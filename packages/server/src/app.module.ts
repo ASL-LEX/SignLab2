@@ -5,6 +5,7 @@ import configuration from './config/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrganizationModule } from './organization/organization.module';
+import { DatasetModule } from './dataset/dataset.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { OrganizationModule } from './organization/organization.module';
         uri: configService.getOrThrow<string>('mongo.uri')
       })
     }),
-    OrganizationModule
+    OrganizationModule,
+    DatasetModule
   ],
 })
 export class AppModule {}

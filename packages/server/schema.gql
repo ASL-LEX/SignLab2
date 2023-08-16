@@ -7,15 +7,30 @@ type Organization {
   name: String!
 }
 
+type Dataset {
+  _id: ID!
+  name: String!
+  description: String!
+}
+
 type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
+  getDatasets: [Dataset!]!
 }
 
 type Mutation {
   createOrganization(organization: OrganizationCreate!): Organization!
+  createDataset(dataset: DatasetCreate!): Dataset!
+  changeDatasetName(dataset: ID!, newName: String!): Boolean!
+  changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
 }
 
 input OrganizationCreate {
   name: String!
+}
+
+input DatasetCreate {
+  name: String!
+  description: String!
 }
