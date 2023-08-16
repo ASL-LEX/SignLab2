@@ -2,3 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Organization {
+  _id: ID!
+  name: String!
+}
+
+type Query {
+  getOrganizations: [Organization!]!
+  exists(name: String!): Boolean!
+}
+
+type Mutation {
+  createOrganization(organization: OrganizationCreate!): Organization!
+}
+
+input OrganizationCreate {
+  name: String!
+}

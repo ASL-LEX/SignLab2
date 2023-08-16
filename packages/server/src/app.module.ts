@@ -4,6 +4,7 @@ import { ApolloFederationDriverConfig, ApolloFederationDriver } from '@nestjs/ap
 import configuration from './config/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { OrganizationModule } from './organization/organization.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { MongooseModule } from '@nestjs/mongoose';
       useFactory: (configService: ConfigService) => ({
         uri: configService.getOrThrow<string>('mongo.uri')
       })
-    })
+    }),
+    OrganizationModule
   ],
 })
 export class AppModule {}
