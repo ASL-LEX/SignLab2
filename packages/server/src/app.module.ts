@@ -1,10 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloFederationDriverConfig, ApolloFederationDriver } from '@nestjs/apollo';
+import configuration from './config/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true
+    }),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      autoSchemaFile: {
+        federation: 2,
+        path: 'schema.gql'
+      },
+      driver: ApolloFederationDriver
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.getOrThrow<string>('mongo.uri')
+      })
+    })
+  ],
 })
 export class AppModule {}
