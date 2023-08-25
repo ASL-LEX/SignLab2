@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrganizationModule } from './organization/organization.module';
 import { DatasetModule } from './dataset/dataset.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { DatasetModule } from './dataset/dataset.module';
       })
     }),
     OrganizationModule,
-    DatasetModule
+    DatasetModule,
+    ProjectModule
   ],
 })
 export class AppModule {}

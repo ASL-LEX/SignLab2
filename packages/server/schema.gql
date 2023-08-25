@@ -13,10 +13,24 @@ type Dataset {
   description: String!
 }
 
+type Project {
+  _id: ID!
+  name: String!
+  description: String!
+  created: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
   getDatasets: [Dataset!]!
+  projectExists(name: String!): Boolean!
+  getProjects: [Project!]!
 }
 
 type Mutation {
@@ -24,6 +38,8 @@ type Mutation {
   createDataset(dataset: DatasetCreate!): Dataset!
   changeDatasetName(dataset: ID!, newName: String!): Boolean!
   changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
+  createProject(project: ProjectCreate!): Project!
+  deleteProject: Boolean!
 }
 
 input OrganizationCreate {
@@ -31,6 +47,11 @@ input OrganizationCreate {
 }
 
 input DatasetCreate {
+  name: String!
+  description: String!
+}
+
+input ProjectCreate {
   name: String!
   description: String!
 }
