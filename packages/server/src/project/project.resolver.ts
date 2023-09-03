@@ -32,7 +32,7 @@ export class ProjectResolver {
 
   // TODO: Handle the ability to get project based on user access
   @Query(() => [Project])
-  async getProjects(): Promise<Project[]> {
-    return [];
+  async getProjects(@OrganizationContext() organization: Organization): Promise<Project[]> {
+    return this.projectService.findAll(organization._id);
   }
 }

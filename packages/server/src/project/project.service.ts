@@ -16,6 +16,10 @@ export class ProjectService {
     });
   }
 
+  async findById(id: string): Promise<Project | null> {
+    return this.projectModel.findById(id);
+  }
+
   async exists(name: string, organization: string): Promise<boolean> {
     const project = await this.projectModel.findOne({ name, organization });
     return !!project;

@@ -29,6 +29,7 @@
     "@nestjs/graphql": "^12.0.8",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^9.0.0",
+    "graphql-type-json": "^0.3.2",
     "mongoose": "^7.4.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
