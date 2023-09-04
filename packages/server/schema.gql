@@ -45,6 +45,18 @@ type Study {
   tagsPerEntry: Float!
 }
 
+type Entry {
+  _id: String!
+  organization: ID!
+  entryID: String!
+  mediaURL: String!
+  mediaType: String!
+  dataset: ID!
+  creator: ID!
+  dateCreated: DateTime!
+  meta: JSON!
+}
+
 type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
@@ -53,6 +65,7 @@ type Query {
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!
   findStudies: [Study!]!
+  entryForDataset(dataset: ID!): [Entry!]!
 }
 
 type Mutation {
@@ -66,6 +79,7 @@ type Mutation {
   deleteStudy: Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
+  createEntry(entry: EntryCreate!, dataset: ID!): Entry!
 }
 
 input OrganizationCreate {
@@ -94,4 +108,12 @@ input StudyCreate {
 input TagSchemaInput {
   dataSchema: JSON!
   uiSchema: JSON!
+}
+
+input EntryCreate {
+  entryID: String!
+  mediaURL: String!
+  mediaType: String!
+  creator: ID!
+  meta: JSON!
 }

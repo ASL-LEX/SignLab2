@@ -7,6 +7,7 @@ import { DatasetPipe } from './pipes/dataset.pipe';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Dataset.name, schema: DatasetSchema }])],
-  providers: [DatasetResolver, DatasetService, DatasetPipe]
+  providers: [DatasetResolver, DatasetService, DatasetPipe],
+  exports: [DatasetService, DatasetPipe]
 })
 export class DatasetModule {}
