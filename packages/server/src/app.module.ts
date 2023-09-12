@@ -9,6 +9,7 @@ import { DatasetModule } from './dataset/dataset.module';
 import { ProjectModule } from './project/project.module';
 import { StudyModule } from './study/study.module';
 import { EntryModule } from './entry/entry.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { EntryModule } from './entry/entry.module';
     DatasetModule,
     ProjectModule,
     StudyModule,
-    EntryModule
+    EntryModule,
+    TagModule
   ],
 })
 export class AppModule {}

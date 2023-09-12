@@ -9,6 +9,10 @@ import {Dataset} from 'src/dataset/dataset.model';
 export class EntryService {
   constructor(@InjectModel(Entry.name) private readonly entryMode: Model<Entry>) {}
 
+  async find(entryID: string): Promise<Entry | null> {
+    return this.entryMode.findOne({ _id: entryID });
+  }
+
   async create(entryCreate: EntryCreate, dataset: Dataset): Promise<Entry> {
     return this.entryMode.create({
       ...entryCreate,

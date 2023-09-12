@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
+import { Validator } from 'jsonschema';
 
 @Injectable()
 export class StudyService {
@@ -23,6 +24,20 @@ export class StudyService {
 
   async findById(id: string): Promise<Study | null> {
     return this.studyModel.findById(id);
+  }
+
+  /** Validate that the tag data matches the study defined schema */
+  async validateData(id: string, data: any): Promise<boolean> {
+    // Get the study/schema for the data
+    const study = await this.findById(id);
+    if (!study) {
+      throw new Error(`Study with id ${id} does not exist`);
+    }
+    const schema = study.tagSchema.dataSchema;
+
+    // Validate the schema
+    const validator = new Validator();
+    return validator.validate(data, schema).valid;
   }
 
   async changeName(study: Study, newName: string): Promise<Study> {

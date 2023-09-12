@@ -2,6 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import mongoose, { Document } from 'mongoose';
 import JSON from 'graphql-type-json';
+import { Schema as JSONSchema } from 'jsonschema';
 
 /** Definition for the tag in JSON schema */
 @Schema()
@@ -9,7 +10,7 @@ import JSON from 'graphql-type-json';
 export class TagSchema {
   @Prop({ type: mongoose.Schema.Types.Mixed })
   @Field(() => JSON)
-  dataSchema: any;
+  dataSchema: JSONSchema;
 
   @Prop({ type: mongoose.Schema.Types.Mixed })
   @Field(() => JSON)

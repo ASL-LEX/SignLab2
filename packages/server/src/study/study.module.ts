@@ -9,6 +9,7 @@ import { StudyCreatePipe } from './pipes/create.pipe';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Study.name, schema: StudySchema }]), ProjectModule],
-  providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe]
+  providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
+  exports: [StudyService, StudyPipe]
 })
 export class StudyModule {}

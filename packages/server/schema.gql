@@ -57,6 +57,29 @@ type Entry {
   meta: JSON!
 }
 
+type Tag {
+  _id: String!
+  entry: Entry!
+  study: Study!
+  complete: Boolean!
+
+  """The user assigned to the tag """
+  user: String
+
+  """
+  The data stored in the tag, not populated until a colaborator has tagged
+  """
+  data: JSON
+
+  """Way to rank tags based on order to be tagged"""
+  order: Float!
+
+  """
+  If the tag is enabled as part of the study, way to disable certain tags
+  """
+  enabled: Boolean!
+}
+
 type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
@@ -80,6 +103,9 @@ type Mutation {
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
   createEntry(entry: EntryCreate!, dataset: ID!): Entry!
+  createTags(study: ID!, entries: [ID!]!): [Tag!]!
+  assignTag(study: ID!): Tag
+  completeTag(tag: ID!, data: JSON!): Boolean!
 }
 
 input OrganizationCreate {
