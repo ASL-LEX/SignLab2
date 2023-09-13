@@ -6,130 +6,73 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetProjectQueryVariables = Types.Exact<{
-  id: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
 }>;
 
-export type GetProjectQuery = {
-  __typename?: 'Query';
-  getProject: {
-    __typename?: 'ProjectModel';
-    id: string;
-    name: string;
-    description?: string | null;
-    logo?: string | null;
-    muiTheme: any;
-    homePage?: string | null;
-    redirectUrl?: string | null;
-    createdAt: any;
-    updatedAt: any;
-    deletedAt?: any | null;
-    settings: { __typename?: 'ProjectSettingsModel'; allowSignup: boolean; displayProjectName: boolean };
-    authMethods: { __typename?: 'ProjectAuthMethodsModel'; emailAuth: boolean; googleAuth: boolean };
-  };
-};
 
-export type ListProjectsQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type GetProjectQuery = { __typename?: 'Query', getProject: { __typename?: 'ProjectModel', id: string, name: string, description?: string | null, logo?: string | null, muiTheme: any, homePage?: string | null, redirectUrl?: string | null, createdAt: any, updatedAt: any, deletedAt?: any | null, settings: { __typename?: 'ProjectSettingsModel', allowSignup: boolean, displayProjectName: boolean }, authMethods: { __typename?: 'ProjectAuthMethodsModel', emailAuth: boolean, googleAuth: boolean } } };
 
-export type ListProjectsQuery = {
-  __typename?: 'Query';
-  listProjects: Array<{ __typename?: 'ProjectModel'; id: string; name: string; description?: string | null; logo?: string | null }>;
-};
+export type ListProjectsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ListProjectsQuery = { __typename?: 'Query', listProjects: Array<{ __typename?: 'ProjectModel', id: string, name: string, description?: string | null, logo?: string | null }> };
 
 export type UpdateProjectSettingsMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  displayProjectName?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  allowSignup?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  id: Types.Scalars['String']['input'];
+  displayProjectName?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  allowSignup?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
-export type UpdateProjectSettingsMutation = {
-  __typename?: 'Mutation';
-  updateProjectSettings: {
-    __typename?: 'ProjectModel';
-    id: string;
-    name: string;
-    description?: string | null;
-    logo?: string | null;
-    homePage?: string | null;
-    redirectUrl?: string | null;
-    settings: { __typename?: 'ProjectSettingsModel'; displayProjectName: boolean; allowSignup: boolean };
-    authMethods: { __typename?: 'ProjectAuthMethodsModel'; googleAuth: boolean; emailAuth: boolean };
-  };
-};
+
+export type UpdateProjectSettingsMutation = { __typename?: 'Mutation', updateProjectSettings: { __typename?: 'ProjectModel', id: string, name: string, description?: string | null, logo?: string | null, homePage?: string | null, redirectUrl?: string | null, settings: { __typename?: 'ProjectSettingsModel', displayProjectName: boolean, allowSignup: boolean }, authMethods: { __typename?: 'ProjectAuthMethodsModel', googleAuth: boolean, emailAuth: boolean } } };
 
 export type UpdateProjectAuthMethodsMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  googleAuth?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  emailAuth?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  id: Types.Scalars['String']['input'];
+  googleAuth?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  emailAuth?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
-export type UpdateProjectAuthMethodsMutation = {
-  __typename?: 'Mutation';
-  updateProjectAuthMethods: {
-    __typename?: 'ProjectModel';
-    id: string;
-    name: string;
-    description?: string | null;
-    logo?: string | null;
-    homePage?: string | null;
-    redirectUrl?: string | null;
-    settings: { __typename?: 'ProjectSettingsModel'; displayProjectName: boolean; allowSignup: boolean };
-    authMethods: { __typename?: 'ProjectAuthMethodsModel'; googleAuth: boolean; emailAuth: boolean };
-  };
-};
+
+export type UpdateProjectAuthMethodsMutation = { __typename?: 'Mutation', updateProjectAuthMethods: { __typename?: 'ProjectModel', id: string, name: string, description?: string | null, logo?: string | null, homePage?: string | null, redirectUrl?: string | null, settings: { __typename?: 'ProjectSettingsModel', displayProjectName: boolean, allowSignup: boolean }, authMethods: { __typename?: 'ProjectAuthMethodsModel', googleAuth: boolean, emailAuth: boolean } } };
 
 export type UpdateProjectMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  name?: Types.InputMaybe<Types.Scalars['String']>;
-  description?: Types.InputMaybe<Types.Scalars['String']>;
-  logo?: Types.InputMaybe<Types.Scalars['String']>;
-  muiTheme?: Types.InputMaybe<Types.Scalars['JSON']>;
-  homePage?: Types.InputMaybe<Types.Scalars['String']>;
-  redirectUrl?: Types.InputMaybe<Types.Scalars['String']>;
+  id: Types.Scalars['String']['input'];
+  name?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  description?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  logo?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  muiTheme?: Types.InputMaybe<Types.Scalars['JSON']['input']>;
+  homePage?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  redirectUrl?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
-export type UpdateProjectMutation = {
-  __typename?: 'Mutation';
-  updateProject: {
-    __typename?: 'ProjectModel';
-    id: string;
-    name: string;
-    description?: string | null;
-    logo?: string | null;
-    muiTheme: any;
-    homePage?: string | null;
-    redirectUrl?: string | null;
-    createdAt: any;
-    updatedAt: any;
-    deletedAt?: any | null;
-    settings: { __typename?: 'ProjectSettingsModel'; displayProjectName: boolean; allowSignup: boolean };
-    authMethods: { __typename?: 'ProjectAuthMethodsModel'; googleAuth: boolean; emailAuth: boolean };
-  };
-};
+
+export type UpdateProjectMutation = { __typename?: 'Mutation', updateProject: { __typename?: 'ProjectModel', id: string, name: string, description?: string | null, logo?: string | null, muiTheme: any, homePage?: string | null, redirectUrl?: string | null, createdAt: any, updatedAt: any, deletedAt?: any | null, settings: { __typename?: 'ProjectSettingsModel', displayProjectName: boolean, allowSignup: boolean }, authMethods: { __typename?: 'ProjectAuthMethodsModel', googleAuth: boolean, emailAuth: boolean } } };
+
 
 export const GetProjectDocument = gql`
-  query getProject($id: String!) {
-    getProject(id: $id) {
-      id
-      name
-      description
-      logo
-      muiTheme
-      homePage
-      redirectUrl
-      createdAt
-      updatedAt
-      deletedAt
-      settings {
-        allowSignup
-        displayProjectName
-      }
-      authMethods {
-        emailAuth
-        googleAuth
-      }
+    query getProject($id: String!) {
+  getProject(id: $id) {
+    id
+    name
+    description
+    logo
+    muiTheme
+    homePage
+    redirectUrl
+    createdAt
+    updatedAt
+    deletedAt
+    settings {
+      allowSignup
+      displayProjectName
+    }
+    authMethods {
+      emailAuth
+      googleAuth
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetProjectQuery__
@@ -148,26 +91,26 @@ export const GetProjectDocument = gql`
  * });
  */
 export function useGetProjectQuery(baseOptions: Apollo.QueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+      }
 export function useGetProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+        }
 export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
 export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
 export type GetProjectQueryResult = Apollo.QueryResult<GetProjectQuery, GetProjectQueryVariables>;
 export const ListProjectsDocument = gql`
-  query listProjects {
-    listProjects {
-      id
-      name
-      description
-      logo
-    }
+    query listProjects {
+  listProjects {
+    id
+    name
+    description
+    logo
   }
-`;
+}
+    `;
 
 /**
  * __useListProjectsQuery__
@@ -185,36 +128,39 @@ export const ListProjectsDocument = gql`
  * });
  */
 export function useListProjectsQuery(baseOptions?: Apollo.QueryHookOptions<ListProjectsQuery, ListProjectsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
+      }
 export function useListProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsQuery, ListProjectsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
+        }
 export type ListProjectsQueryHookResult = ReturnType<typeof useListProjectsQuery>;
 export type ListProjectsLazyQueryHookResult = ReturnType<typeof useListProjectsLazyQuery>;
 export type ListProjectsQueryResult = Apollo.QueryResult<ListProjectsQuery, ListProjectsQueryVariables>;
 export const UpdateProjectSettingsDocument = gql`
-  mutation updateProjectSettings($id: String!, $displayProjectName: Boolean, $allowSignup: Boolean) {
-    updateProjectSettings(id: $id, projectSettings: { displayProjectName: $displayProjectName, allowSignup: $allowSignup }) {
-      id
-      name
-      description
-      logo
-      homePage
-      redirectUrl
-      settings {
-        displayProjectName
-        allowSignup
-      }
-      authMethods {
-        googleAuth
-        emailAuth
-      }
+    mutation updateProjectSettings($id: String!, $displayProjectName: Boolean, $allowSignup: Boolean) {
+  updateProjectSettings(
+    id: $id
+    projectSettings: {displayProjectName: $displayProjectName, allowSignup: $allowSignup}
+  ) {
+    id
+    name
+    description
+    logo
+    homePage
+    redirectUrl
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
     }
   }
-`;
+}
+    `;
 export type UpdateProjectSettingsMutationFn = Apollo.MutationFunction<UpdateProjectSettingsMutation, UpdateProjectSettingsMutationVariables>;
 
 /**
@@ -237,32 +183,35 @@ export type UpdateProjectSettingsMutationFn = Apollo.MutationFunction<UpdateProj
  * });
  */
 export function useUpdateProjectSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectSettingsMutation, UpdateProjectSettingsMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateProjectSettingsMutation, UpdateProjectSettingsMutationVariables>(UpdateProjectSettingsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectSettingsMutation, UpdateProjectSettingsMutationVariables>(UpdateProjectSettingsDocument, options);
+      }
 export type UpdateProjectSettingsMutationHookResult = ReturnType<typeof useUpdateProjectSettingsMutation>;
 export type UpdateProjectSettingsMutationResult = Apollo.MutationResult<UpdateProjectSettingsMutation>;
 export type UpdateProjectSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateProjectSettingsMutation, UpdateProjectSettingsMutationVariables>;
 export const UpdateProjectAuthMethodsDocument = gql`
-  mutation updateProjectAuthMethods($id: String!, $googleAuth: Boolean, $emailAuth: Boolean) {
-    updateProjectAuthMethods(id: $id, projectAuthMethods: { googleAuth: $googleAuth, emailAuth: $emailAuth }) {
-      id
-      name
-      description
-      logo
-      homePage
-      redirectUrl
-      settings {
-        displayProjectName
-        allowSignup
-      }
-      authMethods {
-        googleAuth
-        emailAuth
-      }
+    mutation updateProjectAuthMethods($id: String!, $googleAuth: Boolean, $emailAuth: Boolean) {
+  updateProjectAuthMethods(
+    id: $id
+    projectAuthMethods: {googleAuth: $googleAuth, emailAuth: $emailAuth}
+  ) {
+    id
+    name
+    description
+    logo
+    homePage
+    redirectUrl
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
     }
   }
-`;
+}
+    `;
 export type UpdateProjectAuthMethodsMutationFn = Apollo.MutationFunction<UpdateProjectAuthMethodsMutation, UpdateProjectAuthMethodsMutationVariables>;
 
 /**
@@ -285,36 +234,39 @@ export type UpdateProjectAuthMethodsMutationFn = Apollo.MutationFunction<UpdateP
  * });
  */
 export function useUpdateProjectAuthMethodsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectAuthMethodsMutation, UpdateProjectAuthMethodsMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateProjectAuthMethodsMutation, UpdateProjectAuthMethodsMutationVariables>(UpdateProjectAuthMethodsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectAuthMethodsMutation, UpdateProjectAuthMethodsMutationVariables>(UpdateProjectAuthMethodsDocument, options);
+      }
 export type UpdateProjectAuthMethodsMutationHookResult = ReturnType<typeof useUpdateProjectAuthMethodsMutation>;
 export type UpdateProjectAuthMethodsMutationResult = Apollo.MutationResult<UpdateProjectAuthMethodsMutation>;
 export type UpdateProjectAuthMethodsMutationOptions = Apollo.BaseMutationOptions<UpdateProjectAuthMethodsMutation, UpdateProjectAuthMethodsMutationVariables>;
 export const UpdateProjectDocument = gql`
-  mutation updateProject($id: String!, $name: String, $description: String, $logo: String, $muiTheme: JSON, $homePage: String, $redirectUrl: String) {
-    updateProject(id: $id, settings: { name: $name, description: $description, logo: $logo, muiTheme: $muiTheme, homePage: $homePage, redirectUrl: $redirectUrl }) {
-      id
-      name
-      description
-      logo
-      muiTheme
-      homePage
-      redirectUrl
-      createdAt
-      updatedAt
-      deletedAt
-      settings {
-        displayProjectName
-        allowSignup
-      }
-      authMethods {
-        googleAuth
-        emailAuth
-      }
+    mutation updateProject($id: String!, $name: String, $description: String, $logo: String, $muiTheme: JSON, $homePage: String, $redirectUrl: String) {
+  updateProject(
+    id: $id
+    settings: {name: $name, description: $description, logo: $logo, muiTheme: $muiTheme, homePage: $homePage, redirectUrl: $redirectUrl}
+  ) {
+    id
+    name
+    description
+    logo
+    muiTheme
+    homePage
+    redirectUrl
+    createdAt
+    updatedAt
+    deletedAt
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
     }
   }
-`;
+}
+    `;
 export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutation, UpdateProjectMutationVariables>;
 
 /**
@@ -341,9 +293,9 @@ export type UpdateProjectMutationFn = Apollo.MutationFunction<UpdateProjectMutat
  * });
  */
 export function useUpdateProjectMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectMutation, UpdateProjectMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, options);
+      }
 export type UpdateProjectMutationHookResult = ReturnType<typeof useUpdateProjectMutation>;
 export type UpdateProjectMutationResult = Apollo.MutationResult<UpdateProjectMutation>;
 export type UpdateProjectMutationOptions = Apollo.BaseMutationOptions<UpdateProjectMutation, UpdateProjectMutationVariables>;

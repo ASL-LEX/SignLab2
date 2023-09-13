@@ -1,4 +1,4 @@
-import { Tag } from '../dtos/tag.dto';
+import { Tag } from '../graphql/graphql';
 
 export class TagService {
   protected currentTag: Tag | null = null;
