@@ -21,14 +21,21 @@ import { EnvironmentContextProvider } from './context/EnvironmentContext';
 import { AuthProvider } from './context/AuthContext';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
+import { CssBaseline } from '@mui/material';
+import { useState } from 'react';
+import { SideBar } from './components/SideBar';
 
 function App() {
+  const [drawerOpen, setDrawerOpen] = useState(true);
+
   return (
     <ThemeProvider>
       <BrowserRouter>
         <EnvironmentContextProvider>
+          <CssBaseline />
           <AuthProvider>
-            <NavBar />
+            <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+            <SideBar open={drawerOpen} />
             <Routes>
               <Route path={'/'} element={<HomePage />} />
               <Route path={'/callback'} element={<AuthCallback />} />
