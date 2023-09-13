@@ -1,5 +1,6 @@
-import { FC, useState } from 'react';
-import { Divider, Drawer, IconButton, List, Typography, Link } from '@mui/material';
+import { FC, useState, ReactNode } from 'react';
+import { Divider, Drawer, IconButton, List, Typography, Link,
+         ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Environment } from './Environment';
 import { Navigation } from './Navigation';
@@ -50,6 +51,10 @@ interface SideBarProps {
 export const SideBar: FC<SideBarProps> = ({ open }) => {
   const drawerWidth = 256;
 
+  const navItems: NavItemProps[] = [
+
+  ];
+
   return (
     <Drawer
       variant='persistent'
@@ -69,8 +74,25 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
       open={open}
     >
       <List>
-
+        {navItems.map((navItem) => <NavItem {...navItem} key={navItem.name} />)}
       </List>
     </Drawer>
+  );
+};
+
+interface NavItemProps {
+  action: () => void;
+  name: string;
+  icon: ReactNode;
+}
+
+const NavItem: FC<NavItemProps> = ({ action, name, icon }) => {
+  return (
+    <ListItem>
+      <ListItemButton component='a' onClick={action}>
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={name} />
+      </ListItemButton>
+    </ListItem>
   );
 };
