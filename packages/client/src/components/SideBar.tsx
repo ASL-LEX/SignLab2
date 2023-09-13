@@ -1,48 +1,6 @@
-import { FC, useState, ReactNode } from 'react';
-import { Divider, Drawer, IconButton, List, Typography, Link,
-         ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Environment } from './Environment';
-import { Navigation } from './Navigation';
-import { useAuth } from '../context/AuthContext';
-
-export const SideBar1: FC = () => {
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const { token, initialized } = useAuth();
-
-  return (
-    <>
-      <Drawer PaperProps={{ sx: { width: '25%' } }} open={openDrawer} onClose={() => setOpenDrawer(false)}>
-        <List sx={{ marginTop: '20px' }}>
-          <Link
-            sx={{
-              fontSize: '22px',
-              paddingLeft: '16px'
-            }}
-            underline={'none'}
-            href="/"
-            onClick={() => setOpenDrawer(false)}
-          >
-            Home
-          </Link>
-        </List>
-        <Divider sx={{ paddingTop: '8px' }} orientation="horizontal" flexItem />
-        {token && initialized && (
-          <div>
-            <Typography variant="h5">Environment</Typography>
-            <Environment />
-            <Divider orientation="horizontal" flexItem />
-            <Typography variant="h5">Navigation</Typography>
-            <Navigation />
-          </div>
-        )}
-      </Drawer>
-      <IconButton onClick={() => setOpenDrawer(!openDrawer)}>
-        <MenuIcon />
-      </IconButton>
-    </>
-  );
-}
+import { FC, ReactNode, useState } from 'react';
+import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { ExpandMore, ExpandLess, School, Dataset, Work } from '@mui/icons-material';
 
 interface SideBarProps {
   open: boolean;
@@ -52,7 +10,37 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
   const drawerWidth = 256;
 
   const navItems: NavItemProps[] = [
-
+    {
+      name: 'Projects',
+      icon: <Work />,
+      action: () => {},
+      subItems: [
+        { name: 'New Project', action: () => {} },
+        { name: 'Project Control', action: () => {} },
+        { name: 'User Permissions', action: () => {} },
+      ]
+    },
+    {
+      name: 'Studies',
+      action: () => {},
+      icon: <School />,
+      subItems: [
+        { name: 'New Study', action: () => {} },
+        { name: 'Study Control', action: () => {} },
+        { name: 'User Permissions', action: () => {} },
+        { name: 'Entry Controls', action: () => {} },
+        { name: 'Download Tags', action: () => {} }
+      ]
+    },
+    {
+      name: 'Datasets',
+      action: () => {},
+      icon: <Dataset />,
+      subItems: [
+        { name: 'Dataset Control', action: () => {} },
+        { name: 'Project Access', action: () => {} }
+      ]
+    }
   ];
 
   return (
@@ -66,7 +54,6 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
           boxSizing: 'border-box',
           backgroundColor: '#103F68',
           color: 'white',
-          paddingTop: 18,
           mt: '64px'
         }
       }}
@@ -83,16 +70,39 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
 interface NavItemProps {
   action: () => void;
   name: string;
-  icon: ReactNode;
+  icon?: ReactNode;
+  subItems?: NavItemProps[]
 }
 
-const NavItem: FC<NavItemProps> = ({ action, name, icon }) => {
+const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
+  const isExpandable = subItems && subItems.length > 0;
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+    action();
+  };
+
+  const menuItemChildren = isExpandable ? (
+    <Collapse in={open} timeout='auto' unmountOnExit>
+      <Divider />
+      <List disablePadding>
+        {subItems.map((item, index) => <NavItem {...item} key={index} />)}
+      </List>
+    </Collapse>
+  ) : null;
+
   return (
-    <ListItem>
-      <ListItemButton component='a' onClick={action}>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={name} />
-      </ListItemButton>
-    </ListItem>
+    <>
+      <ListItem>
+        <ListItemButton component='a' onClick={handleClick}>
+          {icon && <ListItemIcon>{icon}</ListItemIcon>}
+          <ListItemText primary={name} inset={!icon} />
+          {isExpandable && !open && <ExpandMore />}
+          {isExpandable && open && <ExpandLess />}
+        </ListItemButton>
+      </ListItem>
+      {menuItemChildren}
+    </>
   );
 };
