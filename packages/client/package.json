@@ -10,7 +10,8 @@
     "prettier:fix": "prettier -wl \"src/**/*.ts(x)\"",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "introspection": "graphql-codegen --config graphql-codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.8.3",
@@ -27,6 +28,7 @@
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",
     "esbuild": "^0.19.0",
+    "graphql": "^16.8.0",
     "injection-js": "^2.4.0",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
@@ -35,6 +37,10 @@
     "styled-components": "^5.3.10"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/near-operation-file-preset": "^2.5.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@storybook/addon-essentials": "^7.0.20",
     "@storybook/addon-interactions": "^7.0.20",
     "@storybook/addon-links": "^7.0.20",

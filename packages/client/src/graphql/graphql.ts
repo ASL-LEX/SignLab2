@@ -5,76 +5,117 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
-  JSON: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  JSON: { input: any; output: any; }
 };
 
 /** Input type for accepting an invite */
 export type AcceptInviteModel = {
   /** The email address of the user accepting the invite */
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
   /** The full name of the user accepting the invite */
-  fullname: Scalars['String'];
+  fullname: Scalars['String']['input'];
   /** The invite code that was included in the invite email */
-  inviteCode: Scalars['String'];
+  inviteCode: Scalars['String']['input'];
   /** The password for the new user account */
-  password: Scalars['String'];
+  password: Scalars['String']['input'];
   /** The ID of the project the invite is associated with */
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
 };
 
 export type AccessToken = {
   __typename?: 'AccessToken';
-  accessToken: Scalars['String'];
+  accessToken: Scalars['String']['output'];
+  refreshToken: Scalars['String']['output'];
 };
 
 export type ConfigurableProjectSettings = {
-  description?: InputMaybe<Scalars['String']>;
-  homePage?: InputMaybe<Scalars['String']>;
-  logo?: InputMaybe<Scalars['String']>;
-  muiTheme?: InputMaybe<Scalars['JSON']>;
-  name?: InputMaybe<Scalars['String']>;
-  redirectUrl?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  homePage?: InputMaybe<Scalars['String']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
+  muiTheme?: InputMaybe<Scalars['JSON']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  redirectUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Dataset = {
+  __typename?: 'Dataset';
+  _id: Scalars['ID']['output'];
+  description: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type DatasetCreate = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type EmailLoginDto = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  projectId: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+export type Entry = {
+  __typename?: 'Entry';
+  _id: Scalars['String']['output'];
+  creator: Scalars['ID']['output'];
+  dataset: Scalars['ID']['output'];
+  dateCreated: Scalars['DateTime']['output'];
+  entryID: Scalars['String']['output'];
+  mediaType: Scalars['String']['output'];
+  mediaURL: Scalars['String']['output'];
+  meta: Scalars['JSON']['output'];
+  organization: Scalars['ID']['output'];
+};
+
+export type EntryCreate = {
+  creator: Scalars['ID']['input'];
+  entryID: Scalars['String']['input'];
+  mediaType: Scalars['String']['input'];
+  mediaURL: Scalars['String']['input'];
+  meta: Scalars['JSON']['input'];
 };
 
 export type ForgotDto = {
-  email: Scalars['String'];
-  projectId: Scalars['String'];
+  email: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+export type GoogleLoginDto = {
+  credential: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
 };
 
 export type InviteModel = {
   __typename?: 'InviteModel';
   /** The date and time at which the invitation was created. */
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   /** The date and time at which the invitation was deleted, if applicable. */
-  deletedAt?: Maybe<Scalars['DateTime']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The email address of the user being invited. */
-  email: Scalars['String'];
+  email: Scalars['String']['output'];
   /** The date and time at which the invitation expires. */
-  expiresAt: Scalars['DateTime'];
+  expiresAt: Scalars['DateTime']['output'];
   /** The ID of the invitation. */
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   /** The ID of the project to which the invitation belongs. */
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['output'];
   /** The role that the user being invited will have. */
-  role: Scalars['Int'];
+  role: Scalars['Int']['output'];
   /** The status of the invitation. */
   status: InviteStatus;
   /** The date and time at which the invitation was last updated. */
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 /** The status of an invite */
@@ -85,182 +126,493 @@ export enum InviteStatus {
   Pending = 'PENDING'
 }
 
+/** Represents an entier lexicon */
+export type Lexicon = {
+  __typename?: 'Lexicon';
+  /** Unique identifier for the lexicon */
+  _id: Scalars['ID']['output'];
+  /** The name of the Lexicon */
+  name: Scalars['String']['output'];
+  /** Format each entry in the Lexicon is expected to follow */
+  schema: Scalars['JSON']['output'];
+};
+
+export type LexiconAddEntry = {
+  /** Keywords that are similar to search accross */
+  associates: Array<Scalars['String']['input']>;
+  /** Fields stored on the entry */
+  fields: Scalars['JSON']['input'];
+  /** Unique user assigned identifier for the entry within the lexicon */
+  key: Scalars['String']['input'];
+  lexicon: Scalars['String']['input'];
+  /** Primary way to search for entries in the lexicon */
+  primary: Scalars['String']['input'];
+  /** Link to the video that represents the entry */
+  video: Scalars['String']['input'];
+};
+
+export type LexiconCreate = {
+  /** The name of the Lexicon */
+  name: Scalars['String']['input'];
+  /** Format each entry in the Lexicon is expected to follow */
+  schema: Scalars['JSON']['input'];
+};
+
+/** Single entry within a whole lexicon  */
+export type LexiconEntry = {
+  __typename?: 'LexiconEntry';
+  /** Keywords that are similar to search accross */
+  associates: Array<Scalars['String']['output']>;
+  /** Fields stored on the entry */
+  fields: Scalars['JSON']['output'];
+  /** Unique user assigned identifier for the entry within the lexicon */
+  key: Scalars['String']['output'];
+  lexicon: Scalars['String']['output'];
+  /** Primary way to search for entries in the lexicon */
+  primary: Scalars['String']['output'];
+  /** Link to the video that represents the entry */
+  video: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvite: InviteModel;
+  assignTag?: Maybe<Tag>;
   cancelInvite: InviteModel;
+  changeDatasetDescription: Scalars['Boolean']['output'];
+  changeDatasetName: Scalars['Boolean']['output'];
+  changeStudyDescription: Study;
+  changeStudyName: Study;
+  completeTag: Scalars['Boolean']['output'];
+  createDataset: Dataset;
+  createEntry: Entry;
   createInvite: InviteModel;
+  createOrganization: Organization;
   createProject: ProjectModel;
-  forgotPassword: Scalars['Boolean'];
+  createStudy: Study;
+  createTags: Array<Tag>;
+  deleteProject: Scalars['Boolean']['output'];
+  deleteStudy: Scalars['Boolean']['output'];
+  forgotPassword: Scalars['Boolean']['output'];
+  lexiconAddEntry: LexiconEntry;
+  /** Remove all entries from a given lexicon */
+  lexiconClearEntries: Scalars['Boolean']['output'];
+  lexiconCreate: Lexicon;
   loginEmail: AccessToken;
+  loginGoogle: AccessToken;
   loginUsername: AccessToken;
+  refresh: AccessToken;
   resendInvite: InviteModel;
-  resetPassword: Scalars['Boolean'];
+  resetPassword: Scalars['Boolean']['output'];
+  signLabCreateProject: Project;
   signup: AccessToken;
   updateProject: ProjectModel;
   updateProjectAuthMethods: ProjectModel;
   updateProjectSettings: ProjectModel;
+  updateUser: UserModel;
 };
+
 
 export type MutationAcceptInviteArgs = {
   input: AcceptInviteModel;
 };
 
-export type MutationCancelInviteArgs = {
-  id: Scalars['ID'];
+
+export type MutationAssignTagArgs = {
+  study: Scalars['ID']['input'];
 };
 
-export type MutationCreateInviteArgs = {
-  email: Scalars['String'];
-  role?: InputMaybe<Scalars['Int']>;
+
+export type MutationCancelInviteArgs = {
+  id: Scalars['ID']['input'];
 };
+
+
+export type MutationChangeDatasetDescriptionArgs = {
+  dataset: Scalars['ID']['input'];
+  newDescription: Scalars['String']['input'];
+};
+
+
+export type MutationChangeDatasetNameArgs = {
+  dataset: Scalars['ID']['input'];
+  newName: Scalars['String']['input'];
+};
+
+
+export type MutationChangeStudyDescriptionArgs = {
+  newDescription: Scalars['String']['input'];
+  study: Scalars['ID']['input'];
+};
+
+
+export type MutationChangeStudyNameArgs = {
+  newName: Scalars['String']['input'];
+  study: Scalars['ID']['input'];
+};
+
+
+export type MutationCompleteTagArgs = {
+  data: Scalars['JSON']['input'];
+  tag: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateDatasetArgs = {
+  dataset: DatasetCreate;
+};
+
+
+export type MutationCreateEntryArgs = {
+  dataset: Scalars['ID']['input'];
+  entry: EntryCreate;
+};
+
+
+export type MutationCreateInviteArgs = {
+  email: Scalars['String']['input'];
+  role?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationCreateOrganizationArgs = {
+  organization: OrganizationCreate;
+};
+
 
 export type MutationCreateProjectArgs = {
   project: ProjectCreateInput;
 };
 
+
+export type MutationCreateStudyArgs = {
+  study: StudyCreate;
+};
+
+
+export type MutationCreateTagsArgs = {
+  entries: Array<Scalars['ID']['input']>;
+  study: Scalars['ID']['input'];
+};
+
+
 export type MutationForgotPasswordArgs = {
   user: ForgotDto;
 };
+
+
+export type MutationLexiconAddEntryArgs = {
+  entry: LexiconAddEntry;
+};
+
+
+export type MutationLexiconClearEntriesArgs = {
+  lexicon: Scalars['String']['input'];
+};
+
+
+export type MutationLexiconCreateArgs = {
+  lexicon: LexiconCreate;
+};
+
 
 export type MutationLoginEmailArgs = {
   user: EmailLoginDto;
 };
 
+
+export type MutationLoginGoogleArgs = {
+  user: GoogleLoginDto;
+};
+
+
 export type MutationLoginUsernameArgs = {
   user: UsernameLoginDto;
 };
 
-export type MutationResendInviteArgs = {
-  id: Scalars['ID'];
+
+export type MutationRefreshArgs = {
+  refreshToken: Scalars['String']['input'];
 };
+
+
+export type MutationResendInviteArgs = {
+  id: Scalars['ID']['input'];
+};
+
 
 export type MutationResetPasswordArgs = {
   user: ResetDto;
 };
 
+
+export type MutationSignLabCreateProjectArgs = {
+  project: ProjectCreate;
+};
+
+
 export type MutationSignupArgs = {
   user: UserSignupDto;
 };
 
+
 export type MutationUpdateProjectArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   settings: ConfigurableProjectSettings;
 };
 
+
 export type MutationUpdateProjectAuthMethodsArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   projectAuthMethods: ProjectAuthMethodsInput;
 };
 
+
 export type MutationUpdateProjectSettingsArgs = {
-  id: Scalars['String'];
+  id: Scalars['String']['input'];
   projectSettings: ProjectSettingsInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  email: Scalars['String']['input'];
+  fullname: Scalars['String']['input'];
+};
+
+export type Organization = {
+  __typename?: 'Organization';
+  _id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type OrganizationCreate = {
+  name: Scalars['String']['input'];
+};
+
+export type Project = {
+  __typename?: 'Project';
+  _id: Scalars['ID']['output'];
+  created: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type ProjectAuthMethodsInput = {
-  emailAuth?: InputMaybe<Scalars['Boolean']>;
-  googleAuth?: InputMaybe<Scalars['Boolean']>;
+  emailAuth?: InputMaybe<Scalars['Boolean']['input']>;
+  googleAuth?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ProjectAuthMethodsModel = {
   __typename?: 'ProjectAuthMethodsModel';
-  emailAuth: Scalars['Boolean'];
-  googleAuth: Scalars['Boolean'];
+  emailAuth: Scalars['Boolean']['output'];
+  googleAuth: Scalars['Boolean']['output'];
+};
+
+export type ProjectCreate = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type ProjectCreateInput = {
-  allowSignup: Scalars['Boolean'];
-  description: Scalars['String'];
-  displayProjectName: Scalars['Boolean'];
-  emailAuth: Scalars['Boolean'];
-  googleAuth: Scalars['Boolean'];
-  homePage?: InputMaybe<Scalars['String']>;
-  logo?: InputMaybe<Scalars['String']>;
-  muiTheme?: InputMaybe<Scalars['JSON']>;
-  name: Scalars['String'];
-  redirectUrl?: InputMaybe<Scalars['String']>;
+  allowSignup?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayProjectName?: InputMaybe<Scalars['Boolean']['input']>;
+  emailAuth?: InputMaybe<Scalars['Boolean']['input']>;
+  googleAuth?: InputMaybe<Scalars['Boolean']['input']>;
+  homePage?: InputMaybe<Scalars['String']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
+  muiTheme?: InputMaybe<Scalars['JSON']['input']>;
+  name: Scalars['String']['input'];
+  redirectUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ProjectModel = {
-  description?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+  __typename?: 'ProjectModel';
+  authMethods: ProjectAuthMethodsModel;
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  homePage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  logo?: Maybe<Scalars['String']['output']>;
+  muiTheme: Scalars['JSON']['output'];
+  name: Scalars['String']['output'];
+  redirectUrl?: Maybe<Scalars['String']['output']>;
+  settings: ProjectSettingsModel;
+  updatedAt: Scalars['DateTime']['output'];
+  users: Array<UserModel>;
 };
 
 export type ProjectSettingsInput = {
-  allowSignup?: InputMaybe<Scalars['Boolean']>;
-  displayProjectName?: InputMaybe<Scalars['Boolean']>;
+  allowSignup?: InputMaybe<Scalars['Boolean']['input']>;
+  displayProjectName?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ProjectSettingsModel = {
   __typename?: 'ProjectSettingsModel';
-  allowSignup: Scalars['Boolean'];
-  displayProjectName: Scalars['Boolean'];
+  allowSignup: Scalars['Boolean']['output'];
+  displayProjectName: Scalars['Boolean']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  entryForDataset: Array<Entry>;
+  exists: Scalars['Boolean']['output'];
+  findStudies: Array<Study>;
+  getDatasets: Array<Dataset>;
+  getOrganizations: Array<Organization>;
   getProject: ProjectModel;
+  getProjects: Array<Project>;
   getUser: UserModel;
   invite: InviteModel;
   invites: Array<InviteModel>;
+  lexFindAll: Array<Lexicon>;
+  lexiconByKey: LexiconEntry;
+  lexiconSearch: Array<LexiconEntry>;
   listProjects: Array<ProjectModel>;
+  me: UserModel;
+  projectExists: Scalars['Boolean']['output'];
   projectUsers: Array<UserModel>;
-  publicKey: Array<Scalars['String']>;
+  publicKey: Array<Scalars['String']['output']>;
+  studyExists: Scalars['Boolean']['output'];
   users: Array<UserModel>;
 };
 
-export type QueryGetProjectArgs = {
-  id: Scalars['String'];
+
+export type QueryEntryForDatasetArgs = {
+  dataset: Scalars['ID']['input'];
 };
+
+
+export type QueryExistsArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type QueryGetProjectArgs = {
+  id: Scalars['String']['input'];
+};
+
 
 export type QueryGetUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
+
 export type QueryInviteArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
+
 
 export type QueryInvitesArgs = {
   status?: InputMaybe<InviteStatus>;
 };
 
+
+export type QueryLexiconByKeyArgs = {
+  key: Scalars['String']['input'];
+  lexicon: Scalars['String']['input'];
+};
+
+
+export type QueryLexiconSearchArgs = {
+  lexicon: Scalars['String']['input'];
+  search: Scalars['String']['input'];
+};
+
+
+export type QueryProjectExistsArgs = {
+  name: Scalars['String']['input'];
+};
+
+
 export type QueryProjectUsersArgs = {
-  projectId: Scalars['String'];
+  projectId: Scalars['String']['input'];
+};
+
+
+export type QueryStudyExistsArgs = {
+  name: Scalars['String']['input'];
+  project: Scalars['ID']['input'];
 };
 
 export type ResetDto = {
-  code: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-  projectId: Scalars['String'];
+  code: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+};
+
+export type Study = {
+  __typename?: 'Study';
+  _id: Scalars['ID']['output'];
+  description: Scalars['String']['output'];
+  instructions: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  project: Scalars['ID']['output'];
+  tagSchema: TagSchema;
+  tagsPerEntry: Scalars['Float']['output'];
+};
+
+export type StudyCreate = {
+  description: Scalars['String']['input'];
+  instructions: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  project: Scalars['ID']['input'];
+  tagSchema: TagSchemaInput;
+  tagsPerEntry: Scalars['Float']['input'];
+};
+
+export type Tag = {
+  __typename?: 'Tag';
+  _id: Scalars['String']['output'];
+  complete: Scalars['Boolean']['output'];
+  /** The data stored in the tag, not populated until a colaborator has tagged */
+  data?: Maybe<Scalars['JSON']['output']>;
+  /** If the tag is enabled as part of the study, way to disable certain tags */
+  enabled: Scalars['Boolean']['output'];
+  entry: Entry;
+  /** Way to rank tags based on order to be tagged */
+  order: Scalars['Float']['output'];
+  study: Study;
+  /** The user assigned to the tag  */
+  user?: Maybe<Scalars['String']['output']>;
+};
+
+export type TagSchema = {
+  __typename?: 'TagSchema';
+  dataSchema: Scalars['JSON']['output'];
+  uiSchema: Scalars['JSON']['output'];
+};
+
+export type TagSchemaInput = {
+  dataSchema: Scalars['JSON']['input'];
+  uiSchema: Scalars['JSON']['input'];
 };
 
 export type UserModel = {
   __typename?: 'UserModel';
-  createdAt: Scalars['DateTime'];
-  deletedAt?: Maybe<Scalars['DateTime']>;
-  email?: Maybe<Scalars['String']>;
-  fullname?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  projectId: Scalars['String'];
-  role: Scalars['Int'];
-  updatedAt: Scalars['DateTime'];
-  username?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  fullname?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  projectId: Scalars['String']['output'];
+  role: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserSignupDto = {
-  email: Scalars['String'];
-  fullname: Scalars['String'];
-  password: Scalars['String'];
-  projectId: Scalars['String'];
-  username?: InputMaybe<Scalars['String']>;
+  email: Scalars['String']['input'];
+  fullname: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UsernameLoginDto = {
-  password: Scalars['String'];
-  projectId: Scalars['String'];
-  username: Scalars['String'];
+  password: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
-

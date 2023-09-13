@@ -12,7 +12,7 @@ export const Environment: React.FC = () => {
   const { project, updateProject } = useProject();
 
   const handleClick = (newValue: string) => {
-    const newProject: ProjectModel = { name: newValue };
+    const newProject: ProjectModel = { name: newValue } as any;
     updateProject(newProject);
   };
 
