@@ -11,7 +11,7 @@ export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Mutation(() => Project)
-  async createProject(@Args('project') project: ProjectCreate, @OrganizationContext() organization: Organization): Promise<Project> {
+  async signLabCreateProject(@Args('project') project: ProjectCreate, @OrganizationContext() organization: Organization): Promise<Project> {
     // Make sure the project name is unique for the given organization
     if (await this.projectExists(project.name, organization)) {
       throw new BadRequestException(`Project with name ${project.name} already exists`);
