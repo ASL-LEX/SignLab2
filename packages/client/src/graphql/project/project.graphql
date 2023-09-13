@@ -1,0 +1,92 @@
+query getProject($id: String!) {
+  getProject(id: $id) {
+    id
+    name
+    description
+    logo
+    muiTheme
+    homePage
+    redirectUrl
+    createdAt
+    updatedAt
+    deletedAt
+    settings {
+      allowSignup
+      displayProjectName
+    }
+    authMethods {
+      emailAuth
+      googleAuth
+    }
+  }
+}
+
+query listProjects {
+  listProjects {
+    id
+    name
+    description
+    logo
+  }
+}
+
+mutation updateProjectSettings($id: String!, $displayProjectName: Boolean, $allowSignup: Boolean) {
+  updateProjectSettings(id: $id, projectSettings: { displayProjectName: $displayProjectName, allowSignup: $allowSignup }) {
+    id
+    name
+    description
+    logo
+    homePage
+    redirectUrl
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
+    }
+  }
+}
+
+mutation updateProjectAuthMethods($id: String!, $googleAuth: Boolean, $emailAuth: Boolean) {
+  updateProjectAuthMethods(id: $id, projectAuthMethods: { googleAuth: $googleAuth, emailAuth: $emailAuth }) {
+    id
+    name
+    description
+    logo
+    homePage
+    redirectUrl
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
+    }
+  }
+}
+
+mutation updateProject($id: String!, $name: String, $description: String, $logo: String, $muiTheme: JSON, $homePage: String, $redirectUrl: String) {
+  updateProject(id: $id, settings: { name: $name, description: $description, logo: $logo, muiTheme: $muiTheme, homePage: $homePage, redirectUrl: $redirectUrl }) {
+    id
+    name
+    description
+    logo
+    muiTheme
+    homePage
+    redirectUrl
+    createdAt
+    updatedAt
+    deletedAt
+    settings {
+      displayProjectName
+      allowSignup
+    }
+    authMethods {
+      googleAuth
+      emailAuth
+    }
+  }
+}
