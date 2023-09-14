@@ -1,4 +1,4 @@
-import { Box, Switch } from '@mui/material';
+import { Switch, Typography } from '@mui/material';
 import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
@@ -94,17 +94,9 @@ export const ProjectUserPermissions: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ height: 800, width: '100%', position: 'absolute', top: '75px', left: '1%', right: '1%' }}>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
+    <>
+      <Typography variant='h3'>User Permissions</Typography>
       <DataGrid
-        sx={{
-          width: '100%',
-          position: 'absolute',
-          '& .MuiDataGrid-cell': {
-            paddingTop: '6px !important',
-            paddingBottom: '8px !important'
-          }
-        }}
         getRowHeight={() => 'auto'}
         rows={rows}
         columns={columns}
@@ -113,7 +105,7 @@ export const ProjectUserPermissions: React.FC = () => {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 8
+              pageSize: 5
             }
           }
         }}
@@ -121,6 +113,6 @@ export const ProjectUserPermissions: React.FC = () => {
         checkboxSelection
         disableRowSelectionOnClick
       />
-    </Box>
+    </>
   );
 };

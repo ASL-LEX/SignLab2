@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Container } from '@mui/material';
+import { Button } from '@mui/material';
 import { useState } from 'react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
@@ -73,11 +73,11 @@ export const NewProject: React.FC = () => {
   };
 
   return (
-    <Container sx={{ left: '2%', width: '96%', top: '100px', position: 'absolute' }}>
+    <>
       <JsonForms schema={schema} uischema={uischema} data={data} renderers={materialRenderers} cells={materialCells} onChange={({ data }) => handleChange(data)} />
-      <Button disabled={error} sx={{ marginTop: '35px', position: 'absolute', right: '5%' }} variant="contained" onClick={handleSubmit}>
+      <Button disabled={error} variant="contained" onClick={handleSubmit}>
         Submit
       </Button>
-    </Container>
+    </>
   );
 };

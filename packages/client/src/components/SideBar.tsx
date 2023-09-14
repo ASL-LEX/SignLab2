@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { ExpandMore, ExpandLess, School, Dataset, Work, Logout } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       icon: <School />,
       subItems: [
         { name: 'New Study', action: () => navigate('/study/new') },
-        { name: 'Study Control', action: () => navigate('/study/contols') },
+        { name: 'Study Control', action: () => navigate('/study/controls') },
         { name: 'User Permissions', action: () => navigate('/study/permissions') },
         { name: 'Entry Controls', action: () => navigate('/study/controls') },
         { name: 'Download Tags', action: () => navigate('/study/tags') }
@@ -43,6 +43,14 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       subItems: [
         { name: 'Dataset Control', action: () => navigate('/dataset/controls') },
         { name: 'Project Access', action: () => navigate('/dataset/projectaccess') }
+      ]
+    },
+    {
+      name: 'Contribute',
+      action: () => {},
+      icon: <GroupWork />,
+      subItems: [
+        { name: 'Tag in Study', action: () => navigate('/study/contribute') }
       ]
     },
     {
@@ -63,6 +71,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           boxSizing: 'border-box',
           backgroundColor: '#103F68',
           color: 'white',
+          paddingTop: 18,
           mt: '64px'
         }
       }}

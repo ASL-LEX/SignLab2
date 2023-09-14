@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
 import { useState } from 'react';
@@ -27,34 +26,22 @@ export const DatasetControlComponent: React.FC<Table> = ({ tableRows, columns }:
   };
 
   return (
-    <Box sx={{ height: 350, width: '100%', boxShadow: '1px 9px 15px darkgrey' }}>
-      <DataGrid
-        sx={{
-          '&.MuiDataGrid-root': {
-            fontWeight: 'normal'
-          },
-          '& .MuiDataGrid-cell': {
-            overflow: 'auto',
-            paddingTop: '8px !important',
-            paddingBottom: '8px !important'
+    <DataGrid
+      getRowHeight={() => 'auto'}
+      rows={rows}
+      columns={columns}
+      rowModesModel={rowModesModel}
+      onRowModesModelChange={handleRowModesModelChange}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 5
           }
-        }}
-        getRowHeight={() => 'auto'}
-        rows={rows}
-        columns={columns}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5
-            }
-          }
-        }}
-        pageSizeOptions={[5, 10, 15]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
+        }
+      }}
+      pageSizeOptions={[5, 10, 15]}
+      checkboxSelection
+      disableRowSelectionOnClick
+    />
   );
 };

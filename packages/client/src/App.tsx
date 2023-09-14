@@ -25,23 +25,25 @@ import { CssBaseline, Box, styled } from '@mui/material';
 import { useState } from 'react';
 import { SideBar } from './components/SideBar';
 
-const drawerWidth = 240;
+const drawerWidth = 256;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{ open?: boolean; }>(({ theme, open }) => ({
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+  open?: boolean;
+}>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: theme.transitions.duration.leavingScreen
   }),
-  marginRight: -drawerWidth,
+  marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen
     }),
-    marginRight: 0,
-  }),
+    marginLeft: 0
+  })
 }));
 
 function App() {
@@ -52,35 +54,37 @@ function App() {
       <BrowserRouter>
         <EnvironmentContextProvider>
           <AuthProvider>
-            <Box sx={{ display: 'flex' }}>
-              <CssBaseline />
+            <CssBaseline />
+            <Box>
               <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-                <Main open={drawerOpen}>
-                  <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-                  <Box sx={{ display: 'flex' }}>
-                    <Routes>
-                      <Route path={'/'} element={<HomePage />} />
-                      <Route path={'/callback'} element={<AuthCallback />} />
-                      <Route path={'/loginpage'} element={<LoginPage />} />
-                      <Route element={<AdminGuard />}>
-                        <Route path={'/project/new'} element={<NewProject />} />
-                        <Route path={'/project/controls'} element={<ProjectControl />} />
-                        <Route path={'/project/permissions'} element={<ProjectUserPermissions />} />
-                        <Route path={'/study/new'} element={<NewStudy />} />
-                        <Route path={'/study/controls'} element={<StudyControl />} />
-                        <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
-                        <Route path={'/study/tags'} element={<DownloadTags />} />
-                        <Route path={'/successpage'} element={<SuccessPage />} />
-                        <Route path={'/dataset/controls'} element={<DatasetControls />} />
-                        <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
-                        <Route path={'/study/contribute'} element={<ContributePage />} />
-                        <Route path={'/tagging'} element={<TagView />} />
-                        <Route path={'/logoutpage'} element={<LogoutPage />} />
-                      </Route>
-                    </Routes>
-                  </Box>
-                </Main>
+            </Box>
+            <Main open={drawerOpen}>
+              <Box sx={{ display: 'flex' }}>
+                <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
+                <Box sx={{ flexGrow: 1, width: '90%' }}>
+                  <Routes>
+                    <Route path={'/'} element={<HomePage />} />
+                    <Route path={'/callback'} element={<AuthCallback />} />
+                    <Route path={'/loginpage'} element={<LoginPage />} />
+                    <Route element={<AdminGuard />}>
+                      <Route path={'/project/new'} element={<NewProject />} />
+                      <Route path={'/project/controls'} element={<ProjectControl />} />
+                      <Route path={'/project/permissions'} element={<ProjectUserPermissions />} />
+                      <Route path={'/study/new'} element={<NewStudy />} />
+                      <Route path={'/study/controls'} element={<StudyControl />} />
+                      <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
+                      <Route path={'/study/tags'} element={<DownloadTags />} />
+                      <Route path={'/successpage'} element={<SuccessPage />} />
+                      <Route path={'/dataset/controls'} element={<DatasetControls />} />
+                      <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
+                      <Route path={'/study/contribute'} element={<ContributePage />} />
+                      <Route path={'/tagging'} element={<TagView />} />
+                      <Route path={'/logoutpage'} element={<LogoutPage />} />
+                    </Route>
+                  </Routes>
+                </Box>
               </Box>
+            </Main>
           </AuthProvider>
         </EnvironmentContextProvider>
       </BrowserRouter>
