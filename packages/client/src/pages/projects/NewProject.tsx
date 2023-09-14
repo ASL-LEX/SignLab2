@@ -75,7 +75,7 @@ export const NewProject: React.FC = () => {
   return (
     <>
       <JsonForms schema={schema} uischema={uischema} data={data} renderers={materialRenderers} cells={materialCells} onChange={({ data }) => handleChange(data)} />
-      <Button disabled={error} sx={{ marginTop: '35px', position: 'absolute', right: '5%' }} variant="contained" onClick={handleSubmit}>
+      <Button disabled={error} variant="contained" onClick={handleSubmit}>
         Submit
       </Button>
     </>
