@@ -63,6 +63,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           boxSizing: 'border-box',
           backgroundColor: '#103F68',
           color: 'white',
+          paddingTop: 18,
           mt: '64px'
         }
       }}

@@ -68,34 +68,39 @@ export const StudyUserPermissions: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', flex: 0.3 },
+    {
+      field: 'id',
+      headerName: 'ID',
+      flex: 1,
+      maxWidth: 100
+    },
     {
       field: 'name',
       headerName: 'Name',
-      width: 150,
-      flex: 0.9,
-      editable: true
+      editable: true,
+      flex: 1
     },
     {
       field: 'username',
       headerName: 'Username',
-      flex: 0.9,
-      editable: true
+      editable: true,
+      flex: 1
     },
     {
       field: 'email',
       headerName: 'Email',
-      flex: 1.1,
+      flex: 1,
       editable: true
     },
     {
       field: 'adminSwitch',
       type: 'boolean',
       editable: true,
+      maxWidth: 200,
+      flex: 1,
       headerName: 'Study Admin',
       renderCell: (params) => <Switch checked={params.value} />,
       renderEditCell: (params) => <SwitchEditInputCell {...params} />,
-      flex: 0.75
     },
     {
       field: 'visibleSwitch',
@@ -103,22 +108,24 @@ export const StudyUserPermissions: React.FC = () => {
       editable: true,
       headerName: 'Study Visible',
       renderCell: (params) => <Switch checked={params.value} />,
+      maxWidth: 200,
+      flex: 1,
       renderEditCell: (params) => <SwitchEditInputCell {...params} />,
-      flex: 0.75
     },
     {
       field: 'switch',
       type: 'boolean',
       editable: true,
+      maxWidth: 200,
+      flex: 1,
       headerName: 'Contribute',
       renderCell: (params) => <Switch checked={params.value} />,
       renderEditCell: (params) => <SwitchEditInputCell {...params} />,
-      flex: 0.75
     }
   ];
 
   return (
-    <Box>
+    <Box sx={{ width: '90%' }}>
       <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
       <DataGrid
         getRowHeight={() => 'auto'}
