@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { ControlComponent } from '../../components/ControlComponent';
 
 // currently hardcoded values, but eventully
@@ -30,14 +30,12 @@ const rows = [
 
 const ProjectControl: React.FC = () => {
   return (
-    <Container sx={{ position: 'absolute', top: '75px', left: '1%', right: '1%' }}>
-      <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
-        <h3 style={{ top: '10%', paddingBottom: '10px' }}>Project Control</h3>
-        <Box>
-          <ControlComponent tableRows={rows} />
-        </Box>
-      </Container>
-    </Container>
+    <>
+      <h3 style={{ top: '10%', paddingBottom: '10px' }}>Project Control</h3>
+      <Box>
+        <ControlComponent tableRows={rows} />
+      </Box>
+    </>
   );
 };
 

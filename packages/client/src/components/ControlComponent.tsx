@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridRowModesModel, GridActionsCellItem, GridRowId } from '@mui/x-data-grid-pro';
@@ -31,13 +30,15 @@ export const ControlComponent: React.FC<Table> = ({ tableRows }: Table) => {
     {
       field: 'name',
       headerName: 'Name',
-      width: 200,
+      flex: 1,
+      maxWidth: 200,
       editable: true
     },
     {
       field: 'description',
       headerName: 'Description',
-      width: 575,
+      flex: 1,
+      minWidth: 500,
       editable: true
     },
     {
@@ -53,32 +54,22 @@ export const ControlComponent: React.FC<Table> = ({ tableRows }: Table) => {
   ];
 
   return (
-    <Box sx={{ height: 800, width: '100%' }}>
-      <DataGrid
-        sx={{
-          '& .MuiDataGrid-cell': {
-            whiteSpce: 'initial !important',
-            lineHeight: '16px !important',
-            paddingTop: '10px !important',
-            paddingBottom: '10px !important'
+    <DataGrid
+      getRowHeight={() => 'auto'}
+      rows={rows}
+      columns={columns}
+      rowModesModel={rowModesModel}
+      onRowModesModelChange={handleRowModesModelChange}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 8
           }
-        }}
-        getRowHeight={() => 'auto'}
-        rows={rows}
-        columns={columns}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 8
-            }
-          }
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
+        }
+      }}
+      pageSizeOptions={[5]}
+      checkboxSelection
+      disableRowSelectionOnClick
+    />
   );
 };

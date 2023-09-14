@@ -97,7 +97,7 @@ export const DatasetControls: React.FC = () => {
   };
 
   return (
-    <Box sx={{ position: 'absolute', top: '8%', left: '2.5%', right: '2.5%' }}>
+    <>
       <h3 style={{ top: '10%', paddingBottom: '10px' }}>Dataset Controls</h3>
       <Box sx={{ display: 'flex', paddingBottom: '20px' }}>
         <Box sx={{ width: '22%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -136,6 +136,6 @@ export const DatasetControls: React.FC = () => {
           </Accordion>
         ))}
       </Box>
-    </Box>
+    </>
   );
 };

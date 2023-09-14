@@ -36,7 +36,7 @@ export const NewStudy: React.FC = () => {
   }
 
   return (
-    <Container sx={{ position: 'absolute', left: '-5%', right: '-5%', alignItems: 'baseline', width: '100%', top: '100px', display: 'flex', flexDirection: 'column' }}>
+    <Container sx={{ flexDirection: 'column' }}>
       <Typography sx={{ margin: '10px 0px 15px 10px' }} variant="h5">
         Create New Study
       </Typography>

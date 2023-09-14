@@ -35,7 +35,7 @@ const rows = [
 
 export const ProjectAccess: React.FC = () => {
   return (
-    <Box sx={{ position: 'absolute', top: '8%', left: '2.5%', right: '2.5%' }}>
+    <>
       <Typography variant="h5">Project Access</Typography>
       <Accordion disableGutters>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
@@ -63,6 +63,6 @@ export const ProjectAccess: React.FC = () => {
           </Container>
         </AccordionDetails>
       </Accordion>
-    </Box>
+    </>
   );
 };

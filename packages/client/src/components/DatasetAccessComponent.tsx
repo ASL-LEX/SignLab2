@@ -1,4 +1,4 @@
-import { Box, Switch } from '@mui/material';
+import { Switch } from '@mui/material';
 import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
@@ -72,31 +72,22 @@ export const DatasetAccessComponent: React.FC<Table> = ({ tableRows }: Table) =>
   ];
 
   return (
-    <Box sx={{ height: 800, width: '100%', boxShadow: '1px 9px 15px darkgrey' }}>
-      <DataGrid
-        sx={{
-          '& .MuiDataGrid-cell': {
-            overflow: 'auto',
-            paddingTop: '8px !important',
-            paddingBottom: '8px !important'
+    <DataGrid
+      getRowHeight={() => 'auto'}
+      rows={rows}
+      columns={columns}
+      rowModesModel={rowModesModel}
+      onRowModesModelChange={handleRowModesModelChange}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 10
           }
-        }}
-        getRowHeight={() => 'auto'}
-        rows={rows}
-        columns={columns}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10
-            }
-          }
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
+        }
+      }}
+      pageSizeOptions={[5]}
+      checkboxSelection
+      disableRowSelectionOnClick
+    />
   );
 };

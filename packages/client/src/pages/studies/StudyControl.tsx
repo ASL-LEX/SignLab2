@@ -1,4 +1,3 @@
-import { Box, Container } from '@mui/material';
 import { ControlComponent } from '../../components/ControlComponent';
 
 // currently hardcoded values, but eventully
@@ -40,13 +39,9 @@ const rows = [
 
 export const StudyControl: React.FC = () => {
   return (
-    <Container sx={{ position: 'absolute', top: '75px', left: '1%', right: '1%' }}>
-      <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
-        <h3 style={{ top: '10%', paddingBottom: '10px' }}>Study Control</h3>
-        <Box sx={{ position: '-webkit-sticky' }}>
-          <ControlComponent tableRows={rows} />
-        </Box>
-      </Container>
-    </Container>
+    <>
+      <h3 style={{ top: '10%', paddingBottom: '10px' }}>Study Control</h3>
+      <ControlComponent tableRows={rows} />
+    </>
   );
 };

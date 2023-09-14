@@ -21,11 +21,11 @@ import { EnvironmentContextProvider } from './context/EnvironmentContext';
 import { AuthProvider } from './context/AuthContext';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
-import { CssBaseline, Box, styled, Typography } from '@mui/material';
+import { CssBaseline, Box, styled } from '@mui/material';
 import { useState } from 'react';
 import { SideBar } from './components/SideBar';
 
-const drawerWidth = 240;
+const drawerWidth = 256;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -61,7 +61,7 @@ function App() {
             <Main open={drawerOpen}>
               <Box sx={{ display: 'flex' }}>
                 <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ flexGrow: 1, width: '90%' }}>
                   <Routes>
                     <Route path={'/'} element={<HomePage />} />
                     <Route path={'/callback'} element={<AuthCallback />} />

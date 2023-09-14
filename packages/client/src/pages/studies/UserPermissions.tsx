@@ -78,18 +78,21 @@ export const StudyUserPermissions: React.FC = () => {
       field: 'name',
       headerName: 'Name',
       editable: true,
-      flex: 1
+      flex: 1,
+      maxWidth: 300
     },
     {
       field: 'username',
       headerName: 'Username',
       editable: true,
-      flex: 1
+      flex: 1,
+      maxWidth: 300
     },
     {
       field: 'email',
       headerName: 'Email',
       flex: 1,
+      maxWidth: 300,
       editable: true
     },
     {
@@ -125,7 +128,7 @@ export const StudyUserPermissions: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ width: '90%' }}>
+    <>
       <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
       <DataGrid
         getRowHeight={() => 'auto'}
@@ -144,6 +147,6 @@ export const StudyUserPermissions: React.FC = () => {
         checkboxSelection
         disableRowSelectionOnClick
       />
-    </Box>
+    </>
   );
 };
