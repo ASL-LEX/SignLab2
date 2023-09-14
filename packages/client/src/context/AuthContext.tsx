@@ -2,6 +2,8 @@ import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'r
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
+const AUTH_TOKEN_STR = 'token';
+
 export interface DecodedToken {
   id: string;
   projectId: string;
@@ -10,11 +12,13 @@ export interface DecodedToken {
 }
 
 export interface AuthContextProps {
-  initialized: boolean;
-  setInitialized: (initialized: boolean) => void;
-  token?: string;
-  decoded_token?: DecodedToken;
+  authenticated: boolean;
+  setAuthenticated: (authenticated: boolean) => void;
+  token: string | null;
+  decodedToken: DecodedToken | null;
   setToken: (token: string) => void;
+  login: (token: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -24,43 +28,79 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
-  const [initialized, setInitialized] = useState<boolean>(false);
-  const [token, setToken] = useState<string>();
-  const [decoded_token, setDecodedToken] = useState<DecodedToken>();
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
   const navigate = useNavigate();
+
+  const setUnautheticated = () => {
+    clearToken();
+    setAuthenticated(false);
+    setToken(null);
+    setDecodedToken(null);
+  };
+
+  const makeAuthenticated = (token: string, tokenPayload: DecodedToken) => {
+    setAuthenticated(true);
+    setToken(token);
+    setDecodedToken(tokenPayload);
+    saveToken(token);
+  };
+
+  const logout = () => {
+    setUnautheticated();
+    navigate('/loginpage');
+  };
+
+  const login = (token: string) => {
+    makeAuthenticated(token, jwt_decode(token));
+    navigate('/');
+  };
 
   useEffect(() => {
     const token = restoreToken();
-    if (token) {
-      const decoded_token: DecodedToken = jwt_decode(token);
-      const current_time = new Date().getTime() / 1000;
-      if (current_time > decoded_token.exp) {
-        navigate('/logout');
-      }
-      setToken(token);
-      setDecodedToken(decoded_token);
-    } else {
-      localStorage.removeItem('token');
+
+    // If not token present, redirect to login
+    if (!token) {
+      setUnautheticated();
+      navigate('/login');
+      return;
     }
-    setInitialized(true);
-  }, [token]);
+
+    // Decode the current token payload
+    const decodedToken: DecodedToken = jwt_decode(token);
+    const currentTime = new Date().getTime() / 1000;
+
+    // Handle expired token
+    if (currentTime > decodedToken.exp) {
+      setUnautheticated();
+      navigate('/login');
+      return;
+    }
+
+    // User is authenticated with presoent token
+    makeAuthenticated(token, decodedToken);
+  }, []);
 
   useEffect(() => {
     if (token) {
-      saveToken(token);
-      setDecodedToken(jwt_decode(token));
+      makeAuthenticated(token, jwt_decode(token));
     }
   }, [token]);
 
-  return <AuthContext.Provider value={{ token, decoded_token, setToken, initialized, setInitialized }} {...props} />;
+  return <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }} {...props} />;
 };
 
 const saveToken = (token: string) => {
-  localStorage.setItem('token', token);
+  localStorage.setItem(AUTH_TOKEN_STR, token);
 };
 
 const restoreToken = (): string | null => {
-  return localStorage.getItem('token');
+  return localStorage.getItem(AUTH_TOKEN_STR);
 };
+
+const clearToken = (): void => {
+  localStorage.removeItem(AUTH_TOKEN_STR);
+}
 
 export const useAuth = () => useContext(AuthContext);

@@ -1,6 +1,7 @@
 import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout } from '@mui/icons-material';
+import { useAuth } from '../context/AuthContext';
 
 interface SideBarProps {
   open: boolean;
@@ -8,6 +9,8 @@ interface SideBarProps {
 
 export const SideBar: FC<SideBarProps> = ({ open }) => {
   const drawerWidth = 256;
+
+  const { logout } = useAuth();
 
   const navItems: NavItemProps[] = [
     {
@@ -43,7 +46,7 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
     },
     {
       name: 'Logout',
-      action: () => {},
+      action: logout,
       icon: <Logout />
     }
   ];

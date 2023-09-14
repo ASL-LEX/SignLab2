@@ -1,8 +1,29 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Container, Link, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import {useNavigate} from 'react-router-dom';
 
 export const LoginPage: FC = () => {
+  // Construct the Auth URL
+  const authUrlBase = import.meta.env.VITE_AUTH_LOGIN_URL;
+  const projectId = import.meta.env.VITE_AUTH_PROJECT_ID;
+  const redirectUrl = encodeURIComponent(window.location.origin + '/callback');
+  const authUrl = `${authUrlBase}/?projectId=${projectId}&redirectUrl=${redirectUrl}`;
+  console.log(authUrl);
+
+  const { authenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(authenticated);
+    if (authenticated) {
+      navigate('/');
+    } else {
+      window.location.href = authUrl;
+    }
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -22,7 +43,7 @@ export const LoginPage: FC = () => {
         <Typography>
           <Link
             sx={{ fontStyle: 'italic', color: 'skyblue' }}
-            href={'https://test-auth.sail.codes/?projectId=fe231d0b-5f01-4e52-9bc1-561e76b1e02d&redirectUrl=http%3A%2F%2Flocalhost%3A5173%2Fcallback'}
+            href={authUrl}
           >
             by following this link
           </Link>

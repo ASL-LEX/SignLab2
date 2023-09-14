@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { useAuth } from '../context/AuthContext';
 
 export const HomePage: React.FC = () => {
-  const { token, initialized } = useAuth();
+  const { token, authenticated } = useAuth();
 
   return (
     <div>
       <AnimatedGradientText>Welcome to SignLab</AnimatedGradientText>
-      {initialized && token ? <p>You are signed in</p> : <p>Please login to continue</p>}
+      {authenticated && token ? <p>You are signed in</p> : <p>Please login to continue</p>}
     </div>
   );
 };
