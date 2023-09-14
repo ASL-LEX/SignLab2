@@ -2,6 +2,7 @@ query getProjects {
   getProjects {
     _id,
     name,
-    description
+    description,
+    created
   }
 }

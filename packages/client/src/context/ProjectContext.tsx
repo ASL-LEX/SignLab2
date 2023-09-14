@@ -1,13 +1,12 @@
-import { createContext, Dispatch, FC, SetStateAction, useContext, useState } from 'react';
+import { createContext, Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Project } from '../graphql/graphql';
-import { useGetProjectLazyQuery } from '../graphql/project/project';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
+import { useGetProjectsQuery } from '../graphql/project/project';
 
 export interface ProjectContextProps {
   project: Project | null;
   setProject: Dispatch<SetStateAction<Project | null>>;
   projects: Project[];
+  updateProjectList: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextProps>({} as ProjectContextProps);
@@ -18,10 +17,24 @@ export interface ProjectProviderProps {
 
 export const ProjectProvider: FC<ProjectProviderProps> = ({ children }) => {
   const [project, setProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
 
+  // Query for projects
+  const getProjectResults = useGetProjectsQuery();
+  useEffect(() => {
+    if (getProjectResults.data) {
+      setProjects(getProjectResults.data.getProjects);
+    }
+
+  }, [getProjectResults.data, getProjectResults.error]);
 
   return (
-    <ProjectContext.Provider value={{ project, setProject, projects: [] }}>
+    <ProjectContext.Provider value={{
+        project,
+        setProject,
+        projects,
+        updateProjectList: () => getProjectResults.refetch()
+      }}>
         {children}
     </ProjectContext.Provider>
   );

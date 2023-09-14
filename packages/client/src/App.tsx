@@ -18,13 +18,15 @@ import { LoginPage } from './pages/LoginPage';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthCallback } from './pages/AuthCallback';
 import { EnvironmentContextProvider } from './context/EnvironmentContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/AuthContext';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
 import { CssBaseline, Box, styled } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { SideBar } from './components/SideBar';
 import { ProjectProvider } from './context/ProjectContext';
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -47,14 +49,32 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 }));
 
 const App: FC = () => {
+  const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
+  const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem(AUTH_TOKEN_STR);
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      }
+    }
+  });
+
+  const apolloClient = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: httpLink.concat(authLink)
+  });
+
   return (
     <ThemeProvider>
       <BrowserRouter>
         <EnvironmentContextProvider>
-          <AuthProvider>
-            <CssBaseline />
-            <AppInternal />
-          </AuthProvider>
+          <ApolloProvider client={apolloClient}>
+            <AuthProvider>
+              <CssBaseline />
+              <AppInternal />
+            </AuthProvider>
+          </ApolloProvider>
         </EnvironmentContextProvider>
       </BrowserRouter>
     </ThemeProvider>
@@ -66,7 +86,7 @@ const AppInternal: FC = () => {
   const { authenticated } = useAuth();
 
   const mainView: ReactNode = (
-    <>
+    <ProjectProvider>
       <Box>
         <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
       </Box>
@@ -78,7 +98,7 @@ const AppInternal: FC = () => {
           </Box>
         </Box>
       </Main>
-    </>
+    </ProjectProvider>
   );
 
   return (<>{ authenticated ? mainView : <UnauthenticatedView /> }</>);

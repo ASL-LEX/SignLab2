@@ -2,7 +2,7 @@ import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'r
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
-const AUTH_TOKEN_STR = 'token';
+export const AUTH_TOKEN_STR = 'token';
 
 export interface DecodedToken {
   id: string;
