@@ -63,7 +63,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     // If not token present, redirect to login
     if (!token) {
       setUnautheticated();
-      navigate('/login');
+      navigate('/loginpage');
       return;
     }
 
@@ -74,7 +74,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     // Handle expired token
     if (currentTime > decodedToken.exp) {
       setUnautheticated();
-      navigate('/login');
+      navigate('/loginpage');
       return;
     }
 

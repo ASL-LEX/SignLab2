@@ -1,4 +1,4 @@
-import { Select, MenuItem, FormControl, InputLabel, Stack, Card, Paper, Typography } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Stack, Paper, Typography } from '@mui/material';
 
 export const Environment: React.FC = () => {
   return (
