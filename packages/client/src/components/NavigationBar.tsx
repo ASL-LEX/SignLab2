@@ -1,43 +1,31 @@
-import { AppBar, Toolbar, CssBaseline, Typography, Link } from '@mui/material';
-import { SideBar } from './SideBar';
-import { Divider } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography } from '@mui/material';
+import { FC, Dispatch, SetStateAction } from 'react';
+import { IconButton } from '@mui/material';
+import { Menu } from '@mui/icons-material';
 
-function NavBar() {
-  const { token, initialized } = useAuth();
-  const navigate = useNavigate();
+export interface NavBarProps {
+  drawerOpen: boolean;
+  setDrawerOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const NavBar: FC<NavBarProps> = ({ drawerOpen, setDrawerOpen }) => {
   return (
     <AppBar>
-      <CssBaseline />
-      <Toolbar>
-        <SideBar />
+      <Toolbar sx={{ backgroundColor: 'white' }}>
+        <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 4, ml: 2 }} onClick={() => setDrawerOpen(!drawerOpen)}>
+          <Menu sx={{ color: 'black' }} />
+        </IconButton>
         <Typography
           sx={{
-            flexGrow: '1',
-            textAlign: 'right',
-            paddingRight: '1rem'
+            flexGrow: 1,
+            textAlign: 'left',
+            paddingRight: '1rem',
+            color: 'black'
           }}
         >
           ASL-LEX SignLab
         </Typography>
-        <Divider orientation="vertical" flexItem />
-        {!token || !initialized ? (
-          <div>
-            <Link sx={{ fontSize: '16px', paddingLeft: '1rem', color: 'white' }} underline="none" href={`/loginpage`}>
-              Log In
-            </Link>
-            <Link sx={{ fontSize: '16px', paddingLeft: '1rem', color: 'white' }} underline="none" href={`/loginpage`}>
-              Sign Up
-            </Link>
-          </div>
-        ) : (
-          <Link sx={{ fontSize: '16px', paddingLeft: '1rem', color: 'white' }} underline="none" onClick={() => navigate('/logoutpage')}>
-            Log Out
-          </Link>
-        )}
       </Toolbar>
     </AppBar>
   );
 }
-export { NavBar };

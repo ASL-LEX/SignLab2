@@ -1,45 +1,117 @@
-import { useState } from 'react';
-import { Divider, Drawer, IconButton, List, Typography, Link } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Environment } from './Environment';
-import { Navigation } from './Navigation';
+import { FC, ReactNode, useState } from 'react';
+import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { ExpandMore, ExpandLess, School, Dataset, Work, Logout } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import {useNavigate} from 'react-router-dom';
 
-function SideBar() {
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const { token, initialized } = useAuth();
+interface SideBarProps {
+  open: boolean;
+  drawerWidth: number;
+}
+
+export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const navItems: NavItemProps[] = [
+    {
+      name: 'Projects',
+      icon: <Work />,
+      action: () => {},
+      subItems: [
+        { name: 'New Project', action: () => navigate('/project/new') },
+        { name: 'Project Control', action: () => navigate('/project/controls') },
+        { name: 'User Permissions', action: () => navigate('/project/permissions') },
+      ]
+    },
+    {
+      name: 'Studies',
+      action: () => {},
+      icon: <School />,
+      subItems: [
+        { name: 'New Study', action: () => navigate('/study/new') },
+        { name: 'Study Control', action: () => navigate('/study/contols') },
+        { name: 'User Permissions', action: () => navigate('/study/permissions') },
+        { name: 'Entry Controls', action: () => navigate('/study/controls') },
+        { name: 'Download Tags', action: () => navigate('/study/tags') }
+      ]
+    },
+    {
+      name: 'Datasets',
+      action: () => {},
+      icon: <Dataset />,
+      subItems: [
+        { name: 'Dataset Control', action: () => navigate('/dataset/controls') },
+        { name: 'Project Access', action: () => navigate('/dataset/projectaccess') }
+      ]
+    },
+    {
+      name: 'Logout',
+      action: logout,
+      icon: <Logout />
+    }
+  ];
 
   return (
-    <div>
-      <Drawer PaperProps={{ sx: { width: '25%' } }} open={openDrawer} onClose={() => setOpenDrawer(false)}>
-        <List sx={{ marginTop: '20px' }}>
-          <Link
-            sx={{
-              fontSize: '22px',
-              paddingLeft: '16px'
-            }}
-            underline={'none'}
-            href="/"
-            onClick={() => setOpenDrawer(false)}
-          >
-            Home
-          </Link>
-        </List>
-        <Divider sx={{ paddingTop: '8px' }} orientation="horizontal" flexItem />
-        {token && initialized && (
-          <div>
-            <Typography variant="h5">Environment</Typography>
-            <Environment />
-            <Divider orientation="horizontal" flexItem />
-            <Typography variant="h5">Navigation</Typography>
-            <Navigation />
-          </div>
-        )}
-      </Drawer>
-      <IconButton onClick={() => setOpenDrawer(!openDrawer)}>
-        <MenuIcon />
-      </IconButton>
-    </div>
+    <Drawer
+      variant='persistent'
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: drawerWidth,
+          boxSizing: 'border-box',
+          backgroundColor: '#103F68',
+          color: 'white',
+          mt: '64px'
+        }
+      }}
+      anchor='left'
+      open={open}
+    >
+      <List>
+        {navItems.map((navItem) => <NavItem {...navItem} key={navItem.name} />)}
+      </List>
+    </Drawer>
   );
+};
+
+interface NavItemProps {
+  action: () => void;
+  name: string;
+  icon?: ReactNode;
+  subItems?: NavItemProps[]
 }
-export { SideBar };
+
+const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
+  const isExpandable = subItems && subItems.length > 0;
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+    action();
+  };
+
+  const menuItemChildren = isExpandable ? (
+    <Collapse in={open} timeout='auto' unmountOnExit>
+      <Divider />
+      <List disablePadding>
+        {subItems.map((item, index) => <NavItem {...item} key={index} />)}
+      </List>
+    </Collapse>
+  ) : null;
+
+  return (
+    <>
+      <ListItem>
+        <ListItemButton component='a' onClick={handleClick}>
+          {icon && <ListItemIcon>{icon}</ListItemIcon>}
+          <ListItemText primary={name} inset={!icon} />
+          {isExpandable && !open && <ExpandMore />}
+          {isExpandable && open && <ExpandLess />}
+        </ListItemButton>
+      </ListItem>
+      {menuItemChildren}
+    </>
+  );
+};
