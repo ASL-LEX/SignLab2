@@ -25,7 +25,7 @@ import { CssBaseline, Box, styled } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { SideBar } from './components/SideBar';
 import { ProjectProvider } from './context/ProjectContext';
-import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const drawerWidth = 256;
@@ -62,7 +62,7 @@ const App: FC = () => {
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: httpLink.concat(authLink)
+    link: concat(authLink, httpLink)
   });
 
   return (
