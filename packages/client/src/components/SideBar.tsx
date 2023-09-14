@@ -72,17 +72,17 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           boxSizing: 'border-box',
           backgroundColor: '#103F68',
           color: 'white',
-          paddingTop: 18,
+          paddingTop: 2,
           mt: '64px'
         }
       }}
       anchor='left'
       open={open}
     >
-      <Environment />
       <List sx={{ paddingTop: '30px' }}>
         {navItems.map((navItem) => <NavItem {...navItem} key={navItem.name} />)}
       </List>
+      <Environment />
     </Drawer>
   );
 };
