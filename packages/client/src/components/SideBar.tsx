@@ -2,6 +2,7 @@ import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import {useNavigate} from 'react-router-dom';
 
 interface SideBarProps {
   open: boolean;
@@ -11,6 +12,7 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
   const drawerWidth = 256;
 
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const navItems: NavItemProps[] = [
     {
@@ -18,9 +20,9 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
       icon: <Work />,
       action: () => {},
       subItems: [
-        { name: 'New Project', action: () => {} },
-        { name: 'Project Control', action: () => {} },
-        { name: 'User Permissions', action: () => {} },
+        { name: 'New Project', action: () => navigate('/project/new') },
+        { name: 'Project Control', action: () => navigate('/project/controls') },
+        { name: 'User Permissions', action: () => navigate('/project/permissions') },
       ]
     },
     {
@@ -28,11 +30,11 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
       action: () => {},
       icon: <School />,
       subItems: [
-        { name: 'New Study', action: () => {} },
-        { name: 'Study Control', action: () => {} },
-        { name: 'User Permissions', action: () => {} },
-        { name: 'Entry Controls', action: () => {} },
-        { name: 'Download Tags', action: () => {} }
+        { name: 'New Study', action: () => navigate('/study/new') },
+        { name: 'Study Control', action: () => navigate('/study/contols') },
+        { name: 'User Permissions', action: () => navigate('/study/permissions') },
+        { name: 'Entry Controls', action: () => navigate('/study/controls') },
+        { name: 'Download Tags', action: () => navigate('/study/tags') }
       ]
     },
     {
@@ -40,8 +42,8 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
       action: () => {},
       icon: <Dataset />,
       subItems: [
-        { name: 'Dataset Control', action: () => {} },
-        { name: 'Project Access', action: () => {} }
+        { name: 'Dataset Control', action: () => navigate('/dataset/controls') },
+        { name: 'Project Access', action: () => navigate('/dataset/projectaccess') }
       ]
     },
     {

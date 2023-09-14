@@ -41,17 +41,17 @@ function App() {
               <Route path={'/callback'} element={<AuthCallback />} />
               <Route path={'/loginpage'} element={<LoginPage />} />
               <Route element={<AdminGuard />}>
-                <Route path={'/newproject'} element={<NewProject />} />
-                <Route path={'/projectcontrol'} element={<ProjectControl />} />
-                <Route path={'/userpermissions'} element={<ProjectUserPermissions />} />
-                <Route path={'/newstudy'} element={<NewStudy />} />
-                <Route path={'/studycontrol'} element={<StudyControl />} />
-                <Route path={'/studyuserpermissions'} element={<StudyUserPermissions />} />
-                <Route path={'/downloadtags'} element={<DownloadTags />} />
+                <Route path={'/project/new'} element={<NewProject />} />
+                <Route path={'/project/controls'} element={<ProjectControl />} />
+                <Route path={'/project/permissions'} element={<ProjectUserPermissions />} />
+                <Route path={'/study/new'} element={<NewStudy />} />
+                <Route path={'/study/controls'} element={<StudyControl />} />
+                <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
+                <Route path={'/study/tags'} element={<DownloadTags />} />
                 <Route path={'/successpage'} element={<SuccessPage />} />
-                <Route path={'/datasetcontrols'} element={<DatasetControls />} />
-                <Route path={'/projectaccess'} element={<ProjectAccess />} />
-                <Route path={'/contribute'} element={<ContributePage />} />
+                <Route path={'/dataset/controls'} element={<DatasetControls />} />
+                <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
+                <Route path={'/study/contribute'} element={<ContributePage />} />
                 <Route path={'/tagging'} element={<TagView />} />
                 <Route path={'/logoutpage'} element={<LogoutPage />} />
               </Route>
