@@ -1,4 +1,4 @@
-import { Box, Switch } from '@mui/material';
+import { Box, Switch, Typography } from '@mui/material';
 import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
@@ -129,7 +129,7 @@ export const StudyUserPermissions: React.FC = () => {
 
   return (
     <>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
+      <Typography variant='h3'>User Permissions</Typography>
       <DataGrid
         getRowHeight={() => 'auto'}
         rows={rows}

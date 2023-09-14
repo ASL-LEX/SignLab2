@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ControlComponent } from '../../components/ControlComponent';
 
 // currently hardcoded values, but eventully
@@ -31,7 +31,7 @@ const rows = [
 const ProjectControl: React.FC = () => {
   return (
     <>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>Project Control</h3>
+      <Typography variant='h3'>Project Control</Typography>
       <Box>
         <ControlComponent tableRows={rows} />
       </Box>

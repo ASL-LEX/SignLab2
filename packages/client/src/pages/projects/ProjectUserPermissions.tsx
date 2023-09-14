@@ -1,4 +1,4 @@
-import { Switch } from '@mui/material';
+import { Switch, Typography } from '@mui/material';
 import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
@@ -95,7 +95,7 @@ export const ProjectUserPermissions: React.FC = () => {
 
   return (
     <>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
+      <Typography variant='h3'>User Permissions</Typography>
       <DataGrid
         getRowHeight={() => 'auto'}
         rows={rows}
@@ -105,7 +105,7 @@ export const ProjectUserPermissions: React.FC = () => {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10
+              pageSize: 5
             }
           }
         }}

@@ -98,7 +98,7 @@ export const DatasetControls: React.FC = () => {
 
   return (
     <>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>Dataset Controls</h3>
+      <Typography variant='h3'>Dataset Controls</Typography>
       <Box sx={{ display: 'flex', paddingBottom: '20px' }}>
         <Box sx={{ width: '22%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
           <IconButton sx={{ color: 'orange', right: '-3%' }} onClick={() => handleClick('add')}>

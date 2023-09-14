@@ -1,7 +1,7 @@
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Button, Container } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { useState } from 'react';
 
 export const TagView = () => {
@@ -49,7 +49,7 @@ export const TagView = () => {
         </Box>
       ) : (
         <Box>
-          <h4>No Entries Tagged</h4>
+          <Typography variant='h4'>No Entries Tagged</Typography>
           <Button variant="outlined" onClick={() => handleClick('')}>
             Navigate home
           </Button>

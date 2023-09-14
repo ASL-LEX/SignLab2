@@ -1,3 +1,4 @@
+import {Typography} from '@mui/material';
 import { ControlComponent } from '../../components/ControlComponent';
 
 // currently hardcoded values, but eventully
@@ -40,7 +41,7 @@ const rows = [
 export const StudyControl: React.FC = () => {
   return (
     <>
-      <h3 style={{ top: '10%', paddingBottom: '10px' }}>Study Control</h3>
+      <Typography variant='h3'>Study Control</Typography>
       <ControlComponent tableRows={rows} />
     </>
   );
