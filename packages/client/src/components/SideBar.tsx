@@ -2,7 +2,8 @@ import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Environment } from './Environment';
 
 interface SideBarProps {
   open: boolean;
@@ -78,7 +79,8 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       anchor='left'
       open={open}
     >
-      <List>
+      <Environment />
+      <List sx={{ paddingTop: '30px' }}>
         {navItems.map((navItem) => <NavItem {...navItem} key={navItem.name} />)}
       </List>
     </Drawer>
