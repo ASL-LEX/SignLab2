@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { ExpandMore, ExpandLess, School, Dataset, Work } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, School, Dataset, Work, Logout } from '@mui/icons-material';
 
 interface SideBarProps {
   open: boolean;
@@ -40,6 +40,11 @@ export const SideBar: FC<SideBarProps> = ({ open }) => {
         { name: 'Dataset Control', action: () => {} },
         { name: 'Project Access', action: () => {} }
       ]
+    },
+    {
+      name: 'Logout',
+      action: () => {},
+      icon: <Logout />
     }
   ];
 

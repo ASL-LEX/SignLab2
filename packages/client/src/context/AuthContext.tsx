@@ -1,4 +1,4 @@
-import React, { createContext, FC, useContext, useEffect, useState } from 'react';
+import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,25 +15,22 @@ export interface AuthContextProps {
   token?: string;
   decoded_token?: DecodedToken;
   setToken: (token: string) => void;
-  setRefreshToken: (token: string) => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export interface AuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [token, setToken] = useState<string>();
-  const [refreshToken, setRefreshToken] = useState<string>();
   const [decoded_token, setDecodedToken] = useState<DecodedToken>();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = restoreToken();
-    const refreshToken = restoreRefreshToken();
     if (token) {
       const decoded_token: DecodedToken = jwt_decode(token);
       const current_time = new Date().getTime() / 1000;
@@ -45,9 +42,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     } else {
       localStorage.removeItem('token');
     }
-    if (refreshToken) {
-      setRefreshToken(refreshToken);
-    }
     setInitialized(true);
   }, [token]);
 
@@ -58,13 +52,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     }
   }, [token]);
 
-  useEffect(() => {
-    if (refreshToken) {
-      saveRefreshToken(refreshToken);
-    }
-  }, [refreshToken]);
-
-  return <AuthContext.Provider value={{ token, decoded_token, setToken, setRefreshToken, initialized, setInitialized }} {...props} />;
+  return <AuthContext.Provider value={{ token, decoded_token, setToken, initialized, setInitialized }} {...props} />;
 };
 
 const saveToken = (token: string) => {
@@ -73,14 +61,6 @@ const saveToken = (token: string) => {
 
 const restoreToken = (): string | null => {
   return localStorage.getItem('token');
-};
-
-const saveRefreshToken = (token: string) => {
-  localStorage.setItem('refreshToken', token);
-};
-
-const restoreRefreshToken = (): string | null => {
-  return localStorage.getItem('refreshToken');
 };
 
 export const useAuth = () => useContext(AuthContext);
