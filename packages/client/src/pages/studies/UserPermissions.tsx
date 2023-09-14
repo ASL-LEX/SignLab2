@@ -72,6 +72,7 @@ export const StudyUserPermissions: React.FC = () => {
     {
       field: 'name',
       headerName: 'Name',
+      width: 150,
       flex: 0.9,
       editable: true
     },
@@ -117,16 +118,9 @@ export const StudyUserPermissions: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ height: 800, width: '100%', position: 'absolute', top: '75px', left: '1%', right: '1%' }}>
+    <Box>
       <h3 style={{ top: '10%', paddingBottom: '10px' }}>User Permissions</h3>
       <DataGrid
-        sx={{
-          '& .MuiDataGrid-cell': {
-            overflow: 'auto',
-            paddingTop: '8px !important',
-            paddingBottom: '8px !important'
-          }
-        }}
         getRowHeight={() => 'auto'}
         rows={rows}
         columns={columns}
