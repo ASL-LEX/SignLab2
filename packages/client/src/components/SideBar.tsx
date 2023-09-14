@@ -6,11 +6,10 @@ import {useNavigate} from 'react-router-dom';
 
 interface SideBarProps {
   open: boolean;
+  drawerWidth: number;
 }
 
-export const SideBar: FC<SideBarProps> = ({ open }) => {
-  const drawerWidth = 256;
-
+export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
