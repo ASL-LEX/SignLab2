@@ -17,7 +17,6 @@ import { DownloadTags } from './pages/studies/DownloadTags';
 import { LoginPage } from './pages/LoginPage';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthCallback } from './pages/AuthCallback';
-import { EnvironmentContextProvider } from './context/EnvironmentContext';
 import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/AuthContext';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
@@ -69,14 +68,12 @@ const App: FC = () => {
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <EnvironmentContextProvider>
-          <ApolloProvider client={apolloClient}>
-            <AuthProvider>
-              <CssBaseline />
-              <AppInternal />
-            </AuthProvider>
-          </ApolloProvider>
-        </EnvironmentContextProvider>
+        <ApolloProvider client={apolloClient}>
+          <AuthProvider>
+            <CssBaseline />
+            <AppInternal />
+          </AuthProvider>
+        </ApolloProvider>
       </BrowserRouter>
     </ThemeProvider>
   );
