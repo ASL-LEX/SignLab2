@@ -1,6 +1,6 @@
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/Auth.context';
 
 export const HomePage: React.FC = () => {
   const { token, authenticated } = useAuth();

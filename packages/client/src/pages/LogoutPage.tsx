@@ -1,7 +1,7 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/Auth.context';
 
 export const LogoutPage: FC = () => {
   const navigate = useNavigate();

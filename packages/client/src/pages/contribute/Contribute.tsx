@@ -1,4 +1,4 @@
-import { Container, Typography, Box, Stack, Button, Grid } from '@mui/material';
+import { Typography, Box, Stack, Button } from '@mui/material';
 import placeholder from './placeholder.png';
 import { useNavigate } from 'react-router-dom';
 

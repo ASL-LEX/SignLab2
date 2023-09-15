@@ -2,13 +2,13 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { ThemeProvider } from './theme/ThemeProvider';
-import { NavBar } from './components/NavigationBar';
+import { NavBar } from './components/NavigationBar.component';
 import { NewProject } from './pages/projects/NewProject';
 import { ProjectControl } from './pages/projects/ProjectControl';
 import { SuccessPage } from './pages/SuccessPage';
 import { NewStudy } from './pages/studies/NewStudy';
 import { ContributePage } from './pages/contribute/Contribute';
-import { TagView } from './components/TagView';
+import { TagView } from './components/TagView.component';
 import { StudyControl } from './pages/studies/StudyControl';
 import { ProjectAccess } from './pages/datasets/ProjectAccess';
 import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions';
@@ -17,17 +17,16 @@ import { DownloadTags } from './pages/studies/DownloadTags';
 import { LoginPage } from './pages/LoginPage';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthCallback } from './pages/AuthCallback';
-import { EnvironmentContextProvider } from './context/EnvironmentContext';
-import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/AuthContext';
+import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
 import { CssBaseline, Box, styled } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
-import { SideBar } from './components/SideBar';
-import { ProjectProvider } from './context/ProjectContext';
+import { SideBar } from './components/SideBar.component';
+import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import {StudyProvider} from './context/Study';
+import {StudyProvider} from './context/Study.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -69,14 +68,12 @@ const App: FC = () => {
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <EnvironmentContextProvider>
-          <ApolloProvider client={apolloClient}>
-            <AuthProvider>
-              <CssBaseline />
-              <AppInternal />
-            </AuthProvider>
-          </ApolloProvider>
-        </EnvironmentContextProvider>
+        <ApolloProvider client={apolloClient}>
+          <AuthProvider>
+            <CssBaseline />
+            <AppInternal />
+          </AuthProvider>
+        </ApolloProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

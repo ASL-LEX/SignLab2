@@ -1,9 +1,9 @@
 import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
-import { Environment } from './Environment';
+import { Environment } from './Environment.component';
 
 interface SideBarProps {
   open: boolean;

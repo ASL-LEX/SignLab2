@@ -1,6 +1,6 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/Auth.context';
 
 export const AuthCallback: React.FC = () => {
   const { login } = useAuth();

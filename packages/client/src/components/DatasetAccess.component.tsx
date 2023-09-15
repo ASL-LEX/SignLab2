@@ -38,7 +38,7 @@ const renderSwitchEditInputCell: GridColDef['renderCell'] = (params) => {
   return <SwitchEditInputCell {...params} />;
 };
 
-export const DatasetAccessComponent: React.FC<Table> = ({ tableRows }: Table) => {
+export const DatasetAccess: React.FC<Table> = ({ tableRows }: Table) => {
   const [rows] = useState(tableRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 

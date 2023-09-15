@@ -2,7 +2,7 @@ import { Accordion, Box, Container, Typography } from '@mui/material';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { DatasetAccessComponent } from '../../components/DatasetAccessComponent';
+import { DatasetAccess } from '../../components/DatasetAccess.component';
 
 const rows = [
   {
@@ -45,7 +45,7 @@ export const ProjectAccess: React.FC = () => {
         <AccordionDetails>
           <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
             <Box sx={{ position: '-webkit-sticky' }}>
-              <DatasetAccessComponent tableRows={rows} />
+              <DatasetAccess tableRows={rows} />
             </Box>
           </Container>
         </AccordionDetails>
@@ -58,7 +58,7 @@ export const ProjectAccess: React.FC = () => {
         <AccordionDetails>
           <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
             <Box sx={{ position: '-webkit-sticky' }}>
-              <DatasetAccessComponent tableRows={rows} />
+              <DatasetAccess tableRows={rows} />
             </Box>
           </Container>
         </AccordionDetails>

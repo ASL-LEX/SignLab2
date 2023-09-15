@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { ControlComponent } from '../../components/ControlComponent';
+import { Control } from '../../components/Control.component';
 
 // currently hardcoded values, but eventully
 // there will be a fetching function that retrieves project information
@@ -33,7 +33,7 @@ const ProjectControl: React.FC = () => {
     <>
       <Typography variant='h3'>Project Control</Typography>
       <Box>
-        <ControlComponent tableRows={rows} />
+        <Control tableRows={rows} />
       </Box>
     </>
   );

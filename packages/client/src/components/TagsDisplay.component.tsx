@@ -10,10 +10,10 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { materialRenderers } from '@jsonforms/material-renderers';
 import { TagField, TagFieldType } from '../models/TagField';
-import { TagFormPreviewDialog } from './TagFormPreview';
+import { TagFormPreviewDialog } from './TagFormPreview.component';
 import { TagFieldGeneratorService } from '../services/tag-field-generator.service';
 import { useState } from 'react';
-import { TagFieldComponent } from './TagFieldComponent';
+import { TagFieldView } from './TagField.component';
 
 type TagPreviewInformation = {
   previewDataSchema: any;
@@ -114,7 +114,7 @@ export const TagsDisplay: React.FC = () => {
           {tagFields.length > 0 ? (
             tagFields.map((value: TagField, index: number) => (
               <Box key={index} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TagFieldComponent field={value} valid={valid} validate={setValid} index={index} />
+                <TagFieldView field={value} valid={valid} validate={setValid} index={index} />
                 <Button size="large" sx={{ marginTop: '45px' }} startIcon={<DeleteIcon />} onClick={() => removeField(index)} />
               </Box>
             ))

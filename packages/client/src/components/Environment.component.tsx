@@ -1,6 +1,6 @@
 import { Select, MenuItem, FormControl, InputLabel, Stack, Paper, Typography } from '@mui/material';
-import { useProject } from '../context/ProjectContext';
-import { useStudy } from '../context/Study';
+import { useProject } from '../context/Project.context';
+import { useStudy } from '../context/Study.context';
 import { Dispatch, SetStateAction, FC } from 'react';
 
 export const Environment: FC = () => {
