@@ -8,11 +8,11 @@ import { Schema as JSONSchema } from 'jsonschema';
 @Schema()
 @ObjectType()
 export class TagSchema {
-  @Prop({ type: mongoose.Schema.Types.Mixed })
+  @Prop({ type: mongoose.Schema.Types.Mixed, required: true })
   @Field(() => JSON)
   dataSchema: JSONSchema;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
+  @Prop({ type: mongoose.Schema.Types.Mixed, required: true })
   @Field(() => JSON)
   uiSchema: any;
 }
@@ -40,7 +40,7 @@ export class Study {
   @Field()
   instructions: string;
 
-  @Prop({ type: TagSchemaSchema })
+  @Prop({ type: TagSchemaSchema, required: true })
   @Field(() => TagSchema)
   tagSchema: TagSchema;
 

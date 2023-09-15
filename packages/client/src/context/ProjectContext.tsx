@@ -1,12 +1,12 @@
-import React, { createContext, FC, useContext, useEffect, useState } from 'react';
-import { ProjectModel } from '../graphql/graphql';
-import { useGetProjectLazyQuery } from '../graphql/project/project';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
+import { createContext, Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Project } from '../graphql/graphql';
+import { useGetProjectsQuery } from '../graphql/project/project';
 
 export interface ProjectContextProps {
-  project?: ProjectModel;
-  updateProject: (updatedProject: ProjectModel) => void;
+  project: Project | null;
+  setProject: Dispatch<SetStateAction<Project | null>>;
+  projects: Project[];
+  updateProjectList: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextProps>({} as ProjectContextProps);
@@ -15,42 +15,27 @@ export interface ProjectProviderProps {
   children: React.ReactNode;
 }
 
-export const ProjectProvider: FC<ProjectProviderProps> = (props) => {
-  const [project, setProject] = useState<ProjectModel>();
-  const { decoded_token } = useAuth();
-  const [getProject] = useGetProjectLazyQuery();
-  const theme = useTheme();
-  const [projectTheme, setProjectTheme] = useState(theme);
+export const ProjectProvider: FC<ProjectProviderProps> = ({ children }) => {
+  const [project, setProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
 
+  // Query for projects
+  const getProjectResults = useGetProjectsQuery();
   useEffect(() => {
-    if (decoded_token?.projectId) {
-      getProject({ variables: { id: decoded_token.projectId } }).then((data: any) => {
-        if (data?.getProject) {
-          setProject(data.getProject as ProjectModel);
-          setProjectTheme(
-            createTheme({
-              ...theme,
-              ...data.getProject.muiTheme
-            })
-          );
-        }
-      });
+    if (getProjectResults.data) {
+      setProjects(getProjectResults.data.getProjects);
     }
-  }, [decoded_token]);
 
-  const updateProject = (updatedProject: ProjectModel) => {
-    setProject(updatedProject);
-  };
+  }, [getProjectResults.data, getProjectResults.error]);
 
   return (
-    <ProjectContext.Provider value={{ project, updateProject }}>
-      <ThemeProvider
-        theme={createTheme({
-          ...projectTheme
-        })}
-      >
-        {props.children}
-      </ThemeProvider>
+    <ProjectContext.Provider value={{
+        project,
+        setProject,
+        projects,
+        updateProjectList: () => getProjectResults.refetch()
+      }}>
+        {children}
     </ProjectContext.Provider>
   );
 };

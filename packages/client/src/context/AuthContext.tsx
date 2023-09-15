@@ -2,7 +2,7 @@ import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'r
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
-const AUTH_TOKEN_STR = 'token';
+export const AUTH_TOKEN_STR = 'token';
 
 export interface DecodedToken {
   id: string;
@@ -63,7 +63,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     // If not token present, redirect to login
     if (!token) {
       setUnautheticated();
-      navigate('/login');
+      navigate('/loginpage');
       return;
     }
 
@@ -74,7 +74,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     // Handle expired token
     if (currentTime > decodedToken.exp) {
       setUnautheticated();
-      navigate('/login');
+      navigate('/loginpage');
       return;
     }
 

@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
+import { Project } from 'src/project/project.model';
 
 @Injectable()
 export class StudyService {
@@ -13,8 +14,8 @@ export class StudyService {
     return this.studyModel.create(study);
   }
 
-  async findAll(): Promise<Study[]> {
-    return this.studyModel.find({});
+  async findAll(project: Project): Promise<Study[]> {
+    return this.studyModel.find({ project: project._id.toString() });
   }
 
   async exists(studyName: string, project: string): Promise<boolean> {

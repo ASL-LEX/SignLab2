@@ -24,8 +24,8 @@ export class StudyResolver {
 
   // TODO: Replace with user specific study query
   @Query(() => [Study])
-  async findStudies(): Promise<Study[]> {
-    return this.studyService.findAll();
+  async findStudies(@Args('project', { type: () => ID }, ProjectPipe) project: Project): Promise<Study[]> {
+    return this.studyService.findAll(project);
   }
 
   @Mutation(() => Boolean)

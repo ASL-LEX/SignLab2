@@ -1,0 +1,14 @@
+query findStudies($project: ID!) {
+  findStudies(project: $project) {
+    _id,
+    name,
+    description,
+    instructions,
+    project,
+    tagsPerEntry,
+    tagSchema {
+      dataSchema,
+      uiSchema
+    }
+  }
+}

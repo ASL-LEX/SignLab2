@@ -10,13 +10,11 @@ export const LoginPage: FC = () => {
   const projectId = import.meta.env.VITE_AUTH_PROJECT_ID;
   const redirectUrl = encodeURIComponent(window.location.origin + '/callback');
   const authUrl = `${authUrlBase}/?projectId=${projectId}&redirectUrl=${redirectUrl}`;
-  console.log(authUrl);
 
   const { authenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(authenticated);
     if (authenticated) {
       navigate('/');
     } else {
