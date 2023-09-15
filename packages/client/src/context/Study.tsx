@@ -26,6 +26,7 @@ export const StudyProvider: FC<StudyProviderProps> = (props) => {
   // Effect to re-query for studies
   useEffect(() => {
     if (!project) {
+      setStudies([]);
       return;
     }
     findStudies({ variables: { project: project._id } });

@@ -15,7 +15,7 @@ export class StudyService {
   }
 
   async findAll(project: Project): Promise<Study[]> {
-    return this.studyModel.find({ project: project._id });
+    return this.studyModel.find({ project: project._id.toString() });
   }
 
   async exists(studyName: string, project: string): Promise<boolean> {
