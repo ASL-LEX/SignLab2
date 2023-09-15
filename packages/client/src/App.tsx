@@ -17,16 +17,16 @@ import { DownloadTags } from './pages/studies/DownloadTags';
 import { LoginPage } from './pages/LoginPage';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthCallback } from './pages/AuthCallback';
-import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/AuthContext';
+import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
 import { LogoutPage } from './pages/LogoutPage';
 import { CssBaseline, Box, styled } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { SideBar } from './components/SideBar.component';
-import { ProjectProvider } from './context/ProjectContext';
+import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import {StudyProvider} from './context/Study';
+import {StudyProvider} from './context/Study.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{

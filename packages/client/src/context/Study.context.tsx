@@ -1,7 +1,7 @@
 import { Dispatch, FC, ReactNode, SetStateAction, createContext, useContext, useState, useEffect } from 'react';
 import { Study } from '../graphql/graphql';
-import { useProject } from './ProjectContext';
-import {useFindStudiesLazyQuery} from '../graphql/study/study';
+import { useProject } from './Project.context';
+import { useFindStudiesLazyQuery } from '../graphql/study/study';
 
 export interface StudyContextProps {
   study: Study | null;

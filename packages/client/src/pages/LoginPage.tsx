@@ -1,7 +1,7 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { FC, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/Auth.context';
 import {useNavigate} from 'react-router-dom';
 
 export const LoginPage: FC = () => {

@@ -27,7 +27,7 @@ export interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: FC<AuthProviderProps> = (props) => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
@@ -88,7 +88,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     }
   }, [token]);
 
-  return <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }} {...props} />;
+  return <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }}>{children}</AuthContext.Provider>;
 };
 
 const saveToken = (token: string) => {
