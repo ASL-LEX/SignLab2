@@ -3,7 +3,7 @@ import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Environment } from './Environment';
+import { Environment } from './Environment.component';
 
 interface SideBarProps {
   open: boolean;

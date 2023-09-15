@@ -13,7 +13,7 @@ interface FieldProps {
   index: number;
 }
 
-export const TagFieldComponent: React.FC<FieldProps> = ({ field, valid, validate, index }: FieldProps) => {
+export const TagFieldView: React.FC<FieldProps> = ({ field, valid, validate, index }: FieldProps) => {
   const [jsonData, setJsonData] = useState({});
   const [schema, setSchema] = useState<JsonSchema>({});
   const [uiSchema, setUiSchema] = useState({ type: 'object' });

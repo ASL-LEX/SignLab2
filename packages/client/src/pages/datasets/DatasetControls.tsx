@@ -1,10 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, IconButton, Typography } from '@mui/material';
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { DatasetControlComponent } from '../../components/DatasetControlComponent';
-import { AddDataset } from '../../components/AddDataset';
+import { DatasetControl } from '../../components/DatasetControl.component';
+import { AddDataset } from '../../components/AddDataset.component';
 import { useState } from 'react';
-import { UploadEntries } from '../../components/UploadEntries';
+import { UploadEntries } from '../../components/UploadEntries.component';
 import { GridColDef } from '@mui/x-data-grid';
 
 const controls = [
@@ -129,7 +129,7 @@ export const DatasetControls: React.FC = () => {
             <AccordionDetails>
               <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
                 <Box sx={{ position: '-webkit-sticky' }}>
-                  <DatasetControlComponent tableRows={rows} columns={columns} />
+                  <DatasetControl tableRows={rows} columns={columns} />
                 </Box>
               </Container>
             </AccordionDetails>

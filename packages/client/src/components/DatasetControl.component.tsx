@@ -17,7 +17,7 @@ interface Table {
   columns: GridColDef[];
 }
 
-export const DatasetControlComponent: React.FC<Table> = ({ tableRows, columns }: Table) => {
+export const DatasetControl: React.FC<Table> = ({ tableRows, columns }: Table) => {
   const [rows] = useState(tableRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 

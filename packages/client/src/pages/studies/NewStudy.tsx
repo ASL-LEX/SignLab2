@@ -1,19 +1,19 @@
 import { Container, Typography, Button, Box, Stepper, Step, StepLabel } from '@mui/material';
-import React from 'react';
-import { TagsDisplay } from '../../components/TagsDisplay';
-import { NewStudyJsonForm } from '../../components/NewStudyJsonForm';
-import { TagTrainingComponent } from '../../components/TagTrainingComponent';
+import { TagsDisplay } from '../../components/TagsDisplay.component';
+import { NewStudyJsonForm } from '../../components/NewStudyJsonForm.component';
+import { TagTrainingComponent } from '../../components/TagTraining.component';
+import { useState } from 'react';
 
 export const NewStudy: React.FC = () => {
   //all constants
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -51,15 +51,15 @@ export const NewStudy: React.FC = () => {
           })}
         </Stepper>
         {activeStep === steps.length ? (
-          <React.Fragment>
+          <>
             <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - your new study is created</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleReset}>Start Over</Button>
             </Box>
-          </React.Fragment>
+          </>
         ) : (
-          <React.Fragment>
+          <>
             <Container maxWidth="lg" sx={{ display: 'table', width: '100%', overflow: 'hidden' }}>
               {getSectionComponent()}
             </Container>
@@ -71,7 +71,7 @@ export const NewStudy: React.FC = () => {
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
             </Box>
-          </React.Fragment>
+          </>
         )}
       </Container>
     </Container>

@@ -1,5 +1,5 @@
 import { Box, Accordion, AccordionSummary, Typography, AccordionDetails, Container } from '@mui/material';
-import { DatasetControlComponent } from './DatasetControlComponent';
+import { DatasetControl } from './DatasetControl.component';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GridColDef } from '@mui/x-data-grid';
 
@@ -93,7 +93,7 @@ export const TagTrainingComponent = () => {
           <AccordionDetails>
             <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
               <Box sx={{ position: '-webkit-sticky' }}>
-                <DatasetControlComponent tableRows={rows} columns={columns} />
+                <DatasetControl tableRows={rows} columns={columns} />
               </Box>
             </Container>
           </AccordionDetails>

@@ -13,7 +13,7 @@ interface Table {
   tableRows: Row[];
 }
 
-export const ControlComponent: React.FC<Table> = ({ tableRows }: Table) => {
+export const Control: React.FC<Table> = ({ tableRows }: Table) => {
   const [rows, setRows] = useState(tableRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 

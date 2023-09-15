@@ -1,5 +1,5 @@
-import {Typography} from '@mui/material';
-import { ControlComponent } from '../../components/ControlComponent';
+import { Typography } from '@mui/material';
+import { Control } from '../../components/Control.component';
 
 // currently hardcoded values, but eventully
 // there will be a fetching function that retrieves project information
@@ -42,7 +42,7 @@ export const StudyControl: React.FC = () => {
   return (
     <>
       <Typography variant='h3'>Study Control</Typography>
-      <ControlComponent tableRows={rows} />
+      <Control tableRows={rows} />
     </>
   );
 };
