@@ -489,6 +489,11 @@ export type QueryExistsArgs = {
 };
 
 
+export type QueryFindStudiesArgs = {
+  project: Scalars['ID']['input'];
+};
+
+
 export type QueryGetProjectArgs = {
   id: Scalars['String']['input'];
 };

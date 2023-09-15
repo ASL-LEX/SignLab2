@@ -1,5 +1,7 @@
-import { Dispatch, FC, ReactNode, SetStateAction, createContext, useContext, useState } from 'react';
+import { Dispatch, FC, ReactNode, SetStateAction, createContext, useContext, useState, useEffect } from 'react';
 import { Study } from '../graphql/graphql';
+import { useProject } from './ProjectContext';
+import {useFindStudiesLazyQuery} from '../graphql/study/study';
 
 export interface StudyContextProps {
   study: Study | null;
@@ -15,8 +17,28 @@ export interface StudyProviderProps {
 
 export const StudyProvider: FC<StudyProviderProps> = (props) => {
   const [study, setStudy] = useState<Study | null>(null);
+  const [studies, setStudies] = useState<Study[]>([]);
 
-  return <StudyContext.Provider value={{ study, setStudy, studies: [] }}>{props.children}</StudyContext.Provider>;
+  const [findStudies, findStudiesResults] = useFindStudiesLazyQuery();
+
+  const { project } = useProject();
+
+  // Effect to re-query for studies
+  useEffect(() => {
+    if (!project) {
+      return;
+    }
+    findStudies({ variables: { project: project._id } });
+  }, [project]);
+
+  // Effect to update list of studies
+  useEffect(() => {
+    if (findStudiesResults.data) {
+      setStudies(findStudiesResults.data.findStudies);
+    }
+  }, [findStudiesResults]);
+
+  return <StudyContext.Provider value={{ study, setStudy, studies }}>{props.children}</StudyContext.Provider>;
 };
 
 export const useStudy = () => useContext(StudyContext);

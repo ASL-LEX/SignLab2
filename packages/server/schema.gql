@@ -87,7 +87,7 @@ type Query {
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!
-  findStudies: [Study!]!
+  findStudies(project: ID!): [Study!]!
   entryForDataset(dataset: ID!): [Entry!]!
 }
 

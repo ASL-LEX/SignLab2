@@ -27,6 +27,7 @@ import { SideBar } from './components/SideBar';
 import { ProjectProvider } from './context/ProjectContext';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import {StudyProvider} from './context/Study';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -87,17 +88,19 @@ const AppInternal: FC = () => {
 
   const mainView: ReactNode = (
     <ProjectProvider>
-      <Box>
-        <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-      </Box>
-      <Main open={drawerOpen}>
-        <Box sx={{ display: 'flex' }}>
-          <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-          <Box sx={{ flexGrow: 1, width: '90%' }}>
-            <MyRoutes />
-          </Box>
+      <StudyProvider>
+        <Box>
+          <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
         </Box>
-      </Main>
+        <Main open={drawerOpen}>
+          <Box sx={{ display: 'flex' }}>
+            <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
+            <Box sx={{ flexGrow: 1, width: '90%' }}>
+              <MyRoutes />
+            </Box>
+          </Box>
+        </Main>
+      </StudyProvider>
     </ProjectProvider>
   );
 
