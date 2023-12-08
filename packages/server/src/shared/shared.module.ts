@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { StudyDeletionService } from './service/study-delete.service';
+import { MongooseMiddlewareService } from './service/mongoose-callback.service';
 
 @Module({
-  providers: [StudyDeletionService],
-  exports: [StudyDeletionService]
+  providers: [MongooseMiddlewareService],
+  exports: [MongooseMiddlewareService]
 })
 export class SharedModule {}

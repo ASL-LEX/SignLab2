@@ -5,13 +5,15 @@ import { Model } from 'mongoose';
 import { Study } from '../study/study.model';
 import { Entry } from '../entry/entry.model';
 import { StudyService } from '../study/study.service';
+import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 
 
 @Injectable()
 export class TagService {
-  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService) {
+  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService,
+              middlewareService: MongooseMiddlewareService) {
     // Subscribe to study delete events
-    this.studyService.onDelete(async (study: Study) => {
+    middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
       await this.removeByStudy(study);
     });
   }

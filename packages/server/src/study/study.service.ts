@@ -5,11 +5,10 @@ import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
 import { Project } from 'src/project/project.model';
-import { StudyDeletionService } from 'src/shared/service/study-delete.service';
 
 @Injectable()
 export class StudyService {
-  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>, private readonly studyDelete: StudyDeletionService) {}
+  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>) {}
 
   async create(study: StudyCreate): Promise<Study> {
     return this.studyModel.create(study);
@@ -58,9 +57,5 @@ export class StudyService {
 
   async delete(study: Study): Promise<void> {
     await this.studyModel.deleteOne({ _id: study._id });
-  }
-
-  async onDelete(callback: (study: Study) => Promise<void>){
-    this.studyDelete.registerOnDelete(callback);
   }
 }
