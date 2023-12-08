@@ -29,7 +29,8 @@ export class StudyResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteStudy(): Promise<boolean> {
+  async deleteStudy(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<boolean> {
+    await this.studyService.delete(study);
     return true;
   }
 

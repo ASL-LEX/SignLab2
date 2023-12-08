@@ -9,7 +9,12 @@ import { StudyService } from '../study/study.service';
 
 @Injectable()
 export class TagService {
-  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService) {}
+  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService) {
+    // Subscribe to study delete events
+    this.studyService.onDelete(async (study: Study) => {
+      await this.removeByStudy(study);
+    });
+  }
 
   async find(id: string): Promise<Tag | null> {
     return this.tagModel.findOne({ _id: id });
@@ -106,5 +111,10 @@ export class TagService {
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
     return this.tagModel.findOne({ study: study._id, user, complete: false, enabled: true });
+  }
+
+  private async removeByStudy(study: Study): Promise<void> {
+    console.log('Called with study', study);
+    await this.tagModel.deleteMany({ study: study._id });
   }
 }

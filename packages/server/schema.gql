@@ -99,7 +99,7 @@ type Mutation {
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject: Boolean!
   createStudy(study: StudyCreate!): Study!
-  deleteStudy: Boolean!
+  deleteStudy(study: ID!): Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
   createEntry(entry: EntryCreate!, dataset: ID!): Entry!

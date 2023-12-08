@@ -8,7 +8,21 @@ import { Project } from 'src/project/project.model';
 
 @Injectable()
 export class StudyService {
-  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>) {}
+  private onDeleteFunctions: ((study: Study) => Promise<void>)[] = [];
+
+  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>) {
+
+    // Attach logic for when a study is deleted
+    const onDeleteFunctions = this.onDeleteFunctions;
+    this.studyModel.schema.pre('deleteOne', async function(next) {
+      // Get the study about the be deleted
+      const study = await this.model.findOne(this.getQuery());
+      console.log('here');
+      // Call any subscribed functions
+      await Promise.all(onDeleteFunctions.map((callback) => callback(study)));
+      next();
+    });
+  }
 
   async create(study: StudyCreate): Promise<Study> {
     return this.studyModel.create(study);
@@ -53,5 +67,17 @@ export class StudyService {
   async changeDescription(study: Study, newDescription: string): Promise<Study> {
     await this.studyModel.updateOne({ _id: study._id }, { $set: { description: newDescription } });
     return (await this.findById(study._id))!;
+  }
+
+  async delete(study: Study): Promise<void> {
+    console.log('here');
+    await this.studyModel.deleteOne({ _id: study._id });
+  }
+
+  /**
+   * Add the ability to attach logic when a study is deleted
+   */
+  async onDelete(callback: (study: Study) => Promise<void>): Promise<void> {
+    this.onDeleteFunctions.push(callback);
   }
 }
