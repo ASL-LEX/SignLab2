@@ -18,7 +18,7 @@ export const StudyControl: React.FC = () => {
     // Execute delete mutation
     confirmation.pushConfirmationRequest({
       title: 'Delete Study',
-      message: 'Are you sure you want to delete this study?',
+      message: 'Are you sure you want to delete this study? Doing so will delete all contained tags',
       onConfirm: () => {
         deleteStudyMutation({ variables: { study: id.toString() } });
       },
@@ -26,6 +26,7 @@ export const StudyControl: React.FC = () => {
     });
   };
 
+  // TODO: Add error message
   useEffect(() => {
     if (deleteStudyResults.called && deleteStudyResults.data) {
       updateStudies();
