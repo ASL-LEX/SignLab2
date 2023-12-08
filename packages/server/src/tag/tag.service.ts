@@ -114,7 +114,6 @@ export class TagService {
   }
 
   private async removeByStudy(study: Study): Promise<void> {
-    console.log('Called with study', study);
     await this.tagModel.deleteMany({ study: study._id });
   }
 }
