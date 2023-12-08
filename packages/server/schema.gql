@@ -97,7 +97,7 @@ type Mutation {
   changeDatasetName(dataset: ID!, newName: String!): Boolean!
   changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
-  deleteProject: Boolean!
+  deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!
   deleteStudy(study: ID!): Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
