@@ -6,12 +6,14 @@ import { Tag, TagSchema } from './tag.model';
 import { StudyModule } from '../study/study.module';
 import { EntryModule } from '../entry/entry.module';
 import { TagPipe } from './pipes/tag.pipe';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]),
     StudyModule,
-    EntryModule
+    EntryModule,
+    SharedModule
   ],
   providers: [TagService, TagResolver, TagPipe]
 })

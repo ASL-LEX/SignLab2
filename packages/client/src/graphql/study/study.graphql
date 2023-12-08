@@ -12,3 +12,7 @@ query findStudies($project: ID!) {
     }
   }
 }
+
+mutation deleteStudy($study: ID!) {
+  deleteStudy(study: $study)
+}

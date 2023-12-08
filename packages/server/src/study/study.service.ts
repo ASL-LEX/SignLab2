@@ -54,4 +54,8 @@ export class StudyService {
     await this.studyModel.updateOne({ _id: study._id }, { $set: { description: newDescription } });
     return (await this.findById(study._id))!;
   }
+
+  async delete(study: Study): Promise<void> {
+    await this.studyModel.deleteOne({ _id: study._id });
+  }
 }

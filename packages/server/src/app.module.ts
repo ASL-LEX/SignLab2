@@ -10,6 +10,7 @@ import { ProjectModule } from './project/project.module';
 import { StudyModule } from './study/study.module';
 import { EntryModule } from './entry/entry.module';
 import { TagModule } from './tag/tag.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { TagModule } from './tag/tag.module';
     ProjectModule,
     StudyModule,
     EntryModule,
-    TagModule
+    TagModule,
+    SharedModule
   ],
 })
 export class AppModule {}

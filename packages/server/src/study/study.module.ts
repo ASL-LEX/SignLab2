@@ -6,9 +6,27 @@ import { Study, StudySchema } from './study.model';
 import { ProjectModule } from '../project/project.module';
 import { StudyPipe } from './pipes/study.pipe';
 import { StudyCreatePipe } from './pipes/create.pipe';
+import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Study.name, schema: StudySchema }]), ProjectModule],
+  imports: [MongooseModule.forFeatureAsync([
+    {
+      name: Study.name,
+      useFactory: (middlewareService: MongooseMiddlewareService) => {
+        const schema = StudySchema;
+
+        schema.pre('deleteOne', async function () {
+          const study = await this.model.findOne(this.getQuery());
+          await middlewareService.apply(Study.name, 'deleteOne', study);
+        });
+
+        return schema;
+      },
+      imports: [SharedModule],
+      inject: [MongooseMiddlewareService],
+    }
+  ]), ProjectModule, SharedModule],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]
 })

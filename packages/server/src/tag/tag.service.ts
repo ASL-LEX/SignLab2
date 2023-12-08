@@ -5,11 +5,18 @@ import { Model } from 'mongoose';
 import { Study } from '../study/study.model';
 import { Entry } from '../entry/entry.model';
 import { StudyService } from '../study/study.service';
+import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 
 
 @Injectable()
 export class TagService {
-  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService) {}
+  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService,
+              middlewareService: MongooseMiddlewareService) {
+    // Subscribe to study delete events
+    middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
+      await this.removeByStudy(study);
+    });
+  }
 
   async find(id: string): Promise<Tag | null> {
     return this.tagModel.findOne({ _id: id });
@@ -106,5 +113,9 @@ export class TagService {
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
     return this.tagModel.findOne({ study: study._id, user, complete: false, enabled: true });
+  }
+
+  private async removeByStudy(study: Study): Promise<void> {
+    await this.tagModel.deleteMany({ study: study._id });
   }
 }
