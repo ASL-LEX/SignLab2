@@ -24,6 +24,11 @@ export const ProjectProvider: FC<ProjectProviderProps> = ({ children }) => {
   useEffect(() => {
     if (getProjectResults.data) {
       setProjects(getProjectResults.data.getProjects);
+
+      // Check if the current project is still in the list
+      if (project && !getProjectResults.data.getProjects.find((p) => p._id === project._id)) {
+        setProject(null);
+      }
     }
 
   }, [getProjectResults.data, getProjectResults.error]);

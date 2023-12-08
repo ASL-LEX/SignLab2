@@ -28,4 +28,8 @@ export class ProjectService {
   async findAll(organization: string): Promise<Project[]> {
     return this.projectModel.find({ organization }).exec();
   }
+
+  async delete(project: Project): Promise<void> {
+    await this.projectModel.deleteOne({ _id: project._id });
+  }
 }

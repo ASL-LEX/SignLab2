@@ -5,10 +5,16 @@ import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
 import { Project } from 'src/project/project.model';
+import { MongooseMiddlewareService } from 'src/shared/service/mongoose-callback.service';
 
 @Injectable()
 export class StudyService {
-  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>) {}
+  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>, middlewareService: MongooseMiddlewareService) {
+    // Remove cooresponding studies when a project is deleted
+    middlewareService.register(Project.name, 'deleteOne', async (project: Project) => {
+      await this.removeForProject(project);
+    });
+  }
 
   async create(study: StudyCreate): Promise<Study> {
     return this.studyModel.create(study);
@@ -57,5 +63,12 @@ export class StudyService {
 
   async delete(study: Study): Promise<void> {
     await this.studyModel.deleteOne({ _id: study._id });
+  }
+
+  private async removeForProject(project: Project): Promise<void> {
+    const studies = await this.findAll(project);
+    for (const study of studies) {
+      await this.delete(study);
+    }
   }
 }

@@ -1,13 +1,38 @@
 import { Box, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useProject } from '../../context/Project.context';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { Project } from '../../graphql/graphql';
+import { useDeleteProjectMutation } from '../../graphql/project/project';
+import { useConfirmation } from '../../context/Confirmation.context';
+import {useEffect} from 'react';
 
 
 const ProjectControl: React.FC = () => {
-  const { projects } = useProject();
+  const { projects, updateProjectList } = useProject();
+
+  const [deleteProjectMutation, deleteProjectResults] = useDeleteProjectMutation();
+  const confirmation = useConfirmation();
+
+  const handleDelete = async (id: GridRowId) => {
+    // Execute delete mutation
+    confirmation.pushConfirmationRequest({
+      title: 'Delete Study',
+      message: 'Are you sure you want to delete this project? Doing so will delete all contained studies and tags',
+      onConfirm: () => {
+        deleteProjectMutation({ variables: { project: id.toString() } });
+      },
+      onCancel: () => {}
+    });
+  };
+
+  // TODO: Add error message
+  useEffect(() => {
+    if (deleteProjectResults.called && deleteProjectResults.data) {
+      updateProjectList();
+    }
+  }, [deleteProjectResults.data, deleteProjectResults.called]);
 
   const columns: GridColDef[] = [
     {
@@ -29,16 +54,11 @@ const ProjectControl: React.FC = () => {
       width: 120,
       maxWidth: 120,
       cellClassName: 'delete',
-      getActions: () => {
-        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" />];
+      getActions: (params) => {
+        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)}/>];
       }
     }
   ];
-
-  // Make sure the lines between rows are visible
-  const rowStyle = {
-    borderBottom: '1px solid rgba(224, 224, 224, 1)'
-  };
 
   return (
     <>

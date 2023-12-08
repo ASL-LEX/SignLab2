@@ -296,6 +296,11 @@ export type MutationCreateTagsArgs = {
 };
 
 
+export type MutationDeleteProjectArgs = {
+  project: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteStudyArgs = {
   study: Scalars['ID']['input'];
 };
