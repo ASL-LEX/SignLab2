@@ -296,6 +296,11 @@ export type MutationCreateTagsArgs = {
 };
 
 
+export type MutationDeleteStudyArgs = {
+  study: Scalars['ID']['input'];
+};
+
+
 export type MutationForgotPasswordArgs = {
   user: ForgotDto;
 };

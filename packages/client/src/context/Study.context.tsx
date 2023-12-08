@@ -7,6 +7,7 @@ export interface StudyContextProps {
   study: Study | null;
   setStudy: Dispatch<SetStateAction<Study | null>>;
   studies: Study[];
+  updateStudies: () => void;
 }
 
 const StudyContext = createContext<StudyContextProps>({} as StudyContextProps);
@@ -22,6 +23,12 @@ export const StudyProvider: FC<StudyProviderProps> = (props) => {
   const [findStudies, findStudiesResults] = useFindStudiesLazyQuery();
 
   const { project } = useProject();
+
+  const updateStudies = () => {
+    if (project) {
+      findStudiesResults.refetch({ project: project._id });
+    }
+  };
 
   // Effect to re-query for studies
   useEffect(() => {
@@ -39,7 +46,7 @@ export const StudyProvider: FC<StudyProviderProps> = (props) => {
     }
   }, [findStudiesResults]);
 
-  return <StudyContext.Provider value={{ study, setStudy, studies }}>{props.children}</StudyContext.Provider>;
+  return <StudyContext.Provider value={{ study, setStudy, studies, updateStudies }}>{props.children}</StudyContext.Provider>;
 };
 
 export const useStudy = () => useContext(StudyContext);
