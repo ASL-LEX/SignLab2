@@ -26,7 +26,8 @@ import { SideBar } from './components/SideBar.component';
 import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import {StudyProvider} from './context/Study.context';
+import { StudyProvider } from './context/Study.context';
+import { ConfirmationProvider } from './context/Confirmation.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -70,8 +71,10 @@ const App: FC = () => {
       <BrowserRouter>
         <ApolloProvider client={apolloClient}>
           <AuthProvider>
-            <CssBaseline />
-            <AppInternal />
+            <ConfirmationProvider>
+              <CssBaseline />
+              <AppInternal />
+            </ConfirmationProvider>
           </AuthProvider>
         </ApolloProvider>
       </BrowserRouter>

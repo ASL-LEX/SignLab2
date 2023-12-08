@@ -5,16 +5,25 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { Study } from '../../graphql/graphql';
 import { useDeleteStudyMutation } from '../../graphql/study/study';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
+import { useConfirmation } from '../../context/Confirmation.context';
 
 export const StudyControl: React.FC = () => {
   const { studies, updateStudies } = useStudy();
 
   const [deleteStudyMutation, deleteStudyResults] = useDeleteStudyMutation();
+  const confirmation = useConfirmation();
 
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
-     deleteStudyMutation({ variables: { study: id.toString() } });
+    confirmation.pushConfirmationRequest({
+      title: 'Delete Study',
+      message: 'Are you sure you want to delete this study?',
+      onConfirm: () => {
+        deleteStudyMutation({ variables: { study: id.toString() } });
+      },
+      onCancel: () => {}
+    });
   };
 
   useEffect(() => {
