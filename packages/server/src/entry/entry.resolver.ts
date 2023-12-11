@@ -1,8 +1,8 @@
 import { Args, ID, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { Dataset } from '../dataset/dataset.model';
-import { Entry } from './entry.model';
+import { Entry } from './models/entry.model';
 import { EntryCreate } from './dtos/create.dto';
-import { EntryService } from './entry.service';
+import { EntryService } from './services/entry.service';
 import { DatasetPipe } from '../dataset/pipes/dataset.pipe';
 
 @Resolver(() => Entry)

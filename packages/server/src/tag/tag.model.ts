@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import JSON from 'graphql-type-json';
 import mongoose, { Document } from 'mongoose';
 import { Study } from '../study/study.model';
-import { Entry } from '../entry/entry.model';
+import { Entry } from '../entry/models/entry.model';
 
 @Schema()
 @ObjectType()

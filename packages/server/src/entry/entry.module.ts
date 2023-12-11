@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Entry, EntrySchema } from './entry.model';
+import { Entry, EntrySchema } from './models/entry.model';
 import { EntryResolver } from './entry.resolver';
-import { EntryService } from './entry.service';
+import { EntryService } from './services/entry.service';
 import { DatasetModule } from '../dataset/dataset.module';
 import { EntryPipe, EntriesPipe } from './pipes/entry.pipe';
 
