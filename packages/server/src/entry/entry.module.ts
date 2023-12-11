@@ -11,6 +11,7 @@ import { UploadSessionResolver } from './resolvers/upload-session.resolver';
 import { UploadSessionService } from './services/upload-session.service';
 import { EntryUploadResolver } from './resolvers/entry-upload.resolver';
 import { EntryUploadService } from './resolvers/entry-upload.service';
+import { UploadSessionPipe } from './pipes/upload-session.pipe';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EntryUploadService } from './resolvers/entry-upload.service';
     EntriesPipe,
     UploadSessionService,
     UploadSessionResolver,
+    UploadSessionPipe,
     EntryUploadResolver,
     EntryUploadService
   ],
