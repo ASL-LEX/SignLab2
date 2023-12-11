@@ -13,11 +13,20 @@ export class UploadSessionService {
   }
 
   async create(dataset: Dataset): Promise<UploadSession> {
-    // TODO: Remove old session along with all uploads
+    await this.deleteOldSession(dataset);
 
     return this.uploadSessionModel.create({
       dataset: dataset._id,
       created: new Date()
     });
+  }
+
+  async complete(uploadSession: UploadSession): Promise<void> {
+    // TODO: Implement completion logic
+  }
+
+  // TODO: Provide user information
+  private async deleteOldSession(dataset: Dataset): Promise<void> {
+    await this.uploadSessionModel.deleteMany({ dataset: dataset._id }).exec();
   }
 }

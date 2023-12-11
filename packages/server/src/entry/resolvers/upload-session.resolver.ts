@@ -19,6 +19,7 @@ export class UploadSessionResolver {
   // TODO: Add return for any cleanup
   @Mutation(() => Boolean)
   async completeUploadSession(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<boolean> {
+    await this.uploadSessionService.complete(uploadSession);
     return true;
   }
 }
