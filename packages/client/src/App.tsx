@@ -28,6 +28,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } f
 import { setContext } from '@apollo/client/link/context';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
+import { DatasetProvider } from './context/Dataset.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -89,17 +90,19 @@ const AppInternal: FC = () => {
   const mainView: ReactNode = (
     <ProjectProvider>
       <StudyProvider>
-        <Box>
-          <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-        </Box>
-        <Main open={drawerOpen}>
-          <Box sx={{ display: 'flex' }}>
-            <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-            <Box sx={{ flexGrow: 1, width: '90%' }}>
-              <MyRoutes />
-            </Box>
+        <DatasetProvider>
+          <Box>
+            <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
           </Box>
-        </Main>
+          <Main open={drawerOpen}>
+            <Box sx={{ display: 'flex' }}>
+              <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
+              <Box sx={{ flexGrow: 1, width: '90%' }}>
+                <MyRoutes />
+              </Box>
+            </Box>
+          </Main>
+        </DatasetProvider>
       </StudyProvider>
     </ProjectProvider>
   );

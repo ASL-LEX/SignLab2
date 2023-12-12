@@ -184,6 +184,7 @@ export type Mutation = {
   changeStudyDescription: Study;
   changeStudyName: Study;
   completeTag: Scalars['Boolean']['output'];
+  completeUploadSession: Scalars['Boolean']['output'];
   createDataset: Dataset;
   createEntry: Entry;
   createInvite: InviteModel;
@@ -191,6 +192,7 @@ export type Mutation = {
   createProject: ProjectModel;
   createStudy: Study;
   createTags: Array<Tag>;
+  createUploadSession: UploadSession;
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
@@ -201,6 +203,7 @@ export type Mutation = {
   loginEmail: AccessToken;
   loginGoogle: AccessToken;
   loginUsername: AccessToken;
+  processEntryUploads: Scalars['Boolean']['output'];
   refresh: AccessToken;
   resendInvite: InviteModel;
   resetPassword: Scalars['Boolean']['output'];
@@ -210,6 +213,7 @@ export type Mutation = {
   updateProjectAuthMethods: ProjectModel;
   updateProjectSettings: ProjectModel;
   updateUser: UserModel;
+  uploadEntryCSV: Scalars['Boolean']['output'];
 };
 
 
@@ -258,6 +262,11 @@ export type MutationCompleteTagArgs = {
 };
 
 
+export type MutationCompleteUploadSessionArgs = {
+  session: Scalars['ID']['input'];
+};
+
+
 export type MutationCreateDatasetArgs = {
   dataset: DatasetCreate;
 };
@@ -293,6 +302,11 @@ export type MutationCreateStudyArgs = {
 export type MutationCreateTagsArgs = {
   entries: Array<Scalars['ID']['input']>;
   study: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateUploadSessionArgs = {
+  dataset: Scalars['ID']['input'];
 };
 
 
@@ -603,6 +617,12 @@ export type TagSchema = {
 export type TagSchemaInput = {
   dataSchema: Scalars['JSON']['input'];
   uiSchema: Scalars['JSON']['input'];
+};
+
+export type UploadSession = {
+  __typename?: 'UploadSession';
+  created: Scalars['DateTime']['output'];
+  dataset: Scalars['String']['output'];
 };
 
 export type UserModel = {
