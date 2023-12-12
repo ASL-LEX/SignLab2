@@ -28,10 +28,12 @@ interface ShowProps {
 export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
+  const [currentStepLimit, setCurrentStepLimit] = useState(0);
 
   useEffect(() => {
     if (selectedDataset) {
       setActiveStep(1);
+      setCurrentStepLimit(1);
     }
   }, [selectedDataset]);
 
@@ -52,6 +54,17 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
       element: <EntryUpload />
     }
   ];
+
+  const nextOrComplete = () => {
+    if (activeStep === steps.length - 1) {
+      props.toggleModal();
+    } else {
+      if (selectedDataset) {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+      setActiveStep(activeStep + 1);
+    }
+  };
 
   return (
     <div>
@@ -75,7 +88,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
           {activeStep != 0 && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
           <Button onClick={props.toggleModal}>Cancel</Button>
-          {activeStep == steps.length && <Button>Complete</Button>}
+          <Button onClick={nextOrComplete} disabled={activeStep >= currentStepLimit}>{activeStep == steps.length - 1 ? 'Complete' : 'Next'}</Button>
         </DialogActions>
       </Dialog>
     </div>
