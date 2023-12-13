@@ -58,6 +58,8 @@ type Entry {
 }
 
 type UploadSession {
+  """The ID of the upload session"""
+  _id: ID!
   dataset: String!
   created: DateTime!
 }

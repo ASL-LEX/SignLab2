@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 
 /**
@@ -9,6 +9,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @Schema()
 @ObjectType()
 export class UploadSession {
+  @Field(() => ID, { description: 'The ID of the upload session' })
+  _id: string;
+
   // TODO: Add in user
   // @Prop({ required: true })
   // user: string;
@@ -23,6 +26,10 @@ export class UploadSession {
 
   @Prop()
   bucketPrefix: string;
+
+  /** URL To the CSV within the bucket storage */
+  @Prop({ required: false, type: String })
+  csvURL: string | null;
 }
 
 export type UploadSessionDocument = UploadSession & Document;

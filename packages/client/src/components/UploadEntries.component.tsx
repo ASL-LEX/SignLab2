@@ -18,8 +18,9 @@ import {
   SelectChangeEvent
  } from '@mui/material';
 import { useDataset } from '../context/Dataset.context';
-import { Dataset } from '../graphql/graphql';
-import { useCreateUploadSessionMutation } from '../graphql/upload-session/upload-session';
+import { Dataset, UploadSession } from '../graphql/graphql';
+import { useCreateUploadSessionMutation, useGetCsvUploadUrlLazyQuery } from '../graphql/upload-session/upload-session';
+import axios from 'axios';
 
 interface ShowProps {
   show: boolean;
@@ -30,6 +31,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
   const [currentStepLimit, setCurrentStepLimit] = useState(0);
+  const [uploadSession, setUploadSession] = useState<UploadSession | null>(null);
 
   useEffect(() => {
     if (selectedDataset) {
@@ -47,7 +49,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Information on Entries',
       description: '',
-      element: <CSVUpload dataset={selectedDataset} />
+      element: <CSVUpload dataset={selectedDataset} uploadSession={uploadSession} setUploadSession={setUploadSession} />
     },
     {
       label: 'Upload Entry Videos',
@@ -139,12 +141,16 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({ selectedDataset, setSelec
 
 interface CSVUploadProps {
   dataset: Dataset | null;
+  uploadSession: UploadSession | null;
+  setUploadSession: Dispatch<SetStateAction<UploadSession | null>>;
 }
 
-const CSVUpload: React.FC<CSVUploadProps> = ({ dataset }) => {
+const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, uploadSession, setUploadSession }) => {
   const [createUploadSessionMutation, createUploadSessionResults] = useCreateUploadSessionMutation();
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [getCSVUploadFile, getCSVUploadFileResult] = useGetCsvUploadUrlLazyQuery();
 
+  // 1. Create the upload session
   const handleCSVUpload = (event: ChangeEvent) => {
     // Get the file from the event
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -165,13 +171,33 @@ const CSVUpload: React.FC<CSVUploadProps> = ({ dataset }) => {
     createUploadSessionMutation({ variables: { dataset: dataset._id }});
   };
 
+  // 2. Once the upload session is created, get the CSV upload URL
   useEffect(() => {
-    // If the upload session was created successfully, then the CSV can be
-    // uploaded
     if (createUploadSessionResults.data) {
+      // Get the created upload session
+      const createdUploadSession = createUploadSessionResults.data.createUploadSession;
+      setUploadSession(createdUploadSession);
 
+      // Get the CSV upload URL
+      getCSVUploadFile({ variables: { session: createdUploadSession._id }});
     }
-  }, [createUploadSessionResults]);
+  }, [createUploadSessionResults.data]);
+
+  // 3. Once the CSV upload URL is retrieved, upload the CSV
+  useEffect(() => {
+    if (getCSVUploadFileResult.data) {
+    const csvURL = getCSVUploadFileResult.data.getCSVUploadURL;
+      axios.put(csvURL, csvFile, {
+        headers: {
+          'Content-Type': 'text/csv'
+        }
+      }).then((response) => {
+        console.log(response);
+      });
+    }
+  }, [getCSVUploadFileResult.data]);
+
+
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }}>

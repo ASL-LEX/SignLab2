@@ -1,12 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { UploadSession } from '../models/upload-session.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {Dataset} from 'src/dataset/dataset.model';
+import { Dataset } from '../../dataset/dataset.model';
+import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
+import { Storage } from '@google-cloud/storage';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UploadSessionService {
-  constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>) {}
+  private readonly uploadBucket = this.configService.getOrThrow<string>('gcp.storage.bucket');
+  private readonly uploadPrefix = this.configService.getOrThrow<string>('upload.prefix');
+  private readonly csvFileName = this.configService.getOrThrow<string>('upload.csvFileName');
+
+  constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
+              @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
+              private readonly configService: ConfigService) {}
 
   async find(id: string): Promise<UploadSession | null> {
     return this.uploadSessionModel.findById(id).exec();
@@ -36,8 +45,21 @@ export class UploadSessionService {
 
   /** Generate the presigned URL for where to upload the CSV against */
   async getCSVUploadURL(uploadSession: UploadSession): Promise<string> {
+    const csvURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.csvFileName}`;
 
-    return 'TODO';
+    const [url] = await this.storage
+      .bucket(this.uploadBucket)
+      .file(csvURL)
+      .getSignedUrl({
+        action: 'write',
+        expires: Date.now() + 2 * 60 * 1000, // 2 minutes
+        contentType: 'text/csv',
+      });
+
+    // Add the url to the upload session to signify the upload is ready
+    await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL } });
+
+    return url;
   }
 
   // TODO: Provide user information

@@ -483,6 +483,8 @@ export type Query = {
   entryForDataset: Array<Entry>;
   exists: Scalars['Boolean']['output'];
   findStudies: Array<Study>;
+  /** Get the presigned URL for where to upload the CSV against */
+  getCSVUploadURL: Scalars['String']['output'];
   getDatasets: Array<Dataset>;
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
@@ -515,6 +517,11 @@ export type QueryExistsArgs = {
 
 export type QueryFindStudiesArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetCsvUploadUrlArgs = {
+  session: Scalars['ID']['input'];
 };
 
 
@@ -621,6 +628,8 @@ export type TagSchemaInput = {
 
 export type UploadSession = {
   __typename?: 'UploadSession';
+  /** The ID of the upload session */
+  _id: Scalars['ID']['output'];
   created: Scalars['DateTime']['output'];
   dataset: Scalars['String']['output'];
 };

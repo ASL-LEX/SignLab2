@@ -1,6 +1,11 @@
 mutation createUploadSession($dataset: ID!) {
   createUploadSession(dataset: $dataset) {
+    _id,
     dataset,
     created
   }
+}
+
+query getCSVUploadURL($session: ID!) {
+  getCSVUploadURL(session: $session)
 }

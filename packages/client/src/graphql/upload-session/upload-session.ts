@@ -10,12 +10,20 @@ export type CreateUploadSessionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUploadSessionMutation = { __typename?: 'Mutation', createUploadSession: { __typename?: 'UploadSession', dataset: string, created: any } };
+export type CreateUploadSessionMutation = { __typename?: 'Mutation', createUploadSession: { __typename?: 'UploadSession', _id: string, dataset: string, created: any } };
+
+export type GetCsvUploadUrlQueryVariables = Types.Exact<{
+  session: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetCsvUploadUrlQuery = { __typename?: 'Query', getCSVUploadURL: string };
 
 
 export const CreateUploadSessionDocument = gql`
     mutation createUploadSession($dataset: ID!) {
   createUploadSession(dataset: $dataset) {
+    _id
     dataset
     created
   }
@@ -47,3 +55,36 @@ export function useCreateUploadSessionMutation(baseOptions?: Apollo.MutationHook
 export type CreateUploadSessionMutationHookResult = ReturnType<typeof useCreateUploadSessionMutation>;
 export type CreateUploadSessionMutationResult = Apollo.MutationResult<CreateUploadSessionMutation>;
 export type CreateUploadSessionMutationOptions = Apollo.BaseMutationOptions<CreateUploadSessionMutation, CreateUploadSessionMutationVariables>;
+export const GetCsvUploadUrlDocument = gql`
+    query getCSVUploadURL($session: ID!) {
+  getCSVUploadURL(session: $session)
+}
+    `;
+
+/**
+ * __useGetCsvUploadUrlQuery__
+ *
+ * To run a query within a React component, call `useGetCsvUploadUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCsvUploadUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCsvUploadUrlQuery({
+ *   variables: {
+ *      session: // value for 'session'
+ *   },
+ * });
+ */
+export function useGetCsvUploadUrlQuery(baseOptions: Apollo.QueryHookOptions<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>(GetCsvUploadUrlDocument, options);
+      }
+export function useGetCsvUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>(GetCsvUploadUrlDocument, options);
+        }
+export type GetCsvUploadUrlQueryHookResult = ReturnType<typeof useGetCsvUploadUrlQuery>;
+export type GetCsvUploadUrlLazyQueryHookResult = ReturnType<typeof useGetCsvUploadUrlLazyQuery>;
+export type GetCsvUploadUrlQueryResult = Apollo.QueryResult<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>;

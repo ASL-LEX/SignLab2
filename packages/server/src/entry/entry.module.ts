@@ -12,6 +12,7 @@ import { UploadSessionService } from './services/upload-session.service';
 import { EntryUploadResolver } from './resolvers/entry-upload.resolver';
 import { EntryUploadService } from './resolvers/entry-upload.service';
 import { UploadSessionPipe } from './pipes/upload-session.pipe';
+import { GcpModule } from '../gcp/gcp.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { UploadSessionPipe } from './pipes/upload-session.pipe';
       { name: UploadSession.name, schema: UploadSessionSchema },
       { name: EntryUpload.name, schema: EntryUploadSchema },
     ]),
-    DatasetModule
+    DatasetModule,
+    GcpModule
   ],
   providers: [
     EntryResolver,
