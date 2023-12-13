@@ -20,6 +20,9 @@ export class UploadSession {
   @Prop({ required: true })
   @Field()
   created: Date;
+
+  @Prop()
+  bucketPrefix: string;
 }
 
 export type UploadSessionDocument = UploadSession & Document;

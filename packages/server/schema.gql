@@ -94,6 +94,9 @@ type Query {
   studyExists(name: String!, project: ID!): Boolean!
   findStudies(project: ID!): [Study!]!
   entryForDataset(dataset: ID!): [Entry!]!
+
+  """Get the presigned URL for where to upload the CSV against"""
+  getCSVUploadURL(session: ID!): String!
 }
 
 type Mutation {

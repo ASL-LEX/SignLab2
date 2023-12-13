@@ -15,14 +15,29 @@ export class UploadSessionService {
   async create(dataset: Dataset): Promise<UploadSession> {
     await this.deleteOldSession(dataset);
 
-    return this.uploadSessionModel.create({
+    // Make the session
+    const uploadSession = await this.uploadSessionModel.create({
       dataset: dataset._id,
-      created: new Date()
+      created: new Date(),
     });
+
+    // Add in the bucket prefix for the session
+    uploadSession.bucketPrefix = `/upload-session/${uploadSession._id}`;
+
+    // Save the session
+    await uploadSession.save();
+
+    return uploadSession;
   }
 
   async complete(uploadSession: UploadSession): Promise<void> {
     // TODO: Implement completion logic
+  }
+
+  /** Generate the presigned URL for where to upload the CSV against */
+  async getCSVUploadURL(uploadSession: UploadSession): Promise<string> {
+
+    return 'TODO';
   }
 
   // TODO: Provide user information
