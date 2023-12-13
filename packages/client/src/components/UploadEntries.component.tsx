@@ -19,8 +19,9 @@ import {
  } from '@mui/material';
 import { useDataset } from '../context/Dataset.context';
 import { Dataset, UploadSession } from '../graphql/graphql';
-import { useCreateUploadSessionMutation, useGetCsvUploadUrlLazyQuery } from '../graphql/upload-session/upload-session';
+import { CreateUploadSessionDocument, GetCsvUploadUrlDocument } from '../graphql/upload-session/upload-session';
 import axios from 'axios';
+import { useApolloClient } from '@apollo/client';
 
 interface ShowProps {
   show: boolean;
@@ -120,7 +121,6 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({ selectedDataset, setSelec
     setSelectedDataset(dataset);
   };
 
-
   return (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
       <Select sx={{ width: 200 }}
@@ -145,65 +145,67 @@ interface CSVUploadProps {
   setUploadSession: Dispatch<SetStateAction<UploadSession | null>>;
 }
 
-const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, uploadSession, setUploadSession }) => {
-  const [createUploadSessionMutation, createUploadSessionResults] = useCreateUploadSessionMutation();
-  const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [getCSVUploadFile, getCSVUploadFileResult] = useGetCsvUploadUrlLazyQuery();
+const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession }) => {
+  const apolloClient = useApolloClient();
 
-  // 1. Create the upload session
-  const handleCSVUpload = (event: ChangeEvent) => {
-    // Get the file from the event
-    const file = (event.target as HTMLInputElement).files?.[0];
+  // Implemented with using the apollo client directly instead of the useMutation hook
+  // to reduce the need for multiple use effects to handle each step change
+  const handleCSVChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(file);
     if (!file) {
       return;
     }
 
-    setCsvFile(file);
+    // First create an upload session
+    const sessionCreation = await apolloClient.mutate({
+      mutation: CreateUploadSessionDocument,
+      variables: { dataset: dataset?._id }
+    });
 
-    // Should not get here, should not move to the CSV upload step if the
-    // dataset is not selected
-    if (!dataset) {
-      console.error('Dataset not selected');
+    if (!sessionCreation.data?.createUploadSession) {
+      console.error('Failed to create upload session');
       return;
     }
 
-    // Create a new upload session
-    createUploadSessionMutation({ variables: { dataset: dataset._id }});
+    const uploadSession = sessionCreation.data.createUploadSession;
+    setUploadSession(uploadSession);
+
+    // Next get the upload url
+    const uploadUrlQuery = await apolloClient.query({
+      query: GetCsvUploadUrlDocument,
+      variables: { session: uploadSession._id }
+    });
+
+
+    if (!uploadUrlQuery.data?.getCSVUploadURL) {
+      console.error('Failed to get upload url');
+      return;
+    }
+
+    const uploadUrl = uploadUrlQuery.data.getCSVUploadURL;
+
+    // Upload the CSV to the url
+    const upload = await axios.put(uploadUrl, file, {
+      headers: {
+        'Content-Type': 'text/csv'
+      }
+    });
+
+    if (upload.status != 200) {
+      console.error('Failed to upload CSV');
+      return;
+    }
+
+    // Trigger the CSV validation
   };
-
-  // 2. Once the upload session is created, get the CSV upload URL
-  useEffect(() => {
-    if (createUploadSessionResults.data) {
-      // Get the created upload session
-      const createdUploadSession = createUploadSessionResults.data.createUploadSession;
-      setUploadSession(createdUploadSession);
-
-      // Get the CSV upload URL
-      getCSVUploadFile({ variables: { session: createdUploadSession._id }});
-    }
-  }, [createUploadSessionResults.data]);
-
-  // 3. Once the CSV upload URL is retrieved, upload the CSV
-  useEffect(() => {
-    if (getCSVUploadFileResult.data) {
-    const csvURL = getCSVUploadFileResult.data.getCSVUploadURL;
-      axios.put(csvURL, csvFile, {
-        headers: {
-          'Content-Type': 'text/csv'
-        }
-      }).then((response) => {
-        console.log(response);
-      });
-    }
-  }, [getCSVUploadFileResult.data]);
-
 
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
       <Button component="label" variant="contained" color="primary" startIcon={<UploadIcon />} sx={{ m: 1 }}>
         Upload CSV
-        <input type="file" hidden onChange={handleCSVUpload} accept='.csv' />
+        <input type="file" hidden onChange={handleCSVChange} accept='.csv' />
       </Button>
     </Box>
   );

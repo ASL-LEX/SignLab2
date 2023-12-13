@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Dataset } from '../../dataset/dataset.model';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
-import { Storage } from '@google-cloud/storage';
+import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -12,6 +12,7 @@ export class UploadSessionService {
   private readonly uploadBucket = this.configService.getOrThrow<string>('gcp.storage.bucket');
   private readonly uploadPrefix = this.configService.getOrThrow<string>('upload.prefix');
   private readonly csvFileName = this.configService.getOrThrow<string>('upload.csvFileName');
+  private readonly bucket: Bucket = this.storage.bucket(this.uploadBucket);
 
   constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
               @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
@@ -31,7 +32,7 @@ export class UploadSessionService {
     });
 
     // Add in the bucket prefix for the session
-    uploadSession.bucketPrefix = `/upload-session/${uploadSession._id}`;
+    uploadSession.bucketPrefix = `${uploadSession._id}`;
 
     // Save the session
     await uploadSession.save();
@@ -47,8 +48,7 @@ export class UploadSessionService {
   async getCSVUploadURL(uploadSession: UploadSession): Promise<string> {
     const csvURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.csvFileName}`;
 
-    const [url] = await this.storage
-      .bucket(this.uploadBucket)
+    const [url] = await this.bucket
       .file(csvURL)
       .getSignedUrl({
         action: 'write',
@@ -60,6 +60,27 @@ export class UploadSessionService {
     await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL } });
 
     return url;
+  }
+
+  // TODO: Have the function return a status
+  async validateCSV(uploadSession: UploadSession): Promise<boolean> {
+    // Verify the CSV is in the bucket
+    if (!uploadSession.csvURL) {
+      throw new Error('CSV URL not found');
+    }
+    const exists = await this.bucket.file(uploadSession.csvURL).exists();
+    if (!exists) {
+      throw new Error('CSV not found');
+    }
+
+    // Download the CSV to /tmp location
+    const csvFile = this.bucket.file(uploadSession.csvURL);
+    const csvFileContents = await csvFile.download();
+
+    // Validate the CSV contents against the target dataset
+
+    // Return the validation status
+    return true;
   }
 
   // TODO: Provide user information

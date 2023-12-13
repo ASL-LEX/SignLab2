@@ -99,6 +99,7 @@ type Query {
 
   """Get the presigned URL for where to upload the CSV against"""
   getCSVUploadURL(session: ID!): String!
+  validateCSV(session: ID!): Boolean!
 }
 
 type Mutation {

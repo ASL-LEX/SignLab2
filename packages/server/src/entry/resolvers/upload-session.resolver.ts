@@ -27,4 +27,11 @@ export class UploadSessionResolver {
   async getCSVUploadURL(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<string> {
     return this.uploadSessionService.getCSVUploadURL(uploadSession);
   }
+
+  // TODO: Have the return type be a validation message
+  @Query(() => Boolean)
+  async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<boolean> {
+    return await this.uploadSessionService.validateCSV(uploadSession);
+    return true;
+  }
 }
