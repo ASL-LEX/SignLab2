@@ -32,6 +32,5 @@ export class UploadSessionResolver {
   @Query(() => Boolean)
   async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<boolean> {
     return await this.uploadSessionService.validateCSV(uploadSession);
-    return true;
   }
 }

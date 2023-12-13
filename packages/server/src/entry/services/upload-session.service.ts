@@ -77,6 +77,8 @@ export class UploadSessionService {
     const csvFile = this.bucket.file(uploadSession.csvURL);
     const csvFileContents = await csvFile.download();
 
+    console.log(csvFileContents.toString());
+
     // Validate the CSV contents against the target dataset
 
     // Return the validation status

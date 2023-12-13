@@ -19,7 +19,7 @@ import {
  } from '@mui/material';
 import { useDataset } from '../context/Dataset.context';
 import { Dataset, UploadSession } from '../graphql/graphql';
-import { CreateUploadSessionDocument, GetCsvUploadUrlDocument } from '../graphql/upload-session/upload-session';
+import { CreateUploadSessionDocument, GetCsvUploadUrlDocument, ValidateCsvDocument } from '../graphql/upload-session/upload-session';
 import axios from 'axios';
 import { useApolloClient } from '@apollo/client';
 
@@ -198,6 +198,10 @@ const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession }) => {
     }
 
     // Trigger the CSV validation
+    const validation = await apolloClient.query({
+      query: ValidateCsvDocument,
+      variables: { session: uploadSession._id }
+    });
   };
 
 

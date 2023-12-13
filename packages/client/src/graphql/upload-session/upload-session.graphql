@@ -9,3 +9,7 @@ mutation createUploadSession($dataset: ID!) {
 query getCSVUploadURL($session: ID!) {
   getCSVUploadURL(session: $session)
 }
+
+query validateCSV($session: ID!) {
+  validateCSV(session: $session)
+}

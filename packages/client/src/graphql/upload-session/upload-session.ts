@@ -19,6 +19,13 @@ export type GetCsvUploadUrlQueryVariables = Types.Exact<{
 
 export type GetCsvUploadUrlQuery = { __typename?: 'Query', getCSVUploadURL: string };
 
+export type ValidateCsvQueryVariables = Types.Exact<{
+  session: Types.Scalars['ID']['input'];
+}>;
+
+
+export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: boolean };
+
 
 export const CreateUploadSessionDocument = gql`
     mutation createUploadSession($dataset: ID!) {
@@ -88,3 +95,36 @@ export function useGetCsvUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetCsvUploadUrlQueryHookResult = ReturnType<typeof useGetCsvUploadUrlQuery>;
 export type GetCsvUploadUrlLazyQueryHookResult = ReturnType<typeof useGetCsvUploadUrlLazyQuery>;
 export type GetCsvUploadUrlQueryResult = Apollo.QueryResult<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>;
+export const ValidateCsvDocument = gql`
+    query validateCSV($session: ID!) {
+  validateCSV(session: $session)
+}
+    `;
+
+/**
+ * __useValidateCsvQuery__
+ *
+ * To run a query within a React component, call `useValidateCsvQuery` and pass it any options that fit your needs.
+ * When your component renders, `useValidateCsvQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useValidateCsvQuery({
+ *   variables: {
+ *      session: // value for 'session'
+ *   },
+ * });
+ */
+export function useValidateCsvQuery(baseOptions: Apollo.QueryHookOptions<ValidateCsvQuery, ValidateCsvQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ValidateCsvQuery, ValidateCsvQueryVariables>(ValidateCsvDocument, options);
+      }
+export function useValidateCsvLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidateCsvQuery, ValidateCsvQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ValidateCsvQuery, ValidateCsvQueryVariables>(ValidateCsvDocument, options);
+        }
+export type ValidateCsvQueryHookResult = ReturnType<typeof useValidateCsvQuery>;
+export type ValidateCsvLazyQueryHookResult = ReturnType<typeof useValidateCsvLazyQuery>;
+export type ValidateCsvQueryResult = Apollo.QueryResult<ValidateCsvQuery, ValidateCsvQueryVariables>;

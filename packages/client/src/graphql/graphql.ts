@@ -502,6 +502,7 @@ export type Query = {
   publicKey: Array<Scalars['String']['output']>;
   studyExists: Scalars['Boolean']['output'];
   users: Array<UserModel>;
+  validateCSV: Scalars['Boolean']['output'];
 };
 
 
@@ -570,6 +571,11 @@ export type QueryProjectUsersArgs = {
 export type QueryStudyExistsArgs = {
   name: Scalars['String']['input'];
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryValidateCsvArgs = {
+  session: Scalars['ID']['input'];
 };
 
 export type ResetDto = {
