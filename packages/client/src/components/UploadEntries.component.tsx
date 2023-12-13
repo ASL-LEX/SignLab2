@@ -1,5 +1,5 @@
 import UploadIcon from '@mui/icons-material/Upload';
-import { Dispatch, useState, SetStateAction, useEffect } from 'react';
+import { Dispatch, useState, SetStateAction, useEffect, ChangeEvent } from 'react';
 import {
   Button,
   Dialog,
@@ -19,6 +19,7 @@ import {
  } from '@mui/material';
 import { useDataset } from '../context/Dataset.context';
 import { Dataset } from '../graphql/graphql';
+import { useCreateUploadSessionMutation } from '../graphql/upload-session/upload-session';
 
 interface ShowProps {
   show: boolean;
@@ -46,7 +47,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Information on Entries',
       description: '',
-      element: <CSVUpload />
+      element: <CSVUpload dataset={selectedDataset} />
     },
     {
       label: 'Upload Entry Videos',
@@ -88,7 +89,11 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
           {activeStep != 0 && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
           <Button onClick={props.toggleModal}>Cancel</Button>
-          <Button onClick={nextOrComplete} disabled={activeStep >= currentStepLimit}>{activeStep == steps.length - 1 ? 'Complete' : 'Next'}</Button>
+          <Button
+            onClick={nextOrComplete}
+            disabled={activeStep >= currentStepLimit}>
+            {activeStep == steps.length - 1 ? 'Complete' : 'Next'}
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
@@ -132,10 +137,41 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({ selectedDataset, setSelec
   );
 };
 
-const CSVUpload: React.FC = () => {
-  const handleCSVUpload = () => {
+interface CSVUploadProps {
+  dataset: Dataset | null;
+}
 
+const CSVUpload: React.FC<CSVUploadProps> = ({ dataset }) => {
+  const [createUploadSessionMutation, createUploadSessionResults] = useCreateUploadSessionMutation();
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+
+  const handleCSVUpload = (event: ChangeEvent) => {
+    // Get the file from the event
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setCsvFile(file);
+
+    // Should not get here, should not move to the CSV upload step if the
+    // dataset is not selected
+    if (!dataset) {
+      console.error('Dataset not selected');
+      return;
+    }
+
+    // Create a new upload session
+    createUploadSessionMutation({ variables: { dataset: dataset._id }});
   };
+
+  useEffect(() => {
+    // If the upload session was created successfully, then the CSV can be
+    // uploaded
+    if (createUploadSessionResults.data) {
+
+    }
+  }, [createUploadSessionResults]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }}>

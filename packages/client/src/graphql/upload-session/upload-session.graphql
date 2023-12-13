@@ -1,0 +1,6 @@
+mutation createUploadSession($dataset: ID!) {
+  createUploadSession(dataset: $dataset) {
+    dataset,
+    created
+  }
+}
