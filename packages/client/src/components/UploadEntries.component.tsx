@@ -202,6 +202,8 @@ const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession }) => {
       query: ValidateCsvDocument,
       variables: { session: uploadSession._id }
     });
+
+    console.log(validation);
   };
 
 

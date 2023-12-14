@@ -10,7 +10,7 @@ import { EntryUpload, EntryUploadSchema } from './models/entry-upload.model';
 import { UploadSessionResolver } from './resolvers/upload-session.resolver';
 import { UploadSessionService } from './services/upload-session.service';
 import { EntryUploadResolver } from './resolvers/entry-upload.resolver';
-import { EntryUploadService } from './resolvers/entry-upload.service';
+import { EntryUploadService } from './services/entry-upload.service';
 import { UploadSessionPipe } from './pipes/upload-session.pipe';
 import { GcpModule } from '../gcp/gcp.module';
 import { CsvValidationService } from './services/csv-validation.service';

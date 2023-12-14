@@ -25,4 +25,9 @@ export class EntryService {
   async findForDataset(dataset: Dataset): Promise<Entry[]> {
     return this.entryMode.find({ dataset: dataset._id });
   }
+
+  async exists(entryID: string, dataset: Dataset): Promise<boolean> {
+    const entry = await this.entryMode.findOne({ entryID, dataset: dataset._id });
+    return !!entry;
+  }
 }

@@ -8,6 +8,8 @@ import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { CsvValidationService } from './csv-validation.service';
 import { DatasetService } from '../../dataset/dataset.service';
+import { EntryUploadService } from '../services/entry-upload.service';
+import { UploadResult } from '../dtos/upload-result.dto';
 
 @Injectable()
 export class UploadSessionService {
@@ -20,7 +22,8 @@ export class UploadSessionService {
               @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
               private readonly configService: ConfigService,
               private readonly csvValidation: CsvValidationService,
-              private readonly datasetService: DatasetService) {}
+              private readonly datasetService: DatasetService,
+              private readonly entryUploadService: EntryUploadService) {}
 
   async find(id: string): Promise<UploadSession | null> {
     return this.uploadSessionModel.findById(id).exec();
@@ -67,7 +70,7 @@ export class UploadSessionService {
   }
 
   // TODO: Have the function return a status
-  async validateCSV(uploadSession: UploadSession): Promise<boolean> {
+  async validateCSV(uploadSession: UploadSession): Promise<UploadResult> {
     // Verify the CSV is in the bucket
     if (!uploadSession.csvURL) {
       throw new Error('CSV URL not found');
@@ -84,14 +87,22 @@ export class UploadSessionService {
     // Get the cooresponding dataset
     const dataset = await this.datasetService.findById(uploadSession.dataset);
     if (!dataset) {
-      throw new Error('Dataset not found for upload session');
+      return { success: false, message: 'Dataset not found' };
     }
 
     // Validate the CSV contents against the target dataset
-    const csvValidationResults = await this.csvValidation.validate(csvFileContents[0], dataset);
+    const csvValidationResults = await this.csvValidation.validate(csvFileContents[0], dataset, uploadSession);
+
+    if (!csvValidationResults.success) {
+      // TODO: Add object type return here
+      return { success: false, message: csvValidationResults.message };
+    }
+
+    // Otherwise store the validated results for the next step
+    await Promise.all(csvValidationResults.entryUploads!.map(entryUpload => this.entryUploadService.create(entryUpload)));
 
     // Return the validation status
-    return csvValidationResults;
+    return { success: true };
   }
 
   // TODO: Provide user information

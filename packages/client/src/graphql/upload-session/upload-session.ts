@@ -24,7 +24,7 @@ export type ValidateCsvQueryVariables = Types.Exact<{
 }>;
 
 
-export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: boolean };
+export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: { __typename?: 'UploadResult', success: boolean, message?: string | null } };
 
 
 export const CreateUploadSessionDocument = gql`
@@ -97,7 +97,10 @@ export type GetCsvUploadUrlLazyQueryHookResult = ReturnType<typeof useGetCsvUplo
 export type GetCsvUploadUrlQueryResult = Apollo.QueryResult<GetCsvUploadUrlQuery, GetCsvUploadUrlQueryVariables>;
 export const ValidateCsvDocument = gql`
     query validateCSV($session: ID!) {
-  validateCSV(session: $session)
+  validateCSV(session: $session) {
+    success
+    message
+  }
 }
     `;
 

@@ -1,5 +1,5 @@
 import { Mutation, Resolver } from '@nestjs/graphql';
-import { EntryUploadService } from './entry-upload.service';
+import { EntryUploadService } from '../services/entry-upload.service';
 
 @Resolver()
 export class EntryUploadResolver {

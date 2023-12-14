@@ -5,6 +5,7 @@ import { Dataset } from '../../dataset/dataset.model';
 import { Args, ID, Mutation, Query } from '@nestjs/graphql';
 import { UploadSessionPipe } from '../pipes/upload-session.pipe';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
+import { UploadResult } from '../dtos/upload-result.dto';
 
 @Injectable()
 export class UploadSessionResolver {
@@ -29,8 +30,8 @@ export class UploadSessionResolver {
   }
 
   // TODO: Have the return type be a validation message
-  @Query(() => Boolean)
-  async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<boolean> {
+  @Query(() => UploadResult)
+  async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<UploadResult> {
     return await this.uploadSessionService.validateCSV(uploadSession);
   }
 }

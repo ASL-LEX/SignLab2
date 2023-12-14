@@ -6,4 +6,8 @@ import { Model } from 'mongoose';
 @Injectable()
 export class EntryUploadService {
   constructor(@InjectModel(EntryUpload.name) private readonly entryUploadModel: Model<EntryUpload>) {}
+
+  async create(entryUpload: EntryUpload): Promise<EntryUpload> {
+    return this.entryUploadModel.create(entryUpload);
+  }
 }

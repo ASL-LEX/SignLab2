@@ -15,6 +15,9 @@ export class EntryUpload {
 
   @Prop({ required: true })
   filename: string;
+
+  @Prop({ required: true })
+  entryID: string;
 }
 
 export type EntryUploadDocument = EntryUpload & Document;

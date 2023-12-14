@@ -11,5 +11,8 @@ query getCSVUploadURL($session: ID!) {
 }
 
 query validateCSV($session: ID!) {
-  validateCSV(session: $session)
+  validateCSV(session: $session) {
+    success,
+    message
+  }
 }

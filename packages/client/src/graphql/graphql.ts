@@ -502,7 +502,7 @@ export type Query = {
   publicKey: Array<Scalars['String']['output']>;
   studyExists: Scalars['Boolean']['output'];
   users: Array<UserModel>;
-  validateCSV: Scalars['Boolean']['output'];
+  validateCSV: UploadResult;
 };
 
 
@@ -630,6 +630,12 @@ export type TagSchema = {
 export type TagSchemaInput = {
   dataSchema: Scalars['JSON']['input'];
   uiSchema: Scalars['JSON']['input'];
+};
+
+export type UploadResult = {
+  __typename?: 'UploadResult';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
 };
 
 export type UploadSession = {
