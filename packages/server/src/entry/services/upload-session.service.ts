@@ -69,7 +69,6 @@ export class UploadSessionService {
     return url;
   }
 
-  // TODO: Have the function return a status
   async validateCSV(uploadSession: UploadSession): Promise<UploadResult> {
     // Verify the CSV is in the bucket
     if (!uploadSession.csvURL) {
@@ -107,6 +106,14 @@ export class UploadSessionService {
 
   // TODO: Provide user information
   private async deleteOldSession(dataset: Dataset): Promise<void> {
-    await this.uploadSessionModel.deleteMany({ dataset: dataset._id }).exec();
+    const existing = await this.uploadSessionModel.findOne({ dataset: dataset._id }).exec();
+    if (existing) {
+      // Delete the in progress entry uploads
+      await this.entryUploadService.deleteForSession(existing);
+      // Remove cooresponding upload files
+      await this.bucket.deleteFiles({ prefix: `${this.uploadPrefix}/${existing.bucketPrefix}` });
+      // Remove the upload session itself
+      await this.uploadSessionModel.deleteOne({ _id: existing._id }).exec();
+    }
   }
 }
