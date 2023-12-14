@@ -13,6 +13,7 @@ import { EntryUploadResolver } from './resolvers/entry-upload.resolver';
 import { EntryUploadService } from './resolvers/entry-upload.service';
 import { UploadSessionPipe } from './pipes/upload-session.pipe';
 import { GcpModule } from '../gcp/gcp.module';
+import { CsvValidationService } from './services/csv-validation.service';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { GcpModule } from '../gcp/gcp.module';
     UploadSessionResolver,
     UploadSessionPipe,
     EntryUploadResolver,
-    EntryUploadService
+    EntryUploadService,
+    CsvValidationService
   ],
   exports: [EntryPipe, EntriesPipe, EntryService]
 })

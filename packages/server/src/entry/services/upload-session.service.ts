@@ -6,6 +6,8 @@ import { Dataset } from '../../dataset/dataset.model';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
+import { CsvValidationService } from './csv-validation.service';
+import { DatasetService } from '../../dataset/dataset.service';
 
 @Injectable()
 export class UploadSessionService {
@@ -16,7 +18,9 @@ export class UploadSessionService {
 
   constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
               @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
-              private readonly configService: ConfigService) {}
+              private readonly configService: ConfigService,
+              private readonly csvValidation: CsvValidationService,
+              private readonly datasetService: DatasetService) {}
 
   async find(id: string): Promise<UploadSession | null> {
     return this.uploadSessionModel.findById(id).exec();
@@ -77,12 +81,17 @@ export class UploadSessionService {
     const csvFile = this.bucket.file(uploadSession.csvURL);
     const csvFileContents = await csvFile.download();
 
-    console.log(csvFileContents.toString());
+    // Get the cooresponding dataset
+    const dataset = await this.datasetService.findById(uploadSession.dataset);
+    if (!dataset) {
+      throw new Error('Dataset not found for upload session');
+    }
 
     // Validate the CSV contents against the target dataset
+    const csvValidationResults = await this.csvValidation.validate(csvFileContents[0], dataset);
 
     // Return the validation status
-    return true;
+    return csvValidationResults;
   }
 
   // TODO: Provide user information
