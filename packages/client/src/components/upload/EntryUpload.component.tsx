@@ -1,16 +1,23 @@
-import { Button } from '@mui/material';
+import { Button, Box, LinearProgress, Stack } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useApolloClient } from '@apollo/client';
 import { GetEntryUploadUrlDocument } from '../../graphql/upload-session/upload-session';
 import { UploadSession } from '../../graphql/graphql';
 import axios from 'axios';
+import { Dispatch, SetStateAction, useState  } from 'react';
+import {StatusMessage} from '../../models/StatusMessage';
 
 export interface EntryUploadProps {
   uploadSession: UploadSession | null;
+  setValidationMessage: Dispatch<SetStateAction<StatusMessage | null>>;
 }
 
-export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession }) => {
+export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setValidationMessage }) => {
   const apolloClient = useApolloClient();
+
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploadComplete, setUploadComplete] = useState<boolean>(false);
 
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,10 +31,11 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession }) => {
       return;
     }
 
-
     // Filter out non-video files
     const videos = Array.from(files).filter((file) => file.type.startsWith('video'));
 
+    setIsUploading(true);
+    let numUploaded = 0;
     for (const video of videos) {
       const uploadUrlQuery = await apolloClient.query({
         query: GetEntryUploadUrlDocument,
@@ -40,7 +48,6 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession }) => {
       }
 
       const uploadUrl = uploadUrlQuery.data.getEntryUploadURL;
-      console.log(uploadUrl);
 
       // Upload the CSV to the url
       await axios.put(uploadUrl, video, {
@@ -48,16 +55,26 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession }) => {
           'Content-Type': video.type
         }
       });
+
+      numUploaded++;
+      setUploadProgress((numUploaded / videos.length) * 100);
     }
+
+    setIsUploading(false);
+    setUploadComplete(true);
+    setValidationMessage({ message: 'Upload complete', severity: 'success' });
   };
 
   return (
-    <Button variant="outlined" sx={{ margin: '10px' }}>
+    <Stack sx={{ display: 'flex' }}>
       <Button component="label" variant="contained" color="primary" startIcon={<UploadIcon />} sx={{ m: 1 }}>
         Upload Videos
         {/* @ts-expect-error */}
         <input type="file" hidden onChange={handleChange} webkitdirectory="true" mozdirectory="true" accept="image/*" />
       </Button>
-    </Button>
+      <Box sx={{ width: '100%' }}>
+        {isUploading && <LinearProgress value={uploadProgress} variant='determinate' color={uploadComplete ? 'primary' : 'success' }/>}
+      </Box>
+    </Stack>
   );
 };

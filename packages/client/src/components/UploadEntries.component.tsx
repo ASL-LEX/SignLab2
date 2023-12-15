@@ -70,7 +70,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Entry Videos',
       description: '',
-      element: <EntryUpload uploadSession={uploadSession} />
+      element: <EntryUpload uploadSession={uploadSession} setValidationMessage={setValidationMessage} />
     }
   ];
 
