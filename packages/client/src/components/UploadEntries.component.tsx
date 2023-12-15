@@ -33,13 +33,27 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
   const [currentStepLimit, setCurrentStepLimit] = useState(0);
   const [uploadSession, setUploadSession] = useState<UploadSession | null>(null);
+  const [validationMessage, setValidationMessage] = useState<ValidationMessage | null>(null);
+  const [csvValid, setCsvValid] = useState<boolean>(false);
 
   useEffect(() => {
+    let activeStep = 0;
+    let currentStepLimit = 0;
+
     if (selectedDataset) {
-      setActiveStep(1);
-      setCurrentStepLimit(1);
+      activeStep++;
+      currentStepLimit++;
     }
-  }, [selectedDataset]);
+
+    if (csvValid) {
+      activeStep++;
+      currentStepLimit++;
+    }
+
+    setActiveStep(activeStep);
+    setCurrentStepLimit(currentStepLimit);
+
+  }, [selectedDataset, csvValid]);
 
   const steps = [
     {
@@ -50,7 +64,13 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Information on Entries',
       description: '',
-      element: <CSVUpload dataset={selectedDataset} uploadSession={uploadSession} setUploadSession={setUploadSession} />
+      element: <CSVUpload
+        dataset={selectedDataset}
+        uploadSession={uploadSession}
+        setUploadSession={setUploadSession}
+        setValidationMessage={setValidationMessage}
+        setCsvValid={setCsvValid}
+        />
     },
     {
       label: 'Upload Entry Videos',
@@ -87,6 +107,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
                 </Step>
               ))}
             </Stepper>
+          <ValidationMessageDisplay validationMessage={validationMessage} />
           </Box>
         </DialogContent>
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
@@ -143,16 +164,17 @@ interface CSVUploadProps {
   dataset: Dataset | null;
   uploadSession: UploadSession | null;
   setUploadSession: Dispatch<SetStateAction<UploadSession | null>>;
+  setValidationMessage: Dispatch<SetStateAction<ValidationMessage | null>>;
+  setCsvValid: Dispatch<SetStateAction<boolean>>;
 }
 
-const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession }) => {
+const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession, setValidationMessage, setCsvValid }) => {
   const apolloClient = useApolloClient();
 
   // Implemented with using the apollo client directly instead of the useMutation hook
   // to reduce the need for multiple use effects to handle each step change
   const handleCSVChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(file);
     if (!file) {
       return;
     }
@@ -203,7 +225,15 @@ const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession }) => {
       variables: { session: uploadSession._id }
     });
 
-    console.log(validation);
+    // Share any validation results
+    const result = validation.data!.validateCSV;
+    if (result.success) {
+      setValidationMessage({ severity: 'success', message: 'CSV validated successfully' });
+      setCsvValid(true);
+    } else {
+      setValidationMessage({ severity: 'error', message: result.message });
+      setCsvValid(false);
+    }
   };
 
 
@@ -222,5 +252,23 @@ const EntryUpload: React.FC = () => {
     <Button variant="outlined" sx={{ margin: '10px' }}>
       Upload Videos (ZIP)
     </Button>
+  );
+};
+
+interface ValidationMessageDisplayProps {
+  validationMessage: ValidationMessage | null;
+}
+
+interface ValidationMessage {
+  severity: 'error' | 'warning' | 'info' | 'success';
+  message: string;
+}
+
+// TODO: Have the  display have various states for each severity
+const ValidationMessageDisplay: React.FC<ValidationMessageDisplayProps> = ({ validationMessage }) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      {validationMessage && <Typography variant="body2">{validationMessage.message}</Typography>}
+    </Box>
   );
 };
