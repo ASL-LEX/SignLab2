@@ -33,4 +33,12 @@ export class UploadSessionResolver {
   async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession): Promise<UploadResult> {
     return await this.uploadSessionService.validateCSV(uploadSession);
   }
+
+  // TODO: Implement caching for the upload session since it's used a lot
+  @Query(() => String)
+  async getEntryUploadURL(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
+                          @Args('filename') filename: string,
+                          @Args('contentType') contentType: string): Promise<string> {
+    return this.uploadSessionService.getEntryUploadURL(uploadSession, filename, contentType);
+  }
 }

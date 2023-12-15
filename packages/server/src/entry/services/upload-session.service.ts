@@ -69,6 +69,20 @@ export class UploadSessionService {
     return url;
   }
 
+  async getEntryUploadURL(uploadSession: UploadSession, filename: string, filetype: string): Promise<string> {
+    const entryURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${filename}`;
+
+    const [url] = await this.bucket
+      .file(entryURL)
+      .getSignedUrl({
+        action: 'write',
+        expires: Date.now() + 2 * 60 * 1000, // 2 minutes
+        contentType: filetype,
+      });
+
+    return url;
+  }
+
   async validateCSV(uploadSession: UploadSession): Promise<UploadResult> {
     // Verify the CSV is in the bucket
     if (!uploadSession.csvURL) {

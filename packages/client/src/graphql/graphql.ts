@@ -486,6 +486,7 @@ export type Query = {
   /** Get the presigned URL for where to upload the CSV against */
   getCSVUploadURL: Scalars['String']['output'];
   getDatasets: Array<Dataset>;
+  getEntryUploadURL: Scalars['String']['output'];
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
   getProjects: Array<Project>;
@@ -522,6 +523,13 @@ export type QueryFindStudiesArgs = {
 
 
 export type QueryGetCsvUploadUrlArgs = {
+  session: Scalars['ID']['input'];
+};
+
+
+export type QueryGetEntryUploadUrlArgs = {
+  contentType: Scalars['String']['input'];
+  filename: Scalars['String']['input'];
   session: Scalars['ID']['input'];
 };
 

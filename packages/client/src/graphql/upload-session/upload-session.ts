@@ -26,6 +26,15 @@ export type ValidateCsvQueryVariables = Types.Exact<{
 
 export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: { __typename?: 'UploadResult', success: boolean, message?: string | null } };
 
+export type GetEntryUploadUrlQueryVariables = Types.Exact<{
+  session: Types.Scalars['ID']['input'];
+  filename: Types.Scalars['String']['input'];
+  contentType: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetEntryUploadUrlQuery = { __typename?: 'Query', getEntryUploadURL: string };
+
 
 export const CreateUploadSessionDocument = gql`
     mutation createUploadSession($dataset: ID!) {
@@ -131,3 +140,42 @@ export function useValidateCsvLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type ValidateCsvQueryHookResult = ReturnType<typeof useValidateCsvQuery>;
 export type ValidateCsvLazyQueryHookResult = ReturnType<typeof useValidateCsvLazyQuery>;
 export type ValidateCsvQueryResult = Apollo.QueryResult<ValidateCsvQuery, ValidateCsvQueryVariables>;
+export const GetEntryUploadUrlDocument = gql`
+    query getEntryUploadURL($session: ID!, $filename: String!, $contentType: String!) {
+  getEntryUploadURL(
+    session: $session
+    filename: $filename
+    contentType: $contentType
+  )
+}
+    `;
+
+/**
+ * __useGetEntryUploadUrlQuery__
+ *
+ * To run a query within a React component, call `useGetEntryUploadUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEntryUploadUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEntryUploadUrlQuery({
+ *   variables: {
+ *      session: // value for 'session'
+ *      filename: // value for 'filename'
+ *      contentType: // value for 'contentType'
+ *   },
+ * });
+ */
+export function useGetEntryUploadUrlQuery(baseOptions: Apollo.QueryHookOptions<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>(GetEntryUploadUrlDocument, options);
+      }
+export function useGetEntryUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>(GetEntryUploadUrlDocument, options);
+        }
+export type GetEntryUploadUrlQueryHookResult = ReturnType<typeof useGetEntryUploadUrlQuery>;
+export type GetEntryUploadUrlLazyQueryHookResult = ReturnType<typeof useGetEntryUploadUrlLazyQuery>;
+export type GetEntryUploadUrlQueryResult = Apollo.QueryResult<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>;
