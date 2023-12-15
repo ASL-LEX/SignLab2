@@ -30,6 +30,9 @@ export class UploadSession {
   /** URL To the CSV within the bucket storage */
   @Prop({ required: false, type: String })
   csvURL: string | null;
+
+  @Prop({ required: false, type: String })
+  entryPrefix: string | null;
 }
 
 export type UploadSessionDocument = UploadSession & Document;

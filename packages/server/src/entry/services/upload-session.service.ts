@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { UploadSession } from '../models/upload-session.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -16,6 +16,7 @@ export class UploadSessionService {
   private readonly uploadBucket = this.configService.getOrThrow<string>('gcp.storage.bucket');
   private readonly uploadPrefix = this.configService.getOrThrow<string>('upload.prefix');
   private readonly csvFileName = this.configService.getOrThrow<string>('upload.csvFileName');
+  private readonly entryFolder = this.configService.getOrThrow<string>('upload.entryFolder');
   private readonly bucket: Bucket = this.storage.bucket(this.uploadBucket);
 
   constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
@@ -54,6 +55,7 @@ export class UploadSessionService {
   /** Generate the presigned URL for where to upload the CSV against */
   async getCSVUploadURL(uploadSession: UploadSession): Promise<string> {
     const csvURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.csvFileName}`;
+    const entryPrefix = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.entryFolder}`;
 
     const [url] = await this.bucket
       .file(csvURL)
@@ -64,13 +66,17 @@ export class UploadSessionService {
       });
 
     // Add the url to the upload session to signify the upload is ready
-    await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL } });
+    await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL, entryPrefix } });
 
     return url;
   }
 
   async getEntryUploadURL(uploadSession: UploadSession, filename: string, filetype: string): Promise<string> {
-    const entryURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${filename}`;
+    if (!uploadSession.entryPrefix) {
+      throw new BadRequestException('CSV must be uploaded before entries');
+    }
+
+    const entryURL = `${uploadSession.entryPrefix}/${filename}`;
 
     const [url] = await this.bucket
       .file(entryURL)
@@ -86,11 +92,11 @@ export class UploadSessionService {
   async validateCSV(uploadSession: UploadSession): Promise<UploadResult> {
     // Verify the CSV is in the bucket
     if (!uploadSession.csvURL) {
-      throw new Error('CSV URL not found');
+      throw new BadRequestException('CSV URL not found');
     }
     const exists = await this.bucket.file(uploadSession.csvURL).exists();
     if (!exists) {
-      throw new Error('CSV not found');
+      throw new BadRequestException('CSV not found');
     }
 
     // Download the CSV to /tmp location

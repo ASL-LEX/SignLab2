@@ -10,6 +10,7 @@ export default () => ({
   },
   upload: {
     prefix: process.env.GCP_STORAGE_PREFIX || 'uploads',
-    csvFileName: process.env.GCP_STORAGE_CSV_FILENAME || 'data.csv'
+    csvFileName: process.env.GCP_STORAGE_CSV_FILENAME || 'data.csv',
+    entryFolder: process.env.GCP_STORAGE_ENTRY_FOLDER || 'entries'
   }
 });
