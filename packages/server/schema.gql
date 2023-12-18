@@ -64,8 +64,14 @@ type UploadSession {
 }
 
 type UploadResult {
-  success: Boolean!
+  status: UploadStatus!
   message: String
+}
+
+enum UploadStatus {
+  ERROR
+  WARNING
+  SUCCESS
 }
 
 type Tag {

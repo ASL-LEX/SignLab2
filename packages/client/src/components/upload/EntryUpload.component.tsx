@@ -48,7 +48,6 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
       }
 
       const uploadUrl = uploadUrlQuery.data.getEntryUploadURL;
-      console.log(`Uploading ${video.name} to ${uploadUrl}`);
 
       // Upload the CSV to the url
       await axios.put(uploadUrl, video, {

@@ -1,4 +1,4 @@
-import { Dataset, UploadSession } from '../../graphql/graphql';
+import { Dataset, UploadSession, UploadStatus } from '../../graphql/graphql';
 import { Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { StatusMessage } from '../../models/StatusMessage';
 import { CreateUploadSessionDocument, GetCsvUploadUrlDocument, ValidateCsvDocument } from '../../graphql/upload-session/upload-session';
@@ -75,7 +75,7 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession,
 
     // Share any validation results
     const result = validation.data!.validateCSV;
-    if (result.success) {
+    if (result.status == UploadStatus.Success ) {
       setValidationMessage({ severity: 'success', message: 'CSV validated successfully' });
       setCsvValid(true);
     } else {

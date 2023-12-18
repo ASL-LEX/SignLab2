@@ -24,7 +24,7 @@ export type ValidateCsvQueryVariables = Types.Exact<{
 }>;
 
 
-export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: { __typename?: 'UploadResult', success: boolean, message?: string | null } };
+export type ValidateCsvQuery = { __typename?: 'Query', validateCSV: { __typename?: 'UploadResult', status: Types.UploadStatus, message?: string | null } };
 
 export type GetEntryUploadUrlQueryVariables = Types.Exact<{
   session: Types.Scalars['ID']['input'];
@@ -40,7 +40,7 @@ export type CompleteUploadSessionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CompleteUploadSessionMutation = { __typename?: 'Mutation', completeUploadSession: { __typename?: 'UploadResult', success: boolean, message?: string | null } };
+export type CompleteUploadSessionMutation = { __typename?: 'Mutation', completeUploadSession: { __typename?: 'UploadResult', status: Types.UploadStatus, message?: string | null } };
 
 
 export const CreateUploadSessionDocument = gql`
@@ -114,7 +114,7 @@ export type GetCsvUploadUrlQueryResult = Apollo.QueryResult<GetCsvUploadUrlQuery
 export const ValidateCsvDocument = gql`
     query validateCSV($session: ID!) {
   validateCSV(session: $session) {
-    success
+    status
     message
   }
 }
@@ -189,7 +189,7 @@ export type GetEntryUploadUrlQueryResult = Apollo.QueryResult<GetEntryUploadUrlQ
 export const CompleteUploadSessionDocument = gql`
     mutation completeUploadSession($session: ID!) {
   completeUploadSession(session: $session) {
-    success
+    status
     message
   }
 }

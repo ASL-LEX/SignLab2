@@ -73,7 +73,6 @@ export type Entry = {
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
   mediaType: Scalars['String']['output'];
-  mediaURL: Scalars['String']['output'];
   meta: Scalars['JSON']['output'];
   organization: Scalars['ID']['output'];
 };
@@ -82,7 +81,6 @@ export type EntryCreate = {
   creator: Scalars['ID']['input'];
   entryID: Scalars['String']['input'];
   mediaType: Scalars['String']['input'];
-  mediaURL: Scalars['String']['input'];
   meta: Scalars['JSON']['input'];
 };
 
@@ -643,7 +641,7 @@ export type TagSchemaInput = {
 export type UploadResult = {
   __typename?: 'UploadResult';
   message?: Maybe<Scalars['String']['output']>;
-  success: Scalars['Boolean']['output'];
+  status: UploadStatus;
 };
 
 export type UploadSession = {
@@ -653,6 +651,12 @@ export type UploadSession = {
   created: Scalars['DateTime']['output'];
   dataset: Scalars['String']['output'];
 };
+
+export enum UploadStatus {
+  Error = 'ERROR',
+  Success = 'SUCCESS',
+  Warning = 'WARNING'
+}
 
 export type UserModel = {
   __typename?: 'UserModel';

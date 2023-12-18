@@ -12,7 +12,7 @@ query getCSVUploadURL($session: ID!) {
 
 query validateCSV($session: ID!) {
   validateCSV(session: $session) {
-    success,
+    status,
     message
   }
 }
@@ -23,7 +23,7 @@ query getEntryUploadURL($session: ID!, $filename: String!, $contentType: String!
 
 mutation completeUploadSession($session: ID!) {
   completeUploadSession(session: $session) {
-    success,
+    status,
     message
   }
 }

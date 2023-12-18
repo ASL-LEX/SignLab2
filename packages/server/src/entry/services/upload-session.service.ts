@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { CsvValidationService } from './csv-validation.service';
 import { DatasetService } from '../../dataset/dataset.service';
 import { EntryUploadService } from '../services/entry-upload.service';
-import { UploadResult } from '../dtos/upload-result.dto';
+import { UploadStatus, UploadResult } from '../dtos/upload-result.dto';
 import { EntryService } from './entry.service';
 
 @Injectable()
@@ -59,7 +59,7 @@ export class UploadSessionService {
     // Get the dataset
     const dataset = await this.datasetService.findById(uploadSession.dataset);
     if (!dataset) {
-      return { success: false, message: 'Dataset not found' };
+      return { status: UploadStatus.ERROR, message: 'Dataset not found' };
     }
 
     // Get all the entry uploads
@@ -106,13 +106,13 @@ export class UploadSessionService {
     await this.deleteOldSession(dataset);
 
     // Let users know if there were missing entries
-    // TODO: Add concept of severity to messages
+    // TODO: Add concept of status to messages
     if (missingEntries.length > 0) {
-      return { success: false, message: `The following entries where in the CSV, but not uploaded:\n ${missingEntries.join(', ')}` };
+      return { status: UploadStatus.WARNING, message: `The following entries where in the CSV, but not uploaded:\n ${missingEntries.join(', ')}` };
     }
 
     // No issues
-    return { success: true };
+    return { status: UploadStatus.SUCCESS };
   }
 
   /** Generate the presigned URL for where to upload the CSV against */
@@ -169,7 +169,7 @@ export class UploadSessionService {
     // Get the cooresponding dataset
     const dataset = await this.datasetService.findById(uploadSession.dataset);
     if (!dataset) {
-      return { success: false, message: 'Dataset not found' };
+      return { status: UploadStatus.ERROR, message: 'Dataset not found' };
     }
 
     // Validate the CSV contents against the target dataset
@@ -177,14 +177,14 @@ export class UploadSessionService {
 
     if (!csvValidationResults.success) {
       // TODO: Add object type return here
-      return { success: false, message: csvValidationResults.message };
+      return { status: UploadStatus.ERROR, message: csvValidationResults.message };
     }
 
     // Otherwise store the validated results for the next step
     await Promise.all(csvValidationResults.entryUploads!.map(entryUpload => this.entryUploadService.create(entryUpload)));
 
     // Return the validation status
-    return { success: true };
+    return { status: UploadStatus.SUCCESS };
   }
 
   // TODO: Provide user information
