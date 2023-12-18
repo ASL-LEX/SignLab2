@@ -30,6 +30,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
   const [uploadSession, setUploadSession] = useState<UploadSession | null>(null);
   const [validationMessage, setValidationMessage] = useState<StatusMessage | null>(null);
   const [csvValid, setCsvValid] = useState<boolean>(false);
+  const [entryUploadComplete, setEntryUploadComplete] = useState<boolean>(false);
 
   useEffect(() => {
     let activeStep = 0;
@@ -45,10 +46,16 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
       currentStepLimit++;
     }
 
+    if (selectedDataset && csvValid && entryUploadComplete) {
+      currentStepLimit++;
+    }
+
     setActiveStep(activeStep);
     setCurrentStepLimit(currentStepLimit);
 
-  }, [selectedDataset, csvValid]);
+    console.log(activeStep, currentStepLimit);
+
+  }, [selectedDataset, csvValid, entryUploadComplete]);
 
   const steps = [
     {
@@ -70,7 +77,10 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Entry Videos',
       description: '',
-      element: <EntryUpload uploadSession={uploadSession} setValidationMessage={setValidationMessage} />
+      element: <EntryUpload
+        uploadSession={uploadSession}
+        setValidationMessage={setValidationMessage}
+        setEntryUploadComplete={setEntryUploadComplete} />
     }
   ];
 

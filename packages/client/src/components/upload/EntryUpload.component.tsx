@@ -2,7 +2,7 @@ import { Button, Box, LinearProgress, Stack } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useApolloClient } from '@apollo/client';
 import { GetEntryUploadUrlDocument, CompleteUploadSessionDocument } from '../../graphql/upload-session/upload-session';
-import { UploadSession } from '../../graphql/graphql';
+import { UploadSession, UploadStatus } from '../../graphql/graphql';
 import axios from 'axios';
 import { Dispatch, SetStateAction, useState  } from 'react';
 import { StatusMessage } from '../../models/StatusMessage';
@@ -10,9 +10,10 @@ import { StatusMessage } from '../../models/StatusMessage';
 export interface EntryUploadProps {
   uploadSession: UploadSession | null;
   setValidationMessage: Dispatch<SetStateAction<StatusMessage | null>>;
+  setEntryUploadComplete: Dispatch<SetStateAction<boolean>>;
 }
 
-export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setValidationMessage }) => {
+export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setValidationMessage, setEntryUploadComplete }) => {
   const apolloClient = useApolloClient();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -65,11 +66,19 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
       variables: { session: uploadSession._id }
     });
 
-    console.log(completionResult);
+    const completionData = completionResult.data?.completeUploadSession;
+    if (!completionData) {
+      console.error('Failed to complete upload session');
+      return;
+    }
 
+    if (completionData.status == UploadStatus.Warning) {
+      console.log('Upload session completed with warnings');
+    }
 
     setIsUploading(false);
     setUploadComplete(true);
+    setEntryUploadComplete(true);
     setValidationMessage({ message: 'Upload complete', severity: 'success' });
   };
 
