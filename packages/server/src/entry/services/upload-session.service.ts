@@ -86,9 +86,10 @@ export class UploadSessionService {
       // Create the entry object
       // TODO: Remove media URL
       //       Determine media type
+      const contentType = entryFile.metadata.contentType;
       const entry = await this.entryService.create({
         entryID: entryUpload.entryID,
-        mediaType: 'video',
+        contentType: entryFile.metadata.contentType,
         meta: entryUpload.metadata
       }, dataset);
 

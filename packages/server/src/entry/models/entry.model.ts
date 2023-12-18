@@ -23,7 +23,7 @@ export class Entry {
 
   @Prop({ required: true, trim: true })
   @Field()
-  mediaType: 'video' | 'image';
+  contentType: string;
 
   @Prop({ required: true })
   recordedInSignLab: boolean;
