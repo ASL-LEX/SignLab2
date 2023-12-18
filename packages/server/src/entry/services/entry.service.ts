@@ -30,4 +30,8 @@ export class EntryService {
     const entry = await this.entryMode.findOne({ entryID, dataset: dataset._id });
     return !!entry;
   }
+
+  async setBucketLocation(entry: Entry, bucketLocation: string): Promise<void> {
+    await this.entryMode.updateOne({ _id: entry._id }, { bucketLocation });
+  }
 }

@@ -18,7 +18,7 @@ export class Entry {
   @Field()
   entryID: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ trim: true })
   bucketLocation: string;
 
   @Prop({ required: true, trim: true })

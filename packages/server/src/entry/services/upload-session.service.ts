@@ -83,19 +83,23 @@ export class UploadSessionService {
         continue;
       }
 
-      // Move the entry to the dataset
-      const newName = `${dataset.bucketPrefix}/${entryUpload.filename}`;
-      await entryFile.move(newName);
-
       // Create the entry object
       // TODO: Remove media URL
       //       Determine media type
-      await this.entryService.create({
+      const entry = await this.entryService.create({
         entryID: entryUpload.entryID,
-        bucketLocation: newName,
         mediaType: 'video',
         meta: entryUpload.metadata
       }, dataset);
+
+      // Move the entry to the dataset
+      const fileExtension = entryUpload.filename.split('.').pop();
+      const filename = `${entry._id}.${fileExtension}`;
+      const newName = `${dataset.bucketPrefix}/${filename}`;
+      await entryFile.move(newName);
+
+      // Add the bucket URL to the entry
+      await this.entryService.setBucketLocation(entry, newName);
     }
 
     // Now remove the upload session

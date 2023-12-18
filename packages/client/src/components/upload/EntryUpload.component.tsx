@@ -32,7 +32,7 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
     }
 
     // Filter out non-video files
-    const videos = Array.from(files).filter((file) => file.type.startsWith('video'));
+    const videos = Array.from(files).filter((file) => file.type.startsWith('video') || file.type.startsWith('image'));
 
     setIsUploading(true);
     let numUploaded = 0;
