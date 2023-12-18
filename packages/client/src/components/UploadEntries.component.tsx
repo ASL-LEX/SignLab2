@@ -1,11 +1,22 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import DownloadIcon from '@mui/icons-material/Download';
-import { useState } from 'react';
-import { Box, FormControl, IconButton, MenuItem, Paper, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Box,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+  Typography,
+ } from '@mui/material';
+import { Dataset, UploadSession } from '../graphql/graphql';
+import { CSVUpload } from './upload/CSVUpload.component';
+import { StatusMessage } from '../models/StatusMessage';
+import { DatasetSelect } from './upload/DatasetSelect.component';
+import { EntryUpload } from './upload/EntryUpload.component';
 
 interface ShowProps {
   show: boolean;
@@ -14,135 +25,128 @@ interface ShowProps {
 
 export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [name, setName] = useState('');
-  const [nameValid, setNameValid] = useState(false);
-  const [entriesValid, setEntriesValid] = useState(false);
-  const [videosValid, setVideosValid] = useState(false);
+  const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
+  const [currentStepLimit, setCurrentStepLimit] = useState(0);
+  const [uploadSession, setUploadSession] = useState<UploadSession | null>(null);
+  const [validationMessage, setValidationMessage] = useState<StatusMessage | null>(null);
+  const [csvValid, setCsvValid] = useState<boolean>(false);
+  const [entryUploadComplete, setEntryUploadComplete] = useState<boolean>(false);
 
-  const handleNameChange = (event: any) => {
-    setName(event.target.value);
-    setNameValid(true);
-  };
+  useEffect(() => {
+    let activeStep = 0;
+    let currentStepLimit = 0;
 
-  //need to add logic for checking csv format
-  //currently the funcion validates as soon as user
-  //clicks the button for both CSV and Videos upload
-  const handleEntriesUpload = () => {
-    setEntriesValid(true);
-  };
-
-  const handleVideosUpload = () => {
-    setVideosValid(true);
-  };
-
-  const handleNext = () => {
-    if (activeStep == 0 && nameValid) {
-      console.log('first spot');
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else if (activeStep == 1 && entriesValid) {
-      console.log('second spot');
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else if (activeStep == 2 && videosValid) {
-      console.log('third spot');
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (selectedDataset) {
+      activeStep++;
+      currentStepLimit++;
     }
-  };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    if (selectedDataset && csvValid) {
+      activeStep++;
+      currentStepLimit++;
+    }
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+    if (selectedDataset && csvValid && entryUploadComplete) {
+      currentStepLimit++;
+    }
+
+    setActiveStep(activeStep);
+    setCurrentStepLimit(currentStepLimit);
+  }, [selectedDataset, csvValid, entryUploadComplete]);
 
   const steps = [
     {
       label: 'Select Dataset to Upload To',
       description: `Select Existing Dataset.`,
-      element: (
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-          <Select sx={{ width: 200 }} labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" value={name} onChange={handleNameChange} label="name">
-            <MenuItem value={10}>
-              <Typography variant="body2">dataset name 1</Typography>
-            </MenuItem>
-            <MenuItem value={20}>
-              <Typography variant="body2">collection of data</Typography>
-            </MenuItem>
-            <MenuItem value={30}>
-              <Typography variant="body2">verbs and conjugations</Typography>
-            </MenuItem>
-          </Select>
-        </FormControl>
-      )
+      element: <DatasetSelect setSelectedDataset={setSelectedDataset} selectedDataset={selectedDataset} />
     },
     {
       label: 'Upload Information on Entries',
       description: '',
-      element: (
-        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          <Button onClick={handleEntriesUpload}>Upload CSV</Button>
-          <IconButton sx={{ color: 'darkgreen', marginLeft: '20px' }}>
-            <DownloadIcon />
-          </IconButton>
-        </Box>
-      )
+      element: <CSVUpload
+        dataset={selectedDataset}
+        uploadSession={uploadSession}
+        setUploadSession={setUploadSession}
+        setValidationMessage={setValidationMessage}
+        setCsvValid={setCsvValid}
+        />
     },
     {
       label: 'Upload Entry Videos',
       description: '',
-      element: (
-        <Button onClick={handleVideosUpload} variant="outlined" sx={{ margin: '10px' }}>
-          Upload Videos (ZIP)
-        </Button>
-      )
+      element: <EntryUpload
+        uploadSession={uploadSession}
+        setValidationMessage={setValidationMessage}
+        setEntryUploadComplete={setEntryUploadComplete} />
     }
   ];
 
+  const onClose = () => {
+    props.toggleModal();
+    setActiveStep(0);
+    setCurrentStepLimit(0);
+    setSelectedDataset(null);
+    setUploadSession(null);
+    setValidationMessage(null);
+    setCsvValid(false);
+    setEntryUploadComplete(false);
+  }
+
+  const nextOrComplete = () => {
+    if (activeStep === steps.length - 1) {
+      onClose();
+    } else {
+      if (selectedDataset) {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+      setActiveStep(activeStep + 1);
+    }
+  };
+
+
   return (
     <div>
-      <Dialog open={props.show} onClose={props.toggleModal}>
+      <Dialog open={props.show} onClose={onClose}>
         <DialogTitle sx={{ fontWeight: 'bold', marginTop: '10px' }}>New Entry Upload</DialogTitle>
         <DialogContent>
           <Box sx={{ minWidth: 400 }}>
             <Stepper sx={{ minWidth: 400 }} activeStep={activeStep} orientation="vertical">
-              {steps.map((step, index) => (
+              {steps.map((step) => (
                 <Step key={step.label}>
-                  <StepLabel optional={index === 2 ? <Typography variant="caption">Last step</Typography> : null}>{step.label}</StepLabel>
+                  <StepLabel>{step.label}</StepLabel>
                   <StepContent>
                     <Typography variant="body2">{step.description}</Typography>
-                    {step.element ? step.element : null}
-                    <Box sx={{ mb: 2 }}>
-                      <div>
-                        <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                          {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                        </Button>
-                        <Button disabled={index === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-                          Back
-                        </Button>
-                      </div>
-                    </Box>
+                    {step.element}
                   </StepContent>
                 </Step>
               ))}
             </Stepper>
-            {activeStep === steps.length && (
-              <Paper square elevation={0} sx={{ p: 3 }}>
-                <Typography>All steps completed - you&apos;re finished</Typography>
-                <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                  Reset
-                </Button>
-              </Paper>
-            )}
+          <ValidationMessageDisplay validationMessage={validationMessage} />
           </Box>
         </DialogContent>
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
-          <Button onClick={props.toggleModal}>Cancel</Button>
-          <Button variant="contained" onClick={props.toggleModal}>
-            Upload
+          {activeStep != 0 && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
+          <Button onClick={onClose}>Cancel</Button>
+          <Button
+            onClick={nextOrComplete}
+            disabled={activeStep >= currentStepLimit}>
+            {activeStep == steps.length - 1 ? 'Complete' : 'Next'}
           </Button>
         </DialogActions>
       </Dialog>
     </div>
+  );
+};
+
+interface ValidationMessageDisplayProps {
+  validationMessage: StatusMessage | null;
+}
+
+// TODO: Have the  display have various states for each severity
+const ValidationMessageDisplay: React.FC<ValidationMessageDisplayProps> = ({ validationMessage }) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      {validationMessage && <Typography variant="body2">{validationMessage.message}</Typography>}
+    </Box>
   );
 };

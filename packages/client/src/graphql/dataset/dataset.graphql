@@ -1,0 +1,7 @@
+query getDatasets {
+  getDatasets {
+    _id,
+    name,
+    description
+  }
+}

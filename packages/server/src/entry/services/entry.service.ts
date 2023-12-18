@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Entry } from './entry.model';
+import { Entry } from '../models/entry.model';
 import { Model } from 'mongoose';
-import { EntryCreate } from './dtos/create.dto';
-import {Dataset} from 'src/dataset/dataset.model';
+import { EntryCreate } from '../dtos/create.dto';
+import { Dataset } from '../../dataset/dataset.model';
 
 @Injectable()
 export class EntryService {
@@ -24,5 +24,14 @@ export class EntryService {
 
   async findForDataset(dataset: Dataset): Promise<Entry[]> {
     return this.entryMode.find({ dataset: dataset._id });
+  }
+
+  async exists(entryID: string, dataset: Dataset): Promise<boolean> {
+    const entry = await this.entryMode.findOne({ entryID, dataset: dataset._id });
+    return !!entry;
+  }
+
+  async setBucketLocation(entry: Entry, bucketLocation: string): Promise<void> {
+    await this.entryMode.updateOne({ _id: entry._id }, { bucketLocation });
   }
 }

@@ -18,13 +18,12 @@ export class Entry {
   @Field()
   entryID: string;
 
-  @Prop({ required: true, trim: true })
-  @Field()
-  mediaURL: string;
+  @Prop({ trim: true })
+  bucketLocation: string;
 
   @Prop({ required: true, trim: true })
   @Field()
-  mediaType: 'video' | 'image';
+  contentType: string;
 
   @Prop({ required: true })
   recordedInSignLab: boolean;

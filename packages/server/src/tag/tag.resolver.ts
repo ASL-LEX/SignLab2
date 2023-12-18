@@ -4,7 +4,7 @@ import { Tag } from './tag.model';
 import { StudyPipe } from '../study/pipes/study.pipe';
 import { Study } from '../study/study.model';
 import { EntriesPipe, EntryPipe } from '../entry/pipes/entry.pipe';
-import { Entry } from '../entry/entry.model';
+import { Entry } from '../entry/models/entry.model';
 import { TagPipe } from './pipes/tag.pipe';
 import JSON from 'graphql-type-json';
 

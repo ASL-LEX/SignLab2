@@ -49,12 +49,29 @@ type Entry {
   _id: String!
   organization: ID!
   entryID: String!
-  mediaURL: String!
-  mediaType: String!
+  contentType: String!
   dataset: ID!
   creator: ID!
   dateCreated: DateTime!
   meta: JSON!
+}
+
+type UploadSession {
+  """The ID of the upload session"""
+  _id: ID!
+  dataset: String!
+  created: DateTime!
+}
+
+type UploadResult {
+  status: UploadStatus!
+  message: String
+}
+
+enum UploadStatus {
+  ERROR
+  WARNING
+  SUCCESS
 }
 
 type Tag {
@@ -89,6 +106,11 @@ type Query {
   studyExists(name: String!, project: ID!): Boolean!
   findStudies(project: ID!): [Study!]!
   entryForDataset(dataset: ID!): [Entry!]!
+
+  """Get the presigned URL for where to upload the CSV against"""
+  getCSVUploadURL(session: ID!): String!
+  validateCSV(session: ID!): UploadResult!
+  getEntryUploadURL(session: ID!, filename: String!, contentType: String!): String!
 }
 
 type Mutation {
@@ -103,6 +125,10 @@ type Mutation {
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
   createEntry(entry: EntryCreate!, dataset: ID!): Entry!
+  createUploadSession(dataset: ID!): UploadSession!
+  completeUploadSession(session: ID!): UploadResult!
+  uploadEntryCSV: Boolean!
+  processEntryUploads: Boolean!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!
@@ -138,8 +164,7 @@ input TagSchemaInput {
 
 input EntryCreate {
   entryID: String!
-  mediaURL: String!
-  mediaType: String!
+  contentType: String!
   creator: ID!
   meta: JSON!
 }

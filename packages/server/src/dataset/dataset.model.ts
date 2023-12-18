@@ -18,6 +18,9 @@ export class Dataset {
   @Prop({ required: true })
   @Field()
   description: string;
+
+  @Prop()
+  bucketPrefix: string;
 }
 
 export type DatasetDocument = Dataset & Document;

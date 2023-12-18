@@ -1,6 +1,6 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { EntryService } from '../entry.service';
-import { Entry } from '../entry.model';
+import { EntryService } from '../services/entry.service';
+import { Entry } from '../models/entry.model';
 
 @Injectable()
 export class EntryPipe implements PipeTransform<string, Promise<Entry>> {

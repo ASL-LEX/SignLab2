@@ -1,0 +1,29 @@
+mutation createUploadSession($dataset: ID!) {
+  createUploadSession(dataset: $dataset) {
+    _id,
+    dataset,
+    created
+  }
+}
+
+query getCSVUploadURL($session: ID!) {
+  getCSVUploadURL(session: $session)
+}
+
+query validateCSV($session: ID!) {
+  validateCSV(session: $session) {
+    status,
+    message
+  }
+}
+
+query getEntryUploadURL($session: ID!, $filename: String!, $contentType: String!) {
+  getEntryUploadURL(session: $session, filename: $filename, contentType: $contentType)
+}
+
+mutation completeUploadSession($session: ID!) {
+  completeUploadSession(session: $session) {
+    status,
+    message
+  }
+}

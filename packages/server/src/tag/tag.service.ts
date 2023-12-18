@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Tag } from './tag.model';
 import { Model } from 'mongoose';
 import { Study } from '../study/study.model';
-import { Entry } from '../entry/entry.model';
+import { Entry } from '../entry/models/entry.model';
 import { StudyService } from '../study/study.service';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 

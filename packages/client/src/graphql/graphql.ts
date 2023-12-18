@@ -73,7 +73,6 @@ export type Entry = {
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
   mediaType: Scalars['String']['output'];
-  mediaURL: Scalars['String']['output'];
   meta: Scalars['JSON']['output'];
   organization: Scalars['ID']['output'];
 };
@@ -82,7 +81,6 @@ export type EntryCreate = {
   creator: Scalars['ID']['input'];
   entryID: Scalars['String']['input'];
   mediaType: Scalars['String']['input'];
-  mediaURL: Scalars['String']['input'];
   meta: Scalars['JSON']['input'];
 };
 
@@ -184,6 +182,7 @@ export type Mutation = {
   changeStudyDescription: Study;
   changeStudyName: Study;
   completeTag: Scalars['Boolean']['output'];
+  completeUploadSession: UploadResult;
   createDataset: Dataset;
   createEntry: Entry;
   createInvite: InviteModel;
@@ -191,6 +190,7 @@ export type Mutation = {
   createProject: ProjectModel;
   createStudy: Study;
   createTags: Array<Tag>;
+  createUploadSession: UploadSession;
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
@@ -201,6 +201,7 @@ export type Mutation = {
   loginEmail: AccessToken;
   loginGoogle: AccessToken;
   loginUsername: AccessToken;
+  processEntryUploads: Scalars['Boolean']['output'];
   refresh: AccessToken;
   resendInvite: InviteModel;
   resetPassword: Scalars['Boolean']['output'];
@@ -210,6 +211,7 @@ export type Mutation = {
   updateProjectAuthMethods: ProjectModel;
   updateProjectSettings: ProjectModel;
   updateUser: UserModel;
+  uploadEntryCSV: Scalars['Boolean']['output'];
 };
 
 
@@ -258,6 +260,11 @@ export type MutationCompleteTagArgs = {
 };
 
 
+export type MutationCompleteUploadSessionArgs = {
+  session: Scalars['ID']['input'];
+};
+
+
 export type MutationCreateDatasetArgs = {
   dataset: DatasetCreate;
 };
@@ -293,6 +300,11 @@ export type MutationCreateStudyArgs = {
 export type MutationCreateTagsArgs = {
   entries: Array<Scalars['ID']['input']>;
   study: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateUploadSessionArgs = {
+  dataset: Scalars['ID']['input'];
 };
 
 
@@ -469,7 +481,10 @@ export type Query = {
   entryForDataset: Array<Entry>;
   exists: Scalars['Boolean']['output'];
   findStudies: Array<Study>;
+  /** Get the presigned URL for where to upload the CSV against */
+  getCSVUploadURL: Scalars['String']['output'];
   getDatasets: Array<Dataset>;
+  getEntryUploadURL: Scalars['String']['output'];
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
   getProjects: Array<Project>;
@@ -486,6 +501,7 @@ export type Query = {
   publicKey: Array<Scalars['String']['output']>;
   studyExists: Scalars['Boolean']['output'];
   users: Array<UserModel>;
+  validateCSV: UploadResult;
 };
 
 
@@ -501,6 +517,18 @@ export type QueryExistsArgs = {
 
 export type QueryFindStudiesArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetCsvUploadUrlArgs = {
+  session: Scalars['ID']['input'];
+};
+
+
+export type QueryGetEntryUploadUrlArgs = {
+  contentType: Scalars['String']['input'];
+  filename: Scalars['String']['input'];
+  session: Scalars['ID']['input'];
 };
 
 
@@ -549,6 +577,11 @@ export type QueryProjectUsersArgs = {
 export type QueryStudyExistsArgs = {
   name: Scalars['String']['input'];
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryValidateCsvArgs = {
+  session: Scalars['ID']['input'];
 };
 
 export type ResetDto = {
@@ -604,6 +637,26 @@ export type TagSchemaInput = {
   dataSchema: Scalars['JSON']['input'];
   uiSchema: Scalars['JSON']['input'];
 };
+
+export type UploadResult = {
+  __typename?: 'UploadResult';
+  message?: Maybe<Scalars['String']['output']>;
+  status: UploadStatus;
+};
+
+export type UploadSession = {
+  __typename?: 'UploadSession';
+  /** The ID of the upload session */
+  _id: Scalars['ID']['output'];
+  created: Scalars['DateTime']['output'];
+  dataset: Scalars['String']['output'];
+};
+
+export enum UploadStatus {
+  Error = 'ERROR',
+  Success = 'SUCCESS',
+  Warning = 'WARNING'
+}
 
 export type UserModel = {
   __typename?: 'UserModel';
