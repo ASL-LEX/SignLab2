@@ -15,4 +15,8 @@ export class EntryUploadService {
   async deleteForSession(session: UploadSession): Promise<void> {
     await this.entryUploadModel.deleteMany({ session: session._id });
   }
+
+  async findForSession(session: UploadSession): Promise<EntryUpload[]> {
+    return this.entryUploadModel.find({ session: session._id }).exec();
+  }
 }

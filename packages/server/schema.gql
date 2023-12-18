@@ -49,7 +49,6 @@ type Entry {
   _id: String!
   organization: ID!
   entryID: String!
-  mediaURL: String!
   mediaType: String!
   dataset: ID!
   creator: ID!
@@ -121,7 +120,7 @@ type Mutation {
   changeStudyDescription(study: ID!, newDescription: String!): Study!
   createEntry(entry: EntryCreate!, dataset: ID!): Entry!
   createUploadSession(dataset: ID!): UploadSession!
-  completeUploadSession(session: ID!): Boolean!
+  completeUploadSession(session: ID!): UploadResult!
   uploadEntryCSV: Boolean!
   processEntryUploads: Boolean!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
@@ -159,7 +158,6 @@ input TagSchemaInput {
 
 input EntryCreate {
   entryID: String!
-  mediaURL: String!
   mediaType: String!
   creator: ID!
   meta: JSON!

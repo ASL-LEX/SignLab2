@@ -19,8 +19,7 @@ export class Entry {
   entryID: string;
 
   @Prop({ required: true, trim: true })
-  @Field()
-  mediaURL: string;
+  bucketLocation: string;
 
   @Prop({ required: true, trim: true })
   @Field()

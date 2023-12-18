@@ -20,3 +20,10 @@ query validateCSV($session: ID!) {
 query getEntryUploadURL($session: ID!, $filename: String!, $contentType: String!) {
   getEntryUploadURL(session: $session, filename: $filename, contentType: $contentType)
 }
+
+mutation completeUploadSession($session: ID!) {
+  completeUploadSession(session: $session) {
+    success,
+    message
+  }
+}

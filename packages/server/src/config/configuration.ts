@@ -12,5 +12,8 @@ export default () => ({
     prefix: process.env.GCP_STORAGE_PREFIX || 'uploads',
     csvFileName: process.env.GCP_STORAGE_CSV_FILENAME || 'data.csv',
     entryFolder: process.env.GCP_STORAGE_ENTRY_FOLDER || 'entries'
+  },
+  dataset: {
+    prefix: process.env.GCP_STORAGE_DATASET_PREFIX || 'datasets'
   }
 });

@@ -1,11 +1,11 @@
 import { Button, Box, LinearProgress, Stack } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useApolloClient } from '@apollo/client';
-import { GetEntryUploadUrlDocument } from '../../graphql/upload-session/upload-session';
+import { GetEntryUploadUrlDocument, CompleteUploadSessionDocument } from '../../graphql/upload-session/upload-session';
 import { UploadSession } from '../../graphql/graphql';
 import axios from 'axios';
 import { Dispatch, SetStateAction, useState  } from 'react';
-import {StatusMessage} from '../../models/StatusMessage';
+import { StatusMessage } from '../../models/StatusMessage';
 
 export interface EntryUploadProps {
   uploadSession: UploadSession | null;
@@ -48,6 +48,7 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
       }
 
       const uploadUrl = uploadUrlQuery.data.getEntryUploadURL;
+      console.log(`Uploading ${video.name} to ${uploadUrl}`);
 
       // Upload the CSV to the url
       await axios.put(uploadUrl, video, {
@@ -59,6 +60,14 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
       numUploaded++;
       setUploadProgress((numUploaded / videos.length) * 100);
     }
+
+    const completionResult = await apolloClient.mutate({
+      mutation: CompleteUploadSessionDocument,
+      variables: { session: uploadSession._id }
+    });
+
+    console.log(completionResult);
+
 
     setIsUploading(false);
     setUploadComplete(true);

@@ -184,7 +184,7 @@ export type Mutation = {
   changeStudyDescription: Study;
   changeStudyName: Study;
   completeTag: Scalars['Boolean']['output'];
-  completeUploadSession: Scalars['Boolean']['output'];
+  completeUploadSession: UploadResult;
   createDataset: Dataset;
   createEntry: Entry;
   createInvite: InviteModel;

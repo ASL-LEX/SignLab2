@@ -35,6 +35,13 @@ export type GetEntryUploadUrlQueryVariables = Types.Exact<{
 
 export type GetEntryUploadUrlQuery = { __typename?: 'Query', getEntryUploadURL: string };
 
+export type CompleteUploadSessionMutationVariables = Types.Exact<{
+  session: Types.Scalars['ID']['input'];
+}>;
+
+
+export type CompleteUploadSessionMutation = { __typename?: 'Mutation', completeUploadSession: { __typename?: 'UploadResult', success: boolean, message?: string | null } };
+
 
 export const CreateUploadSessionDocument = gql`
     mutation createUploadSession($dataset: ID!) {
@@ -179,3 +186,37 @@ export function useGetEntryUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetEntryUploadUrlQueryHookResult = ReturnType<typeof useGetEntryUploadUrlQuery>;
 export type GetEntryUploadUrlLazyQueryHookResult = ReturnType<typeof useGetEntryUploadUrlLazyQuery>;
 export type GetEntryUploadUrlQueryResult = Apollo.QueryResult<GetEntryUploadUrlQuery, GetEntryUploadUrlQueryVariables>;
+export const CompleteUploadSessionDocument = gql`
+    mutation completeUploadSession($session: ID!) {
+  completeUploadSession(session: $session) {
+    success
+    message
+  }
+}
+    `;
+export type CompleteUploadSessionMutationFn = Apollo.MutationFunction<CompleteUploadSessionMutation, CompleteUploadSessionMutationVariables>;
+
+/**
+ * __useCompleteUploadSessionMutation__
+ *
+ * To run a mutation, you first call `useCompleteUploadSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCompleteUploadSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [completeUploadSessionMutation, { data, loading, error }] = useCompleteUploadSessionMutation({
+ *   variables: {
+ *      session: // value for 'session'
+ *   },
+ * });
+ */
+export function useCompleteUploadSessionMutation(baseOptions?: Apollo.MutationHookOptions<CompleteUploadSessionMutation, CompleteUploadSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CompleteUploadSessionMutation, CompleteUploadSessionMutationVariables>(CompleteUploadSessionDocument, options);
+      }
+export type CompleteUploadSessionMutationHookResult = ReturnType<typeof useCompleteUploadSessionMutation>;
+export type CompleteUploadSessionMutationResult = Apollo.MutationResult<CompleteUploadSessionMutation>;
+export type CompleteUploadSessionMutationOptions = Apollo.BaseMutationOptions<CompleteUploadSessionMutation, CompleteUploadSessionMutationVariables>;

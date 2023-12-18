@@ -10,6 +10,7 @@ import { CsvValidationService } from './csv-validation.service';
 import { DatasetService } from '../../dataset/dataset.service';
 import { EntryUploadService } from '../services/entry-upload.service';
 import { UploadResult } from '../dtos/upload-result.dto';
+import { EntryService } from './entry.service';
 
 @Injectable()
 export class UploadSessionService {
@@ -24,7 +25,8 @@ export class UploadSessionService {
               private readonly configService: ConfigService,
               private readonly csvValidation: CsvValidationService,
               private readonly datasetService: DatasetService,
-              private readonly entryUploadService: EntryUploadService) {}
+              private readonly entryUploadService: EntryUploadService,
+              private readonly entryService: EntryService) {}
 
   async find(id: string): Promise<UploadSession | null> {
     return this.uploadSessionModel.findById(id).exec();
@@ -48,8 +50,65 @@ export class UploadSessionService {
     return uploadSession;
   }
 
-  async complete(uploadSession: UploadSession): Promise<void> {
-    // TODO: Implement completion logic
+  async complete(uploadSession: UploadSession): Promise<UploadResult> {
+    // Verify the CSV is in the bucket
+    if (!uploadSession.csvURL) {
+      throw new BadRequestException('CSV URL not found');
+    }
+
+    // Get the dataset
+    const dataset = await this.datasetService.findById(uploadSession.dataset);
+    if (!dataset) {
+      return { success: false, message: 'Dataset not found' };
+    }
+
+    // Get all the entry uploads
+    const entryUploads = await this.entryUploadService.findForSession(uploadSession);
+    if (entryUploads.length == 0) {
+      throw new BadRequestException('No entries found');
+    }
+
+    const missingEntries: string[] = [];
+
+    // Go over each entry and move it to the dataset
+    for (const entryUpload of entryUploads) {
+      const entryURL = `${uploadSession.entryPrefix}/${entryUpload.filename}`;
+
+      const entryFile = this.bucket.file(entryURL);
+
+      // Verify the entry is in the bucket
+      const exists = await entryFile.exists();
+      if (!exists[0]) {
+        missingEntries.push(`Entry ${entryUpload.filename} not found`);
+        continue;
+      }
+
+      // Move the entry to the dataset
+      const newName = `${dataset.bucketPrefix}/${entryUpload.filename}`;
+      await entryFile.move(newName);
+
+      // Create the entry object
+      // TODO: Remove media URL
+      //       Determine media type
+      await this.entryService.create({
+        entryID: entryUpload.entryID,
+        bucketLocation: newName,
+        mediaType: 'video',
+        meta: entryUpload.metadata
+      }, dataset);
+    }
+
+    // Now remove the upload session
+    await this.deleteOldSession(dataset);
+
+    // Let users know if there were missing entries
+    // TODO: Add concept of severity to messages
+    if (missingEntries.length > 0) {
+      return { success: false, message: `The following entries where in the CSV, but not uploaded:\n ${missingEntries.join(', ')}` };
+    }
+
+    // No issues
+    return { success: true };
   }
 
   /** Generate the presigned URL for where to upload the CSV against */
