@@ -52,9 +52,6 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
 
     setActiveStep(activeStep);
     setCurrentStepLimit(currentStepLimit);
-
-    console.log(activeStep, currentStepLimit);
-
   }, [selectedDataset, csvValid, entryUploadComplete]);
 
   const steps = [
@@ -84,9 +81,20 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     }
   ];
 
+  const onClose = () => {
+    props.toggleModal();
+    setActiveStep(0);
+    setCurrentStepLimit(0);
+    setSelectedDataset(null);
+    setUploadSession(null);
+    setValidationMessage(null);
+    setCsvValid(false);
+    setEntryUploadComplete(false);
+  }
+
   const nextOrComplete = () => {
     if (activeStep === steps.length - 1) {
-      props.toggleModal();
+      onClose();
     } else {
       if (selectedDataset) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -95,9 +103,10 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     }
   };
 
+
   return (
     <div>
-      <Dialog open={props.show} onClose={props.toggleModal}>
+      <Dialog open={props.show} onClose={onClose}>
         <DialogTitle sx={{ fontWeight: 'bold', marginTop: '10px' }}>New Entry Upload</DialogTitle>
         <DialogContent>
           <Box sx={{ minWidth: 400 }}>
@@ -117,7 +126,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
         </DialogContent>
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
           {activeStep != 0 && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
-          <Button onClick={props.toggleModal}>Cancel</Button>
+          <Button onClick={onClose}>Cancel</Button>
           <Button
             onClick={nextOrComplete}
             disabled={activeStep >= currentStepLimit}>

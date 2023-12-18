@@ -73,7 +73,7 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
     }
 
     if (completionData.status == UploadStatus.Warning) {
-      console.log('Upload session completed with warnings');
+      setValidationMessage({ severity: 'warning', message: completionData.message });
     }
 
     setIsUploading(false);
