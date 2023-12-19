@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { Args, ID, Mutation, Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
 import { Dataset } from '../../dataset/dataset.model';
 import { Entry } from '../models/entry.model';
 import { EntryCreate } from '../dtos/create.dto';
@@ -16,7 +16,19 @@ export class EntryResolver {
   }
 
   @Query(() => [Entry])
-  async entryForDataset(@Args('dataset', { type: () => ID }) dataset: Dataset): Promise<Entry[]> {
+  async entryForDataset(@Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset): Promise<Entry[]> {
     return this.entryService.findForDataset(dataset);
+  }
+
+  @ResolveField(() => String)
+  async signedUrl(@Parent() entry: Entry): Promise<string> {
+    return this.entryService.getSignedUrl(entry);
+  }
+
+  // NOTE: With the current implementation, this is only really helpful
+  //       if the request to `signedUrl` is made.
+  @ResolveField(() => Number, { description: 'Get the number of milliseconds the signed URL is valid for.' })
+  async signedUrlExpiration(@Parent() entry: Entry): Promise<number> {
+    return this.entryService.getSignedUrlExpiration(entry);
   }
 }

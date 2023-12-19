@@ -1,13 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Entry } from '../models/entry.model';
 import { Model } from 'mongoose';
 import { EntryCreate } from '../dtos/create.dto';
 import { Dataset } from '../../dataset/dataset.model';
+import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
+import { Bucket, Storage } from '@google-cloud/storage';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EntryService {
-  constructor(@InjectModel(Entry.name) private readonly entryMode: Model<Entry>) {}
+  private readonly bucketName = this.configService.getOrThrow<string>('gcp.storage.bucket');
+  private readonly bucket: Bucket = this.storage.bucket(this.bucketName);
+  private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
+
+  constructor(@InjectModel(Entry.name) private readonly entryMode: Model<Entry>,
+              @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
+              private readonly configService: ConfigService) {}
 
   async find(entryID: string): Promise<Entry | null> {
     return this.entryMode.findOne({ _id: entryID });
@@ -23,7 +32,7 @@ export class EntryService {
   }
 
   async findForDataset(dataset: Dataset): Promise<Entry[]> {
-    return this.entryMode.find({ dataset: dataset._id });
+    return this.entryMode.find({ dataset: dataset._id.toString() });
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {
@@ -33,5 +42,23 @@ export class EntryService {
 
   async setBucketLocation(entry: Entry, bucketLocation: string): Promise<void> {
     await this.entryMode.updateOne({ _id: entry._id }, { bucketLocation });
+  }
+
+  async getSignedUrl(entry: Entry): Promise<string> {
+    const file = this.bucket.file(entry.bucketLocation);
+    const [url] = await file.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + this.expiration
+    });
+    return url;
+  }
+
+  /**
+  * Get how long the signed URL is valid for in milliseconds.
+  *
+  * In the future, this could be configurable per entry.
+  */
+  async getSignedUrlExpiration(_entry: Entry): Promise<number> {
+    return this.expiration;
   }
 }

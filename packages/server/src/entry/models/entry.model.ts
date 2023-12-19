@@ -48,6 +48,9 @@ export class Entry {
   @Field(() => JSON)
   meta: any;
 
+  @Prop({ required: false })
+  signedURLExpiration: Date;
+
   // TODO: Add creator field
 }
 
