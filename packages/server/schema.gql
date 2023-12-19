@@ -54,6 +54,10 @@ type Entry {
   creator: ID!
   dateCreated: DateTime!
   meta: JSON!
+  signedUrl: String!
+
+  """Get the number of milliseconds the signed URL is valid for."""
+  signedUrlExpiration: Float!
 }
 
 type UploadSession {

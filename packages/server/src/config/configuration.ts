@@ -15,5 +15,8 @@ export default () => ({
   },
   dataset: {
     prefix: process.env.GCP_STORAGE_DATASET_PREFIX || 'datasets'
+  },
+  entry: {
+    signedURLExpiration: process.env.GCP_STORAGE_ENTRY_SIGNED_URL_EXPIRATION || (15 * 60 * 1000)  // 15 minutes
   }
 });
