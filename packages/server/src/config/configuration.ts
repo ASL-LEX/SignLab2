@@ -21,5 +21,8 @@ export default () => ({
   },
   auth: {
     publicKeyUrl: process.env.AUTH_PUBLIC_KEY_URL || 'https://test-auth-service.sail.codes/public-key'
+  },
+  casbin: {
+    model: process.env.CASBIN_MODEL || 'src/config/casbin-model.conf'
   }
 });
