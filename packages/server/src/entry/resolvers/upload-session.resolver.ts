@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { UploadSession } from '../models/upload-session.model';
 import { UploadSessionService } from '../services/upload-session.service';
 import { Dataset } from '../../dataset/dataset.model';
@@ -6,7 +6,10 @@ import { Args, ID, Mutation, Query } from '@nestjs/graphql';
 import { UploadSessionPipe } from '../pipes/upload-session.pipe';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 import { UploadResult } from '../dtos/upload-result.dto';
+import { JwtAuthGuard } from '../../auth/jwt.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Injectable()
 export class UploadSessionResolver {
   constructor(private readonly uploadSessionService: UploadSessionService) {}

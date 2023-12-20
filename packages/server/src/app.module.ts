@@ -11,6 +11,7 @@ import { StudyModule } from './study/study.module';
 import { EntryModule } from './entry/entry.module';
 import { TagModule } from './tag/tag.module';
 import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { SharedModule } from './shared/shared.module';
     StudyModule,
     EntryModule,
     TagModule,
-    SharedModule
+    SharedModule,
+    AuthModule
   ],
 })
 export class AppModule {}

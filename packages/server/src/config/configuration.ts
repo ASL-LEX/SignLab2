@@ -18,5 +18,8 @@ export default () => ({
   },
   entry: {
     signedURLExpiration: process.env.GCP_STORAGE_ENTRY_SIGNED_URL_EXPIRATION || (15 * 60 * 1000)  // 15 minutes
+  },
+  auth: {
+    publicKeyUrl: process.env.AUTH_PUBLIC_KEY_URL || 'https://test-auth-service.sail.codes/public-key'
   }
 });

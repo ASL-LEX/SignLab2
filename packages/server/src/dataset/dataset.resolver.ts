@@ -5,9 +5,11 @@ import { Organization } from '../organization/organization.model';
 import { OrganizationContext } from '../organization/organization.context';
 import { DatasetCreate } from './dtos/create.dto';
 import { DatasetPipe } from './pipes/dataset.pipe';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
 // TODO: Add authentication
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Dataset)
 export class DatasetResolver {
   constructor(private readonly datasetService: DatasetService) {}
