@@ -7,7 +7,11 @@ import { EntriesPipe, EntryPipe } from '../entry/pipes/entry.pipe';
 import { Entry } from '../entry/models/entry.model';
 import { TagPipe } from './pipes/tag.pipe';
 import JSON from 'graphql-type-json';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Tag)
 export class TagResolver {
   constructor(private readonly tagService: TagService, private readonly entryPipe: EntryPipe, private readonly studyPipe: StudyPipe) {}

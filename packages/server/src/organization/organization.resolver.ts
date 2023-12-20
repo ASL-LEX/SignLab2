@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import {OrganizationCreate} from './dtos/create.dto';
+import { OrganizationCreate } from './dtos/create.dto';
 import { Organization } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationPipe } from './pipes/create.pipe';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
 @Resolver(() => Organization)
 export class OrganizationResolver {
@@ -13,6 +15,7 @@ export class OrganizationResolver {
     return this.orgService.find();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => Boolean)
   async exists(@Args('name') name: string): Promise<boolean> {
     const existingProject = await this.orgService.findByName(name);
@@ -20,6 +23,7 @@ export class OrganizationResolver {
   }
 
   // TODO: Add authentication guard
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Organization)
   async createOrganization(@Args('organization', CreateOrganizationPipe) organization: OrganizationCreate): Promise<Organization> {
     return this.orgService.create(organization);

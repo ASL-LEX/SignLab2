@@ -1,12 +1,15 @@
-import {BadRequestException} from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args, ID } from '@nestjs/graphql';
 import { OrganizationContext } from 'src/organization/organization.context';
 import { Organization } from 'src/organization/organization.model';
 import { ProjectCreate } from './dtos/create.dto';
 import { Project } from './project.model';
 import { ProjectService } from './project.service';
-import {ProjectPipe} from './pipes/project.pipe';
+import { ProjectPipe } from './pipes/project.pipe';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
+
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Project)
 export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}

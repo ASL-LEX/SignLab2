@@ -131,8 +131,6 @@ type Mutation {
   createEntry(entry: EntryCreate!, dataset: ID!): Entry!
   createUploadSession(dataset: ID!): UploadSession!
   completeUploadSession(session: ID!): UploadResult!
-  uploadEntryCSV: Boolean!
-  processEntryUploads: Boolean!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!

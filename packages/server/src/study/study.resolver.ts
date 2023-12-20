@@ -6,7 +6,10 @@ import { StudyPipe } from './pipes/study.pipe';
 import { StudyCreate } from './dtos/create.dto';
 import { StudyService } from './study.service';
 import { StudyCreatePipe } from './pipes/create.pipe';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Study)
 export class StudyResolver {
   constructor(private readonly studyService: StudyService) {}

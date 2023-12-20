@@ -4,7 +4,10 @@ import { Entry } from '../models/entry.model';
 import { EntryCreate } from '../dtos/create.dto';
 import { EntryService } from '../services/entry.service';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(private readonly entryService: EntryService) {}
