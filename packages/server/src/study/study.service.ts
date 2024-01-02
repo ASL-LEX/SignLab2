@@ -1,23 +1,32 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
 import { Project } from 'src/project/project.model';
-import { MongooseMiddlewareService } from 'src/shared/service/mongoose-callback.service';
+import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
+import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import * as casbin from 'casbin';
 
 @Injectable()
 export class StudyService {
-  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>, middlewareService: MongooseMiddlewareService) {
+  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>, middlewareService: MongooseMiddlewareService,
+              @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {
     // Remove cooresponding studies when a project is deleted
     middlewareService.register(Project.name, 'deleteOne', async (project: Project) => {
+      // TODO: Update Casbin policies
       await this.removeForProject(project);
     });
   }
 
   async create(study: StudyCreate): Promise<Study> {
-    return this.studyModel.create(study);
+    const newStudy = await this.studyModel.create(study);
+
+    // Make the study - project relation in the enforcer model
+    await this.enforcer.addNamedGroupingPolicy('g2', study.project, newStudy._id.toString());
+
+    return newStudy;
   }
 
   async findAll(project: Project): Promise<Study[]> {

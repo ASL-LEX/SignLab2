@@ -21,5 +21,11 @@ export default () => ({
   },
   auth: {
     publicKeyUrl: process.env.AUTH_PUBLIC_KEY_URL || 'https://test-auth-service.sail.codes/public-key'
+  },
+  casbin: {
+    model: process.env.CASBIN_MODEL || 'src/config/casbin-model.conf',
+    mongo: {
+      uri: process.env.CASBIN_MONGO_URI || 'mongodb://127.0.0.1:27017/casbin'
+    }
   }
 });

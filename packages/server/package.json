@@ -34,6 +34,8 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@types/passport-jwt": "^3.0.13",
+    "casbin": "^5.28.0",
+    "casbin-mongoose-adapter": "^5.3.1",
     "csv-parser": "^3.0.0",
     "graphql-type-json": "^0.3.2",
     "jsonschema": "^1.4.1",

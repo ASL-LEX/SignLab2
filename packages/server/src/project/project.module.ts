@@ -6,6 +6,7 @@ import { Project, ProjectSchema } from './project.model';
 import { ProjectPipe } from './pipes/project.pipe';
 import { MongooseMiddlewareService } from 'src/shared/service/mongoose-callback.service';
 import { SharedModule } from 'src/shared/shared.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { SharedModule } from 'src/shared/shared.module';
         imports: [SharedModule],
         inject: [MongooseMiddlewareService],
       }
-    ])
+    ]),
+    AuthModule
   ],
   providers: [ProjectResolver, ProjectService, ProjectPipe],
   exports: [ProjectPipe, ProjectService]

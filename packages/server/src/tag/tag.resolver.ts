@@ -10,7 +10,7 @@ import JSON from 'graphql-type-json';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 
-
+// TODO: Add permissioning
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Tag)
 export class TagResolver {

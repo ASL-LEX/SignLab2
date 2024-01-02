@@ -5,23 +5,35 @@ import { Organization } from '../organization/organization.model';
 import { OrganizationContext } from '../organization/organization.context';
 import { DatasetCreate } from './dtos/create.dto';
 import { DatasetPipe } from './pipes/dataset.pipe';
-import { BadRequestException, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { BadRequestException, UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
+import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import * as casbin from 'casbin';
+import { UserContext } from '../auth/user.decorator';
+import { TokenPayload } from '../auth/user.dto';
+import { DatasetPermissions } from '../auth/permissions/dataset';
 
 // TODO: Add authentication
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Dataset)
 export class DatasetResolver {
-  constructor(private readonly datasetService: DatasetService) {}
+  constructor(private readonly datasetService: DatasetService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
 
   @Query(() => [Dataset])
   async getDatasets(@OrganizationContext() organization: Organization): Promise<Dataset[]> {
+    // TODO: Get datasets based on access permissions
+
     return this.datasetService.findAll(organization._id);
   }
 
   @Mutation(() => Dataset)
   async createDataset(@Args('dataset') dataset: DatasetCreate,
-                      @OrganizationContext() organization: Organization): Promise<Dataset> {
+                      @OrganizationContext() organization: Organization,
+                      @UserContext() user: TokenPayload): Promise<Dataset> {
+    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.CREATE, organization._id))) {
+      throw new UnauthorizedException('User does not have permission to create a dataset in this organization');
+    }
+
     const existingDataset = await this.datasetService.findByName(organization._id, dataset.name);
     if (existingDataset) {
       throw new BadRequestException(`Dataset with the name ${dataset.name} already exists`);
@@ -35,6 +47,10 @@ export class DatasetResolver {
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @Args('newName') newName: string,
     @OrganizationContext() organization: Organization): Promise<boolean> {
+
+    if (!(await this.enforcer.enforce(organization._id, DatasetPermissions.UPDATE, dataset._id))) {
+      throw new UnauthorizedException('User does not have permission to update this dataset');
+    }
 
     const existingDataset = await this.datasetService.findByName(organization._id, newName);
     if (existingDataset) {
@@ -50,6 +66,10 @@ export class DatasetResolver {
   async changeDatasetDescription(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @Args('newDescription') newDescription: string): Promise<boolean> {
+
+    if (!(await this.enforcer.enforce(dataset._id, DatasetPermissions.UPDATE, dataset._id))) {
+      throw new UnauthorizedException('User does not have permission to update this dataset');
+    }
 
     await this.datasetService.changeDescription(dataset, newDescription);
 

@@ -6,6 +6,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt.guard';
 import { OrganizationModule } from '../organization/organization.module';
 import { HttpModule } from '@nestjs/axios';
+import { casbinProvider } from './casbin.provider';
+import { AuthResolver } from './auth.resolver';
 
 @Module({
   imports: [
@@ -24,11 +26,13 @@ import { HttpModule } from '@nestjs/axios';
         };
         return options;
       }
-    })
+    }),
   ],
   providers: [
     AuthService,
     JwtAuthGuard,
+    casbinProvider,
+    AuthResolver,
     {
       provide: JwtStrategy,
       inject: [AuthService],
@@ -38,6 +42,6 @@ import { HttpModule } from '@nestjs/axios';
       }
     }
   ],
-  exports: [AuthService]
+  exports: [AuthService, casbinProvider]
 })
 export class AuthModule {}

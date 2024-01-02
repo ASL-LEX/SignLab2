@@ -122,13 +122,13 @@ type Mutation {
   createDataset(dataset: DatasetCreate!): Dataset!
   changeDatasetName(dataset: ID!, newName: String!): Boolean!
   changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
+  grantOwner(targetUser: ID!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!
   deleteStudy(study: ID!): Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
-  createEntry(entry: EntryCreate!, dataset: ID!): Entry!
   createUploadSession(dataset: ID!): UploadSession!
   completeUploadSession(session: ID!): UploadResult!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
@@ -162,11 +162,4 @@ input StudyCreate {
 input TagSchemaInput {
   dataSchema: JSON!
   uiSchema: JSON!
-}
-
-input EntryCreate {
-  entryID: String!
-  contentType: String!
-  creator: ID!
-  meta: JSON!
 }
