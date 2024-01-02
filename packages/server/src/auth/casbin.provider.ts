@@ -6,6 +6,7 @@ import { roleHierarchy } from './roles';
 import { roleToStudyPermissions } from './permissions/study';
 import { roleToProjectPermissions } from './permissions/project';
 import { roleToTagPermissions } from './permissions/tag';
+import { roleToDatasetPermissions } from './permissions/dataset';
 
 export const CASBIN_PROVIDER = 'CASBIN_PROVIDER';
 
@@ -21,7 +22,8 @@ export const casbinProvider: Provider<casbin.Enforcer> = {
       ...roleHierarchy,
       ...roleToStudyPermissions,
       ...roleToProjectPermissions,
-      ...roleToTagPermissions
+      ...roleToTagPermissions,
+      ...roleToDatasetPermissions
     ];
     await Promise.all(groups.map(group => enforcer.addNamedGroupingPolicy('g', ...group)));
 
