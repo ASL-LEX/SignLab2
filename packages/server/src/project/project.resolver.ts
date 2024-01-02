@@ -1,4 +1,4 @@
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args, ID } from '@nestjs/graphql';
 import { OrganizationContext } from 'src/organization/organization.context';
 import { Organization } from 'src/organization/organization.model';
@@ -9,15 +9,22 @@ import { ProjectPipe } from './pipes/project.pipe';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { UserContext } from '../auth/user.decorator';
 import { TokenPayload } from '../auth/user.dto';
-
+import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import * as casbin from 'casbin';
+import { ProjectPermissions } from '../auth/permissions/project';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Project)
 export class ProjectResolver {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
 
   @Mutation(() => Project)
   async signLabCreateProject(@Args('project') project: ProjectCreate, @OrganizationContext() organization: Organization, @UserContext() user: TokenPayload): Promise<Project> {
+    // Make sure the user is allowed to create projects
+    if(!(await this.enforcer.enforce(user.id, ProjectPermissions.CREATE, organization._id))) {
+      throw new UnauthorizedException('User does not have permission to create projects');
+    }
+
     // Make sure the project name is unique for the given organization
     if (await this.projectExists(project.name, organization, user)) {
       throw new BadRequestException(`Project with name ${project.name} already exists`);
@@ -32,14 +39,23 @@ export class ProjectResolver {
 
   // TODO: Handle Project deletion
   @Mutation(() => Boolean)
-  async deleteProject(@Args('project', { type: () => ID }, ProjectPipe) project: Project): Promise<boolean> {
+  async deleteProject(@Args('project', { type: () => ID }, ProjectPipe) project: Project,
+                      @UserContext() user: TokenPayload,
+                      @OrganizationContext() organization: Organization): Promise<boolean> {
+    if(!(await this.enforcer.enforce(user.id, ProjectPermissions.DELETE, organization._id))) {
+      throw new UnauthorizedException('User does not have permission to delete projects');
+    }
+
     await this.projectService.delete(project);
     return true;
   }
 
   // TODO: Handle the ability to get project based on user access
   @Query(() => [Project])
-  async getProjects(@OrganizationContext() organization: Organization, @UserContext() _user: TokenPayload): Promise<Project[]> {
+  async getProjects(@OrganizationContext() organization: Organization, @UserContext() user: TokenPayload): Promise<Project[]> {
+    if(!(await this.enforcer.enforce(user.id, ProjectPermissions.READ, organization._id))) {
+      throw new UnauthorizedException('User does not have permission to read projects');
+    }
     return this.projectService.findAll(organization._id);
   }
 }
