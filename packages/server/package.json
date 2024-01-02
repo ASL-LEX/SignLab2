@@ -40,7 +40,6 @@
     "graphql-type-json": "^0.3.2",
     "jsonschema": "^1.4.1",
     "mongoose": "^7.4.3",
-    "nest-authz": "^2.6.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

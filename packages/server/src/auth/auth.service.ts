@@ -19,7 +19,6 @@ export class AuthService {
   }
 
   async getPublicKey(): Promise<string> {
-    // TODO: Replace with an actual call to the auth service
     if (this.publicKey === null) {
       this.publicKey = await this.queryForPublicKey();
     }

@@ -7,6 +7,8 @@ import { Project } from './project.model';
 import { ProjectService } from './project.service';
 import { ProjectPipe } from './pipes/project.pipe';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { UserContext } from '../auth/user.decorator';
+import { TokenPayload } from '../auth/user.dto';
 
 
 @UseGuards(JwtAuthGuard)
@@ -15,16 +17,16 @@ export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Mutation(() => Project)
-  async signLabCreateProject(@Args('project') project: ProjectCreate, @OrganizationContext() organization: Organization): Promise<Project> {
+  async signLabCreateProject(@Args('project') project: ProjectCreate, @OrganizationContext() organization: Organization, @UserContext() user: TokenPayload): Promise<Project> {
     // Make sure the project name is unique for the given organization
-    if (await this.projectExists(project.name, organization)) {
+    if (await this.projectExists(project.name, organization, user)) {
       throw new BadRequestException(`Project with name ${project.name} already exists`);
     }
     return this.projectService.create(project, organization._id);
   }
 
   @Query(() => Boolean)
-  async projectExists(@Args('name') name: string, @OrganizationContext() organization: Organization): Promise<boolean> {
+  async projectExists(@Args('name') name: string, @OrganizationContext() organization: Organization, @UserContext() _user: TokenPayload): Promise<boolean> {
     return this.projectService.exists(name, organization._id);
   }
 
@@ -37,7 +39,7 @@ export class ProjectResolver {
 
   // TODO: Handle the ability to get project based on user access
   @Query(() => [Project])
-  async getProjects(@OrganizationContext() organization: Organization): Promise<Project[]> {
+  async getProjects(@OrganizationContext() organization: Organization, @UserContext() _user: TokenPayload): Promise<Project[]> {
     return this.projectService.findAll(organization._id);
   }
 }
