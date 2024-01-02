@@ -8,6 +8,7 @@ import { StudyPipe } from './pipes/study.pipe';
 import { StudyCreatePipe } from './pipes/create.pipe';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 import { SharedModule } from '../shared/shared.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [MongooseModule.forFeatureAsync([
@@ -26,7 +27,7 @@ import { SharedModule } from '../shared/shared.module';
       imports: [SharedModule],
       inject: [MongooseMiddlewareService],
     }
-  ]), ProjectModule, SharedModule],
+  ]), ProjectModule, SharedModule, AuthModule],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]
 })
