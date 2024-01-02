@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Dataset } from './dataset.model';
 import { DatasetCreate } from './dtos/create.dto';
-import {ConfigService} from '@nestjs/config';
-
+import { ConfigService } from '@nestjs/config';
+import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import * as casbin from 'casbin';
 
 @Injectable()
 export class DatasetService {
   private readonly datasetPrefix = this.configService.getOrThrow<string>('dataset.prefix');
 
-  constructor(@InjectModel(Dataset.name) private readonly datasetModel: Model<Dataset>, private readonly configService: ConfigService) {}
+  constructor(@InjectModel(Dataset.name) private readonly datasetModel: Model<Dataset>,
+              private readonly configService: ConfigService,
+              @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
 
   async findById(id: string): Promise<Dataset | null> {
     return this.datasetModel.findById(id);
@@ -31,6 +34,9 @@ export class DatasetService {
     // Add in the bucket prefix for the dataset
     dataset.bucketPrefix = `${this.datasetPrefix}/${organization}/${dataset._id}`;
     await dataset.save();
+
+    // Add organization - dataset mapping to casbin
+    await this.enforcer.addNamedGroupingPolicy('g2', organization, dataset._id.toString());
 
     // Return the created dataset
     return dataset;
