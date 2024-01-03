@@ -68,20 +68,16 @@ export type EmailLoginDto = {
 export type Entry = {
   __typename?: 'Entry';
   _id: Scalars['String']['output'];
+  contentType: Scalars['String']['output'];
   creator: Scalars['ID']['output'];
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
-  mediaType: Scalars['String']['output'];
   meta: Scalars['JSON']['output'];
   organization: Scalars['ID']['output'];
-};
-
-export type EntryCreate = {
-  creator: Scalars['ID']['input'];
-  entryID: Scalars['String']['input'];
-  mediaType: Scalars['String']['input'];
-  meta: Scalars['JSON']['input'];
+  signedUrl: Scalars['String']['output'];
+  /** Get the number of milliseconds the signed URL is valid for. */
+  signedUrlExpiration: Scalars['Float']['output'];
 };
 
 export type ForgotDto = {
@@ -184,7 +180,6 @@ export type Mutation = {
   completeTag: Scalars['Boolean']['output'];
   completeUploadSession: UploadResult;
   createDataset: Dataset;
-  createEntry: Entry;
   createInvite: InviteModel;
   createOrganization: Organization;
   createProject: ProjectModel;
@@ -194,6 +189,7 @@ export type Mutation = {
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
+  grantOwner: Scalars['Boolean']['output'];
   lexiconAddEntry: LexiconEntry;
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
@@ -201,7 +197,6 @@ export type Mutation = {
   loginEmail: AccessToken;
   loginGoogle: AccessToken;
   loginUsername: AccessToken;
-  processEntryUploads: Scalars['Boolean']['output'];
   refresh: AccessToken;
   resendInvite: InviteModel;
   resetPassword: Scalars['Boolean']['output'];
@@ -211,7 +206,6 @@ export type Mutation = {
   updateProjectAuthMethods: ProjectModel;
   updateProjectSettings: ProjectModel;
   updateUser: UserModel;
-  uploadEntryCSV: Scalars['Boolean']['output'];
 };
 
 
@@ -270,12 +264,6 @@ export type MutationCreateDatasetArgs = {
 };
 
 
-export type MutationCreateEntryArgs = {
-  dataset: Scalars['ID']['input'];
-  entry: EntryCreate;
-};
-
-
 export type MutationCreateInviteArgs = {
   email: Scalars['String']['input'];
   role?: InputMaybe<Scalars['Int']['input']>;
@@ -320,6 +308,11 @@ export type MutationDeleteStudyArgs = {
 
 export type MutationForgotPasswordArgs = {
   user: ForgotDto;
+};
+
+
+export type MutationGrantOwnerArgs = {
+  targetUser: Scalars['ID']['input'];
 };
 
 
@@ -404,11 +397,16 @@ export type MutationUpdateUserArgs = {
 export type Organization = {
   __typename?: 'Organization';
   _id: Scalars['ID']['output'];
+  /** URL where the user logs in against */
+  authURL: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
 
 export type OrganizationCreate = {
+  /** URL where the user logs in against */
+  authURL: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
 };
 
 export type Project = {
