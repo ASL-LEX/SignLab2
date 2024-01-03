@@ -23,4 +23,8 @@ export class OrganizationService {
   async findByName(name: string): Promise<Organization | null> {
     return this.orgModel.findOne({ name });
   }
+
+  async findByProject(projectId: string): Promise<Organization | null> {
+    return this.orgModel.findOne({ projectId });
+  }
 }

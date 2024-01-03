@@ -8,6 +8,7 @@ import { OrganizationModule } from '../organization/organization.module';
 import { HttpModule } from '@nestjs/axios';
 import { casbinProvider } from './casbin.provider';
 import { AuthResolver } from './auth.resolver';
+import { OrganizationService } from '../organization/organization.service';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { AuthResolver } from './auth.resolver';
         };
         return options;
       }
-    })
+    }),
+    forwardRef(() => OrganizationModule)
   ],
   providers: [
     AuthService,
@@ -35,10 +37,10 @@ import { AuthResolver } from './auth.resolver';
     AuthResolver,
     {
       provide: JwtStrategy,
-      inject: [AuthService],
-      useFactory: async (authService: AuthService) => {
+      inject: [AuthService, OrganizationService],
+      useFactory: async (authService: AuthService, organizationService: OrganizationService) => {
         const key = await authService.getPublicKey();
-        return new JwtStrategy(key);
+        return new JwtStrategy(key, organizationService);
       }
     }
   ],
