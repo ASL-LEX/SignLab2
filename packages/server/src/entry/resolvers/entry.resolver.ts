@@ -3,7 +3,7 @@ import { Dataset } from '../../dataset/dataset.model';
 import { Entry } from '../models/entry.model';
 import { EntryService } from '../services/entry.service';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
-import { UseGuards, Inject, UnauthorizedException} from '@nestjs/common';
+import { UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt.guard';
 import { DatasetPermissions } from '../../auth/permissions/dataset';
 import { CASBIN_PROVIDER } from '../../auth/casbin.provider';
@@ -14,10 +14,16 @@ import { UserContext } from '../../auth/user.decorator';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Entry)
 export class EntryResolver {
-  constructor(private readonly entryService: EntryService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    private readonly entryService: EntryService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   @Query(() => [Entry])
-  async entryForDataset(@Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset, @UserContext() user: TokenPayload): Promise<Entry[]> {
+  async entryForDataset(
+    @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
+    @UserContext() user: TokenPayload
+  ): Promise<Entry[]> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, dataset._id))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }

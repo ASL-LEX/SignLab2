@@ -103,7 +103,7 @@ export const StudyUserPermissions: React.FC = () => {
       flex: 1,
       headerName: 'Study Admin',
       renderCell: (params) => <Switch checked={params.value} />,
-      renderEditCell: (params) => <SwitchEditInputCell {...params} />,
+      renderEditCell: (params) => <SwitchEditInputCell {...params} />
     },
     {
       field: 'visibleSwitch',
@@ -113,7 +113,7 @@ export const StudyUserPermissions: React.FC = () => {
       renderCell: (params) => <Switch checked={params.value} />,
       maxWidth: 200,
       flex: 1,
-      renderEditCell: (params) => <SwitchEditInputCell {...params} />,
+      renderEditCell: (params) => <SwitchEditInputCell {...params} />
     },
     {
       field: 'switch',
@@ -123,13 +123,13 @@ export const StudyUserPermissions: React.FC = () => {
       flex: 1,
       headerName: 'Contribute',
       renderCell: (params) => <Switch checked={params.value} />,
-      renderEditCell: (params) => <SwitchEditInputCell {...params} />,
+      renderEditCell: (params) => <SwitchEditInputCell {...params} />
     }
   ];
 
   return (
     <>
-      <Typography variant='h3'>User Permissions</Typography>
+      <Typography variant="h3">User Permissions</Typography>
       <DataGrid
         getRowHeight={() => 'auto'}
         rows={rows}

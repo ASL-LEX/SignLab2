@@ -30,17 +30,18 @@ export const ProjectProvider: FC<ProjectProviderProps> = ({ children }) => {
         setProject(null);
       }
     }
-
   }, [getProjectResults.data, getProjectResults.error]);
 
   return (
-    <ProjectContext.Provider value={{
+    <ProjectContext.Provider
+      value={{
         project,
         setProject,
         projects,
         updateProjectList: () => getProjectResults.refetch()
-      }}>
-        {children}
+      }}
+    >
+      {children}
     </ProjectContext.Provider>
   );
 };

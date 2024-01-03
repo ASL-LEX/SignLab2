@@ -1,4 +1,13 @@
-import { TagFieldType, AslLexField, AutoCompleteField, BooleanField, EmbeddedVideoOption, FreeTextField, NumericField, SliderField } from '../models/TagField';
+import {
+  TagFieldType,
+  AslLexField,
+  AutoCompleteField,
+  BooleanField,
+  EmbeddedVideoOption,
+  FreeTextField,
+  NumericField,
+  SliderField
+} from '../models/TagField';
 
 export const TagFieldGeneratorService = (tagFieldType: TagFieldType) => {
   /**

@@ -10,9 +10,11 @@ import { Roles } from './roles';
 export class AuthService {
   private publicKey: string | null = null;
 
-  constructor(private readonly httpService: HttpService,
-              private readonly configService: ConfigService,
-              @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   // TODO: In the future this will be replaced by a library which handles
   // key rotation

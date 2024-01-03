@@ -11,16 +11,22 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { CASBIN_PROVIDER } from '../auth/casbin.provider';
 import * as casbin from 'casbin';
 import { StudyPermissions } from '../auth/permissions/study';
-import {UserContext} from 'src/auth/user.decorator';
-import {TokenPayload} from 'src/auth/user.dto';
+import { UserContext } from 'src/auth/user.decorator';
+import { TokenPayload } from 'src/auth/user.dto';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Study)
 export class StudyResolver {
-  constructor(private readonly studyService: StudyService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    private readonly studyService: StudyService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   @Mutation(() => Study)
-  async createStudy(@Args('study', { type: () => StudyCreate }, StudyCreatePipe) study: StudyCreate, @UserContext() user: TokenPayload): Promise<Study> {
+  async createStudy(
+    @Args('study', { type: () => StudyCreate }, StudyCreatePipe) study: StudyCreate,
+    @UserContext() user: TokenPayload
+  ): Promise<Study> {
     if (!(await this.enforcer.enforce(user.id, StudyPermissions.CREATE, study.project))) {
       throw new UnauthorizedException('User cannot create studies on this project');
     }
@@ -29,7 +35,10 @@ export class StudyResolver {
   }
 
   @Query(() => Boolean)
-  async studyExists(@Args('name') name: string, @Args('project', { type: () => ID }, ProjectPipe) project: Project): Promise<Boolean> {
+  async studyExists(
+    @Args('name') name: string,
+    @Args('project', { type: () => ID }, ProjectPipe) project: Project
+  ): Promise<Boolean> {
     if (!(await this.enforcer.enforce(name, StudyPermissions.READ, project))) {
       throw new UnauthorizedException('User cannot read studies on this project');
     }
@@ -54,7 +63,10 @@ export class StudyResolver {
   }
 
   @Mutation(() => Study)
-  async changeStudyName(@Args('study',{ type: () => ID }, StudyPipe) study: Study, @Args('newName') newName: string): Promise<Study> {
+  async changeStudyName(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('newName') newName: string
+  ): Promise<Study> {
     if (!(await this.enforcer.enforce(study.name, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }
@@ -63,7 +75,10 @@ export class StudyResolver {
   }
 
   @Mutation(() => Study)
-  async changeStudyDescription(@Args('study', { type: () => ID }, StudyPipe) study: Study, @Args('newDescription') newDescription: string): Promise<Study> {
+  async changeStudyDescription(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('newDescription') newDescription: string
+  ): Promise<Study> {
     if (!(await this.enforcer.enforce(study.name, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }

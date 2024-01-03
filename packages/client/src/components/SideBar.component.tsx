@@ -22,7 +22,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       subItems: [
         { name: 'New Project', action: () => navigate('/project/new') },
         { name: 'Project Control', action: () => navigate('/project/controls') },
-        { name: 'User Permissions', action: () => navigate('/project/permissions') },
+        { name: 'User Permissions', action: () => navigate('/project/permissions') }
       ]
     },
     {
@@ -50,9 +50,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       name: 'Contribute',
       action: () => {},
       icon: <GroupWork />,
-      subItems: [
-        { name: 'Tag in Study', action: () => navigate('/study/contribute') }
-      ]
+      subItems: [{ name: 'Tag in Study', action: () => navigate('/study/contribute') }]
     },
     {
       name: 'Logout',
@@ -63,7 +61,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
 
   return (
     <Drawer
-      variant='persistent'
+      variant="persistent"
       sx={{
         width: drawerWidth,
         flexShrink: 0,
@@ -76,11 +74,13 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           mt: '64px'
         }
       }}
-      anchor='left'
+      anchor="left"
       open={open}
     >
       <List sx={{ paddingTop: '30px' }}>
-        {navItems.map((navItem) => <NavItem {...navItem} key={navItem.name} />)}
+        {navItems.map((navItem) => (
+          <NavItem {...navItem} key={navItem.name} />
+        ))}
       </List>
       <Environment />
     </Drawer>
@@ -91,7 +91,7 @@ interface NavItemProps {
   action: () => void;
   name: string;
   icon?: ReactNode;
-  subItems?: NavItemProps[]
+  subItems?: NavItemProps[];
 }
 
 const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
@@ -104,10 +104,12 @@ const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
   };
 
   const menuItemChildren = isExpandable ? (
-    <Collapse in={open} timeout='auto' unmountOnExit>
+    <Collapse in={open} timeout="auto" unmountOnExit>
       <Divider />
       <List disablePadding>
-        {subItems.map((item, index) => <NavItem {...item} key={index} />)}
+        {subItems.map((item, index) => (
+          <NavItem {...item} key={index} />
+        ))}
       </List>
     </Collapse>
   ) : null;
@@ -115,7 +117,7 @@ const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
   return (
     <>
       <ListItem>
-        <ListItemButton component='a' onClick={handleClick}>
+        <ListItemButton component="a" onClick={handleClick}>
           {icon && <ListItemIcon>{icon}</ListItemIcon>}
           <ListItemText primary={name} inset={!icon} />
           {isExpandable && !open && <ExpandMore />}

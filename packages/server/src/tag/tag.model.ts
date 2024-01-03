@@ -24,11 +24,14 @@ export class Tag {
   complete: boolean;
 
   @Prop({ required: false })
-  @Field({ nullable: true, description: 'The user assigned to the tag '})
+  @Field({ nullable: true, description: 'The user assigned to the tag ' })
   user?: string;
 
   @Prop({ requried: false, type: mongoose.Schema.Types.Mixed })
-  @Field(() => JSON, { nullable: true, description: 'The data stored in the tag, not populated until a colaborator has tagged' })
+  @Field(() => JSON, {
+    nullable: true,
+    description: 'The data stored in the tag, not populated until a colaborator has tagged'
+  })
   data?: any;
 
   @Prop()

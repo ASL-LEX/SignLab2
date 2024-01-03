@@ -22,13 +22,15 @@ const rows = [
   {
     id: 3,
     name: 'Project Starbucks',
-    description: 'The company was founded by Steven Paul Jobs, Ronald Gerald Wayne, and Stephen G. Wozniak on April 1, 1976 and is headquartered in Cupertino, CA.',
+    description:
+      'The company was founded by Steven Paul Jobs, Ronald Gerald Wayne, and Stephen G. Wozniak on April 1, 1976 and is headquartered in Cupertino, CA.',
     access: true
   },
   {
     id: 4,
     name: 'Project Charles',
-    description: 'Investment, wealth and alternative managers, asset owners and insurers in over 30 countries rely on Charles River IMS to manage USD $48 Trillion in assets.',
+    description:
+      'Investment, wealth and alternative managers, asset owners and insurers in over 30 countries rely on Charles River IMS to manage USD $48 Trillion in assets.',
     access: false
   }
 ];
@@ -39,8 +41,12 @@ export const ProjectAccess: React.FC = () => {
       <Typography variant="h5">Project Access</Typography>
       <Accordion disableGutters>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', left: '3%' }}>Dataset 1 name</Typography>
-          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', right: '52%' }}>Dataset 1 description</Typography>
+          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', left: '3%' }}>
+            Dataset 1 name
+          </Typography>
+          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', right: '52%' }}>
+            Dataset 1 description
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
@@ -52,8 +58,12 @@ export const ProjectAccess: React.FC = () => {
       </Accordion>
       <Accordion disableGutters>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', left: '3%' }}>Dataset 2 name</Typography>
-          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', right: '52%' }}>Dataset2 description</Typography>
+          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', left: '3%' }}>
+            Dataset 2 name
+          </Typography>
+          <Typography sx={{ fontSize: '15px', position: 'absolute', top: '14px', right: '52%' }}>
+            Dataset2 description
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>

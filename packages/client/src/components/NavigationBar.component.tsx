@@ -12,7 +12,14 @@ export const NavBar: FC<NavBarProps> = ({ drawerOpen, setDrawerOpen }) => {
   return (
     <AppBar>
       <Toolbar sx={{ backgroundColor: 'white' }}>
-        <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 4, ml: 2 }} onClick={() => setDrawerOpen(!drawerOpen)}>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 4, ml: 2 }}
+          onClick={() => setDrawerOpen(!drawerOpen)}
+        >
           <Menu sx={{ color: 'black' }} />
         </IconButton>
         <Typography
@@ -28,4 +35,4 @@ export const NavBar: FC<NavBarProps> = ({ drawerOpen, setDrawerOpen }) => {
       </Toolbar>
     </AppBar>
   );
-}
+};

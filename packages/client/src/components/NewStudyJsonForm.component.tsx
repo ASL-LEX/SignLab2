@@ -74,7 +74,14 @@ export const NewStudyJsonForm: React.FC = () => {
         }
       }}
     >
-      <JsonForms schema={schema} uischema={uischema} data={data} renderers={materialRenderers} cells={materialCells} onChange={({ data }) => handleChange(data)} />
+      <JsonForms
+        schema={schema}
+        uischema={uischema}
+        data={data}
+        renderers={materialRenderers}
+        cells={materialCells}
+        onChange={({ data }) => handleChange(data)}
+      />
     </Box>
   );
 };

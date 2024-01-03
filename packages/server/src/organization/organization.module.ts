@@ -6,9 +6,7 @@ import { Organization, OrganizationSchema } from './organization.model';
 import { CreateOrganizationPipe } from './pipes/create.pipe';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Organization.name, schema: OrganizationSchema }])
-  ],
+  imports: [MongooseModule.forFeature([{ name: Organization.name, schema: OrganizationSchema }])],
   providers: [OrganizationResolver, OrganizationService, CreateOrganizationPipe]
 })
 export class OrganizationModule {}

@@ -22,7 +22,6 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
   const [open, setOpen] = useState(false);
   const [confirmationRequest, setConfirmationRequest] = useState<ConfirmationRequest | null>(null);
 
-
   const pushConfirmationRequest = (confirmationRequest: ConfirmationRequest) => {
     setConfirmationRequest(confirmationRequest);
     setOpen(true);
@@ -42,14 +41,9 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
     setOpen(false);
   };
 
-
   return (
     <ConfirmationContext.Provider value={{ pushConfirmationRequest }}>
-      <Dialog
-        sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
-        maxWidth="xs"
-        open={open}
-      >
+      <Dialog sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }} maxWidth="xs" open={open}>
         <DialogTitle>{confirmationRequest && confirmationRequest.title}</DialogTitle>
         <DialogContent>
           <Typography>{confirmationRequest && confirmationRequest.message}</Typography>
@@ -64,6 +58,6 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
       {children}
     </ConfirmationContext.Provider>
   );
-}
+};
 
 export const useConfirmation = () => useContext(ConfirmationContext);

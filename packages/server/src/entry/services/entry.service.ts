@@ -14,9 +14,11 @@ export class EntryService {
   private readonly bucket: Bucket = this.storage.bucket(this.bucketName);
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
 
-  constructor(@InjectModel(Entry.name) private readonly entryMode: Model<Entry>,
-              @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
-              private readonly configService: ConfigService) {}
+  constructor(
+    @InjectModel(Entry.name) private readonly entryMode: Model<Entry>,
+    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
+    private readonly configService: ConfigService
+  ) {}
 
   async find(entryID: string): Promise<Entry | null> {
     return this.entryMode.findOne({ _id: entryID });
@@ -54,10 +56,10 @@ export class EntryService {
   }
 
   /**
-  * Get how long the signed URL is valid for in milliseconds.
-  *
-  * In the future, this could be configurable per entry.
-  */
+   * Get how long the signed URL is valid for in milliseconds.
+   *
+   * In the future, this could be configurable per entry.
+   */
   async getSignedUrlExpiration(_entry: Entry): Promise<number> {
     return this.expiration;
   }

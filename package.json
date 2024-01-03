@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build --workspaces --if-present",
+    "prettier": "npm run prettier --workspaces --if-present",
+    "prettier:fix": "npm run prettier:fix --workspaces --if-present"
   },
   "workspaces": [
     "packages/*"

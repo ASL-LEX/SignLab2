@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import {ProjectPipe} from 'src/project/pipes/project.pipe';
-import {StudyCreate} from '../dtos/create.dto';
-import {StudyService} from '../study.service';
+import { ProjectPipe } from 'src/project/pipes/project.pipe';
+import { StudyCreate } from '../dtos/create.dto';
+import { StudyService } from '../study.service';
 
 @Injectable()
 export class StudyCreatePipe implements PipeTransform<StudyCreate, Promise<StudyCreate>> {

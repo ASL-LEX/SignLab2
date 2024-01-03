@@ -9,7 +9,9 @@ export const Environment: FC = () => {
 
   return (
     <Paper sx={{ padding: 1 }}>
-      <Typography variant='body1' sx={{ paddingBottom: 1 }}>Environment</Typography>
+      <Typography variant="body1" sx={{ paddingBottom: 1 }}>
+        Environment
+      </Typography>
       <Stack sx={{ width: '100%' }} spacing={2}>
         {/* Project Selection */}
         <FieldSelector
@@ -35,7 +37,7 @@ export const Environment: FC = () => {
 };
 
 interface FieldSelectorProps<T> {
-  value: T | null,
+  value: T | null;
   setValue: Dispatch<SetStateAction<T | null>>;
   label: string;
   options: T[];
@@ -55,9 +57,17 @@ function FieldSelector<T>(props: FieldSelectorProps<T>) {
   return (
     <FormControl sx={{ minWidth: '200px' }}>
       <InputLabel>{props.label}</InputLabel>
-      <Select value={props.value || ''} onChange={(event, _child) => handleChange(event.target.value)} renderValue={(option) => props.display(option)}>
-        {props.options.map((option) => <MenuItem value={option as any} key={props.getKey(option)}>{props.display(option)}</MenuItem>)}
+      <Select
+        value={props.value || ''}
+        onChange={(event, _child) => handleChange(event.target.value)}
+        renderValue={(option) => props.display(option)}
+      >
+        {props.options.map((option) => (
+          <MenuItem value={option as any} key={props.getKey(option)}>
+            {props.display(option)}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
-};
+}

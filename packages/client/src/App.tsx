@@ -57,9 +57,9 @@ const App: FC = () => {
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token ? `Bearer ${token}` : ''
       }
-    }
+    };
   });
 
   const apolloClient = new ApolloClient({
@@ -81,7 +81,7 @@ const App: FC = () => {
       </BrowserRouter>
     </ThemeProvider>
   );
-}
+};
 
 const AppInternal: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -107,7 +107,7 @@ const AppInternal: FC = () => {
     </ProjectProvider>
   );
 
-  return (<>{ authenticated ? mainView : <UnauthenticatedView /> }</>);
+  return <>{authenticated ? mainView : <UnauthenticatedView />}</>;
 };
 
 const UnauthenticatedView: FC = () => {

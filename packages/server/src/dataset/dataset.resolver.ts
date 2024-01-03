@@ -17,7 +17,10 @@ import { DatasetPermissions } from '../auth/permissions/dataset';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Dataset)
 export class DatasetResolver {
-  constructor(private readonly datasetService: DatasetService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    private readonly datasetService: DatasetService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   @Query(() => [Dataset])
   async getDatasets(@OrganizationContext() organization: Organization): Promise<Dataset[]> {
@@ -27,9 +30,11 @@ export class DatasetResolver {
   }
 
   @Mutation(() => Dataset)
-  async createDataset(@Args('dataset') dataset: DatasetCreate,
-                      @OrganizationContext() organization: Organization,
-                      @UserContext() user: TokenPayload): Promise<Dataset> {
+  async createDataset(
+    @Args('dataset') dataset: DatasetCreate,
+    @OrganizationContext() organization: Organization,
+    @UserContext() user: TokenPayload
+  ): Promise<Dataset> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.CREATE, organization._id))) {
       throw new UnauthorizedException('User does not have permission to create a dataset in this organization');
     }
@@ -46,8 +51,8 @@ export class DatasetResolver {
   async changeDatasetName(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @Args('newName') newName: string,
-    @OrganizationContext() organization: Organization): Promise<boolean> {
-
+    @OrganizationContext() organization: Organization
+  ): Promise<boolean> {
     if (!(await this.enforcer.enforce(organization._id, DatasetPermissions.UPDATE, dataset._id))) {
       throw new UnauthorizedException('User does not have permission to update this dataset');
     }
@@ -65,8 +70,8 @@ export class DatasetResolver {
   @Mutation(() => Boolean)
   async changeDatasetDescription(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
-    @Args('newDescription') newDescription: string): Promise<boolean> {
-
+    @Args('newDescription') newDescription: string
+  ): Promise<boolean> {
     if (!(await this.enforcer.enforce(dataset._id, DatasetPermissions.UPDATE, dataset._id))) {
       throw new UnauthorizedException('User does not have permission to update this dataset');
     }

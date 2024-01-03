@@ -98,9 +98,11 @@ export const DatasetControls: React.FC = () => {
 
   return (
     <>
-      <Typography variant='h3'>Dataset Controls</Typography>
+      <Typography variant="h3">Dataset Controls</Typography>
       <Box sx={{ display: 'flex', paddingBottom: '20px' }}>
-        <Box sx={{ width: '22%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Box
+          sx={{ width: '22%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}
+        >
           <IconButton sx={{ color: 'orange', right: '-3%' }} onClick={() => handleClick('add')}>
             <AddCircleOutlineTwoToneIcon />
           </IconButton>
@@ -109,7 +111,9 @@ export const DatasetControls: React.FC = () => {
             Add New Dataset
           </Typography>
         </Box>
-        <Box sx={{ width: '20%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Box
+          sx={{ width: '20%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}
+        >
           <IconButton sx={{ color: 'orange', right: '-4%' }} onClick={() => handleClick('upload')}>
             <AddCircleOutlineTwoToneIcon />
           </IconButton>
@@ -123,11 +127,17 @@ export const DatasetControls: React.FC = () => {
         {controls.map((item: Control) => (
           <Accordion key={item.name} disableGutters>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>{item.name}</Typography>
-              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>{item.description}</Typography>
+              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>
+                {item.name}
+              </Typography>
+              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>
+                {item.description}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
+              <Container
+                sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}
+              >
                 <Box sx={{ position: '-webkit-sticky' }}>
                   <DatasetControl tableRows={rows} columns={columns} />
                 </Box>

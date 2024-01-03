@@ -9,12 +9,7 @@ import { TagPipe } from './pipes/tag.pipe';
 import { SharedModule } from '../shared/shared.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]),
-    StudyModule,
-    EntryModule,
-    SharedModule
-  ],
+  imports: [MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]), StudyModule, EntryModule, SharedModule],
   providers: [TagService, TagResolver, TagPipe]
 })
 export class TagModule {}

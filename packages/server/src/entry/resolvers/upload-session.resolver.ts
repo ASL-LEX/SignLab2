@@ -10,18 +10,23 @@ import { JwtAuthGuard } from '../../auth/jwt.guard';
 import { DatasetPermissions } from '../../auth/permissions/dataset';
 import { CASBIN_PROVIDER } from '../../auth/casbin.provider';
 import * as casbin from 'casbin';
-import {UserContext} from 'src/auth/user.decorator';
-import {TokenPayload} from 'src/auth/user.dto';
-
+import { UserContext } from 'src/auth/user.decorator';
+import { TokenPayload } from 'src/auth/user.dto';
 
 @UseGuards(JwtAuthGuard)
 @Injectable()
 export class UploadSessionResolver {
-  constructor(private readonly uploadSessionService: UploadSessionService, @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    private readonly uploadSessionService: UploadSessionService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   // TODO: Grab the user from the request
   @Mutation(() => UploadSession)
-  async createUploadSession(@Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset, @UserContext() user: TokenPayload): Promise<UploadSession> {
+  async createUploadSession(
+    @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
+    @UserContext() user: TokenPayload
+  ): Promise<UploadSession> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, dataset._id))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
@@ -31,8 +36,10 @@ export class UploadSessionResolver {
 
   // TODO: Add return for any cleanup
   @Mutation(() => UploadResult)
-  async completeUploadSession(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
-                              @UserContext() user: TokenPayload): Promise<UploadResult> {
+  async completeUploadSession(
+    @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
+    @UserContext() user: TokenPayload
+  ): Promise<UploadResult> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
@@ -41,8 +48,10 @@ export class UploadSessionResolver {
   }
 
   @Query(() => String, { description: 'Get the presigned URL for where to upload the CSV against' })
-  async getCSVUploadURL(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
-                        @UserContext() user: TokenPayload): Promise<string> {
+  async getCSVUploadURL(
+    @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
+    @UserContext() user: TokenPayload
+  ): Promise<string> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
@@ -51,8 +60,10 @@ export class UploadSessionResolver {
   }
 
   @Query(() => UploadResult)
-  async validateCSV(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
-                    @UserContext() user: TokenPayload): Promise<UploadResult> {
+  async validateCSV(
+    @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
+    @UserContext() user: TokenPayload
+  ): Promise<UploadResult> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
@@ -62,11 +73,12 @@ export class UploadSessionResolver {
 
   // TODO: Implement caching for the upload session since it's used a lot
   @Query(() => String)
-  async getEntryUploadURL(@Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
-                          @Args('filename') filename: string,
-                          @Args('contentType') contentType: string,
-                          @UserContext() user: TokenPayload): Promise<string> {
-
+  async getEntryUploadURL(
+    @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
+    @Args('filename') filename: string,
+    @Args('contentType') contentType: string,
+    @UserContext() user: TokenPayload
+  ): Promise<string> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }

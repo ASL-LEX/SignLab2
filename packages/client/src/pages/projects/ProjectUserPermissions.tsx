@@ -95,7 +95,7 @@ export const ProjectUserPermissions: React.FC = () => {
 
   return (
     <>
-      <Typography variant='h3'>User Permissions</Typography>
+      <Typography variant="h3">User Permissions</Typography>
       <DataGrid
         getRowHeight={() => 'auto'}
         rows={rows}

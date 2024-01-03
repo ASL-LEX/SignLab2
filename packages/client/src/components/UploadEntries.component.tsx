@@ -10,8 +10,8 @@ import {
   StepContent,
   StepLabel,
   Stepper,
-  Typography,
- } from '@mui/material';
+  Typography
+} from '@mui/material';
 import { Dataset, UploadSession } from '../graphql/graphql';
 import { CSVUpload } from './upload/CSVUpload.component';
 import { StatusMessage } from '../models/StatusMessage';
@@ -63,21 +63,26 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     {
       label: 'Upload Information on Entries',
       description: '',
-      element: <CSVUpload
-        dataset={selectedDataset}
-        uploadSession={uploadSession}
-        setUploadSession={setUploadSession}
-        setValidationMessage={setValidationMessage}
-        setCsvValid={setCsvValid}
+      element: (
+        <CSVUpload
+          dataset={selectedDataset}
+          uploadSession={uploadSession}
+          setUploadSession={setUploadSession}
+          setValidationMessage={setValidationMessage}
+          setCsvValid={setCsvValid}
         />
+      )
     },
     {
       label: 'Upload Entry Videos',
       description: '',
-      element: <EntryUpload
-        uploadSession={uploadSession}
-        setValidationMessage={setValidationMessage}
-        setEntryUploadComplete={setEntryUploadComplete} />
+      element: (
+        <EntryUpload
+          uploadSession={uploadSession}
+          setValidationMessage={setValidationMessage}
+          setEntryUploadComplete={setEntryUploadComplete}
+        />
+      )
     }
   ];
 
@@ -90,7 +95,7 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
     setValidationMessage(null);
     setCsvValid(false);
     setEntryUploadComplete(false);
-  }
+  };
 
   const nextOrComplete = () => {
     if (activeStep === steps.length - 1) {
@@ -102,7 +107,6 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
       setActiveStep(activeStep + 1);
     }
   };
-
 
   return (
     <div>
@@ -121,15 +125,13 @@ export const UploadEntries: React.FC<ShowProps> = (props: ShowProps) => {
                 </Step>
               ))}
             </Stepper>
-          <ValidationMessageDisplay validationMessage={validationMessage} />
+            <ValidationMessageDisplay validationMessage={validationMessage} />
           </Box>
         </DialogContent>
         <DialogActions sx={{ marginBottom: '15px', marginRight: '15px' }}>
           {activeStep != 0 && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
           <Button onClick={onClose}>Cancel</Button>
-          <Button
-            onClick={nextOrComplete}
-            disabled={activeStep >= currentStepLimit}>
+          <Button onClick={nextOrComplete} disabled={activeStep >= currentStepLimit}>
             {activeStep == steps.length - 1 ? 'Complete' : 'Next'}
           </Button>
         </DialogActions>

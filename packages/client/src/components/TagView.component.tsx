@@ -34,7 +34,13 @@ export const TagView = () => {
     <Container sx={{ left: '5%', width: '90%', top: '100px', position: 'absolute' }}>
       {state ? (
         <Box>
-          <JsonForms schema={state.schema} uischema={state.uischema} data={initialData} renderers={materialRenderers} cells={materialCells} />
+          <JsonForms
+            schema={state.schema}
+            uischema={state.uischema}
+            data={initialData}
+            renderers={materialRenderers}
+            cells={materialCells}
+          />
           <Box sx={{ height: '50px', padding: '30px' }}>
             <Button variant="outlined" sx={{ margin: '10px' }}>
               Back
@@ -49,7 +55,7 @@ export const TagView = () => {
         </Box>
       ) : (
         <Box>
-          <Typography variant='h4'>No Entries Tagged</Typography>
+          <Typography variant="h4">No Entries Tagged</Typography>
           <Button variant="outlined" onClick={() => handleClick('')}>
             Navigate home
           </Button>

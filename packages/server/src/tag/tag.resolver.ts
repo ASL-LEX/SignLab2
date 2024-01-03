@@ -14,11 +14,17 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Tag)
 export class TagResolver {
-  constructor(private readonly tagService: TagService, private readonly entryPipe: EntryPipe, private readonly studyPipe: StudyPipe) {}
+  constructor(
+    private readonly tagService: TagService,
+    private readonly entryPipe: EntryPipe,
+    private readonly studyPipe: StudyPipe
+  ) {}
 
   @Mutation(() => [Tag])
-  async createTags(@Args('study', { type: () => ID }, StudyPipe) study: Study,
-                   @Args('entries', { type: () => [ID] }, EntriesPipe) entries: Entry[]) {
+  async createTags(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('entries', { type: () => [ID] }, EntriesPipe) entries: Entry[]
+  ) {
     return this.tagService.createTags(study, entries);
   }
 
@@ -29,7 +35,10 @@ export class TagResolver {
   }
 
   @Mutation(() => Boolean)
-  async completeTag(@Args('tag', { type: () => ID }, TagPipe) tag: Tag, @Args('data', { type: () => JSON }) data: any): Promise<boolean> {
+  async completeTag(
+    @Args('tag', { type: () => ID }, TagPipe) tag: Tag,
+    @Args('data', { type: () => JSON }) data: any
+  ): Promise<boolean> {
     // TODO: Add user context and verify the correct user has completed the tag
     await this.tagService.complete(tag, data);
     return true;

@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import * as casbin from 'casbin';
 import { MongooseAdapter } from 'casbin-mongoose-adapter';
 import { roleHierarchy } from './roles';
@@ -25,7 +25,7 @@ export const casbinProvider: Provider<casbin.Enforcer> = {
       ...roleToTagPermissions,
       ...roleToDatasetPermissions
     ];
-    await Promise.all(groups.map(group => enforcer.addNamedGroupingPolicy('g', ...group)));
+    await Promise.all(groups.map((group) => enforcer.addNamedGroupingPolicy('g', ...group)));
 
     return enforcer;
   },

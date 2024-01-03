@@ -23,12 +23,14 @@ export const DatasetSelect: React.FC<DatasetSelectProps> = ({ selectedDataset, s
 
   return (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-      <Select sx={{ width: 200 }}
+      <Select
+        sx={{ width: 200 }}
         labelId="demo-simple-select-standard-label"
         id="demo-simple-select-standard"
         label="dataset"
         value={selectedDataset ? selectedDataset._id : ''}
-        onChange={handleChange}>
+        onChange={handleChange}
+      >
         {datasets.map((dataset) => (
           <MenuItem key={dataset._id} value={dataset._id}>
             {dataset.name}

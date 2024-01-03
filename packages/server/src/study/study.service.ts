@@ -11,8 +11,11 @@ import * as casbin from 'casbin';
 
 @Injectable()
 export class StudyService {
-  constructor(@InjectModel(Study.name) private readonly studyModel: Model<Study>, middlewareService: MongooseMiddlewareService,
-              @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {
+  constructor(
+    @InjectModel(Study.name) private readonly studyModel: Model<Study>,
+    middlewareService: MongooseMiddlewareService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {
     // Remove cooresponding studies when a project is deleted
     middlewareService.register(Project.name, 'deleteOne', async (project: Project) => {
       // TODO: Update Casbin policies

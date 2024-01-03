@@ -6,8 +6,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { Project } from '../../graphql/graphql';
 import { useDeleteProjectMutation } from '../../graphql/project/project';
 import { useConfirmation } from '../../context/Confirmation.context';
-import {useEffect} from 'react';
-
+import { useEffect } from 'react';
 
 const ProjectControl: React.FC = () => {
   const { projects, updateProjectList } = useProject();
@@ -55,20 +54,16 @@ const ProjectControl: React.FC = () => {
       maxWidth: 120,
       cellClassName: 'delete',
       getActions: (params) => {
-        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)}/>];
+        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)} />];
       }
     }
   ];
 
   return (
     <>
-      <Typography variant='h3'>Project Control</Typography>
+      <Typography variant="h3">Project Control</Typography>
       <Box sx={{ maxWidth: '1000px', margin: 'auto' }}>
-        <DataGrid
-          rows={projects || []}
-          columns={columns}
-          getRowId={(row: Project) => row._id}
-        />
+        <DataGrid rows={projects || []} columns={columns} getRowId={(row: Project) => row._id} />
       </Box>
     </>
   );

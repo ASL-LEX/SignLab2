@@ -54,20 +54,16 @@ export const StudyControl: React.FC = () => {
       maxWidth: 120,
       cellClassName: 'delete',
       getActions: (params) => {
-        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)}/>];
+        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)} />];
       }
     }
   ];
 
   return (
     <>
-      <Typography variant='h3'>Study Control</Typography>
+      <Typography variant="h3">Study Control</Typography>
       <Box sx={{ maxWidth: '1000px', margin: 'auto' }}>
-        <DataGrid
-          rows={studies || []}
-          columns={columns}
-          getRowId={(row: Study) => row._id}
-        />
+        <DataGrid rows={studies || []} columns={columns} getRowId={(row: Study) => row._id} />
       </Box>
     </>
   );

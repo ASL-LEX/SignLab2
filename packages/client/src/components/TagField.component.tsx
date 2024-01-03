@@ -37,7 +37,10 @@ export const TagFieldView: React.FC<FieldProps> = ({ field, valid, validate, ind
     <Card sx={{ width: '90%', height: '15%', margin: '45px 15px -15px 10px' }}>
       <Container sx={{ display: 'flex', flexDirection: 'column', margin: ' 5px 0px -16px -20px' }}>
         <Typography sx={{ margin: '5px 0px 0px 8px', fontSize: '22px' }}>{field.data.fieldName || 'Empty'}</Typography>
-        <Typography sx={{ margin: '0px 0px 7px 9px', color: 'gray', fontWeight: 'medium', fontSize: '12px' }} variant="body2">
+        <Typography
+          sx={{ margin: '0px 0px 7px 9px', color: 'gray', fontWeight: 'medium', fontSize: '12px' }}
+          variant="body2"
+        >
           {field.kindDisplay}
         </Typography>
       </Container>
