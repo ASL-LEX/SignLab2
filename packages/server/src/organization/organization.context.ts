@@ -1,6 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
-// TODO: After users are added in, grab organization from user
-export const OrganizationContext = createParamDecorator((_data: unknown, _ctx: ExecutionContext) => {
-  return { _id: '1', name: 'ASL-LEX' };
+export const OrganizationContext = createParamDecorator((_data: unknown, ctx: ExecutionContext) => {
+  const gqlCtx = GqlExecutionContext.create(ctx);
+  return gqlCtx.getContext().req.user.organization;
 });

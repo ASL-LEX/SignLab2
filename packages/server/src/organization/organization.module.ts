@@ -7,6 +7,7 @@ import { CreateOrganizationPipe } from './pipes/create.pipe';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Organization.name, schema: OrganizationSchema }])],
-  providers: [OrganizationResolver, OrganizationService, CreateOrganizationPipe]
+  providers: [OrganizationResolver, OrganizationService, CreateOrganizationPipe],
+  exports: [OrganizationService]
 })
 export class OrganizationModule {}
