@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { TokenPayload } from './user.dto';
 import { OrganizationService } from '../organization/organization.service';
-import {Organization} from 'src/organization/organization.model';
+import { Organization } from 'src/organization/organization.model';
 
 interface JwtStrategyValidate extends TokenPayload {
   organization: Organization;

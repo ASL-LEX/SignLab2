@@ -62,7 +62,7 @@ export const LoginPage: FC = () => {
           alignItems: 'center'
         }}
       >
-        <Typography variant='h2'>Login</Typography>
+        <Typography variant="h2">Login</Typography>
         <FormControl sx={{ m: 1 }}>
           <Select
             sx={{ width: 300, m: 1 }}
@@ -76,7 +76,7 @@ export const LoginPage: FC = () => {
               </MenuItem>
             ))}
           </Select>
-          <Button disabled={organization == null} variant='contained' onClick={loginRedirect}>
+          <Button disabled={organization == null} variant="contained" onClick={loginRedirect}>
             {organization ? 'Redirect to Organization Login' : 'Select an Organization to Login'}
           </Button>
         </FormControl>
