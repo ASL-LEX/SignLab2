@@ -65,7 +65,14 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
       <Dialog open={props.show} onClose={props.toggleModal}>
         <DialogTitle>Create New Dataset</DialogTitle>
         <DialogContent>
-          <JsonForms schema={schema} uischema={uischema} data={data} renderers={materialRenderers} cells={materialCells} onChange={({ data }) => handleChange(data)} />
+          <JsonForms
+            schema={schema}
+            uischema={uischema}
+            data={data}
+            renderers={materialRenderers}
+            cells={materialCells}
+            onChange={({ data }) => handleChange(data)}
+          />
         </DialogContent>
         <DialogActions>
           <button onClick={props.toggleModal} type="submit">

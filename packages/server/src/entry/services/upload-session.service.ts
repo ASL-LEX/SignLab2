@@ -20,13 +20,15 @@ export class UploadSessionService {
   private readonly entryFolder = this.configService.getOrThrow<string>('upload.entryFolder');
   private readonly bucket: Bucket = this.storage.bucket(this.uploadBucket);
 
-  constructor(@InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
-              @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
-              private readonly configService: ConfigService,
-              private readonly csvValidation: CsvValidationService,
-              private readonly datasetService: DatasetService,
-              private readonly entryUploadService: EntryUploadService,
-              private readonly entryService: EntryService) {}
+  constructor(
+    @InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
+    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
+    private readonly configService: ConfigService,
+    private readonly csvValidation: CsvValidationService,
+    private readonly datasetService: DatasetService,
+    private readonly entryUploadService: EntryUploadService,
+    private readonly entryService: EntryService
+  ) {}
 
   async find(id: string): Promise<UploadSession | null> {
     return this.uploadSessionModel.findById(id).exec();
@@ -38,7 +40,7 @@ export class UploadSessionService {
     // Make the session
     const uploadSession = await this.uploadSessionModel.create({
       dataset: dataset._id,
-      created: new Date(),
+      created: new Date()
     });
 
     // Add in the bucket prefix for the session
@@ -87,11 +89,14 @@ export class UploadSessionService {
       // TODO: Remove media URL
       //       Determine media type
       const contentType = entryFile.metadata.contentType;
-      const entry = await this.entryService.create({
-        entryID: entryUpload.entryID,
-        contentType: entryFile.metadata.contentType,
-        meta: entryUpload.metadata
-      }, dataset);
+      const entry = await this.entryService.create(
+        {
+          entryID: entryUpload.entryID,
+          contentType: entryFile.metadata.contentType,
+          meta: entryUpload.metadata
+        },
+        dataset
+      );
 
       // Move the entry to the dataset
       const fileExtension = entryUpload.filename.split('.').pop();
@@ -109,7 +114,10 @@ export class UploadSessionService {
     // Let users know if there were missing entries
     // TODO: Add concept of status to messages
     if (missingEntries.length > 0) {
-      return { status: UploadStatus.WARNING, message: `The following entries where in the CSV, but not uploaded:\n ${missingEntries.join(', ')}` };
+      return {
+        status: UploadStatus.WARNING,
+        message: `The following entries where in the CSV, but not uploaded:\n ${missingEntries.join(', ')}`
+      };
     }
 
     // No issues
@@ -121,13 +129,11 @@ export class UploadSessionService {
     const csvURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.csvFileName}`;
     const entryPrefix = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.entryFolder}`;
 
-    const [url] = await this.bucket
-      .file(csvURL)
-      .getSignedUrl({
-        action: 'write',
-        expires: Date.now() + 2 * 60 * 1000, // 2 minutes
-        contentType: 'text/csv',
-      });
+    const [url] = await this.bucket.file(csvURL).getSignedUrl({
+      action: 'write',
+      expires: Date.now() + 2 * 60 * 1000, // 2 minutes
+      contentType: 'text/csv'
+    });
 
     // Add the url to the upload session to signify the upload is ready
     await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL, entryPrefix } });
@@ -142,13 +148,11 @@ export class UploadSessionService {
 
     const entryURL = `${uploadSession.entryPrefix}/${filename}`;
 
-    const [url] = await this.bucket
-      .file(entryURL)
-      .getSignedUrl({
-        action: 'write',
-        expires: Date.now() + 2 * 60 * 1000, // 2 minutes
-        contentType: filetype,
-      });
+    const [url] = await this.bucket.file(entryURL).getSignedUrl({
+      action: 'write',
+      expires: Date.now() + 2 * 60 * 1000, // 2 minutes
+      contentType: filetype
+    });
 
     return url;
   }
@@ -182,7 +186,9 @@ export class UploadSessionService {
     }
 
     // Otherwise store the validated results for the next step
-    await Promise.all(csvValidationResults.entryUploads!.map(entryUpload => this.entryUploadService.create(entryUpload)));
+    await Promise.all(
+      csvValidationResults.entryUploads!.map((entryUpload) => this.entryUploadService.create(entryUpload))
+    );
 
     // Return the validation status
     return { status: UploadStatus.SUCCESS };

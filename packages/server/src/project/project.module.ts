@@ -24,7 +24,7 @@ import { AuthModule } from '../auth/auth.module';
           return schema;
         },
         imports: [SharedModule],
-        inject: [MongooseMiddlewareService],
+        inject: [MongooseMiddlewareService]
       }
     ]),
     AuthModule

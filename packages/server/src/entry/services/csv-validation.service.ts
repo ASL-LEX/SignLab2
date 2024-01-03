@@ -18,10 +18,7 @@ export interface CsvValidationResult {
  */
 @Injectable()
 export class CsvValidationService {
-  private static REQUIRED_CSV_HEADERS = [
-    'entryID',
-    'filename'
-  ];
+  private static REQUIRED_CSV_HEADERS = ['entryID', 'filename'];
 
   constructor(private readonly entryService: EntryService) {}
 
@@ -96,7 +93,11 @@ export class CsvValidationService {
   }
 
   /** Helper to convert the CSV lines to an array of objects */
-  private toEntryUpload(row: any, _dataset: Dataset, session: UploadSession): { data?: EntryUpload, errorMessage?: string } {
+  private toEntryUpload(
+    row: any,
+    _dataset: Dataset,
+    session: UploadSession
+  ): { data?: EntryUpload; errorMessage?: string } {
     const entryID = row.entryID;
     const filename = row.filename;
 
@@ -111,7 +112,7 @@ export class CsvValidationService {
         session: session._id,
         entryID,
         filename,
-        metadata,
+        metadata
       }
     };
   }

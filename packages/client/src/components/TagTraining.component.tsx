@@ -87,11 +87,17 @@ export const TagTrainingComponent = () => {
       {controls.map((item: Control) => (
         <Accordion key={item.name} disableGutters>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-            <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>{item.name}</Typography>
-            <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>{item.description}</Typography>
+            <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>
+              {item.name}
+            </Typography>
+            <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>
+              {item.description}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Container sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
+            <Container
+              sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}
+            >
               <Box sx={{ position: '-webkit-sticky' }}>
                 <DatasetControl tableRows={rows} columns={columns} />
               </Box>

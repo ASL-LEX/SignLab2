@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { EntryUpload } from '../models/entry-upload.model';
 import { Model } from 'mongoose';
-import {UploadSession} from '../models/upload-session.model';
+import { UploadSession } from '../models/upload-session.model';
 
 @Injectable()
 export class EntryUploadService {

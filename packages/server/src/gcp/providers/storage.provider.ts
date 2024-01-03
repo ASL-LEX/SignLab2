@@ -19,5 +19,5 @@ export const storageProvider: Provider<Storage> = {
       keyFilename: configService.getOrThrow<string>('gcp.storage.keyFilename')
     });
   },
-  inject: [ConfigService],
+  inject: [ConfigService]
 };

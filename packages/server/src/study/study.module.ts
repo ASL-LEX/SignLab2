@@ -11,23 +11,28 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [MongooseModule.forFeatureAsync([
-    {
-      name: Study.name,
-      useFactory: (middlewareService: MongooseMiddlewareService) => {
-        const schema = StudySchema;
+  imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: Study.name,
+        useFactory: (middlewareService: MongooseMiddlewareService) => {
+          const schema = StudySchema;
 
-        schema.pre('deleteOne', async function () {
-          const study = await this.model.findOne(this.getQuery());
-          await middlewareService.apply(Study.name, 'deleteOne', study);
-        });
+          schema.pre('deleteOne', async function () {
+            const study = await this.model.findOne(this.getQuery());
+            await middlewareService.apply(Study.name, 'deleteOne', study);
+          });
 
-        return schema;
-      },
-      imports: [SharedModule],
-      inject: [MongooseMiddlewareService],
-    }
-  ]), ProjectModule, SharedModule, AuthModule],
+          return schema;
+        },
+        imports: [SharedModule],
+        inject: [MongooseMiddlewareService]
+      }
+    ]),
+    ProjectModule,
+    SharedModule,
+    AuthModule
+  ],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]
 })

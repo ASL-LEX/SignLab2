@@ -23,7 +23,11 @@ type TagPreviewInformation = {
 
 export const TagsDisplay: React.FC = () => {
   const [tagFields, setTagFields] = useState<TagField[]>([]);
-  const [data, setData] = useState<TagPreviewInformation>({ previewDataSchema: {}, previewUiSchema: {}, renderers: [] });
+  const [data, setData] = useState<TagPreviewInformation>({
+    previewDataSchema: {},
+    previewUiSchema: {},
+    renderers: []
+  });
   const [valid, setValid] = useState<boolean[]>([]);
   const [open, setOpen] = useState(false);
   const renderers = [...materialRenderers];
@@ -42,7 +46,11 @@ export const TagsDisplay: React.FC = () => {
   };
 
   const produceJSONForm = () => {
-    const dataSchema: { type: string; properties: any; required: string[] } = { type: 'object', properties: {}, required: [] };
+    const dataSchema: { type: string; properties: any; required: string[] } = {
+      type: 'object',
+      properties: {},
+      required: []
+    };
     const uiSchema: { type: string; elements: any[] } = { type: 'VerticalLayout', elements: [] };
 
     for (const tagField of tagFields) {
@@ -102,7 +110,12 @@ export const TagsDisplay: React.FC = () => {
               {button.name}
             </Button>
           ))}
-          <Button variant="outlined" sx={{ marginTop: '5%', width: '12rem' }} onClick={openTagFormPreview} disabled={valid.includes(false)}>
+          <Button
+            variant="outlined"
+            sx={{ marginTop: '5%', width: '12rem' }}
+            onClick={openTagFormPreview}
+            disabled={valid.includes(false)}
+          >
             Preview
           </Button>
         </Container>
@@ -115,7 +128,12 @@ export const TagsDisplay: React.FC = () => {
             tagFields.map((value: TagField, index: number) => (
               <Box key={index} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <TagFieldView field={value} valid={valid} validate={setValid} index={index} />
-                <Button size="large" sx={{ marginTop: '45px' }} startIcon={<DeleteIcon />} onClick={() => removeField(index)} />
+                <Button
+                  size="large"
+                  sx={{ marginTop: '45px' }}
+                  startIcon={<DeleteIcon />}
+                  onClick={() => removeField(index)}
+                />
               </Box>
             ))
           ) : (

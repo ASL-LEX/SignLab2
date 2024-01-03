@@ -11,9 +11,11 @@ import * as casbin from 'casbin';
 export class DatasetService {
   private readonly datasetPrefix = this.configService.getOrThrow<string>('dataset.prefix');
 
-  constructor(@InjectModel(Dataset.name) private readonly datasetModel: Model<Dataset>,
-              private readonly configService: ConfigService,
-              @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
+  constructor(
+    @InjectModel(Dataset.name) private readonly datasetModel: Model<Dataset>,
+    private readonly configService: ConfigService,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+  ) {}
 
   async findById(id: string): Promise<Dataset | null> {
     return this.datasetModel.findById(id);

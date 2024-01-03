@@ -7,11 +7,13 @@ import { Entry } from '../entry/models/entry.model';
 import { StudyService } from '../study/study.service';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 
-
 @Injectable()
 export class TagService {
-  constructor(@InjectModel(Tag.name) private readonly tagModel: Model<Tag>, private readonly studyService: StudyService,
-              middlewareService: MongooseMiddlewareService) {
+  constructor(
+    @InjectModel(Tag.name) private readonly tagModel: Model<Tag>,
+    private readonly studyService: StudyService,
+    middlewareService: MongooseMiddlewareService
+  ) {
     // Subscribe to study delete events
     middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
       await this.removeByStudy(study);
@@ -32,7 +34,7 @@ export class TagService {
   async createTags(study: Study, entries: Entry[]): Promise<Tag[]> {
     const tags: Tag[] = [];
     for (const entry of entries) {
-      for(let order = 0; order < study.tagsPerEntry; order++) {
+      for (let order = 0; order < study.tagsPerEntry; order++) {
         const newTag = await this.tagModel.create({
           entry: entry._id,
           study: study._id,
@@ -65,7 +67,7 @@ export class TagService {
         // Only search on tags that are enabled for the current study
         { $match: { enabled: true, study: study._id.toString() } },
         // Grab tags that are unassigned (user field doesn't exist) or have been completed by the user
-        { $match: { $or: [ { user: { $exists: false } }, { user: { $eq: user } } ] } },
+        { $match: { $or: [{ user: { $exists: false } }, { user: { $eq: user } }] } },
         // Group by the entrys and expand tags
         { $group: { _id: { entry: '$entry' }, tag: { $push: '$$ROOT' } } },
         // Now filter where user does not show up in the list of tags
@@ -84,10 +86,7 @@ export class TagService {
       }
 
       // Otherwise mark the tag as assigned
-      await this.tagModel.findOneAndUpdate(
-        { _id: searchResult[0].tag._id },
-        { $set: { user } }
-      );
+      await this.tagModel.findOneAndUpdate({ _id: searchResult[0].tag._id }, { $set: { user } });
     });
 
     // At this point, if a tag was found, it will be assigned to the user

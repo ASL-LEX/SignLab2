@@ -41,6 +41,6 @@ import { AuthModule } from './auth/auth.module';
     TagModule,
     SharedModule,
     AuthModule
-  ],
+  ]
 })
 export class AppModule {}

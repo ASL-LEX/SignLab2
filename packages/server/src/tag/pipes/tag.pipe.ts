@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import {Tag} from '../tag.model';
+import { Tag } from '../tag.model';
 import { TagService } from '../tag.service';
 
 @Injectable()

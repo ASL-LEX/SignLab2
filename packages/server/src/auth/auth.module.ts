@@ -26,7 +26,7 @@ import { AuthResolver } from './auth.resolver';
         };
         return options;
       }
-    }),
+    })
   ],
   providers: [
     AuthService,

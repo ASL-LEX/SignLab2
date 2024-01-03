@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client';
 import { GetEntryUploadUrlDocument, CompleteUploadSessionDocument } from '../../graphql/upload-session/upload-session';
 import { UploadSession, UploadStatus } from '../../graphql/graphql';
 import axios from 'axios';
-import { Dispatch, SetStateAction, useState  } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { StatusMessage } from '../../models/StatusMessage';
 
 export interface EntryUploadProps {
@@ -13,13 +13,16 @@ export interface EntryUploadProps {
   setEntryUploadComplete: Dispatch<SetStateAction<boolean>>;
 }
 
-export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setValidationMessage, setEntryUploadComplete }) => {
+export const EntryUpload: React.FC<EntryUploadProps> = ({
+  uploadSession,
+  setValidationMessage,
+  setEntryUploadComplete
+}) => {
   const apolloClient = useApolloClient();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
-
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!uploadSession) {
@@ -90,7 +93,9 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({ uploadSession, setVali
         <input type="file" hidden onChange={handleChange} webkitdirectory="true" mozdirectory="true" accept="image/*" />
       </Button>
       <Box sx={{ width: '100%' }}>
-        {isUploading && <LinearProgress value={uploadProgress} variant='determinate' color={uploadComplete ? 'primary' : 'success' }/>}
+        {isUploading && (
+          <LinearProgress value={uploadProgress} variant="determinate" color={uploadComplete ? 'primary' : 'success'} />
+        )}
       </Box>
     </Stack>
   );

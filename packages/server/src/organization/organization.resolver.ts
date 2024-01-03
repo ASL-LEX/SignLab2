@@ -25,7 +25,9 @@ export class OrganizationResolver {
   // TODO: Add authentication guard
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Organization)
-  async createOrganization(@Args('organization', CreateOrganizationPipe) organization: OrganizationCreate): Promise<Organization> {
+  async createOrganization(
+    @Args('organization', CreateOrganizationPipe) organization: OrganizationCreate
+  ): Promise<Organization> {
     return this.orgService.create(organization);
   }
 }

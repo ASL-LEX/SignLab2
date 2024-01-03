@@ -7,7 +7,7 @@ export enum UploadStatus {
 }
 
 registerEnumType(UploadStatus, {
-  name: 'UploadStatus',
+  name: 'UploadStatus'
 });
 
 @ObjectType()

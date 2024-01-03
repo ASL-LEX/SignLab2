@@ -20,7 +20,7 @@ import { AuthModule } from '../auth/auth.module';
     MongooseModule.forFeature([
       { name: Entry.name, schema: EntrySchema },
       { name: UploadSession.name, schema: UploadSessionSchema },
-      { name: EntryUpload.name, schema: EntryUploadSchema },
+      { name: EntryUpload.name, schema: EntryUploadSchema }
     ]),
     DatasetModule,
     GcpModule,

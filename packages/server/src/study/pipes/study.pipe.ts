@@ -14,4 +14,3 @@ export class StudyPipe implements PipeTransform<string, Promise<Study>> {
     return study;
   }
 }
-

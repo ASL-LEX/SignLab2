@@ -1,12 +1,15 @@
 import { Dataset, UploadSession, UploadStatus } from '../../graphql/graphql';
 import { Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { StatusMessage } from '../../models/StatusMessage';
-import { CreateUploadSessionDocument, GetCsvUploadUrlDocument, ValidateCsvDocument } from '../../graphql/upload-session/upload-session';
+import {
+  CreateUploadSessionDocument,
+  GetCsvUploadUrlDocument,
+  ValidateCsvDocument
+} from '../../graphql/upload-session/upload-session';
 import { useApolloClient } from '@apollo/client';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
-
 
 export interface CSVUploadProps {
   dataset: Dataset | null;
@@ -16,7 +19,12 @@ export interface CSVUploadProps {
   setCsvValid: Dispatch<SetStateAction<boolean>>;
 }
 
-export const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession, setValidationMessage, setCsvValid }) => {
+export const CSVUpload: React.FC<CSVUploadProps> = ({
+  dataset,
+  setUploadSession,
+  setValidationMessage,
+  setCsvValid
+}) => {
   const apolloClient = useApolloClient();
 
   // Implemented with using the apollo client directly instead of the useMutation hook
@@ -47,7 +55,6 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession,
       variables: { session: uploadSession._id }
     });
 
-
     if (!uploadUrlQuery.data?.getCSVUploadURL) {
       console.error('Failed to get upload url');
       return;
@@ -75,7 +82,7 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession,
 
     // Share any validation results
     const result = validation.data!.validateCSV;
-    if (result.status == UploadStatus.Success ) {
+    if (result.status == UploadStatus.Success) {
       setValidationMessage({ severity: 'success', message: 'CSV validated successfully' });
       setCsvValid(true);
     } else {
@@ -84,12 +91,11 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({ dataset, setUploadSession,
     }
   };
 
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
       <Button component="label" variant="contained" color="primary" startIcon={<UploadIcon />} sx={{ m: 1 }}>
         Upload CSV
-        <input type="file" hidden onChange={handleCSVChange} accept='.csv' />
+        <input type="file" hidden onChange={handleCSVChange} accept=".csv" />
       </Button>
     </Box>
   );

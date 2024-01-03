@@ -2,7 +2,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Container, Link, Typography } from '@mui/material';
 import { FC, useEffect } from 'react';
 import { useAuth } from '../context/Auth.context';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: FC = () => {
   // Construct the Auth URL
@@ -39,10 +39,7 @@ export const LoginPage: FC = () => {
           Sign In or Sign Up
         </Typography>
         <Typography>
-          <Link
-            sx={{ fontStyle: 'italic', color: 'skyblue' }}
-            href={authUrl}
-          >
+          <Link sx={{ fontStyle: 'italic', color: 'skyblue' }} href={authUrl}>
             by following this link
           </Link>
         </Typography>

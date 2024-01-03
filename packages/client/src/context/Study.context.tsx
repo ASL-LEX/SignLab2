@@ -46,7 +46,9 @@ export const StudyProvider: FC<StudyProviderProps> = (props) => {
     }
   }, [findStudiesResults]);
 
-  return <StudyContext.Provider value={{ study, setStudy, studies, updateStudies }}>{props.children}</StudyContext.Provider>;
+  return (
+    <StudyContext.Provider value={{ study, setStudy, studies, updateStudies }}>{props.children}</StudyContext.Provider>
+  );
 };
 
 export const useStudy = () => useContext(StudyContext);

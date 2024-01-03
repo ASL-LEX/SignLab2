@@ -88,7 +88,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [token]);
 
-  return <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 const saveToken = (token: string) => {
@@ -101,6 +105,6 @@ const restoreToken = (): string | null => {
 
 const clearToken = (): void => {
   localStorage.removeItem(AUTH_TOKEN_STR);
-}
+};
 
 export const useAuth = () => useContext(AuthContext);
