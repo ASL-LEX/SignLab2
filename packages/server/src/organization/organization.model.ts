@@ -15,6 +15,10 @@ export class Organization {
   /** Maps the `projectId` in the auth service back to the organization */
   @Prop()
   projectId: string;
+
+  @Prop()
+  @Field({ description: 'URL where the user logs in against' })
+  authURL: string;
 }
 
 export type OrganizationDocument = Organization & Document;

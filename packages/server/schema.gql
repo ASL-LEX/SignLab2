@@ -5,6 +5,9 @@
 type Organization {
   _id: ID!
   name: String!
+
+  """URL where the user logs in against"""
+  authURL: String!
 }
 
 type Dataset {
@@ -138,6 +141,9 @@ type Mutation {
 
 input OrganizationCreate {
   name: String!
+
+  """URL where the user logs in against"""
+  authURL: String!
   projectId: String!
 }
 
