@@ -11,6 +11,10 @@ export class Organization {
   @Prop()
   @Field()
   name: string;
+
+  /** Maps the `projectId` in the auth service back to the organization */
+  @Prop()
+  projectId: string;
 }
 
 export type OrganizationDocument = Organization & Document;

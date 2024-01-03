@@ -138,6 +138,7 @@ type Mutation {
 
 input OrganizationCreate {
   name: String!
+  projectId: String!
 }
 
 input DatasetCreate {
