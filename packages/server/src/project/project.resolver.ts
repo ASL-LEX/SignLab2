@@ -9,9 +9,9 @@ import { ProjectPipe } from './pipes/project.pipe';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
-import { ProjectPermissions } from '../auth/permissions/project';
+import { ProjectPermissions } from '../permission/permissions/project';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Project)

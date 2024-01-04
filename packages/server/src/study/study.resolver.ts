@@ -8,9 +8,9 @@ import { StudyService } from './study.service';
 import { StudyCreatePipe } from './pipes/create.pipe';
 import { UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
-import { StudyPermissions } from '../auth/permissions/study';
+import { StudyPermissions } from '../permission/permissions/study';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
 

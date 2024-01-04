@@ -125,7 +125,6 @@ type Mutation {
   createDataset(dataset: DatasetCreate!): Dataset!
   changeDatasetName(dataset: ID!, newName: String!): Boolean!
   changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
-  grantOwner(targetUser: ID!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!

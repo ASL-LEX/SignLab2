@@ -13,7 +13,8 @@ import { EntryUploadService } from './services/entry-upload.service';
 import { UploadSessionPipe } from './pipes/upload-session.pipe';
 import { GcpModule } from '../gcp/gcp.module';
 import { CsvValidationService } from './services/csv-validation.service';
-import { AuthModule } from '../auth/auth.module';
+import { PermissionModule } from '../permission/permission.module';
+import { JwtModule } from '../jwt/jwt.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AuthModule } from '../auth/auth.module';
     ]),
     DatasetModule,
     GcpModule,
-    AuthModule
+    PermissionModule,
+    JwtModule
   ],
   providers: [
     EntryResolver,

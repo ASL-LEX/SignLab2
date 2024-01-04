@@ -6,7 +6,7 @@ import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
 import { Project } from 'src/project/project.model';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 
 @Injectable()

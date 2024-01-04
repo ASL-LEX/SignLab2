@@ -7,11 +7,11 @@ import { DatasetCreate } from './dtos/create.dto';
 import { DatasetPipe } from './pipes/dataset.pipe';
 import { BadRequestException, UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
-import { DatasetPermissions } from '../auth/permissions/dataset';
+import { DatasetPermissions } from '../permission/permissions/dataset';
 
 // TODO: Add authentication
 @UseGuards(JwtAuthGuard)

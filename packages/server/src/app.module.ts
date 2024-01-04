@@ -11,9 +11,8 @@ import { StudyModule } from './study/study.module';
 import { EntryModule } from './entry/entry.module';
 import { TagModule } from './tag/tag.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from './jwt/jwt.module';
-import { PermsModule } from './perms/perms.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -42,9 +41,8 @@ import { PermsModule } from './perms/perms.module';
     EntryModule,
     TagModule,
     SharedModule,
-    AuthModule,
     JwtModule,
-    PermsModule
+    PermissionModule
   ]
 })
 export class AppModule {}

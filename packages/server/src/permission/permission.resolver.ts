@@ -3,14 +3,14 @@ import { JwtAuthGuard } from '../jwt/jwt.guard';
 import { UseGuards } from '@nestjs/common';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
-import { AuthService } from './auth.service';
+import { PermissionService } from './permission.service';
 import { OrganizationContext } from 'src/organization/organization.context';
 import { Organization } from 'src/organization/organization.model';
 
 @UseGuards(JwtAuthGuard)
 @Resolver()
-export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+export class PermissionResolver {
+  constructor(private readonly permissionService: PermissionService) {}
 
   @Mutation(() => Boolean)
   async grantOwner(
@@ -18,7 +18,7 @@ export class AuthResolver {
     @TokenContext() requestingUser: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
-    await this.authService.grantOwner(targetUser, requestingUser.id, organization._id);
+    await this.permissionService.grantOwner(targetUser, requestingUser.id, organization._id);
     return true;
   }
 }
