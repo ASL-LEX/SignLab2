@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './project.model';
 import { ProjectCreate } from './dtos/create.dto';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 
 @Injectable()

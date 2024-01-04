@@ -8,7 +8,8 @@ import { StudyPipe } from './pipes/study.pipe';
 import { StudyCreatePipe } from './pipes/create.pipe';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 import { SharedModule } from '../shared/shared.module';
-import { AuthModule } from '../auth/auth.module';
+import { JwtModule } from '../jwt/jwt.module';
+import { PermissionModule } from '../permission/permission.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AuthModule } from '../auth/auth.module';
     ]),
     ProjectModule,
     SharedModule,
-    AuthModule
+    JwtModule,
+    PermissionModule
   ],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]

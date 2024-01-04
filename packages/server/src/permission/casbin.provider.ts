@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as casbin from 'casbin';
 import { MongooseAdapter } from 'casbin-mongoose-adapter';
-import { roleHierarchy } from './roles';
+import { roleHierarchy } from './permissions/roles';
 import { roleToStudyPermissions } from './permissions/study';
 import { roleToProjectPermissions } from './permissions/project';
 import { roleToTagPermissions } from './permissions/tag';

@@ -1,4 +1,4 @@
-import { Roles } from '../roles';
+import { Roles } from './roles';
 
 /** Permissions associated with projects */
 export enum ProjectPermissions {

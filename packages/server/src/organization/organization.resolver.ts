@@ -4,7 +4,7 @@ import { Organization } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationPipe } from './pipes/create.pipe';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
 
 @Resolver(() => Organization)
 export class OrganizationResolver {

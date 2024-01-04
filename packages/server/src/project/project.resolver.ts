@@ -6,12 +6,12 @@ import { ProjectCreate } from './dtos/create.dto';
 import { Project } from './project.model';
 import { ProjectService } from './project.service';
 import { ProjectPipe } from './pipes/project.pipe';
-import { JwtAuthGuard } from '../auth/jwt.guard';
-import { UserContext } from '../auth/user.decorator';
-import { TokenPayload } from '../auth/user.dto';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
+import { TokenContext } from '../jwt/token.context';
+import { TokenPayload } from '../jwt/token.dto';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
-import { ProjectPermissions } from '../auth/permissions/project';
+import { ProjectPermissions } from '../permission/permissions/project';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Project)
@@ -25,7 +25,7 @@ export class ProjectResolver {
   async signLabCreateProject(
     @Args('project') project: ProjectCreate,
     @OrganizationContext() organization: Organization,
-    @UserContext() user: TokenPayload
+    @TokenContext() user: TokenPayload
   ): Promise<Project> {
     // Make sure the user is allowed to create projects
     if (!(await this.enforcer.enforce(user.id, ProjectPermissions.CREATE, organization._id))) {
@@ -43,7 +43,7 @@ export class ProjectResolver {
   async projectExists(
     @Args('name') name: string,
     @OrganizationContext() organization: Organization,
-    @UserContext() _user: TokenPayload
+    @TokenContext() _user: TokenPayload
   ): Promise<boolean> {
     return this.projectService.exists(name, organization._id);
   }
@@ -52,7 +52,7 @@ export class ProjectResolver {
   @Mutation(() => Boolean)
   async deleteProject(
     @Args('project', { type: () => ID }, ProjectPipe) project: Project,
-    @UserContext() user: TokenPayload,
+    @TokenContext() user: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
     if (!(await this.enforcer.enforce(user.id, ProjectPermissions.DELETE, organization._id))) {
@@ -67,7 +67,7 @@ export class ProjectResolver {
   @Query(() => [Project])
   async getProjects(
     @OrganizationContext() organization: Organization,
-    @UserContext() user: TokenPayload
+    @TokenContext() user: TokenPayload
   ): Promise<Project[]> {
     if (!(await this.enforcer.enforce(user.id, ProjectPermissions.READ, organization._id))) {
       throw new UnauthorizedException('User does not have permission to read projects');

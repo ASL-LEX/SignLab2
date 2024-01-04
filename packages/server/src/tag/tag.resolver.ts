@@ -8,7 +8,7 @@ import { Entry } from '../entry/models/entry.model';
 import { TagPipe } from './pipes/tag.pipe';
 import JSON from 'graphql-type-json';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
 
 // TODO: Add permissioning
 @UseGuards(JwtAuthGuard)

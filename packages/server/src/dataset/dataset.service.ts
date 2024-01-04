@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Dataset } from './dataset.model';
 import { DatasetCreate } from './dtos/create.dto';
 import { ConfigService } from '@nestjs/config';
-import { CASBIN_PROVIDER } from '../auth/casbin.provider';
+import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 
 @Injectable()

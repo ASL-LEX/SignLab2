@@ -11,7 +11,8 @@ import { StudyModule } from './study/study.module';
 import { EntryModule } from './entry/entry.module';
 import { TagModule } from './tag/tag.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
+import { JwtModule } from './jwt/jwt.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { AuthModule } from './auth/auth.module';
     EntryModule,
     TagModule,
     SharedModule,
-    AuthModule
+    JwtModule,
+    PermissionModule
   ]
 })
 export class AppModule {}

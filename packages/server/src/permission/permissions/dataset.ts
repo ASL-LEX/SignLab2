@@ -1,4 +1,4 @@
-import { Roles } from '../roles';
+import { Roles } from './roles';
 
 export enum DatasetPermissions {
   CREATE = 'dataset:create',
