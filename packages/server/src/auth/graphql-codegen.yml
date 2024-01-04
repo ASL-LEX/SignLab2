@@ -19,5 +19,6 @@ generates:
           content: '/* Generated File DO NOT EDIT. */'
       - add:
           content: '/* tslint:disable */'
+      - typescript
       - typescript-operations
       - typescript-generic-sdk
