@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { CASBIN_PROVIDER } from './casbin.provider';
 import * as casbin from 'casbin';
-import { Roles } from './roles';
+import { Roles } from './permissions/roles';
 
 @Injectable()
 export class AuthService {
