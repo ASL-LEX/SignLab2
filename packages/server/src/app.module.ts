@@ -12,6 +12,8 @@ import { EntryModule } from './entry/entry.module';
 import { TagModule } from './tag/tag.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from './jwt/jwt.module';
+import { PermsModule } from './perms/perms.module';
 
 @Module({
   imports: [
@@ -40,7 +42,9 @@ import { AuthModule } from './auth/auth.module';
     EntryModule,
     TagModule,
     SharedModule,
-    AuthModule
+    AuthModule,
+    JwtModule,
+    PermsModule
   ]
 })
 export class AppModule {}

@@ -6,11 +6,11 @@ import { OrganizationContext } from '../organization/organization.context';
 import { DatasetCreate } from './dtos/create.dto';
 import { DatasetPipe } from './pipes/dataset.pipe';
 import { BadRequestException, UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
 import { CASBIN_PROVIDER } from '../auth/casbin.provider';
 import * as casbin from 'casbin';
-import { UserContext } from '../auth/user.decorator';
-import { TokenPayload } from '../auth/user.dto';
+import { TokenContext } from '../jwt/token.context';
+import { TokenPayload } from '../jwt/token.dto';
 import { DatasetPermissions } from '../auth/permissions/dataset';
 
 // TODO: Add authentication
@@ -33,7 +33,7 @@ export class DatasetResolver {
   async createDataset(
     @Args('dataset') dataset: DatasetCreate,
     @OrganizationContext() organization: Organization,
-    @UserContext() user: TokenPayload
+    @TokenContext() user: TokenPayload
   ): Promise<Dataset> {
     if (!(await this.enforcer.enforce(user.id, DatasetPermissions.CREATE, organization._id))) {
       throw new UnauthorizedException('User does not have permission to create a dataset in this organization');

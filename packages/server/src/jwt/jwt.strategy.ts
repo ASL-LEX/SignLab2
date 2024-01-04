@@ -1,7 +1,7 @@
 import { Injectable, BadGatewayException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { TokenPayload } from './user.dto';
+import { TokenPayload } from './token.dto';
 import { OrganizationService } from '../organization/organization.service';
 import { Organization } from 'src/organization/organization.model';
 
