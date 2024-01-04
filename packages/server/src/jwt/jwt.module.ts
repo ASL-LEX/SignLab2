@@ -1,8 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
-import {
-  JwtModule as NestJwtModule,
-  JwtModuleOptions as NestJwtModuleOptions
-} from '@nestjs/jwt';
+import { JwtModule as NestJwtModule, JwtModuleOptions as NestJwtModuleOptions } from '@nestjs/jwt';
 import { JwtService } from './jwt.service';
 import { HttpModule } from '@nestjs/axios';
 import { JwtAuthGuard } from './jwt.guard';
@@ -19,11 +16,11 @@ import { OrganizationModule } from '../organization/organization.module';
         const options: NestJwtModuleOptions = {
           publicKey: await jwtService.getPublicKey(),
           signOptions: {
-            algorithm: 'RS256',
+            algorithm: 'RS256'
           }
         };
         return options;
-      },
+      }
     }),
     HttpModule,
     forwardRef(() => OrganizationModule)

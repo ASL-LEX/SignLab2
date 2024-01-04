@@ -4,11 +4,7 @@ import { PermissionResolver } from './permission.resolver';
 import { PermissionService } from './permission.service';
 
 @Module({
-  providers: [
-    casbinProvider,
-    PermissionResolver,
-    PermissionService
-  ],
+  providers: [casbinProvider, PermissionResolver, PermissionService],
   exports: [casbinProvider]
 })
 export class PermissionModule {}

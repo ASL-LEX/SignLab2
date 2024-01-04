@@ -7,10 +7,7 @@ import { firstValueFrom } from 'rxjs';
 export class JwtService {
   private publicKey: string | null = null;
 
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
 
   // TODO: In the future this will be replaced by a library which handles
   // key rotation

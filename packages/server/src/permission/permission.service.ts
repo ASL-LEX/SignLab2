@@ -5,9 +5,7 @@ import { Roles } from './permissions/roles';
 
 @Injectable()
 export class PermissionService {
-  constructor(
-    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
-  ) {}
+  constructor(@Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer) {}
 
   /** requestingUser must be an owner themselves */
   async grantOwner(targetUser: string, requestingUser: string, organization: string): Promise<void> {
