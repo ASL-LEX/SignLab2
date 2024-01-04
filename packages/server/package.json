@@ -39,6 +39,7 @@
     "casbin": "^5.28.0",
     "casbin-mongoose-adapter": "^5.3.1",
     "csv-parser": "^3.0.0",
+    "graphql-request": "^6.1.0",
     "graphql-type-json": "^0.3.2",
     "jsonschema": "^1.4.1",
     "mongoose": "^7.4.3",
@@ -48,7 +49,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@graphql-codegen/typescript-generic-sdk": "^4.0.0",
+    "@graphql-codegen/typescript-graphql-request": "^6.1.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

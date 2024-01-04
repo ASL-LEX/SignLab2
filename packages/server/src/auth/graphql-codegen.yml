@@ -21,4 +21,4 @@ generates:
           content: '/* tslint:disable */'
       - typescript
       - typescript-operations
-      - typescript-generic-sdk
+      - typescript-graphql-request

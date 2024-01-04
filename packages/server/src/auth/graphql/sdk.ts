@@ -1,6 +1,7 @@
 /* Generated File DO NOT EDIT. */
 /* tslint:disable */
-import { DocumentNode } from 'graphql';
+import { GraphQLClient } from 'graphql-request';
+import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -371,11 +372,16 @@ export const ProjectUsersDocument = gql`
   }
 }
     `;
-export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
-export function getSdk<C, E>(requester: Requester<C, E>) {
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, variables) => action();
+
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    projectUsers(variables: ProjectUsersQueryVariables, options?: C): Promise<ProjectUsersQuery> {
-      return requester<ProjectUsersQuery, ProjectUsersQueryVariables>(ProjectUsersDocument, variables, options) as Promise<ProjectUsersQuery>;
+    projectUsers(variables: ProjectUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ProjectUsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProjectUsersQuery>(ProjectUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'projectUsers', 'query', variables);
     }
   };
 }

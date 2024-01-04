@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ProjectResolver } from './project.resolver';
 import { ProjectService } from './project.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -29,7 +29,7 @@ import { PermissionModule } from '../permission/permission.module';
       }
     ]),
     JwtModule,
-    PermissionModule
+    forwardRef(() => PermissionModule)
   ],
   providers: [ProjectResolver, ProjectService, ProjectPipe],
   exports: [ProjectPipe, ProjectService]
