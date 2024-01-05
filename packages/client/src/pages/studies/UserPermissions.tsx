@@ -29,7 +29,27 @@ const EditStudyAdminSwitch: React.FC<EditStudyAdminSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isStudyAdmin}
-      disabled={!props.permission.isStudyAdmin && props.permission.user.id === props.currentUser.id}
+      disabled={!props.permission.isStudyAdminEditable || props.permission.user.id === props.currentUser.id}
+    />
+  );
+};
+
+const EditContributorSwitch: React.FC<EditStudyAdminSwitchProps> = (props) => {
+
+    return (
+      <Switch
+        checked={props.permission.isContributor}
+        disabled={!props.permission.isContributorEditable || props.permission.user.id === props.currentUser.id}
+      />
+    );
+};
+
+const EditTrainedSwitch: React.FC<EditStudyAdminSwitchProps> = (props) => {
+
+  return (
+    <Switch
+      checked={props.permission.isTrained}
+      disabled={!props.permission.isTrainedEditable}
     />
   );
 };
@@ -67,6 +87,30 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <EditStudyAdminSwitch permission={params.row} currentUser={decodedToken!} study={study} />
+        );
+      },
+      editable: false,
+      flex: 1
+    },
+    {
+      field: 'contributor',
+      headerName: 'Contributor',
+      valueGetter: (params) => params.row.isContributor,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <EditContributorSwitch permission={params.row} currentUser={decodedToken!} study={study} />
+        );
+      },
+      editable: false,
+      flex: 1
+    },
+    {
+      field: 'trained',
+      headerName: 'Trained',
+      valueGetter: (params) => params.row.isTrained,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <EditTrainedSwitch permission={params.row} currentUser={decodedToken!} study={study} />
         );
       },
       editable: false,
