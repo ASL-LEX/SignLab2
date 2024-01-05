@@ -3,9 +3,13 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useStudy } from '../../context/Study.context';
 import { Study, StudyPermissionModel } from '../../graphql/graphql';
 import { DecodedToken, useAuth } from '../../context/Auth.context';
-import { useGetStudyPermissionsQuery, useGrantStudyAdminMutation, useGrantContributorMutation, useGrantTrainedContributorMutation } from '../../graphql/permission/permission';
+import {
+  useGetStudyPermissionsQuery,
+  useGrantStudyAdminMutation,
+  useGrantContributorMutation,
+  useGrantTrainedContributorMutation
+} from '../../graphql/permission/permission';
 import { useEffect, useState } from 'react';
-
 
 export const StudyUserPermissions: React.FC = () => {
   const { study } = useStudy();
@@ -108,7 +112,6 @@ const EditTrainedSwitch: React.FC<EditSwitchProps> = (props) => {
     />
   );
 };
-
 
 const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
   const { decodedToken } = useAuth();

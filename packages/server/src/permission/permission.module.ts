@@ -10,7 +10,13 @@ import { StudyPermissionResolver } from './resolvers/study.resolver';
 
 @Module({
   imports: [forwardRef(() => ProjectModule), AuthModule, forwardRef(() => StudyModule)],
-  providers: [casbinProvider, PermissionService, ProjectPermissionResolver, OwnerPermissionResolver, StudyPermissionResolver],
+  providers: [
+    casbinProvider,
+    PermissionService,
+    ProjectPermissionResolver,
+    OwnerPermissionResolver,
+    StudyPermissionResolver
+  ],
   exports: [casbinProvider]
 })
 export class PermissionModule {}

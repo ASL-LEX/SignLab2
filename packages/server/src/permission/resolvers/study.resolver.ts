@@ -15,8 +15,10 @@ import { UserModel } from '../../auth/user.model';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => StudyPermissionModel)
 export class StudyPermissionResolver {
-  constructor(@Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-              private readonly permissionService: PermissionService) {}
+  constructor(
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
+    private readonly permissionService: PermissionService
+  ) {}
 
   @Query(() => [StudyPermissionModel])
   async getStudyPermissions(
@@ -40,7 +42,11 @@ export class StudyPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
-    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.id,
+      StudyPermissions.GRANT_ACCESS,
+      study._id.toString()
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
     }
@@ -56,7 +62,11 @@ export class StudyPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
-    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.id,
+      StudyPermissions.GRANT_ACCESS,
+      study._id.toString()
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
     }
@@ -72,7 +82,11 @@ export class StudyPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
-    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.id,
+      StudyPermissions.GRANT_ACCESS,
+      study._id.toString()
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
     }

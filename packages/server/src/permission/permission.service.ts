@@ -101,12 +101,7 @@ export class PermissionService {
     return permissions;
   }
 
-  async grantStudyAdmin(
-    study: Study,
-    user: string,
-    isAdmin: boolean,
-    requestingUser: TokenPayload
-  ): Promise<boolean> {
+  async grantStudyAdmin(study: Study, user: string, isAdmin: boolean, requestingUser: TokenPayload): Promise<boolean> {
     // Make sure the target user is not a project admin
     const isProjectAdmin = await this.enforcer.enforce(user, Roles.PROJECT_ADMIN, study._id);
     if (isProjectAdmin) {

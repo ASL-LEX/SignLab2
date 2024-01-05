@@ -15,8 +15,10 @@ import { UserModel } from '../../auth/user.model';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => ProjectPermissionModel)
 export class ProjectPermissionResolver {
-  constructor(@Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-              private readonly permissionService: PermissionService) {}
+  constructor(
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
+    private readonly permissionService: PermissionService
+  ) {}
 
   @Query(() => [ProjectPermissionModel])
   async getProjectPermissions(
