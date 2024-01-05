@@ -26,8 +26,7 @@ interface EditAdminSwitchProps {
 }
 
 const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
-
-const [grantProjectPermissions, grantProjectPermissionsResults] = useGrantProjectPermissionsMutation();
+  const [grantProjectPermissions, grantProjectPermissionsResults] = useGrantProjectPermissionsMutation();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     grantProjectPermissions({
@@ -101,13 +100,8 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       valueGetter: (params) => params.row.hasRole,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <EditAdminSwitch
-            permission={params.row}
-            currentUser={decodedToken!}
-            project={project}
-            refetch={refetch}
-          />
-        )
+          <EditAdminSwitch permission={params.row} currentUser={decodedToken!} project={project} refetch={refetch} />
+        );
       },
       editable: false,
       flex: 1
@@ -116,19 +110,19 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
 
   return (
     <DataGrid
-        getRowHeight={() => 'auto'}
-        rows={rows}
-        columns={columns}
-        getRowId={(row) => row.user.id}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5
-            }
+      getRowHeight={() => 'auto'}
+      rows={rows}
+      columns={columns}
+      getRowId={(row) => row.user.id}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 5
           }
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-      />
+        }
+      }}
+      pageSizeOptions={[5]}
+      disableRowSelectionOnClick
+    />
   );
 };

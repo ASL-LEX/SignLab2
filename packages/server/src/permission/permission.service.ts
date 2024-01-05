@@ -41,7 +41,12 @@ export class PermissionService {
     return permissions;
   }
 
-  async grantProjectPermissions(project: Project, user: string, isAdmin: boolean, requestingUser: TokenPayload): Promise<boolean> {
+  async grantProjectPermissions(
+    project: Project,
+    user: string,
+    isAdmin: boolean,
+    requestingUser: TokenPayload
+  ): Promise<boolean> {
     // Make sure the target user is not an owner
     const isOwner = await this.enforcer.enforce(user, Roles.OWNER, project._id);
     if (isOwner) {
