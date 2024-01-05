@@ -53,11 +53,16 @@ export class PermissionService {
       throw new UnauthorizedException('Cannot change your own permissions');
     }
 
+      console.log(project);
+      console.log(user);
+
     // Otherwise grant the permissions
     if (isAdmin) {
       await this.enforcer.addPolicy(user, Roles.PROJECT_ADMIN, project._id);
     } else {
-      await this.enforcer.removePolicy(user, Roles.PROJECT_ADMIN, project._id);
+      console.log('Has policy: ', await this.enforcer.enforce(user, Roles.PROJECT_ADMIN, project._id));
+      const result = await this.enforcer.removePolicy(user, Roles.PROJECT_ADMIN, project._id);
+      // console.log(result);
     }
 
     return true;

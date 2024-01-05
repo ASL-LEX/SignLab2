@@ -1,9 +1,11 @@
 import { Switch, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useProject } from '../../context/Project.context';
 import { Permission, Project } from '../../graphql/graphql';
 import { useGetProjectPermissionsQuery } from '../../graphql/permission/permission';
+import { DecodedToken, useAuth } from '../../context/Auth.context';
+import { useGrantProjectPermissionsMutation } from '../../graphql/permission/permission';
 
 export const ProjectUserPermissions: React.FC = () => {
   const { project } = useProject();
@@ -18,33 +20,49 @@ export const ProjectUserPermissions: React.FC = () => {
 
 interface EditAdminSwitchProps {
   permission: Permission;
+  currentUser: DecodedToken;
+  project: Project;
+  refetch: () => void;
 }
 
 const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
-  const handleChange = () => {
 
+const [grantProjectPermissions, grantProjectPermissionsResults] = useGrantProjectPermissionsMutation();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    grantProjectPermissions({
+      variables: {
+        project: props.project._id,
+        user: props.permission.user.id,
+        isAdmin: event.target.checked
+      }
+    });
   };
 
-  console.log(props.permission.hasRole);
-
+  useEffect(() => {
+    if (grantProjectPermissionsResults.data) {
+      props.refetch();
+    }
+  }, [grantProjectPermissionsResults]);
 
   return (
     <Switch
       checked={props.permission.hasRole}
-      onChange={() => handleChange()}
-      disabled={!props.permission.editable}
+      onChange={handleChange}
+      disabled={!props.permission.editable || props.permission.user.id === props.currentUser.id}
     />
   );
 };
 
 const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
-  const { data } = useGetProjectPermissionsQuery({
+  const { data, refetch } = useGetProjectPermissionsQuery({
     variables: {
       project: project._id
     }
   });
 
   const [rows, setRows] = useState<Permission[]>([]);
+  const { decodedToken } = useAuth();
 
   useEffect(() => {
     if (data?.getProjectPermissions) {
@@ -81,7 +99,16 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       type: 'boolean',
       headerName: 'Project Admin',
       valueGetter: (params) => params.row.hasRole,
-      renderCell: (params: GridRenderCellParams) => <EditAdminSwitch permission={params.row} />,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <EditAdminSwitch
+            permission={params.row}
+            currentUser={decodedToken!}
+            project={project}
+            refetch={refetch}
+          />
+        )
+      },
       editable: false,
       flex: 1
     }

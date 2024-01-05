@@ -16,3 +16,7 @@ query getProjectPermissions($project: ID!) {
     role
   }
 }
+
+mutation grantProjectPermissions($project: ID!, $user: ID!, $isAdmin: Boolean!) {
+  grantProjectPermissions(project: $project, user: $user, isAdmin: $isAdmin)
+}

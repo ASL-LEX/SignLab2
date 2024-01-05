@@ -190,6 +190,7 @@ export type Mutation = {
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
   grantOwner: Scalars['Boolean']['output'];
+  grantProjectPermissions: Scalars['Boolean']['output'];
   lexiconAddEntry: LexiconEntry;
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
@@ -313,6 +314,13 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationGrantOwnerArgs = {
   targetUser: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantProjectPermissionsArgs = {
+  isAdmin: Scalars['Boolean']['input'];
+  project: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
 };
 
 
