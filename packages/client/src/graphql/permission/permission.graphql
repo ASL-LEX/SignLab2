@@ -11,9 +11,8 @@ query getProjectPermissions($project: ID!) {
       updatedAt,
       deletedAt
     },
-    hasRole,
-    editable,
-    role
+    isProjectAdmin,
+    editable
   }
 }
 

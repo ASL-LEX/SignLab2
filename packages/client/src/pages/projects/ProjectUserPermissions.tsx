@@ -2,7 +2,7 @@ import { Switch, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useProject } from '../../context/Project.context';
-import { Permission, Project } from '../../graphql/graphql';
+import { ProjectPermissionModel, Project } from '../../graphql/graphql';
 import { useGetProjectPermissionsQuery } from '../../graphql/permission/permission';
 import { DecodedToken, useAuth } from '../../context/Auth.context';
 import { useGrantProjectPermissionsMutation } from '../../graphql/permission/permission';
@@ -19,7 +19,7 @@ export const ProjectUserPermissions: React.FC = () => {
 };
 
 interface EditAdminSwitchProps {
-  permission: Permission;
+  permission: ProjectPermissionModel;
   currentUser: DecodedToken;
   project: Project;
   refetch: () => void;
@@ -46,7 +46,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
 
   return (
     <Switch
-      checked={props.permission.hasRole}
+      checked={props.permission.isProjectAdmin}
       onChange={handleChange}
       disabled={!props.permission.editable || props.permission.user.id === props.currentUser.id}
     />
@@ -60,7 +60,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
     }
   });
 
-  const [rows, setRows] = useState<Permission[]>([]);
+  const [rows, setRows] = useState<ProjectPermissionModel[]>([]);
   const { decodedToken } = useAuth();
 
   useEffect(() => {

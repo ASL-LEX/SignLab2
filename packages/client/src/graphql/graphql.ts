@@ -417,14 +417,6 @@ export type OrganizationCreate = {
   projectId: Scalars['String']['input'];
 };
 
-export type Permission = {
-  __typename?: 'Permission';
-  editable: Scalars['Boolean']['output'];
-  hasRole: Scalars['Boolean']['output'];
-  role: Roles;
-  user: UserModel;
-};
-
 export type Project = {
   __typename?: 'Project';
   _id: Scalars['ID']['output'];
@@ -479,6 +471,13 @@ export type ProjectModel = {
   users: Array<UserModel>;
 };
 
+export type ProjectPermissionModel = {
+  __typename?: 'ProjectPermissionModel';
+  editable: Scalars['Boolean']['output'];
+  isProjectAdmin: Scalars['Boolean']['output'];
+  user: UserModel;
+};
+
 export type ProjectSettingsInput = {
   allowSignup?: InputMaybe<Scalars['Boolean']['input']>;
   displayProjectName?: InputMaybe<Scalars['Boolean']['input']>;
@@ -501,7 +500,7 @@ export type Query = {
   getEntryUploadURL: Scalars['String']['output'];
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
-  getProjectPermissions: Array<Permission>;
+  getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
   getUser: UserModel;
   invite: InviteModel;
@@ -610,13 +609,6 @@ export type ResetDto = {
   password: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
 };
-
-export enum Roles {
-  Contributor = 'CONTRIBUTOR',
-  Owner = 'OWNER',
-  ProjectAdmin = 'PROJECT_ADMIN',
-  StudyAdmin = 'STUDY_ADMIN'
-}
 
 export type Study = {
   __typename?: 'Study';
