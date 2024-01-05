@@ -14,10 +14,10 @@ export const roleToProjectPermissions: string[][] = [
   // OWNER permissions
   [Roles.OWNER, ProjectPermissions.CREATE],
   [Roles.OWNER, ProjectPermissions.DELETE],
-  [Roles.OWNER, ProjectPermissions.GRANT_ADMIN],
 
   // PROJECT_ADMIN permissions
   [Roles.PROJECT_ADMIN, ProjectPermissions.UPDATE],
+  [Roles.OWNER, ProjectPermissions.GRANT_ADMIN],
 
   // STUDY_ADMIN permissions
 
