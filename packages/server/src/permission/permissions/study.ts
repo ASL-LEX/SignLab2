@@ -23,4 +23,6 @@ export const roleToStudyPermissions: string[][] = [
 
   // CONTRIBUTOR permissions
   [Roles.CONTRIBUTOR, StudyPermissions.READ]
+
+  // TRAINED_CONTRIBUTOR permissions
 ];

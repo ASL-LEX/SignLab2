@@ -2,6 +2,7 @@ export enum Roles {
   OWNER = 'owner',
   PROJECT_ADMIN = 'project_admin',
   STUDY_ADMIN = 'study_admin',
+  TRAINED_CONTRIBUTOR = 'trained_contributor',
   CONTRIBUTOR = 'contributor'
 }
 
