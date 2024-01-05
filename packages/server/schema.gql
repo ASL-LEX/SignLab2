@@ -28,6 +28,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type UserModel {
+  id: ID!
+}
+
+type Permission {
+  user: UserModel!
+  role: Roles!
+  hasRole: Boolean!
+  editable: Boolean!
+}
+
+enum Roles {
+  OWNER
+  PROJECT_ADMIN
+  STUDY_ADMIN
+  CONTRIBUTOR
+}
+
 type TagSchema {
   dataSchema: JSON!
   uiSchema: JSON!
@@ -108,6 +126,7 @@ type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
   getDatasets: [Dataset!]!
+  getProjectPermissions(project: ID!): [Permission!]!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!

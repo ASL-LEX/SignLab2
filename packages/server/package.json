@@ -19,7 +19,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "introspection": "graphql-codegen --config src/auth/graphql-codegen.yml"
   },
   "dependencies": {
     "@apollo/subgraph": "^2.4.12",
@@ -38,6 +39,7 @@
     "casbin": "^5.28.0",
     "casbin-mongoose-adapter": "^5.3.1",
     "csv-parser": "^3.0.0",
+    "graphql-request": "^6.1.0",
     "graphql-type-json": "^0.3.2",
     "jsonschema": "^1.4.1",
     "mongoose": "^7.4.3",
@@ -47,6 +49,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/typescript-graphql-request": "^6.1.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

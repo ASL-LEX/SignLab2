@@ -20,7 +20,8 @@ export default () => ({
     signedURLExpiration: process.env.GCP_STORAGE_ENTRY_SIGNED_URL_EXPIRATION || 15 * 60 * 1000 // 15 minutes
   },
   auth: {
-    publicKeyUrl: process.env.AUTH_PUBLIC_KEY_URL || 'https://test-auth-service.sail.codes/public-key'
+    publicKeyUrl: process.env.AUTH_PUBLIC_KEY_URL || 'https://test-auth-service.sail.codes/public-key',
+    graphqlEndpoint: process.env.AUTH_GRAPHQL_ENDPOINT || 'https://test-auth-service.sail.codes/graphql'
   },
   casbin: {
     model: process.env.CASBIN_MODEL || 'src/config/casbin-model.conf',
