@@ -1,107 +1,98 @@
 import { Switch, Typography } from '@mui/material';
-import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
-import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
-import { GridRowModesModel } from '@mui/x-data-grid-pro';
-import { useRef, useState } from 'react';
-
-const SwitchEditInputCell: React.FC<GridRenderCellParams> = (props: GridRenderCellParams<any, boolean>) => {
-  const { id, value, field, hasFocus } = props;
-  const apiRef = useGridApiContext();
-  const ref = useRef<HTMLElement>();
-
-  const handleChange = (newValue: boolean | false) => {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  useEnhancedEffect(() => {
-    if (hasFocus && ref.current) {
-      const input = ref.current.querySelector<HTMLInputElement>(`input[value="${value}"]`);
-      input?.focus();
-    }
-  }, [hasFocus, value]);
-
-  return <Switch disabled defaultChecked value={value} onChange={() => handleChange} />;
-};
-
-const tableRows = [
-  {
-    id: 1,
-    name: 'Professor Flour',
-    username: 'flour123',
-    email: 'bread@bread.com',
-    switch: true
-  },
-  {
-    id: 2,
-    name: 'Elon',
-    username: 'elon1012',
-    email: 'elonmusk@hotmail.com',
-    switch: true
-  },
-  {
-    id: 3,
-    name: 'Chrishell Stausse',
-    username: 'chrishell123',
-    email: 'chrishell@gmail.com',
-    switch: false
-  },
-  {
-    id: 4,
-    name: 'Project Charles',
-    username: 'charlie',
-    email: '111@hotmail.com',
-    switch: false
-  }
-];
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
+import { useProject } from '../../context/Project.context';
+import { Permission, Project } from '../../graphql/graphql';
+import { useGetProjectPermissionsQuery } from '../../graphql/permission/permission';
 
 export const ProjectUserPermissions: React.FC = () => {
-  const [rows] = useState(tableRows);
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const { project } = useProject();
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
+  return (
+    <>
+      <Typography variant="h3">User Permissions</Typography>
+      {project && <UserPermissionTable project={project} />}
+    </>
+  );
+};
+
+interface EditAdminSwitchProps {
+  permission: Permission;
+}
+
+const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
+  const handleChange = () => {
+
   };
 
+  console.log(props.permission.hasRole);
+
+
+  return (
+    <Switch
+      checked={props.permission.hasRole}
+      onChange={() => handleChange()}
+      disabled={!props.permission.editable}
+    />
+  );
+};
+
+const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
+  const { data } = useGetProjectPermissionsQuery({
+    variables: {
+      project: project._id
+    }
+  });
+
+  const [rows, setRows] = useState<Permission[]>([]);
+
+  useEffect(() => {
+    if (data?.getProjectPermissions) {
+      setRows(data.getProjectPermissions);
+    }
+  }, [data]);
+
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', flex: 0.5 },
+    /* For now, only email is populated, this will change in the future
     {
       field: 'name',
       headerName: 'Name',
+      valueGetter: (params) => params.row.user.fullname,
       flex: 1.25,
-      editable: true
+      editable: false,
     },
     {
       field: 'username',
       headerName: 'Username',
+      valueGetter: (params) => params.row.user.username,
       flex: 1.75,
-      editable: true
+      editable: false
     },
+    */
     {
       field: 'email',
       headerName: 'Email',
+      valueGetter: (params) => params.row.user.email,
       flex: 1.75,
-      editable: true
+      editable: false
     },
     {
-      field: 'switch',
+      field: 'projectAdmin',
       type: 'boolean',
-      headerName: 'Switch',
-      renderCell: (params) => <Switch defaultChecked value={params.value} />,
-      renderEditCell: (params) => <SwitchEditInputCell {...params} />,
-      editable: true,
+      headerName: 'Project Admin',
+      valueGetter: (params) => params.row.hasRole,
+      renderCell: (params: GridRenderCellParams) => <EditAdminSwitch permission={params.row} />,
+      editable: false,
       flex: 1
     }
   ];
 
   return (
-    <>
-      <Typography variant="h3">User Permissions</Typography>
-      <DataGrid
+    <DataGrid
         getRowHeight={() => 'auto'}
         rows={rows}
         columns={columns}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
+        getRowId={(row) => row.user.id}
         initialState={{
           pagination: {
             paginationModel: {
@@ -110,9 +101,7 @@ export const ProjectUserPermissions: React.FC = () => {
           }
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
         disableRowSelectionOnClick
       />
-    </>
   );
 };

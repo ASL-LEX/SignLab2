@@ -10,7 +10,7 @@ export type GetProjectPermissionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetProjectPermissionsQuery = { __typename?: 'Query', getProjectPermissions: Array<{ __typename?: 'Permission', hasRole: boolean, editable: boolean, user: { __typename?: 'UserModel', id: string, fullname?: string | null, username?: string | null, email?: string | null } }> };
+export type GetProjectPermissionsQuery = { __typename?: 'Query', getProjectPermissions: Array<{ __typename?: 'Permission', hasRole: boolean, editable: boolean, role: Types.Roles, user: { __typename?: 'UserModel', id: string, projectId: string, fullname?: string | null, username?: string | null, email?: string | null, role: number, createdAt: any, updatedAt: any, deletedAt?: any | null } }> };
 
 
 export const GetProjectPermissionsDocument = gql`
@@ -18,12 +18,18 @@ export const GetProjectPermissionsDocument = gql`
   getProjectPermissions(project: $project) {
     user {
       id
+      projectId
       fullname
       username
       email
+      role
+      createdAt
+      updatedAt
+      deletedAt
     }
     hasRole
     editable
+    role
   }
 }
     `;

@@ -2,11 +2,17 @@ query getProjectPermissions($project: ID!) {
   getProjectPermissions(project: $project) {
     user {
       id,
+      projectId,
       fullname,
       username,
-      email
+      email,
+      role,
+      createdAt,
+      updatedAt,
+      deletedAt
     },
     hasRole,
-    editable
+    editable,
+    role
   }
 }
