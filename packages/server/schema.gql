@@ -28,24 +28,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type UserModel {
-  id: ID!
-}
-
-type Permission {
-  user: UserModel!
-  role: Roles!
-  hasRole: Boolean!
-  editable: Boolean!
-}
-
-enum Roles {
-  OWNER
-  PROJECT_ADMIN
-  STUDY_ADMIN
-  CONTRIBUTOR
-}
-
 type TagSchema {
   dataSchema: JSON!
   uiSchema: JSON!
@@ -64,6 +46,26 @@ type Study {
   tagSchema: TagSchema!
   project: ID!
   tagsPerEntry: Float!
+}
+
+type UserModel {
+  id: ID!
+}
+
+type ProjectPermissionModel {
+  user: UserModel!
+  isProjectAdmin: Boolean!
+  editable: Boolean!
+}
+
+type StudyPermissionModel {
+  user: UserModel!
+  isStudyAdmin: Boolean!
+  isStudyAdminEditable: Boolean!
+  isContributor: Boolean!
+  isContributorEditable: Boolean!
+  isTrained: Boolean!
+  isTrainedEditable: Boolean!
 }
 
 type Entry {
@@ -126,7 +128,8 @@ type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
   getDatasets: [Dataset!]!
-  getProjectPermissions(project: ID!): [Permission!]!
+  getProjectPermissions(project: ID!): [ProjectPermissionModel!]!
+  getStudyPermissions(study: ID!): [StudyPermissionModel!]!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!
@@ -144,8 +147,11 @@ type Mutation {
   createDataset(dataset: DatasetCreate!): Dataset!
   changeDatasetName(dataset: ID!, newName: String!): Boolean!
   changeDatasetDescription(dataset: ID!, newDescription: String!): Boolean!
-  grantOwner(targetUser: ID!): Boolean!
   grantProjectPermissions(project: ID!, user: ID!, isAdmin: Boolean!): Boolean!
+  grantOwner(targetUser: ID!): Boolean!
+  grantStudyAdmin(study: ID!, user: ID!, isAdmin: Boolean!): Boolean!
+  grantContributor(study: ID!, user: ID!, isContributor: Boolean!): Boolean!
+  grantTrainedContributor(study: ID!, user: ID!, isTrained: Boolean!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!

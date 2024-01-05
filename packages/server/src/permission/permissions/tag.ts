@@ -18,5 +18,7 @@ export const roleToTagPermissions: string[][] = [
   [Roles.STUDY_ADMIN, TagPermissions.UPDATE],
 
   // CONTRIBUTOR permissions
-  [Roles.CONTRIBUTOR, TagPermissions.CREATE]
+
+  // TRAINED_CONTRIBUTOR permissions
+  [Roles.TRAINED_CONTRIBUTOR, TagPermissions.CREATE]
 ];

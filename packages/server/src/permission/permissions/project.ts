@@ -23,4 +23,6 @@ export const roleToProjectPermissions: string[][] = [
 
   // CONTRIBUTOR permissions
   [Roles.CONTRIBUTOR, ProjectPermissions.READ]
+
+  // TRAINED_CONTRIBUTOR permissions
 ];

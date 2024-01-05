@@ -11,12 +11,45 @@ query getProjectPermissions($project: ID!) {
       updatedAt,
       deletedAt
     },
-    hasRole,
-    editable,
-    role
+    isProjectAdmin,
+    editable
   }
 }
 
 mutation grantProjectPermissions($project: ID!, $user: ID!, $isAdmin: Boolean!) {
   grantProjectPermissions(project: $project, user: $user, isAdmin: $isAdmin)
+}
+
+query getStudyPermissions($study: ID!) {
+  getStudyPermissions(study: $study) {
+    user {
+      id,
+      projectId,
+      fullname,
+      username,
+      email,
+      role,
+      createdAt,
+      updatedAt,
+      deletedAt
+    },
+    isStudyAdmin,
+    isStudyAdminEditable,
+    isContributor,
+    isContributorEditable,
+    isTrained,
+    isTrainedEditable
+  }
+}
+
+mutation grantStudyAdmin($study: ID!, $user: ID!, $isAdmin: Boolean!) {
+  grantStudyAdmin(study: $study, user: $user, isAdmin: $isAdmin)
+}
+
+mutation grantContributor($study: ID!, $user: ID!, $isContributor: Boolean!) {
+  grantContributor(study: $study, user: $user, isContributor: $isContributor)
+}
+
+mutation grantTrainedContributor($study: ID!, $user: ID!, $isTrained: Boolean!) {
+  grantTrainedContributor(study: $study, user: $user, isTrained: $isTrained)
 }

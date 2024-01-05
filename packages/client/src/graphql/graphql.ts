@@ -189,8 +189,11 @@ export type Mutation = {
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
+  grantContributor: Scalars['Boolean']['output'];
   grantOwner: Scalars['Boolean']['output'];
   grantProjectPermissions: Scalars['Boolean']['output'];
+  grantStudyAdmin: Scalars['Boolean']['output'];
+  grantTrainedContributor: Scalars['Boolean']['output'];
   lexiconAddEntry: LexiconEntry;
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
@@ -312,6 +315,13 @@ export type MutationForgotPasswordArgs = {
 };
 
 
+export type MutationGrantContributorArgs = {
+  isContributor: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
 export type MutationGrantOwnerArgs = {
   targetUser: Scalars['ID']['input'];
 };
@@ -320,6 +330,20 @@ export type MutationGrantOwnerArgs = {
 export type MutationGrantProjectPermissionsArgs = {
   isAdmin: Scalars['Boolean']['input'];
   project: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantStudyAdminArgs = {
+  isAdmin: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantTrainedContributorArgs = {
+  isTrained: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
   user: Scalars['ID']['input'];
 };
 
@@ -417,14 +441,6 @@ export type OrganizationCreate = {
   projectId: Scalars['String']['input'];
 };
 
-export type Permission = {
-  __typename?: 'Permission';
-  editable: Scalars['Boolean']['output'];
-  hasRole: Scalars['Boolean']['output'];
-  role: Roles;
-  user: UserModel;
-};
-
 export type Project = {
   __typename?: 'Project';
   _id: Scalars['ID']['output'];
@@ -479,6 +495,13 @@ export type ProjectModel = {
   users: Array<UserModel>;
 };
 
+export type ProjectPermissionModel = {
+  __typename?: 'ProjectPermissionModel';
+  editable: Scalars['Boolean']['output'];
+  isProjectAdmin: Scalars['Boolean']['output'];
+  user: UserModel;
+};
+
 export type ProjectSettingsInput = {
   allowSignup?: InputMaybe<Scalars['Boolean']['input']>;
   displayProjectName?: InputMaybe<Scalars['Boolean']['input']>;
@@ -501,8 +524,9 @@ export type Query = {
   getEntryUploadURL: Scalars['String']['output'];
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
-  getProjectPermissions: Array<Permission>;
+  getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
+  getStudyPermissions: Array<StudyPermissionModel>;
   getUser: UserModel;
   invite: InviteModel;
   invites: Array<InviteModel>;
@@ -554,6 +578,11 @@ export type QueryGetProjectArgs = {
 
 export type QueryGetProjectPermissionsArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetStudyPermissionsArgs = {
+  study: Scalars['ID']['input'];
 };
 
 
@@ -611,13 +640,6 @@ export type ResetDto = {
   projectId: Scalars['String']['input'];
 };
 
-export enum Roles {
-  Contributor = 'CONTRIBUTOR',
-  Owner = 'OWNER',
-  ProjectAdmin = 'PROJECT_ADMIN',
-  StudyAdmin = 'STUDY_ADMIN'
-}
-
 export type Study = {
   __typename?: 'Study';
   _id: Scalars['ID']['output'];
@@ -636,6 +658,17 @@ export type StudyCreate = {
   project: Scalars['ID']['input'];
   tagSchema: TagSchemaInput;
   tagsPerEntry: Scalars['Float']['input'];
+};
+
+export type StudyPermissionModel = {
+  __typename?: 'StudyPermissionModel';
+  isContributor: Scalars['Boolean']['output'];
+  isContributorEditable: Scalars['Boolean']['output'];
+  isStudyAdmin: Scalars['Boolean']['output'];
+  isStudyAdminEditable: Scalars['Boolean']['output'];
+  isTrained: Scalars['Boolean']['output'];
+  isTrainedEditable: Scalars['Boolean']['output'];
+  user: UserModel;
 };
 
 export type Tag = {
