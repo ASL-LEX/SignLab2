@@ -13,6 +13,8 @@ import * as casbin from 'casbin';
 import { CASBIN_PROVIDER } from './casbin.provider';
 import { Roles } from './permissions/roles';
 import { ProjectPermissions } from './permissions/project';
+import { StudyPipe } from '../study/pipes/study.pipe';
+import { Study } from '../study/study.model';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Permission)
@@ -34,7 +36,7 @@ export class PermissionResolver {
       throw new UnauthorizedException('Requesting user is not an owner');
     }
 
-    await this.permissionService.grantOwner(targetUser, requestingUser.id, organization._id);
+    await this.permissionService.grantOwner(targetUser, organization._id);
     return true;
   }
 
@@ -65,6 +67,19 @@ export class PermissionResolver {
     }
 
     return this.permissionService.grantProjectPermissions(project, user, isAdmin, requestingUser);
+  }
+
+  @Query(() => [Permission])
+  async getStudyPermissions(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<Permission[]> {
+    const hasPermission = await this.enforcer.enforce(requestingUser.id, ProjectPermissions.GRANT_ADMIN, study.project);
+    if (!hasPermission) {
+      throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
+    }
+
+    return this.permissionService.getStudyPermissions(study, requestingUser);
   }
 
   @ResolveField('user', () => UserModel)

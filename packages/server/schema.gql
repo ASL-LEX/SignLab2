@@ -127,6 +127,7 @@ type Query {
   exists(name: String!): Boolean!
   getDatasets: [Dataset!]!
   getProjectPermissions(project: ID!): [Permission!]!
+  getStudyPermissions(study: ID!): [Permission!]!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!

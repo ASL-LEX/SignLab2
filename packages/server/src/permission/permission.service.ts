@@ -6,6 +6,7 @@ import { UserService } from '../auth/services/user.service';
 import { Project } from '../project/project.model';
 import { TokenPayload } from '../jwt/token.dto';
 import { Permission } from './permission.model';
+import { Study } from '../study/study.model';
 
 @Injectable()
 export class PermissionService {
@@ -15,7 +16,7 @@ export class PermissionService {
   ) {}
 
   /** requestingUser must be an owner themselves */
-  async grantOwner(targetUser: string, requestingUser: string, organization: string): Promise<void> {
+  async grantOwner(targetUser: string, organization: string): Promise<void> {
     await this.enforcer.addPolicy(targetUser, Roles.OWNER, organization);
   }
 
@@ -66,5 +67,29 @@ export class PermissionService {
     }
 
     return true;
+  }
+
+  async getStudyPermissions(study: Study, requestingUser: TokenPayload): Promise<Permission[]> {
+    // Get all the users associated with the organization
+    const users = await this.userService.getUsersForProject(requestingUser.projectId);
+
+    // Create the cooresponding permission representation
+    const permissions = await Promise.all(
+      users.map(async (user) => {
+        const hasRole = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study);
+        // Owner and project admins cannot be changed
+        const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, study)) &&
+                         !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study));
+
+        return {
+          user: user.id,
+          role: Roles.STUDY_ADMIN,
+          hasRole,
+          editable
+        };
+      })
+    );
+
+    return permissions;
   }
 }

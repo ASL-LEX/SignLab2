@@ -4,9 +4,10 @@ import { PermissionResolver } from './permission.resolver';
 import { PermissionService } from './permission.service';
 import { ProjectModule } from '../project/project.module';
 import { AuthModule } from '../auth/auth.module';
+import { StudyModule } from '../study/study.module';
 
 @Module({
-  imports: [forwardRef(() => ProjectModule), AuthModule],
+  imports: [forwardRef(() => ProjectModule), AuthModule, forwardRef(() => StudyModule)],
   providers: [casbinProvider, PermissionResolver, PermissionService],
   exports: [casbinProvider]
 })

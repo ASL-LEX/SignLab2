@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { StudyService } from './study.service';
 import { StudyResolver } from './study.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -33,7 +33,7 @@ import { PermissionModule } from '../permission/permission.module';
     ProjectModule,
     SharedModule,
     JwtModule,
-    PermissionModule
+    forwardRef(() => PermissionModule)
   ],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]
