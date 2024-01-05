@@ -6,7 +6,7 @@ export enum ProjectPermissions {
   READ = 'project:read',
   UPDATE = 'project:update',
   DELETE = 'project:delete',
-  GRANT_ADMIN = 'project:grant_admin',
+  GRANT_ADMIN = 'project:grant_admin'
 }
 
 /** All role to project permissions */

@@ -12,16 +12,16 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
-  JSON: { input: any; output: any; }
-  _Any: { input: any; output: any; }
-  federation__FieldSet: { input: any; output: any; }
-  link__Import: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: any; output: any };
+  JSON: { input: any; output: any };
+  _Any: { input: any; output: any };
+  federation__FieldSet: { input: any; output: any };
+  link__Import: { input: any; output: any };
 };
 
 /** Input type for accepting an invite */
@@ -119,85 +119,69 @@ export type Mutation = {
   updateUser: UserModel;
 };
 
-
 export type MutationAcceptInviteArgs = {
   input: AcceptInviteModel;
 };
 
-
 export type MutationCancelInviteArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationCreateInviteArgs = {
   email: Scalars['String']['input'];
   role?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type MutationCreateProjectArgs = {
   project: ProjectCreateInput;
 };
-
 
 export type MutationForgotPasswordArgs = {
   user: ForgotDto;
 };
 
-
 export type MutationLoginEmailArgs = {
   user: EmailLoginDto;
 };
-
 
 export type MutationLoginGoogleArgs = {
   user: GoogleLoginDto;
 };
 
-
 export type MutationLoginUsernameArgs = {
   user: UsernameLoginDto;
 };
-
 
 export type MutationRefreshArgs = {
   refreshToken: Scalars['String']['input'];
 };
 
-
 export type MutationResendInviteArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationResetPasswordArgs = {
   user: ResetDto;
 };
 
-
 export type MutationSignupArgs = {
   user: UserSignupDto;
 };
-
 
 export type MutationUpdateProjectArgs = {
   id: Scalars['String']['input'];
   settings: ConfigurableProjectSettings;
 };
 
-
 export type MutationUpdateProjectAuthMethodsArgs = {
   id: Scalars['String']['input'];
   projectAuthMethods: ProjectAuthMethodsInput;
 };
 
-
 export type MutationUpdateProjectSettingsArgs = {
   id: Scalars['String']['input'];
   projectSettings: ProjectSettingsInput;
 };
-
 
 export type MutationUpdateUserArgs = {
   email: Scalars['String']['input'];
@@ -271,31 +255,25 @@ export type Query = {
   users: Array<UserModel>;
 };
 
-
 export type Query_EntitiesArgs = {
   representations: Array<Scalars['_Any']['input']>;
 };
-
 
 export type QueryGetProjectArgs = {
   id: Scalars['String']['input'];
 };
 
-
 export type QueryGetUserArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type QueryInviteArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type QueryInvitesArgs = {
   status?: InputMaybe<InviteStatus>;
 };
-
 
 export type QueryProjectUsersArgs = {
   projectId: Scalars['String']['input'];
@@ -353,35 +331,63 @@ export type ProjectUsersQueryVariables = Exact<{
   projectId: Scalars['String']['input'];
 }>;
 
-
-export type ProjectUsersQuery = { __typename?: 'Query', projectUsers: Array<{ __typename?: 'UserModel', id: string, projectId: string, username?: string | null, fullname?: string | null, email?: string | null, role: number, createdAt: any, updatedAt: any, deletedAt?: any | null }> };
-
+export type ProjectUsersQuery = {
+  __typename?: 'Query';
+  projectUsers: Array<{
+    __typename?: 'UserModel';
+    id: string;
+    projectId: string;
+    username?: string | null;
+    fullname?: string | null;
+    email?: string | null;
+    role: number;
+    createdAt: any;
+    updatedAt: any;
+    deletedAt?: any | null;
+  }>;
+};
 
 export const ProjectUsersDocument = gql`
-    query projectUsers($projectId: String!) {
-  projectUsers(projectId: $projectId) {
-    id
-    projectId
-    username
-    fullname
-    email
-    role
-    createdAt
-    updatedAt
-    deletedAt
+  query projectUsers($projectId: String!) {
+    projectUsers(projectId: $projectId) {
+      id
+      projectId
+      username
+      fullname
+      email
+      role
+      createdAt
+      updatedAt
+      deletedAt
+    }
   }
-}
-    `;
+`;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
-
+export type SdkFunctionWrapper = <T>(
+  action: (requestHeaders?: Record<string, string>) => Promise<T>,
+  operationName: string,
+  operationType?: string,
+  variables?: any
+) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, variables) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    projectUsers(variables: ProjectUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ProjectUsersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProjectUsersQuery>(ProjectUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'projectUsers', 'query', variables);
+    projectUsers(
+      variables: ProjectUsersQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<ProjectUsersQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProjectUsersQuery>(ProjectUsersDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders
+          }),
+        'projectUsers',
+        'query',
+        variables
+      );
     }
   };
 }

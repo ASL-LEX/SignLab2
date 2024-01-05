@@ -9,8 +9,10 @@ import { Permission } from './permission.model';
 
 @Injectable()
 export class PermissionService {
-  constructor(@Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-              private readonly userService: UserService) {}
+  constructor(
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
+    private readonly userService: UserService
+  ) {}
 
   /** requestingUser must be an owner themselves */
   async grantOwner(targetUser: string, requestingUser: string, organization: string): Promise<void> {
@@ -28,17 +30,19 @@ export class PermissionService {
     const users = await this.userService.getUsersForProject(requestingUser.projectId);
 
     // Create the cooresponding permission representation
-    const permissions = await Promise.all(users.map(async user => {
-      const hasRole = await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, project._id);
-      const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, project._id));
+    const permissions = await Promise.all(
+      users.map(async (user) => {
+        const hasRole = await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, project._id);
+        const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, project._id));
 
-      return {
-        user: user.id,
-        role: Roles.PROJECT_ADMIN,
-        hasRole,
-        editable
-      };
-    }));
+        return {
+          user: user.id,
+          role: Roles.PROJECT_ADMIN,
+          hasRole,
+          editable
+        };
+      })
+    );
 
     return permissions;
   }
