@@ -19,3 +19,25 @@ query getProjectPermissions($project: ID!) {
 mutation grantProjectPermissions($project: ID!, $user: ID!, $isAdmin: Boolean!) {
   grantProjectPermissions(project: $project, user: $user, isAdmin: $isAdmin)
 }
+
+query getStudyPermissions($study: ID!) {
+  getStudyPermissions(study: $study) {
+    user {
+      id,
+      projectId,
+      fullname,
+      username,
+      email,
+      role,
+      createdAt,
+      updatedAt,
+      deletedAt
+    },
+    isStudyAdmin,
+    isStudyAdminEditable,
+    isContributor,
+    isContributorEditable,
+    isTrained,
+    isTrainedEditable
+  }
+}

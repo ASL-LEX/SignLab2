@@ -21,6 +21,13 @@ export type GrantProjectPermissionsMutationVariables = Types.Exact<{
 
 export type GrantProjectPermissionsMutation = { __typename?: 'Mutation', grantProjectPermissions: boolean };
 
+export type GetStudyPermissionsQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetStudyPermissionsQuery = { __typename?: 'Query', getStudyPermissions: Array<{ __typename?: 'StudyPermissionModel', isStudyAdmin: boolean, isStudyAdminEditable: boolean, isContributor: boolean, isContributorEditable: boolean, isTrained: boolean, isTrainedEditable: boolean, user: { __typename?: 'UserModel', id: string, projectId: string, fullname?: string | null, username?: string | null, email?: string | null, role: number, createdAt: any, updatedAt: any, deletedAt?: any | null } }> };
+
 
 export const GetProjectPermissionsDocument = gql`
     query getProjectPermissions($project: ID!) {
@@ -102,3 +109,54 @@ export function useGrantProjectPermissionsMutation(baseOptions?: Apollo.Mutation
 export type GrantProjectPermissionsMutationHookResult = ReturnType<typeof useGrantProjectPermissionsMutation>;
 export type GrantProjectPermissionsMutationResult = Apollo.MutationResult<GrantProjectPermissionsMutation>;
 export type GrantProjectPermissionsMutationOptions = Apollo.BaseMutationOptions<GrantProjectPermissionsMutation, GrantProjectPermissionsMutationVariables>;
+export const GetStudyPermissionsDocument = gql`
+    query getStudyPermissions($study: ID!) {
+  getStudyPermissions(study: $study) {
+    user {
+      id
+      projectId
+      fullname
+      username
+      email
+      role
+      createdAt
+      updatedAt
+      deletedAt
+    }
+    isStudyAdmin
+    isStudyAdminEditable
+    isContributor
+    isContributorEditable
+    isTrained
+    isTrainedEditable
+  }
+}
+    `;
+
+/**
+ * __useGetStudyPermissionsQuery__
+ *
+ * To run a query within a React component, call `useGetStudyPermissionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStudyPermissionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStudyPermissionsQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *   },
+ * });
+ */
+export function useGetStudyPermissionsQuery(baseOptions: Apollo.QueryHookOptions<GetStudyPermissionsQuery, GetStudyPermissionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStudyPermissionsQuery, GetStudyPermissionsQueryVariables>(GetStudyPermissionsDocument, options);
+      }
+export function useGetStudyPermissionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStudyPermissionsQuery, GetStudyPermissionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStudyPermissionsQuery, GetStudyPermissionsQueryVariables>(GetStudyPermissionsDocument, options);
+        }
+export type GetStudyPermissionsQueryHookResult = ReturnType<typeof useGetStudyPermissionsQuery>;
+export type GetStudyPermissionsLazyQueryHookResult = ReturnType<typeof useGetStudyPermissionsLazyQuery>;
+export type GetStudyPermissionsQueryResult = Apollo.QueryResult<GetStudyPermissionsQuery, GetStudyPermissionsQueryVariables>;

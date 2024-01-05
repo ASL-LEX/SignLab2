@@ -502,6 +502,7 @@ export type Query = {
   getProject: ProjectModel;
   getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
+  getStudyPermissions: Array<StudyPermissionModel>;
   getUser: UserModel;
   invite: InviteModel;
   invites: Array<InviteModel>;
@@ -553,6 +554,11 @@ export type QueryGetProjectArgs = {
 
 export type QueryGetProjectPermissionsArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetStudyPermissionsArgs = {
+  study: Scalars['ID']['input'];
 };
 
 
@@ -628,6 +634,17 @@ export type StudyCreate = {
   project: Scalars['ID']['input'];
   tagSchema: TagSchemaInput;
   tagsPerEntry: Scalars['Float']['input'];
+};
+
+export type StudyPermissionModel = {
+  __typename?: 'StudyPermissionModel';
+  isContributor: Scalars['Boolean']['output'];
+  isContributorEditable: Scalars['Boolean']['output'];
+  isStudyAdmin: Scalars['Boolean']['output'];
+  isStudyAdminEditable: Scalars['Boolean']['output'];
+  isTrained: Scalars['Boolean']['output'];
+  isTrainedEditable: Scalars['Boolean']['output'];
+  user: UserModel;
 };
 
 export type Tag = {
