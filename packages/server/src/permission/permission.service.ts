@@ -40,4 +40,26 @@ export class PermissionService {
 
     return permissions;
   }
+
+  async grantProjectPermissions(project: Project, user: string, isAdmin: boolean, requestingUser: TokenPayload): Promise<boolean> {
+    // Make sure the target user is not an owner
+    const isOwner = await this.enforcer.enforce(user, Roles.OWNER, project._id);
+    if (isOwner) {
+      throw new UnauthorizedException('Target user is an owner');
+    }
+
+    // The user cannot change its own permissions
+    if (user === requestingUser.id) {
+      throw new UnauthorizedException('Cannot change your own permissions');
+    }
+
+    // Otherwise grant the permissions
+    if (isAdmin) {
+      await this.enforcer.addPolicy(user, Roles.PROJECT_ADMIN, project._id);
+    } else {
+      await this.enforcer.removePolicy(user, Roles.PROJECT_ADMIN, project._id);
+    }
+
+    return true;
+  }
 }

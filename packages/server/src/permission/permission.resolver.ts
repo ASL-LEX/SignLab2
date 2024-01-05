@@ -54,6 +54,23 @@ export class PermissionResolver {
     return this.permissionService.getProjectPermissions(project, requestingUser);
   }
 
+  @Mutation(() => Boolean)
+  async grantProjectPermissions(
+    @Args('project', { type: () => ID }, ProjectPipe) project: Project,
+    @Args('user', { type: () => ID }) user: string,
+    @Args('isAdmin', { type: () => Boolean }) isAdmin: boolean,
+    @TokenContext() requestingUser: TokenPayload,
+  ): Promise<boolean> {
+    const hasPermission = await this.enforcer.enforce(requestingUser.id,
+                                                      ProjectPermissions.GRANT_ADMIN,
+                                                      project._id);
+    if (!hasPermission) {
+      throw new UnauthorizedException('Requesting user does not have permission to manage project permissions');
+    }
+
+    return this.permissionService.grantProjectPermissions(project, user, isAdmin, requestingUser);
+  }
+
   @ResolveField('user', () => UserModel)
   resolveUser(@Parent() permission: Permission): any {
     return { __typename: 'UserModel', id: permission.user };
