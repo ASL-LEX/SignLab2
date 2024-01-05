@@ -1,4 +1,4 @@
-import { Resolver, Args, ID, Query, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Args, ID, Query, ResolveField, Parent, Mutation } from '@nestjs/graphql';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
 import { UseGuards, Inject, UnauthorizedException } from '@nestjs/common';
 import { StudyPermissionModel } from '../models/study.model';
@@ -30,6 +30,54 @@ export class StudyPermissionResolver {
     }
 
     return this.permissionService.getStudyPermissions(study, requestingUser);
+  }
+
+  @Mutation(() => Boolean)
+  async grantStudyAdmin(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user', { type: () => ID }) user: string,
+    @Args('isAdmin', { type: () => Boolean }) isAdmin: boolean,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<boolean> {
+    // Make sure the user has the ability to manage study permissions
+    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    if (!hasPermission) {
+      throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
+    }
+
+    return this.permissionService.grantStudyAdmin(study, user, isAdmin, requestingUser);
+  }
+
+  @Mutation(() => Boolean)
+  async grantContributor(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user', { type: () => ID }) user: string,
+    @Args('isContributor', { type: () => Boolean }) isContributor: boolean,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<boolean> {
+    // Make sure the user has the ability to manage study permissions
+    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    if (!hasPermission) {
+      throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
+    }
+
+    return this.permissionService.grantContributor(study, user, isContributor, requestingUser);
+  }
+
+  @Mutation(() => Boolean)
+  async grantTrainedContributor(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user', { type: () => ID }) user: string,
+    @Args('isTrained', { type: () => Boolean }) isTrained: boolean,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<boolean> {
+    // Make sure the user has the ability to manage study permissions
+    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id.toString());
+    if (!hasPermission) {
+      throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
+    }
+
+    return this.permissionService.grantTrainedContributor(study, user, isTrained, requestingUser);
   }
 
   @ResolveField('user', () => UserModel)

@@ -99,4 +99,72 @@ export class PermissionService {
     // return permissions;
     return permissions;
   }
+
+  async grantStudyAdmin(
+    study: Study,
+    user: string,
+    isAdmin: boolean,
+    requestingUser: TokenPayload
+  ): Promise<boolean> {
+    // Make sure the target user is not a project admin
+    const isProjectAdmin = await this.enforcer.enforce(user, Roles.PROJECT_ADMIN, study._id);
+    if (isProjectAdmin) {
+      throw new UnauthorizedException('Target user is an owner');
+    }
+
+    // The user cannot change its own permissions
+    if (user === requestingUser.id) {
+      throw new UnauthorizedException('Cannot change your own permissions');
+    }
+
+    // Otherwise grant the permissions
+    if (isAdmin) {
+      await this.enforcer.addPolicy(user, Roles.PROJECT_ADMIN, study._id.toString());
+    } else {
+      await this.enforcer.removePolicy(user, Roles.PROJECT_ADMIN, study._id.toString());
+    }
+
+    return true;
+  }
+
+  async grantContributor(
+    study: Study,
+    user: string,
+    isContributor: boolean,
+    requestingUser: TokenPayload
+  ): Promise<boolean> {
+    // Make sure the target user is not a study admin
+    const isStudyAdmin = await this.enforcer.enforce(user, Roles.STUDY_ADMIN, study._id.toString());
+    if (isStudyAdmin) {
+      throw new UnauthorizedException('Target user is an owner');
+    }
+
+    // The user cannot change its own permissions
+    if (user === requestingUser.id) {
+      throw new UnauthorizedException('Cannot change your own permissions');
+    }
+
+    // Otherwise grant the permissions
+    if (isContributor) {
+      await this.enforcer.addPolicy(user, Roles.CONTRIBUTOR, study._id.toString());
+    } else {
+      await this.enforcer.removePolicy(user, Roles.CONTRIBUTOR, study._id.toString());
+    }
+
+    return true;
+  }
+
+  async grantTrainedContributor(
+    study: Study,
+    user: string,
+    isTrained: boolean,
+    _requestingUser: TokenPayload
+  ): Promise<boolean> {
+    if (isTrained) {
+      await this.enforcer.addPolicy(user, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
+    } else {
+      await this.enforcer.removePolicy(user, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
+    }
+    return true;
+  }
 }

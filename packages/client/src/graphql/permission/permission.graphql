@@ -41,3 +41,15 @@ query getStudyPermissions($study: ID!) {
     isTrainedEditable
   }
 }
+
+mutation grantStudyAdmin($study: ID!, $user: ID!, $isAdmin: Boolean!) {
+  grantStudyAdmin(study: $study, user: $user, isAdmin: $isAdmin)
+}
+
+mutation grantContributor($study: ID!, $user: ID!, $isContributor: Boolean!) {
+  grantContributor(study: $study, user: $user, isContributor: $isContributor)
+}
+
+mutation grantTrainedContributor($study: ID!, $user: ID!, $isTrained: Boolean!) {
+  grantTrainedContributor(study: $study, user: $user, isTrained: $isTrained)
+}

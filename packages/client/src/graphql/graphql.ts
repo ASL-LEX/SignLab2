@@ -189,8 +189,11 @@ export type Mutation = {
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
+  grantContributor: Scalars['Boolean']['output'];
   grantOwner: Scalars['Boolean']['output'];
   grantProjectPermissions: Scalars['Boolean']['output'];
+  grantStudyAdmin: Scalars['Boolean']['output'];
+  grantTrainedContributor: Scalars['Boolean']['output'];
   lexiconAddEntry: LexiconEntry;
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
@@ -312,6 +315,13 @@ export type MutationForgotPasswordArgs = {
 };
 
 
+export type MutationGrantContributorArgs = {
+  isContributor: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
 export type MutationGrantOwnerArgs = {
   targetUser: Scalars['ID']['input'];
 };
@@ -320,6 +330,20 @@ export type MutationGrantOwnerArgs = {
 export type MutationGrantProjectPermissionsArgs = {
   isAdmin: Scalars['Boolean']['input'];
   project: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantStudyAdminArgs = {
+  isAdmin: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
+  user: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantTrainedContributorArgs = {
+  isTrained: Scalars['Boolean']['input'];
+  study: Scalars['ID']['input'];
   user: Scalars['ID']['input'];
 };
 
