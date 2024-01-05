@@ -5,8 +5,8 @@ import { Roles } from './permissions/roles';
 import { UserService } from '../auth/services/user.service';
 import { Project } from '../project/project.model';
 import { TokenPayload } from '../jwt/token.dto';
-import { Permission } from './permission.model';
 import { Study } from '../study/study.model';
+import { ProjectPermissionModel } from './models/project.model';
 
 @Injectable()
 export class PermissionService {
@@ -20,7 +20,7 @@ export class PermissionService {
     await this.enforcer.addPolicy(targetUser, Roles.OWNER, organization);
   }
 
-  async getProjectPermissions(project: Project, requestingUser: TokenPayload): Promise<Permission[]> {
+  async getProjectPermissions(project: Project, requestingUser: TokenPayload): Promise<ProjectPermissionModel[]> {
     // Get all the users associated with the organization
     const users = await this.userService.getUsersForProject(requestingUser.projectId);
 
@@ -32,8 +32,7 @@ export class PermissionService {
 
         return {
           user: user.id,
-          role: Roles.PROJECT_ADMIN,
-          hasRole,
+          isProjectAdmin: hasRole,
           editable
         };
       })
@@ -69,17 +68,17 @@ export class PermissionService {
     return true;
   }
 
-  async getStudyPermissions(study: Study, requestingUser: TokenPayload): Promise<Permission[]> {
+  async getStudyPermissions(study: Study, requestingUser: TokenPayload): Promise<boolean> {
     // Get all the users associated with the organization
     const users = await this.userService.getUsersForProject(requestingUser.projectId);
 
     // Create the cooresponding permission representation
     const permissions = await Promise.all(
       users.map(async (user) => {
-        const hasRole = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study);
+        const hasRole = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString());
         // Owner and project admins cannot be changed
-        const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, study)) &&
-                         !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study));
+        const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, study._id.toString())) &&
+                         !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study._id.toString()));
 
         return {
           user: user.id,
@@ -90,6 +89,7 @@ export class PermissionService {
       })
     );
 
-    return permissions;
+    // return permissions;
+    return true;
   }
 }
