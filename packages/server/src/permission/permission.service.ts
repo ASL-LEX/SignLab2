@@ -78,6 +78,7 @@ export class PermissionService {
       users.map(async (user) => {
         const isStudyAdmin = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString());
         const isStudyAdminEditable = !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study._id.toString()));
+        console.log(user, isStudyAdminEditable);
 
         const isContributor = await this.enforcer.enforce(user.id, Roles.CONTRIBUTOR, study._id.toString());
         const isContributorEditable = !(await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString()));
@@ -119,9 +120,9 @@ export class PermissionService {
 
     // Otherwise grant the permissions
     if (isAdmin) {
-      await this.enforcer.addPolicy(user, Roles.PROJECT_ADMIN, study._id.toString());
+      await this.enforcer.addPolicy(user, Roles.STUDY_ADMIN, study._id.toString());
     } else {
-      await this.enforcer.removePolicy(user, Roles.PROJECT_ADMIN, study._id.toString());
+      await this.enforcer.removePolicy(user, Roles.STUDY_ADMIN, study._id.toString());
     }
 
     return true;
