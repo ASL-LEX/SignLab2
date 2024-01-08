@@ -19,6 +19,13 @@ export type DeleteStudyMutationVariables = Types.Exact<{
 
 export type DeleteStudyMutation = { __typename?: 'Mutation', deleteStudy: boolean };
 
+export type CreateStudyMutationVariables = Types.Exact<{
+  study: Types.StudyCreate;
+}>;
+
+
+export type CreateStudyMutation = { __typename?: 'Mutation', createStudy: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } };
+
 
 export const FindStudiesDocument = gql`
     query findStudies($project: ID!) {
@@ -95,3 +102,45 @@ export function useDeleteStudyMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteStudyMutationHookResult = ReturnType<typeof useDeleteStudyMutation>;
 export type DeleteStudyMutationResult = Apollo.MutationResult<DeleteStudyMutation>;
 export type DeleteStudyMutationOptions = Apollo.BaseMutationOptions<DeleteStudyMutation, DeleteStudyMutationVariables>;
+export const CreateStudyDocument = gql`
+    mutation createStudy($study: StudyCreate!) {
+  createStudy(study: $study) {
+    _id
+    name
+    description
+    instructions
+    project
+    tagsPerEntry
+    tagSchema {
+      dataSchema
+      uiSchema
+    }
+  }
+}
+    `;
+export type CreateStudyMutationFn = Apollo.MutationFunction<CreateStudyMutation, CreateStudyMutationVariables>;
+
+/**
+ * __useCreateStudyMutation__
+ *
+ * To run a mutation, you first call `useCreateStudyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStudyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStudyMutation, { data, loading, error }] = useCreateStudyMutation({
+ *   variables: {
+ *      study: // value for 'study'
+ *   },
+ * });
+ */
+export function useCreateStudyMutation(baseOptions?: Apollo.MutationHookOptions<CreateStudyMutation, CreateStudyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStudyMutation, CreateStudyMutationVariables>(CreateStudyDocument, options);
+      }
+export type CreateStudyMutationHookResult = ReturnType<typeof useCreateStudyMutation>;
+export type CreateStudyMutationResult = Apollo.MutationResult<CreateStudyMutation>;
+export type CreateStudyMutationOptions = Apollo.BaseMutationOptions<CreateStudyMutation, CreateStudyMutationVariables>;

@@ -3,10 +3,12 @@ import { TagsDisplay } from '../../components/TagsDisplay.component';
 import { NewStudyJsonForm } from '../../components/NewStudyJsonForm.component';
 import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState } from 'react';
+import { StudyCreate } from '../../graphql/graphql';
+import { PartialStudyCreate } from '../../types/study';
 
 export const NewStudy: React.FC = () => {
-  //all constants
   const [activeStep, setActiveStep] = useState(0);
+  const [partialNewStudy, setPartialNewStudy] = useState<PartialStudyCreate | null>(null);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
@@ -25,7 +27,7 @@ export const NewStudy: React.FC = () => {
   function getSectionComponent() {
     switch (activeStep) {
       case 0:
-        return <NewStudyJsonForm />;
+        return <NewStudyJsonForm newStudy={partialNewStudy} setNewStudy={setPartialNewStudy} />;
       case 1:
         return <TagsDisplay />;
       case 2:

@@ -1,7 +1,9 @@
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { Box } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { PartialStudyCreate } from '../types/study';
+import { ErrorObject } from 'ajv';
 
 const schema = {
   type: 'object',
@@ -16,12 +18,12 @@ const schema = {
     instructions: {
       type: 'string'
     },
-    times: {
+    tagsPerEntry: {
       type: 'number',
       default: 1
     }
   },
-  required: ['name', 'description', 'instructions']
+  required: ['name', 'description', 'instructions', 'tagsPerEntry']
 };
 
 const uischema = {
@@ -46,22 +48,28 @@ const uischema = {
     {
       type: 'Control',
       label: 'Number of times each entry needs to be tagged (default 1)',
-      scope: '#/properties/times'
+      scope: '#/properties/tagsPerEntry'
     }
   ]
 };
 
-export const NewStudyJsonForm: React.FC = () => {
+export interface NewStudyFormProps {
+  newStudy: PartialStudyCreate | null;
+  setNewStudy: Dispatch<SetStateAction<PartialStudyCreate | null>>;
+}
+
+export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
   const initialData = {
-    name: '',
-    description: '',
-    instructions: ''
+    tagsPerEntry: schema.properties.tagsPerEntry.default
   };
 
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<any>(initialData);
 
-  const handleChange = (data: any) => {
+  const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
+    if (!errors) {
+      props.setNewStudy({ ...data });
+    }
   };
 
   return (
@@ -80,7 +88,7 @@ export const NewStudyJsonForm: React.FC = () => {
         data={data}
         renderers={materialRenderers}
         cells={materialCells}
-        onChange={({ data }) => handleChange(data)}
+        onChange={({ data, errors }) => handleChange(data, errors)}
       />
     </Box>
   );
