@@ -64,7 +64,6 @@ export const NewStudy: React.FC = () => {
 
   useEffect(() => {
     if (createStudyResults.data) {
-      // TODO: Add in a success message
       updateStudies();
     }
   }, [createStudyResults.data]);
