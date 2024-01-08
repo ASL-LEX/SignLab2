@@ -2,19 +2,45 @@ import { Container, Typography, Button, Box, Stepper, Step, StepLabel } from '@m
 import { TagsDisplay } from '../../components/TagsDisplay.component';
 import { NewStudyJsonForm } from '../../components/NewStudyJsonForm.component';
 import { TagTrainingComponent } from '../../components/TagTraining.component';
-import { useState } from 'react';
-import { StudyCreate } from '../../graphql/graphql';
+import { useState, useEffect } from 'react';
+import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [stepLimit, setStepLimit] = useState(0);
   const [partialNewStudy, setPartialNewStudy] = useState<PartialStudyCreate | null>(null);
+  const [tagSchema, setTagSchema] = useState<TagSchema | null>(null);
+
+  // Handles mantaining which step the user is on and the step limit
+  useEffect(() => {
+    if (!partialNewStudy) {
+      setStepLimit(0);
+      return;
+    }
+
+    if (!tagSchema) {
+      setStepLimit(1);
+      return;
+    }
+
+    console.log(tagSchema);
+
+    setStepLimit(2);
+
+  }, [partialNewStudy, tagSchema]);
 
   const handleNext = () => {
+    if (activeStep === stepLimit) {
+      return;
+    }
     setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
+    if (activeStep === 0) {
+      return;
+    }
     setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
   };
 
@@ -24,12 +50,12 @@ export const NewStudy: React.FC = () => {
 
   const steps = ['Study Identification', 'Construct Tagging Interface', 'Select Tag Training Items'];
 
-  function getSectionComponent() {
+  const getSectionComponent = () => {
     switch (activeStep) {
       case 0:
         return <NewStudyJsonForm newStudy={partialNewStudy} setNewStudy={setPartialNewStudy} />;
       case 1:
-        return <TagsDisplay />;
+        return <TagsDisplay tagSchema={tagSchema} setTagSchema={setTagSchema} />;
       case 2:
         return <TagTrainingComponent />;
       default:
@@ -69,7 +95,7 @@ export const NewStudy: React.FC = () => {
               <Button variant="outlined" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
                 Back
               </Button>
-              <Button variant="outlined" onClick={handleNext}>
+              <Button variant="outlined" disabled={activeStep === stepLimit} onClick={handleNext}>
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
             </Box>

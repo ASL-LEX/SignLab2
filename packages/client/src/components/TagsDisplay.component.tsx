@@ -12,8 +12,9 @@ import { materialRenderers } from '@jsonforms/material-renderers';
 import { TagField, TagFieldType } from '../models/TagField';
 import { TagFormPreviewDialog } from './TagFormPreview.component';
 import { TagFieldGeneratorService } from '../services/tag-field-generator.service';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { TagFieldView } from './TagField.component';
+import { TagSchema } from '../graphql/graphql';
 
 type TagPreviewInformation = {
   previewDataSchema: any;
@@ -21,7 +22,12 @@ type TagPreviewInformation = {
   renderers: any;
 };
 
-export const TagsDisplay: React.FC = () => {
+export interface TagsDisplayProps {
+  tagSchema: TagSchema | null;
+  setTagSchema: Dispatch<SetStateAction<TagSchema | null>>;
+}
+
+export const TagsDisplay: React.FC<TagsDisplayProps> = (props) => {
   const [tagFields, setTagFields] = useState<TagField[]>([]);
   const [data, setData] = useState<TagPreviewInformation>({
     previewDataSchema: {},
@@ -44,6 +50,18 @@ export const TagsDisplay: React.FC = () => {
     valid.splice(index, 1);
     setValid([...valid]);
   };
+
+  // Handling keeping track of complete tag schema
+  useEffect(() => {
+    if (valid.length === 0 || valid.includes(false)) {
+      return;
+    }
+    const schema = produceJSONForm();
+    props.setTagSchema({
+      dataSchema: schema.dataSchema,
+      uiSchema:schema.uiSchema
+    });
+  }, [valid, tagFields]);
 
   const produceJSONForm = () => {
     const dataSchema: { type: string; properties: any; required: string[] } = {
