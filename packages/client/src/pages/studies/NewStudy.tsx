@@ -5,12 +5,19 @@ import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
 import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
+import { useCreateStudyMutation } from '../../graphql/study/study';
+import { useProject } from '../../context/Project.context';
+import { useStudy } from '../../context/Study.context';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepLimit, setStepLimit] = useState(0);
   const [partialNewStudy, setPartialNewStudy] = useState<PartialStudyCreate | null>(null);
   const [tagSchema, setTagSchema] = useState<TagSchema | null>(null);
+  const { project } = useProject();
+  const { updateStudies } = useStudy();
+
+  const [createStudyMutation, createStudyResults] = useCreateStudyMutation();
 
   // Handles mantaining which step the user is on and the step limit
   useEffect(() => {
@@ -24,9 +31,8 @@ export const NewStudy: React.FC = () => {
       return;
     }
 
-    console.log(tagSchema);
-
-    setStepLimit(2);
+    // TODO: Future work will be done to add in the entry selection step
+    setStepLimit(3);
 
   }, [partialNewStudy, tagSchema]);
 
@@ -34,8 +40,34 @@ export const NewStudy: React.FC = () => {
     if (activeStep === stepLimit) {
       return;
     }
+    if (activeStep === steps.length - 1) {
+      // Make sure the required fields are present
+      if (!partialNewStudy || !tagSchema) {
+        console.error('Reached submission with invalid data');
+        return;
+      }
+      // Make sure a project is selected
+      if (!project) {
+        console.error('Reached submission with no project selected');
+        return;
+      }
+      const study: StudyCreate = {
+        ...partialNewStudy,
+        project: project._id,
+        tagSchema: tagSchema
+      };
+      createStudyMutation({ variables: { study } });
+
+    }
     setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
+
+  useEffect(() => {
+    if (createStudyResults.data) {
+      // TODO: Add in a success message
+      updateStudies();
+    }
+  }, [createStudyResults.data]);
 
   const handleBack = () => {
     if (activeStep === 0) {

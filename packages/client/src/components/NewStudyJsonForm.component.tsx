@@ -68,6 +68,7 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
     if (!errors || errors.length === 0) {
+      // TODO: Check for unique study name
       props.setNewStudy({ ...data });
     } else {
       props.setNewStudy(null);
