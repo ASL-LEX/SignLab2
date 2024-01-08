@@ -37,9 +37,10 @@ export class StudyResolver {
   @Query(() => Boolean)
   async studyExists(
     @Args('name') name: string,
-    @Args('project', { type: () => ID }, ProjectPipe) project: Project
+    @Args('project', { type: () => ID }, ProjectPipe) project: Project,
+    @TokenContext() user: TokenPayload
   ): Promise<Boolean> {
-    if (!(await this.enforcer.enforce(name, StudyPermissions.READ, project))) {
+    if (!(await this.enforcer.enforce(user.id, StudyPermissions.READ, project._id.toString()))) {
       throw new UnauthorizedException('User cannot read studies on this project');
     }
 
@@ -53,8 +54,11 @@ export class StudyResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteStudy(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<boolean> {
-    if (!(await this.enforcer.enforce(study.name, StudyPermissions.DELETE, study._id))) {
+  async deleteStudy(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
+    if (!(await this.enforcer.enforce(user.id, StudyPermissions.DELETE, study._id))) {
       throw new UnauthorizedException('User cannot delete studies on this project');
     }
 
@@ -65,9 +69,10 @@ export class StudyResolver {
   @Mutation(() => Study)
   async changeStudyName(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @Args('newName') newName: string
+    @Args('newName') newName: string,
+    @TokenContext() user: TokenPayload
   ): Promise<Study> {
-    if (!(await this.enforcer.enforce(study.name, StudyPermissions.UPDATE, study._id))) {
+    if (!(await this.enforcer.enforce(user.id, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }
 
@@ -77,9 +82,10 @@ export class StudyResolver {
   @Mutation(() => Study)
   async changeStudyDescription(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @Args('newDescription') newDescription: string
+    @Args('newDescription') newDescription: string,
+    @TokenContext() user: TokenPayload
   ): Promise<Study> {
-    if (!(await this.enforcer.enforce(study.name, StudyPermissions.UPDATE, study._id))) {
+    if (!(await this.enforcer.enforce(user.id, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }
 
