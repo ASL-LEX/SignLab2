@@ -54,7 +54,10 @@ export class StudyResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteStudy(@Args('study', { type: () => ID }, StudyPipe) study: Study, @TokenContext() user: TokenPayload): Promise<boolean> {
+  async deleteStudy(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
     if (!(await this.enforcer.enforce(user.id, StudyPermissions.DELETE, study._id))) {
       throw new UnauthorizedException('User cannot delete studies on this project');
     }

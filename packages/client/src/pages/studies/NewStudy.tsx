@@ -33,7 +33,6 @@ export const NewStudy: React.FC = () => {
 
     // TODO: Future work will be done to add in the entry selection step
     setStepLimit(3);
-
   }, [partialNewStudy, tagSchema]);
 
   const handleNext = () => {
@@ -57,7 +56,6 @@ export const NewStudy: React.FC = () => {
         tagSchema: tagSchema
       };
       createStudyMutation({ variables: { study } });
-
     }
     setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
@@ -92,7 +90,7 @@ export const NewStudy: React.FC = () => {
       default:
         return null;
     }
-  }
+  };
 
   return (
     <Container sx={{ flexDirection: 'column' }}>

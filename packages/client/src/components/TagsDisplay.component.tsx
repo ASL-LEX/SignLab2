@@ -59,7 +59,7 @@ export const TagsDisplay: React.FC<TagsDisplayProps> = (props) => {
     const schema = produceJSONForm();
     props.setTagSchema({
       dataSchema: schema.dataSchema,
-      uiSchema:schema.uiSchema
+      uiSchema: schema.uiSchema
     });
   }, [valid, tagFields]);
 
