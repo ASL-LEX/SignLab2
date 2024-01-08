@@ -26,6 +26,14 @@ export type CreateStudyMutationVariables = Types.Exact<{
 
 export type CreateStudyMutation = { __typename?: 'Mutation', createStudy: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } };
 
+export type StudyExistsQueryVariables = Types.Exact<{
+  name: Types.Scalars['String']['input'];
+  project: Types.Scalars['ID']['input'];
+}>;
+
+
+export type StudyExistsQuery = { __typename?: 'Query', studyExists: boolean };
+
 
 export const FindStudiesDocument = gql`
     query findStudies($project: ID!) {
@@ -144,3 +152,37 @@ export function useCreateStudyMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateStudyMutationHookResult = ReturnType<typeof useCreateStudyMutation>;
 export type CreateStudyMutationResult = Apollo.MutationResult<CreateStudyMutation>;
 export type CreateStudyMutationOptions = Apollo.BaseMutationOptions<CreateStudyMutation, CreateStudyMutationVariables>;
+export const StudyExistsDocument = gql`
+    query studyExists($name: String!, $project: ID!) {
+  studyExists(name: $name, project: $project)
+}
+    `;
+
+/**
+ * __useStudyExistsQuery__
+ *
+ * To run a query within a React component, call `useStudyExistsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudyExistsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStudyExistsQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      project: // value for 'project'
+ *   },
+ * });
+ */
+export function useStudyExistsQuery(baseOptions: Apollo.QueryHookOptions<StudyExistsQuery, StudyExistsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StudyExistsQuery, StudyExistsQueryVariables>(StudyExistsDocument, options);
+      }
+export function useStudyExistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StudyExistsQuery, StudyExistsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StudyExistsQuery, StudyExistsQueryVariables>(StudyExistsDocument, options);
+        }
+export type StudyExistsQueryHookResult = ReturnType<typeof useStudyExistsQuery>;
+export type StudyExistsLazyQueryHookResult = ReturnType<typeof useStudyExistsLazyQuery>;
+export type StudyExistsQueryResult = Apollo.QueryResult<StudyExistsQuery, StudyExistsQueryVariables>;

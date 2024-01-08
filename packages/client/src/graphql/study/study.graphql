@@ -31,3 +31,7 @@ mutation createStudy($study: StudyCreate!) {
     }
   }
 }
+
+query studyExists($name: String!, $project: ID!) {
+  studyExists(name: $name, project: $project)
+}
