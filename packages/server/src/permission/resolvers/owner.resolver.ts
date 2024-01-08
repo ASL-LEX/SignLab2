@@ -5,10 +5,12 @@ import { TokenPayload } from '../../jwt/token.dto';
 import { Organization } from '../../organization/organization.model';
 import * as casbin from 'casbin';
 import { CASBIN_PROVIDER } from '../casbin.provider';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Roles } from '../permissions/roles';
 import { PermissionService } from '../permission.service';
+import { JwtAuthGuard } from '../../jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Resolver()
 export class OwnerPermissionResolver {
   constructor(
