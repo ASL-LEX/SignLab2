@@ -1,84 +1,25 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, IconButton, Typography } from '@mui/material';
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { DatasetControl } from '../../components/DatasetControl.component';
+import { DatasetTable } from '../../components/DatasetTable.component';
 import { AddDataset } from '../../components/AddDataset.component';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UploadEntries } from '../../components/UploadEntries.component';
-import { GridColDef } from '@mui/x-data-grid';
-
-const controls = [
-  { name: 'First', description: 'The description of the object' },
-  { name: 'Second', description: 'Description of the second object' }
-];
-
-const rows = [
-  {
-    id: 1,
-    view: '',
-    entry: '',
-    responder: '',
-    access: true
-  },
-  {
-    id: 2,
-    view: '',
-    entry: '',
-    responder: '',
-    access: true
-  },
-  {
-    id: 3,
-    view: '',
-    entry: '',
-    responder: '',
-    access: true
-  },
-  {
-    id: 4,
-    view: '',
-    entry: '',
-    responder: '',
-    access: false
-  }
-];
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', flex: 0.3 },
-  {
-    field: 'view',
-    headerName: 'View',
-    flex: 0.75,
-    editable: true
-  },
-  {
-    field: 'entry',
-    headerName: 'Entry ID',
-    flex: 1,
-    editable: true
-  },
-  {
-    field: 'responder',
-    headerName: 'Responder ID',
-    flex: 1,
-    editable: true
-  },
-  {
-    field: 'access',
-    type: 'boolean',
-    headerName: 'Access',
-    flex: 0.75
-  }
-];
-
-interface Control {
-  name: string;
-  description: string;
-}
+import { Dataset } from '../../graphql/graphql';
+import { useGetDatasetsQuery } from '../../graphql/dataset/dataset';
 
 export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
   const [upload, setUpload] = useState(false);
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const getDatasetsResults = useGetDatasetsQuery();
+
+  useEffect(() => {
+    if (getDatasetsResults.data) {
+      setDatasets(getDatasetsResults.data.getDatasets);
+      console.log(getDatasetsResults.data.getDatasets);
+    }
+  }, [getDatasetsResults.data]);
 
   const handleClick = (type: string) => {
     if (type === 'add') {
@@ -96,6 +37,7 @@ export const DatasetControls: React.FC = () => {
     setUpload((upload) => !upload);
   };
 
+  // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
   return (
     <>
       <Typography variant="h3">Dataset Controls</Typography>
@@ -124,24 +66,18 @@ export const DatasetControls: React.FC = () => {
         </Box>
       </Box>
       <Box sx={{ width: '100%' }}>
-        {controls.map((item: Control) => (
-          <Accordion key={item.name} disableGutters>
+        {datasets.map((dataset: Dataset) => (
+          <Accordion key={dataset._id} disableGutters>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
               <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>
-                {item.name}
+                {dataset.name}
               </Typography>
               <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>
-                {item.description}
+                {dataset.description}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Container
-                sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}
-              >
-                <Box sx={{ position: '-webkit-sticky' }}>
-                  <DatasetControl tableRows={rows} columns={columns} />
-                </Box>
-              </Container>
+              <DatasetTable dataset={dataset} />
             </AccordionDetails>
           </Accordion>
         ))}

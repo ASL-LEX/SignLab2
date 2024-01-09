@@ -1,5 +1,5 @@
 import { Box, Accordion, AccordionSummary, Typography, AccordionDetails, Container } from '@mui/material';
-import { DatasetControl } from './DatasetControl.component';
+import { DatasetTable } from './DatasetTable.component';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GridColDef } from '@mui/x-data-grid';
 

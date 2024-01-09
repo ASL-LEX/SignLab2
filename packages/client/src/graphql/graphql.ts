@@ -69,7 +69,7 @@ export type Entry = {
   __typename?: 'Entry';
   _id: Scalars['String']['output'];
   contentType: Scalars['String']['output'];
-  creator: Scalars['ID']['output'];
+  creator?: Maybe<Scalars['ID']['output']>;
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
