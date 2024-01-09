@@ -5,7 +5,7 @@ import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
 import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
-import { CreateStudyDocument, useCreateStudyMutation } from '../../graphql/study/study';
+import { CreateStudyDocument } from '../../graphql/study/study';
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
@@ -18,7 +18,7 @@ export const NewStudy: React.FC = () => {
   const [tagSchema, setTagSchema] = useState<TagSchema | null>(null);
   const { project } = useProject();
   const { updateStudies } = useStudy();
-  const [trainingSet, setTrainingSet] = useState<string[]>([]);
+  const [_trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
   const apolloClient = useApolloClient();
 
