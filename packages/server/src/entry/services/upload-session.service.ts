@@ -11,6 +11,7 @@ import { DatasetService } from '../../dataset/dataset.service';
 import { EntryUploadService } from '../services/entry-upload.service';
 import { UploadStatus, UploadResult } from '../dtos/upload-result.dto';
 import { EntryService } from './entry.service';
+import { TokenPayload } from '../../jwt/token.dto';
 
 @Injectable()
 export class UploadSessionService {
@@ -52,7 +53,7 @@ export class UploadSessionService {
     return uploadSession;
   }
 
-  async complete(uploadSession: UploadSession): Promise<UploadResult> {
+  async complete(uploadSession: UploadSession, user: TokenPayload): Promise<UploadResult> {
     // Verify the CSV is in the bucket
     if (!uploadSession.csvURL) {
       throw new BadRequestException('CSV URL not found');
@@ -86,16 +87,14 @@ export class UploadSessionService {
       }
 
       // Create the entry object
-      // TODO: Remove media URL
-      //       Determine media type
-      const contentType = entryFile.metadata.contentType;
       const entry = await this.entryService.create(
         {
           entryID: entryUpload.entryID,
           contentType: entryFile.metadata.contentType,
           meta: entryUpload.metadata
         },
-        dataset
+        dataset,
+        user
       );
 
       // Move the entry to the dataset

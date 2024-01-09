@@ -44,7 +44,7 @@ export class UploadSessionResolver {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 
-    return this.uploadSessionService.complete(uploadSession);
+    return this.uploadSessionService.complete(uploadSession, user);
   }
 
   @Query(() => String, { description: 'Get the presigned URL for where to upload the CSV against' })
