@@ -1,39 +1,21 @@
 import { DatasetsView } from './DatasetsView.component';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
 import { Switch } from '@mui/material';
 
-export const TagTrainingComponent = () => {
+export interface TagTrainingComponentProps {
+  setTrainingSet: Dispatch<SetStateAction<string[]>>;
+  setTaggingSet: Dispatch<SetStateAction<string[]>>;
+}
+
+export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props) => {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const getDatasetsResults = useGetDatasetsQuery();
 
-  const trainingSet: Set<Entry> = new Set();
-  const fullSet: Set<Entry> = new Set();
-
-  const trainingOnLoad = (entry: Entry) => {
-  };
-
-  const addToTrainingSet = (entry: Entry) => {
-
-  };
-
-  const removeFromTrainingSet = (entry: Entry) => {
-
-  };
-
-  const fullSetOnLoad = (entry: Entry) => {
-    fullSet.add(entry);
-  };
-
-  const addToFullSet = (entry: Entry) => {
-
-  };
-
-  const removeFromFullSet = (entry: Entry) => {
-
-  };
+  const trainingSet: Set<string> = new Set();
+  const fullSet: Set<string> = new Set();
 
   const additionalColumns: GridColDef[] = [
     {
@@ -43,10 +25,10 @@ export const TagTrainingComponent = () => {
       renderCell: (params) => (
         <EditSetSwitch
           startingValue={false}
-          onLoad={trainingOnLoad}
-          add={addToTrainingSet}
-          remove={removeFromTrainingSet}
-          entry={params.value}
+          onLoad={(_entry) => {}}
+          add={(entry) => { trainingSet.add(entry._id); props.setTrainingSet(Array.from(trainingSet)); }}
+          remove={(entry) => { trainingSet.delete(entry._id); props.setTrainingSet(Array.from(trainingSet)); }}
+          entry={params.row}
         />
       )
     },
@@ -57,10 +39,10 @@ export const TagTrainingComponent = () => {
       renderCell: (params) => (
         <EditSetSwitch
           startingValue={true}
-          onLoad={fullSetOnLoad}
-          add={addToFullSet}
-          remove={removeFromFullSet}
-          entry={params.value}
+          onLoad={(entry) => { fullSet.add(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
+          add={(entry) => { fullSet.add(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
+          remove={(entry) => { fullSet.delete(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
+          entry={params.row}
         />
       )
     }

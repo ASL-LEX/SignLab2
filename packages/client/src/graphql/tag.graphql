@@ -1,0 +1,5 @@
+mutation createTags($study: ID!, $entries: [ID!]!) {
+  createTags(study: $study, entries: $entries) {
+    _id
+  }
+}
