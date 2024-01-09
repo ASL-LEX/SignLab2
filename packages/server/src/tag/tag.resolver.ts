@@ -7,8 +7,13 @@ import { EntriesPipe, EntryPipe } from '../entry/pipes/entry.pipe';
 import { Entry } from '../entry/models/entry.model';
 import { TagPipe } from './pipes/tag.pipe';
 import JSON from 'graphql-type-json';
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
+import { CASBIN_PROVIDER } from 'src/permission/casbin.provider';
+import * as casbin from 'casbin';
+import { TokenContext } from '../jwt/token.context';
+import { TokenPayload } from '../jwt/token.dto';
+import { StudyPermissions } from '../permission/permissions/study';
 
 // TODO: Add permissioning
 @UseGuards(JwtAuthGuard)
@@ -17,21 +22,28 @@ export class TagResolver {
   constructor(
     private readonly tagService: TagService,
     private readonly entryPipe: EntryPipe,
-    private readonly studyPipe: StudyPipe
+    private readonly studyPipe: StudyPipe,
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
   ) {}
 
   @Mutation(() => [Tag])
   async createTags(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @Args('entries', { type: () => [ID] }, EntriesPipe) entries: Entry[]
+    @Args('entries', { type: () => [ID] }, EntriesPipe) entries: Entry[],
+    @TokenContext() user: TokenPayload
   ) {
+    if (!(await this.enforcer.enforce(user.id, StudyPermissions.CREATE, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot add tags to this study');
+    }
     return this.tagService.createTags(study, entries);
   }
 
   @Mutation(() => Tag, { nullable: true })
-  async assignTag(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<Tag | null> {
-    // TODO: Add user context
-    return this.tagService.assignTag(study, '1');
+  async assignTag(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<Tag | null> {
+    return this.tagService.assignTag(study, user.id);
   }
 
   @Mutation(() => Boolean)

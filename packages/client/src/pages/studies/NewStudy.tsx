@@ -5,9 +5,11 @@ import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
 import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
-import { useCreateStudyMutation } from '../../graphql/study/study';
+import { CreateStudyDocument } from '../../graphql/study/study';
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
+import { useApolloClient } from '@apollo/client';
+import { CreateTagsDocument } from '../../graphql/tag';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -16,8 +18,9 @@ export const NewStudy: React.FC = () => {
   const [tagSchema, setTagSchema] = useState<TagSchema | null>(null);
   const { project } = useProject();
   const { updateStudies } = useStudy();
-
-  const [createStudyMutation, createStudyResults] = useCreateStudyMutation();
+  const [_trainingSet, setTrainingSet] = useState<string[]>([]);
+  const [taggingSet, setTaggingSet] = useState<string[]>([]);
+  const apolloClient = useApolloClient();
 
   // Handles mantaining which step the user is on and the step limit
   useEffect(() => {
@@ -35,7 +38,7 @@ export const NewStudy: React.FC = () => {
     setStepLimit(3);
   }, [partialNewStudy, tagSchema]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (activeStep === stepLimit) {
       return;
     }
@@ -50,21 +53,33 @@ export const NewStudy: React.FC = () => {
         console.error('Reached submission with no project selected');
         return;
       }
+
       const study: StudyCreate = {
         ...partialNewStudy,
         project: project._id,
         tagSchema: tagSchema
       };
-      createStudyMutation({ variables: { study } });
+
+      // Make the new study
+      const result = await apolloClient.mutate({
+        mutation: CreateStudyDocument,
+        variables: { study: study }
+      });
+
+      if (result.errors || !result.data) {
+        console.error('Failed to create study');
+        return;
+      }
+
+      // Create the corresponding tags
+      await apolloClient.mutate({
+        mutation: CreateTagsDocument,
+        variables: { study: result.data.createStudy._id, entries: taggingSet }
+      });
+      updateStudies();
     }
     setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
-
-  useEffect(() => {
-    if (createStudyResults.data) {
-      updateStudies();
-    }
-  }, [createStudyResults.data]);
 
   const handleBack = () => {
     if (activeStep === 0) {
@@ -86,7 +101,7 @@ export const NewStudy: React.FC = () => {
       case 1:
         return <TagsDisplay tagSchema={tagSchema} setTagSchema={setTagSchema} />;
       case 2:
-        return <TagTrainingComponent />;
+        return <TagTrainingComponent setTaggingSet={setTaggingSet} setTrainingSet={setTrainingSet} />;
       default:
         return null;
     }
