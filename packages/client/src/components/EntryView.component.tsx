@@ -92,7 +92,5 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 };
 
 const ImageEntryView: React.FC<EntryViewProps> = (props) => {
-  return (
-    <img src={props.entry.signedUrl} width={props.width} />
-  );
+  return <img src={props.entry.signedUrl} width={props.width} />;
 };

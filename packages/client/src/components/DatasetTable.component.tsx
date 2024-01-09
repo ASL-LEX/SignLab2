@@ -13,7 +13,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const columns = [...defaultColumns, ...(props.additionalColumns ?? [])];
 
-  const entryForDatasetResult = useEntryForDatasetQuery({ variables: { dataset: props.dataset._id  } });
+  const entryForDatasetResult = useEntryForDatasetQuery({ variables: { dataset: props.dataset._id } });
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
   useEffect(() => {
@@ -53,6 +53,6 @@ const defaultColumns: GridColDef[] = [
     field: 'entryID',
     headerName: 'Entry ID',
     width: 150,
-    editable: false,
+    editable: false
   }
 ];

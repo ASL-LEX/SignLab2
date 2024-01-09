@@ -7,7 +7,7 @@ import { Dataset } from '../../dataset/dataset.model';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
-import {TokenPayload} from 'src/jwt/token.dto';
+import { TokenPayload } from 'src/jwt/token.dto';
 
 @Injectable()
 export class EntryService {
