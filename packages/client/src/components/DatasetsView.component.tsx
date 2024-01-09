@@ -2,13 +2,15 @@ import { Accordion, AccordionSummary, Typography, Stack, AccordionDetails } from
 import { Dataset } from '../graphql/graphql';
 import { DatasetTable } from './DatasetTable.component';
 import { ExpandMore } from '@mui/icons-material';
+import {GridColDef} from '@mui/x-data-grid';
 
 export interface DatasetsViewProps {
   datasets: Dataset[];
+  additionalColumns?: GridColDef[];
 }
 
 // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
-export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets }) => {
+export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additionalColumns }) => {
   return (
     <>
       {datasets.map((dataset: Dataset) => (
@@ -20,7 +22,7 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets }) => {
             </Stack>
           </AccordionSummary>
           <AccordionDetails>
-            <DatasetTable dataset={dataset} />
+            <DatasetTable dataset={dataset} additionalColumns={additionalColumns} />
           </AccordionDetails>
         </Accordion>
       ))}
