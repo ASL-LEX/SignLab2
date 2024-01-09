@@ -1,12 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Container, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { DatasetTable } from '../../components/DatasetTable.component';
 import { AddDataset } from '../../components/AddDataset.component';
 import { useEffect, useState } from 'react';
 import { UploadEntries } from '../../components/UploadEntries.component';
 import { Dataset } from '../../graphql/graphql';
 import { useGetDatasetsQuery } from '../../graphql/dataset/dataset';
+import { DatasetsView } from '../../components/DatasetsView.component';
 
 export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
@@ -17,7 +16,6 @@ export const DatasetControls: React.FC = () => {
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasets);
-      console.log(getDatasetsResults.data.getDatasets);
     }
   }, [getDatasetsResults.data]);
 
@@ -37,7 +35,6 @@ export const DatasetControls: React.FC = () => {
     setUpload((upload) => !upload);
   };
 
-  // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
   return (
     <>
       <Typography variant="h3">Dataset Controls</Typography>
@@ -65,23 +62,7 @@ export const DatasetControls: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ width: '100%' }}>
-        {datasets.map((dataset: Dataset) => (
-          <Accordion key={dataset._id} disableGutters>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '3%' }}>
-                {dataset.name}
-              </Typography>
-              <Typography sx={{ fontWeight: 'normal', position: 'absolute', top: '14px', left: '20%' }}>
-                {dataset.description}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DatasetTable dataset={dataset} />
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </Box>
+      <DatasetsView datasets={datasets} />
     </>
   );
 };
