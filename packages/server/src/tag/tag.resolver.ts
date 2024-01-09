@@ -39,7 +39,10 @@ export class TagResolver {
   }
 
   @Mutation(() => Tag, { nullable: true })
-  async assignTag(@Args('study', { type: () => ID }, StudyPipe) study: Study, @TokenContext() user: TokenPayload): Promise<Tag | null> {
+  async assignTag(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<Tag | null> {
     return this.tagService.assignTag(study, user.id);
   }
 

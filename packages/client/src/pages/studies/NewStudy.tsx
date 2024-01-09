@@ -9,7 +9,7 @@ import { CreateStudyDocument, useCreateStudyMutation } from '../../graphql/study
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
-import {CreateTagsDocument} from '../../graphql/tag';
+import { CreateTagsDocument } from '../../graphql/tag';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -21,7 +21,6 @@ export const NewStudy: React.FC = () => {
   const [trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
   const apolloClient = useApolloClient();
-
 
   // Handles mantaining which step the user is on and the step limit
   useEffect(() => {
@@ -73,7 +72,7 @@ export const NewStudy: React.FC = () => {
       }
 
       // Create the corresponding tags
-      const tags = await apolloClient.mutate({
+      await apolloClient.mutate({
         mutation: CreateTagsDocument,
         variables: { study: result.data.createStudy._id, entries: taggingSet }
       });

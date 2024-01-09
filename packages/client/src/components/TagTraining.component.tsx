@@ -26,8 +26,14 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
         <EditSetSwitch
           startingValue={false}
           onLoad={(_entry) => {}}
-          add={(entry) => { trainingSet.add(entry._id); props.setTrainingSet(Array.from(trainingSet)); }}
-          remove={(entry) => { trainingSet.delete(entry._id); props.setTrainingSet(Array.from(trainingSet)); }}
+          add={(entry) => {
+            trainingSet.add(entry._id);
+            props.setTrainingSet(Array.from(trainingSet));
+          }}
+          remove={(entry) => {
+            trainingSet.delete(entry._id);
+            props.setTrainingSet(Array.from(trainingSet));
+          }}
           entry={params.row}
         />
       )
@@ -39,9 +45,18 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       renderCell: (params) => (
         <EditSetSwitch
           startingValue={true}
-          onLoad={(entry) => { fullSet.add(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
-          add={(entry) => { fullSet.add(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
-          remove={(entry) => { fullSet.delete(entry._id); props.setTaggingSet(Array.from(fullSet)); }}
+          onLoad={(entry) => {
+            fullSet.add(entry._id);
+            props.setTaggingSet(Array.from(fullSet));
+          }}
+          add={(entry) => {
+            fullSet.add(entry._id);
+            props.setTaggingSet(Array.from(fullSet));
+          }}
+          remove={(entry) => {
+            fullSet.delete(entry._id);
+            props.setTaggingSet(Array.from(fullSet));
+          }}
           entry={params.row}
         />
       )
@@ -87,11 +102,5 @@ const EditSetSwitch: React.FC<EditSwitchProps> = (props) => {
     }
   };
 
-  return (
-    <Switch
-      checked={checked}
-      onChange={handleChange}
-      inputProps={{ 'aria-label': 'controlled' }}
-    />
-  );
+  return <Switch checked={checked} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />;
 };

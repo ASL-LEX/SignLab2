@@ -2,7 +2,7 @@ import { Accordion, AccordionSummary, Typography, Stack, AccordionDetails } from
 import { Dataset } from '../graphql/graphql';
 import { DatasetTable } from './DatasetTable.component';
 import { ExpandMore } from '@mui/icons-material';
-import {GridColDef} from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
 export interface DatasetsViewProps {
   datasets: Dataset[];

@@ -10,7 +10,13 @@ import { SharedModule } from '../shared/shared.module';
 import { PermissionModule } from '../permission/permission.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]), StudyModule, EntryModule, SharedModule, PermissionModule],
+  imports: [
+    MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }]),
+    StudyModule,
+    EntryModule,
+    SharedModule,
+    PermissionModule
+  ],
   providers: [TagService, TagResolver, TagPipe]
 })
 export class TagModule {}
