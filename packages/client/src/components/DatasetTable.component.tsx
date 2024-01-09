@@ -14,12 +14,10 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const entryForDatasetResult = useEntryForDatasetQuery({ variables: { dataset: props.dataset._id  } });
 
   useEffect(() => {
-    console.log(entryForDatasetResult.error);
     if (entryForDatasetResult.data) {
-      console.log(props.dataset);
       setEntries(entryForDatasetResult.data.entryForDataset);
     }
-  }, [entryForDatasetResult.data, entryForDatasetResult.error]);
+  }, [entryForDatasetResult.data]);
 
   return (
     <DataGrid
