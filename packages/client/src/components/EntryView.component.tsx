@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { Entry } from '../graphql/graphql';
 import { useEffect, useRef } from 'react';
 
@@ -8,11 +7,7 @@ export interface EntryViewProps {
 }
 
 export const EntryView: React.FC<EntryViewProps> = (props) => {
-  return (
-    <Box sx={{ width: props.width }}>
-      {getEntryView(props.entry)}
-    </Box>
-  );
+  return getEntryView(props.entry);
 };
 
 const getEntryView = (entry: Entry) => {
@@ -84,7 +79,7 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
     return video.duration;
   };
 
-
+  // Set the video to the middle frame when the video is loaded
   useEffect(() => {
     setMiddleFrame();
   }, [videoRef.current]);

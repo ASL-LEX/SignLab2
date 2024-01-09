@@ -6,13 +6,16 @@ import { EntryView } from './EntryView.component';
 
 export interface DatasetTableProps {
   dataset: Dataset;
+  additionalColumns?: GridColDef[];
 }
 
 export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [entries, setEntries] = useState<Entry[]>([]);
+  const columns = [...defaultColumns, ...(props.additionalColumns ?? [])];
 
   const entryForDatasetResult = useEntryForDatasetQuery({ variables: { dataset: props.dataset._id  } });
 
+  // TODO: Add in logic to re-fetch data when the presigned URL expires
   useEffect(() => {
     if (entryForDatasetResult.data) {
       setEntries(entryForDatasetResult.data.entryForDataset);
@@ -23,7 +26,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
     <DataGrid
       getRowHeight={() => 'auto'}
       rows={entries}
-      columns={defaultColumns}
+      columns={columns}
       initialState={{
         pagination: {
           paginationModel: {
