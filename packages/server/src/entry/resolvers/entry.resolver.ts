@@ -32,8 +32,8 @@ export class EntryResolver {
   }
 
   @ResolveField(() => String)
-  async signedUrl(@Parent() entry: Entry): Promise<string> {
-    if (!(await this.enforcer.enforce(entry.dataset, DatasetPermissions.READ, entry.dataset))) {
+  async signedUrl(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<string> {
+    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, entry.dataset))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -43,8 +43,8 @@ export class EntryResolver {
   // NOTE: With the current implementation, this is only really helpful
   //       if the request to `signedUrl` is made.
   @ResolveField(() => Number, { description: 'Get the number of milliseconds the signed URL is valid for.' })
-  async signedUrlExpiration(@Parent() entry: Entry): Promise<number> {
-    if (!(await this.enforcer.enforce(entry.dataset, DatasetPermissions.READ, entry.dataset))) {
+  async signedUrlExpiration(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<number> {
+    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, entry.dataset))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 

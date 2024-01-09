@@ -7,6 +7,7 @@ import { Dataset } from '../../dataset/dataset.model';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
+import {TokenPayload} from 'src/jwt/token.dto';
 
 @Injectable()
 export class EntryService {
@@ -24,12 +25,14 @@ export class EntryService {
     return this.entryMode.findOne({ _id: entryID });
   }
 
-  async create(entryCreate: EntryCreate, dataset: Dataset): Promise<Entry> {
+  async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload): Promise<Entry> {
     return this.entryMode.create({
       ...entryCreate,
       dataset: dataset._id,
       organization: dataset.organization,
-      recordedInSignLab: false
+      recordedInSignLab: false,
+      dateCreated: new Date(),
+      creator: user.id
     });
   }
 
