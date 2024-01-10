@@ -42,15 +42,12 @@ export const TagView = () => {
             renderers={materialRenderers}
             cells={materialCells}
           />
-          <Box sx={{ height: '50px', padding: '30px' }}>
-            <Button variant="outlined" sx={{ margin: '10px' }}>
-              Back
-            </Button>
-            <Button variant="outlined" sx={{ margin: '10px' }} onClick={handleNext}>
+          <Box>
+            <Button variant="outlined" onClick={handleNext}>
               Next
             </Button>
           </Box>
-          <Button variant="outlined" sx={{ marginTop: '35px' }} onClick={() => handleClick('contribute')}>
+          <Button variant="outlined" sx={{ marginTop: 2 }} onClick={() => handleClick('contribute')}>
             Exit Tagging
           </Button>
         </Box>
