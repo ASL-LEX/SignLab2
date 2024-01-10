@@ -2,79 +2,6 @@ import { Typography, Box, Stack, Button } from '@mui/material';
 import placeholder from './placeholder.png';
 import { useNavigate } from 'react-router-dom';
 
-const schema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      default: 'foo'
-    },
-    name_noDefault: {
-      type: 'string'
-    },
-    description: {
-      type: 'string',
-      default: 'bar'
-    },
-    done: {
-      type: 'boolean',
-      default: false
-    },
-    rating: {
-      type: 'integer',
-      default: 5
-    },
-    cost: {
-      type: 'number',
-      default: 5.5
-    },
-    dueDate: {
-      type: 'string',
-      format: 'date',
-      default: '2019-04-01'
-    }
-  },
-  required: ['name', 'name_noDefault']
-};
-
-const uischema = {
-  type: 'VerticalLayout',
-  elements: [
-    {
-      type: 'Control',
-      scope: '#/properties/name'
-    },
-    {
-      type: 'Control',
-      scope: '#/properties/name_noDefault'
-    },
-    {
-      type: 'Control',
-      label: false,
-      scope: '#/properties/done'
-    },
-    {
-      type: 'Control',
-      scope: '#/properties/description',
-      options: {
-        multi: true
-      }
-    },
-    {
-      type: 'Control',
-      scope: '#/properties/rating'
-    },
-    {
-      type: 'Control',
-      scope: '#/properties/cost'
-    },
-    {
-      type: 'Control',
-      scope: '#/properties/dueDate'
-    }
-  ]
-};
-
 export const ContributePage: React.FC = () => {
   const initialData = {
     image: placeholder,
@@ -88,7 +15,7 @@ export const ContributePage: React.FC = () => {
   const handleSubmit = () => {
     //submit logic
     //redirect to next page
-    navigate('/tagging', { state: { schema: schema, uischema: uischema } });
+    navigate('/tagging');
   };
 
   return (

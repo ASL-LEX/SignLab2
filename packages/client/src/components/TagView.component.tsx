@@ -1,12 +1,13 @@
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useStudy } from '../context/Study.context';
 
 export const TagView = () => {
-  const { state } = useLocation();
-  console.log(state);
+  const { study } = useStudy();
+
   const [initialData, setData] = useState({
     name: '',
     name_noDefault: '',
@@ -31,12 +32,12 @@ export const TagView = () => {
   };
 
   return (
-    <Container sx={{ left: '5%', width: '90%', top: '100px', position: 'absolute' }}>
-      {state ? (
+    <Container>
+      {study ? (
         <Box>
           <JsonForms
-            schema={state.schema}
-            uischema={state.uischema}
+            schema={study.tagSchema.dataSchema}
+            uischema={study.tagSchema.uiSchema}
             data={initialData}
             renderers={materialRenderers}
             cells={materialCells}
