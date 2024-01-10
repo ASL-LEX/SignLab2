@@ -1,7 +1,7 @@
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Container, Typography, Stack } from '@mui/material';
 import { useState } from 'react';
 import { useStudy } from '../context/Study.context';
 
@@ -34,7 +34,7 @@ export const TagView = () => {
   return (
     <Container>
       {study ? (
-        <Box>
+        <Stack direction='column'>
           <JsonForms
             schema={study.tagSchema.dataSchema}
             uischema={study.tagSchema.uiSchema}
@@ -42,15 +42,15 @@ export const TagView = () => {
             renderers={materialRenderers}
             cells={materialCells}
           />
-          <Box>
+          <Stack direction='row' spacing={2}>
             <Button variant="outlined" onClick={handleNext}>
               Next
             </Button>
-          </Box>
-          <Button variant="outlined" sx={{ marginTop: 2 }} onClick={() => handleClick('contribute')}>
-            Exit Tagging
-          </Button>
-        </Box>
+            <Button variant="outlined" onClick={() => handleClick('contribute')}>
+              Exit Tagging
+            </Button>
+          </Stack>
+        </Stack>
       ) : (
         <Box>
           <Typography variant="h4">No Entries Tagged</Typography>
