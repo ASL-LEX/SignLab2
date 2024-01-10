@@ -7,6 +7,13 @@ query getProjects {
   }
 }
 
+mutation createProject($project: ProjectCreate!) {
+  signLabCreateProject(project: $project) {
+    name,
+    description
+  }
+}
+
 mutation deleteProject($project: ID!) {
   deleteProject(project: $project)
 }

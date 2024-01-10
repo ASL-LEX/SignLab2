@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
+import { useApolloClient } from '@apollo/client';
+import { CreateProjectDocument } from '../../graphql/project/project';
 
 const schema = {
   type: 'object',
@@ -45,6 +47,7 @@ const uischema = {
 export const NewProject: React.FC = () => {
   const [error, setError] = useState(true);
   const navigate = useNavigate();
+  const apolloClient = useApolloClient();
 
   const initialData = {
     name: '',
@@ -59,13 +62,22 @@ export const NewProject: React.FC = () => {
       setError(false);
     }
   };
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     if (error) {
       setError(true);
       event.preventDefault();
       return;
     } else {
-      //submit logic
+      const result = await apolloClient.mutate({
+        mutation: CreateProjectDocument,
+        variables: { project: data }
+      });
+
+      if (result.errors || !result.data) {
+        console.error('Failed to create study');
+        setError(true);
+        return;
+      }
       //redirect to next page
       setError(false);
       navigate('/successpage');
@@ -74,6 +86,11 @@ export const NewProject: React.FC = () => {
 
   return (
     <>
+      {error && (
+        <Typography color={'red'} variant="h6">
+          Failed to create project! Try again.
+        </Typography>
+      )}
       <JsonForms
         schema={schema}
         uischema={uischema}
@@ -82,7 +99,7 @@ export const NewProject: React.FC = () => {
         cells={materialCells}
         onChange={({ data }) => handleChange(data)}
       />
-      <Button disabled={error} variant="contained" onClick={handleSubmit}>
+      <Button variant="contained" onClick={handleSubmit}>
         Submit
       </Button>
     </>
