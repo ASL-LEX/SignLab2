@@ -2,9 +2,11 @@ import { Box } from '@mui/material';
 import { EntryView } from '../../components/EntryView.component';
 import { TagForm } from '../../components/contribute/TagForm.component';
 import { useStudy } from '../../context/Study.context';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AssignTagMutation, useAssignTagMutation } from '../../graphql/tag';
 import { useCompleteTagMutation } from '../../graphql/tag';
+import {NoTagNotification} from '../../components/contribute/NoTagNotification.component';
+import { Study } from '../../graphql/graphql';
 
 
 export const TaggingInterface: React.FC = () => {
@@ -56,12 +58,26 @@ export const TaggingInterface: React.FC = () => {
   // TODO: View for when there is no study vs when there is no tag
   return (
     <>
-      {study && tag && (
-        <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: 1000, margin: 'auto' }}>
-          <EntryView entry={tag.entry} width={500} autoPlay={true} pauseFrame='start' mouseOverControls={false} displayControls={true} />
-          <TagForm study={study} setTagData={setTagData} />
-        </Box>
+      {study && (
+        <>
+          {tag ? <MainView tag={tag} study={study} setTagData={setTagData} /> : <NoTagNotification studyName={study.name} />}
+        </>
       )}
     </>
+  );
+};
+
+interface MainViewProps {
+  tag: NonNullable<AssignTagMutation['assignTag']>;
+  setTagData: Dispatch<SetStateAction<any>>;
+  study: Study;
+}
+
+const MainView: React.FC<MainViewProps> = (props) => {
+  return (
+    <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: 1000, margin: 'auto' }}>
+      <EntryView entry={props.tag.entry} width={500} autoPlay={true} pauseFrame='start' mouseOverControls={false} displayControls={true} />
+      <TagForm study={props.study} setTagData={props.setTagData} />
+    </Box>
   );
 };
