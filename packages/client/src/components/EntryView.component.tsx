@@ -5,29 +5,34 @@ import { useEffect, useRef } from 'react';
 export interface EntryViewProps {
   entry: Entry;
   width: number;
+  pauseFrame?: 'start' | 'end' | 'middle';
+  autoPlay?: boolean;
+  mouseOverControls?: boolean;
+  displayControls?: boolean;
 }
 
 export const EntryView: React.FC<EntryViewProps> = (props) => {
-  return getEntryView(props.entry, props.width);
+  return getEntryView(props);
 };
 
-const getEntryView = (entry: Entry, width: number) => {
-  if (entry.contentType.startsWith('video/')) {
-    return <VideoEntryView entry={entry} width={width} />;
+const getEntryView = (props: EntryViewProps) => {
+  if (props.entry.contentType.startsWith('video/')) {
+    return <VideoEntryView {...props} />;
   }
-  if (entry.contentType.startsWith('image/')) {
-    return <ImageEntryView entry={entry} width={width} />;
+  if (props.entry.contentType.startsWith('image/')) {
+    return <ImageEntryView {...props} />;
   }
   console.error('Unknown entry type');
   return <p>Placeholder</p>;
 };
 
+// TODO: Add in ability to control video play, pause, and middle frame selection
 const VideoEntryView: React.FC<EntryViewProps> = (props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   /** Start the video at the begining */
   const handleStart: React.MouseEventHandler = () => {
-    if (!videoRef.current) {
+    if (!videoRef.current || (props.mouseOverControls != undefined && !props.mouseOverControls)) {
       return;
     }
     videoRef.current.currentTime = 0;
@@ -36,20 +41,25 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 
   /** Stop the video */
   const handleStop: React.MouseEventHandler = () => {
-    if (!videoRef.current) {
+    if (!videoRef.current || (props.mouseOverControls != undefined && !props.mouseOverControls)) {
       return;
     }
     videoRef.current.pause();
-    setMiddleFrame();
+    setPauseFrame();
   };
 
   /** Set the video to the middle frame */
-  const setMiddleFrame = async () => {
+  const setPauseFrame = async () => {
     if (!videoRef.current) {
       return;
     }
-    const duration = await getDuration();
-    videoRef.current.currentTime = duration / 2;
+
+    if (!props.pauseFrame || props.pauseFrame === 'middle') {
+      const duration = await getDuration();
+      videoRef.current.currentTime = duration / 2;
+    } else if (props.pauseFrame === 'start') {
+      videoRef.current.currentTime = 0;
+    }
   };
 
   /** Get the duration, there is a known issue on Chrome with some audio/video durations */
@@ -82,12 +92,12 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 
   // Set the video to the middle frame when the video is loaded
   useEffect(() => {
-    setMiddleFrame();
+    setPauseFrame();
   }, [videoRef.current]);
 
   return (
     <Box sx={{ maxWidth: props.width }}>
-      <video width={props.width} onMouseEnter={handleStart} onMouseLeave={handleStop} ref={videoRef}>
+      <video width={props.width} onMouseEnter={handleStart} onMouseLeave={handleStop} ref={videoRef} autoPlay={props.autoPlay} controls={props.displayControls}>
         <source src={props.entry.signedUrl} />
       </video>
     </Box>
@@ -97,7 +107,7 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 const ImageEntryView: React.FC<EntryViewProps> = (props) => {
   return (
     <Box sx={{ maxWidth: props.width }}>
-      <img src={props.entry.signedUrl} />
+      <img src={props.entry.signedUrl} width='100%' />
     </Box>
   );
 };

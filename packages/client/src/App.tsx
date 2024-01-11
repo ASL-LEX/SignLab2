@@ -29,7 +29,6 @@ import { setContext } from '@apollo/client/link/context';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
-import {TaggingInterface} from './pages/contribute/TaggingInterface';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
