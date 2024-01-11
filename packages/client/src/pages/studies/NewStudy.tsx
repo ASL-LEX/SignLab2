@@ -3,7 +3,7 @@ import { TagsDisplay } from '../../components/TagsDisplay.component';
 import { NewStudyJsonForm } from '../../components/NewStudyJsonForm.component';
 import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
-import { Study, StudyCreate, TagSchema } from '../../graphql/graphql';
+import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
 import { CreateStudyDocument } from '../../graphql/study/study';
 import { useProject } from '../../context/Project.context';
