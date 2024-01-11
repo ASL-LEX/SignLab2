@@ -12,6 +12,13 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 
 export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta: any, signedUrl: string, signedUrlExpiration: number }> };
 
+export type DeleteEntryMutationVariables = Types.Exact<{
+  entryId: Types.Scalars['ID']['input'];
+}>;
+
+
+export type DeleteEntryMutation = { __typename?: 'Mutation', deleteEntry: boolean };
+
 
 export const EntryForDatasetDocument = gql`
     query entryForDataset($dataset: ID!) {
@@ -57,3 +64,34 @@ export function useEntryForDatasetLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type EntryForDatasetQueryHookResult = ReturnType<typeof useEntryForDatasetQuery>;
 export type EntryForDatasetLazyQueryHookResult = ReturnType<typeof useEntryForDatasetLazyQuery>;
 export type EntryForDatasetQueryResult = Apollo.QueryResult<EntryForDatasetQuery, EntryForDatasetQueryVariables>;
+export const DeleteEntryDocument = gql`
+    mutation deleteEntry($entryId: ID!) {
+  deleteEntry(entryId: $entryId)
+}
+    `;
+export type DeleteEntryMutationFn = Apollo.MutationFunction<DeleteEntryMutation, DeleteEntryMutationVariables>;
+
+/**
+ * __useDeleteEntryMutation__
+ *
+ * To run a mutation, you first call `useDeleteEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteEntryMutation, { data, loading, error }] = useDeleteEntryMutation({
+ *   variables: {
+ *      entryId: // value for 'entryId'
+ *   },
+ * });
+ */
+export function useDeleteEntryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteEntryMutation, DeleteEntryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteEntryMutation, DeleteEntryMutationVariables>(DeleteEntryDocument, options);
+      }
+export type DeleteEntryMutationHookResult = ReturnType<typeof useDeleteEntryMutation>;
+export type DeleteEntryMutationResult = Apollo.MutationResult<DeleteEntryMutation>;
+export type DeleteEntryMutationOptions = Apollo.BaseMutationOptions<DeleteEntryMutation, DeleteEntryMutationVariables>;

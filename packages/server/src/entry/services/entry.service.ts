@@ -16,17 +16,17 @@ export class EntryService {
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
 
   constructor(
-    @InjectModel(Entry.name) private readonly entryMode: Model<Entry>,
+    @InjectModel(Entry.name) private readonly entryModel: Model<Entry>,
     @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
     private readonly configService: ConfigService
   ) {}
 
   async find(entryID: string): Promise<Entry | null> {
-    return this.entryMode.findOne({ _id: entryID });
+    return this.entryModel.findOne({ _id: entryID });
   }
 
   async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload): Promise<Entry> {
-    return this.entryMode.create({
+    return this.entryModel.create({
       ...entryCreate,
       dataset: dataset._id,
       organization: dataset.organization,
@@ -36,17 +36,21 @@ export class EntryService {
     });
   }
 
+  async delete(entryId: string): Promise<void> {
+    await this.entryModel.deleteOne({ _id: entryId });
+  }
+
   async findForDataset(dataset: Dataset): Promise<Entry[]> {
-    return this.entryMode.find({ dataset: dataset._id.toString() });
+    return this.entryModel.find({ dataset: dataset._id.toString() });
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {
-    const entry = await this.entryMode.findOne({ entryID, dataset: dataset._id });
+    const entry = await this.entryModel.findOne({ entryID, dataset: dataset._id });
     return !!entry;
   }
 
   async setBucketLocation(entry: Entry, bucketLocation: string): Promise<void> {
-    await this.entryMode.updateOne({ _id: entry._id }, { bucketLocation });
+    await this.entryModel.updateOne({ _id: entry._id }, { bucketLocation });
   }
 
   async getSignedUrl(entry: Entry): Promise<string> {

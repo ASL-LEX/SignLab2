@@ -158,6 +158,7 @@ type Mutation {
   deleteStudy(study: ID!): Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
+  deleteEntry(entryId: ID!): Boolean!
   createUploadSession(dataset: ID!): UploadSession!
   completeUploadSession(session: ID!): UploadResult!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!

@@ -186,6 +186,7 @@ export type Mutation = {
   createStudy: Study;
   createTags: Array<Tag>;
   createUploadSession: UploadSession;
+  deleteEntry: Scalars['Boolean']['output'];
   deleteProject: Scalars['Boolean']['output'];
   deleteStudy: Scalars['Boolean']['output'];
   forgotPassword: Scalars['Boolean']['output'];
@@ -297,6 +298,11 @@ export type MutationCreateTagsArgs = {
 
 export type MutationCreateUploadSessionArgs = {
   dataset: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteEntryArgs = {
+  entryId: Scalars['ID']['input'];
 };
 
 

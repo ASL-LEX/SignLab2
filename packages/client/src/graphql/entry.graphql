@@ -1,14 +1,18 @@
 query entryForDataset($dataset: ID!) {
   entryForDataset(dataset: $dataset) {
-    _id,
-    organization,
-    entryID,
-    contentType,
-    dataset,
-    creator,
-    dateCreated,
-    meta,
-    signedUrl,
+    _id
+    organization
+    entryID
+    contentType
+    dataset
+    creator
+    dateCreated
+    meta
+    signedUrl
     signedUrlExpiration
   }
+}
+
+mutation deleteEntry($entryId: ID!) {
+  deleteEntry(entryId: $entryId)
 }

@@ -1,4 +1,4 @@
-import { Args, ID, Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
+import { Args, ID, Resolver, Query, ResolveField, Parent, Mutation } from '@nestjs/graphql';
 import { Dataset } from '../../dataset/dataset.model';
 import { Entry } from '../models/entry.model';
 import { EntryService } from '../services/entry.service';
@@ -10,6 +10,9 @@ import { CASBIN_PROVIDER } from '../../permission/casbin.provider';
 import * as casbin from 'casbin';
 import { TokenPayload } from '../../jwt/token.dto';
 import { TokenContext } from '../../jwt/token.context';
+import { OrganizationContext } from 'src/organization/organization.context';
+import { Organization } from 'src/organization/organization.model';
+import { EntryPipe } from '../pipes/entry.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Entry)
@@ -49,5 +52,17 @@ export class EntryResolver {
     }
 
     return this.entryService.getSignedUrlExpiration(entry);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteEntry(
+    @Args('entryId', { type: () => ID }, EntryPipe) entryId: string,
+    @TokenContext() user: TokenPayload,
+    @OrganizationContext() organization: Organization
+  ): Promise<boolean> {
+    //TODO check if user is allowed to delete entry
+
+    await this.entryService.delete(entryId);
+    return true;
   }
 }
