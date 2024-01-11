@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { useApolloClient } from '@apollo/client';
-import { CreateProjectDocument } from '../../graphql/project/project';
+import { useCreateProjectMutation, useProjectExistsLazyQuery } from '../../graphql/project/project';
+import { ErrorObject } from 'ajv';
 
 const schema = {
   type: 'object',
@@ -44,44 +44,58 @@ const uischema = {
   ]
 };
 
+const initialData = {
+  name: '',
+  description: ''
+};
+
 export const NewProject: React.FC = () => {
-  const [error, setError] = useState(true);
   const navigate = useNavigate();
-  const apolloClient = useApolloClient();
-
-  const initialData = {
-    name: '',
-    description: ''
-  };
-
   const [data, setData] = useState(initialData);
+  const [createProject, { error, data: createProjectResults, loading }] = useCreateProjectMutation({
+    variables: { project: data }
+  });
+  const [projectExistsQuery, projectExistsResults] = useProjectExistsLazyQuery();
+  const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
 
-  const handleChange = (data: any) => {
-    setData(data);
-    if (data) {
-      setError(false);
-    }
-  };
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
-    if (error) {
-      setError(true);
-      event.preventDefault();
-      return;
+  useEffect(() => {
+    if (projectExistsResults.data?.projectExists) {
+      setAdditionalErrors([
+        {
+          instancePath: '/name',
+          keyword: 'uniqueProjectName',
+          message: 'A project with this name already exists',
+          schemaPath: '#/properties/name/name',
+          params: { keyword: 'uniqueProjectName' }
+        }
+      ]);
     } else {
-      const result = await apolloClient.mutate({
-        mutation: CreateProjectDocument,
-        variables: { project: data }
-      });
+      setAdditionalErrors([]);
+    }
+  }, [projectExistsResults.data]);
 
-      if (result.errors || !result.data) {
-        console.error('Failed to create study');
-        setError(true);
-        return;
-      }
-      //redirect to next page
-      setError(false);
+  useEffect(() => {
+    if (createProjectResults) {
+      console.log('succesfully created');
       navigate('/successpage');
     }
+  }, [createProjectResults]);
+
+  useEffect(() => {
+    if (error) {
+      //handle server side error here. For now a simple text is displayed
+    }
+  }, [error]);
+
+  const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
+    setData(data);
+    if (!errors || errors.length === 0) {
+      projectExistsQuery({ variables: { name: data.name } });
+    }
+  };
+
+  const handleSubmit = async () => {
+    createProject();
   };
 
   return (
@@ -97,9 +111,10 @@ export const NewProject: React.FC = () => {
         data={data}
         renderers={materialRenderers}
         cells={materialCells}
-        onChange={({ data }) => handleChange(data)}
+        onChange={({ data, errors }) => handleChange(data, errors)}
+        additionalErrors={additionalErrors}
       />
-      <Button variant="contained" onClick={handleSubmit}>
+      <Button variant="contained" onClick={handleSubmit} disabled={loading}>
         Submit
       </Button>
     </>

@@ -10,6 +10,13 @@ export type GetProjectsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type GetProjectsQuery = { __typename?: 'Query', getProjects: Array<{ __typename?: 'Project', _id: string, name: string, description: string, created: any }> };
 
+export type ProjectExistsQueryVariables = Types.Exact<{
+  name: Types.Scalars['String']['input'];
+}>;
+
+
+export type ProjectExistsQuery = { __typename?: 'Query', projectExists: boolean };
+
 export type CreateProjectMutationVariables = Types.Exact<{
   project: Types.ProjectCreate;
 }>;
@@ -62,6 +69,39 @@ export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
+export const ProjectExistsDocument = gql`
+    query projectExists($name: String!) {
+  projectExists(name: $name)
+}
+    `;
+
+/**
+ * __useProjectExistsQuery__
+ *
+ * To run a query within a React component, call `useProjectExistsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectExistsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectExistsQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useProjectExistsQuery(baseOptions: Apollo.QueryHookOptions<ProjectExistsQuery, ProjectExistsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProjectExistsQuery, ProjectExistsQueryVariables>(ProjectExistsDocument, options);
+      }
+export function useProjectExistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectExistsQuery, ProjectExistsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProjectExistsQuery, ProjectExistsQueryVariables>(ProjectExistsDocument, options);
+        }
+export type ProjectExistsQueryHookResult = ReturnType<typeof useProjectExistsQuery>;
+export type ProjectExistsLazyQueryHookResult = ReturnType<typeof useProjectExistsLazyQuery>;
+export type ProjectExistsQueryResult = Apollo.QueryResult<ProjectExistsQuery, ProjectExistsQueryVariables>;
 export const CreateProjectDocument = gql`
     mutation createProject($project: ProjectCreate!) {
   signLabCreateProject(project: $project) {
