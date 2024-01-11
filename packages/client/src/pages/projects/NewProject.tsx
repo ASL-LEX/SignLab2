@@ -114,7 +114,7 @@ export const NewProject: React.FC = () => {
         onChange={({ data, errors }) => handleChange(data, errors)}
         additionalErrors={additionalErrors}
       />
-      <Button variant="contained" onClick={handleSubmit} disabled={loading}>
+      <Button variant="contained" onClick={handleSubmit} disabled={loading || projectExistsResults.data?.projectExists}>
         Submit
       </Button>
     </>
