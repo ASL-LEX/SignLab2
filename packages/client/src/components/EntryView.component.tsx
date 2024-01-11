@@ -1,3 +1,4 @@
+import {Box} from '@mui/material';
 import { Entry } from '../graphql/graphql';
 import { useEffect, useRef } from 'react';
 
@@ -7,15 +8,15 @@ export interface EntryViewProps {
 }
 
 export const EntryView: React.FC<EntryViewProps> = (props) => {
-  return getEntryView(props.entry);
+  return getEntryView(props.entry, props.width);
 };
 
-const getEntryView = (entry: Entry) => {
+const getEntryView = (entry: Entry, width: number) => {
   if (entry.contentType.startsWith('video/')) {
-    return <VideoEntryView entry={entry} width={150} />;
+    return <VideoEntryView entry={entry} width={width} />;
   }
   if (entry.contentType.startsWith('image/')) {
-    return <ImageEntryView entry={entry} width={150} />;
+    return <ImageEntryView entry={entry} width={width} />;
   }
   console.error('Unknown entry type');
   return <p>Placeholder</p>;
@@ -85,12 +86,18 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
   }, [videoRef.current]);
 
   return (
-    <video width={props.width} onMouseEnter={handleStart} onMouseLeave={handleStop} ref={videoRef}>
-      <source src={props.entry.signedUrl} />
-    </video>
+    <Box sx={{ maxWidth: props.width }}>
+      <video width={props.width} onMouseEnter={handleStart} onMouseLeave={handleStop} ref={videoRef}>
+        <source src={props.entry.signedUrl} />
+      </video>
+    </Box>
   );
 };
 
 const ImageEntryView: React.FC<EntryViewProps> = (props) => {
-  return <img src={props.entry.signedUrl} width={props.width} />;
+  return (
+    <Box sx={{ maxWidth: props.width }}>
+      <img src={props.entry.signedUrl} />
+    </Box>
+  );
 };
