@@ -6,7 +6,7 @@ export interface NoTagNotificationProps {
 
 export const NoTagNotification: React.FC<NoTagNotificationProps> = ({ studyName }) => {
   return (
-    <Stack direction='column' sx={{ margin: 'auto', maxWidth: 750, alignItems: 'center' }} spacing={2}>
+    <Stack direction="column" sx={{ margin: 'auto', maxWidth: 750, alignItems: 'center' }} spacing={2}>
       <Typography variant="h2">No tags Remaining</Typography>
       <Typography variant="body1">No tags left for "{studyName}", please check back later</Typography>
     </Stack>

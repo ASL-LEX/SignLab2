@@ -5,14 +5,13 @@ import { useStudy } from '../../context/Study.context';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AssignTagMutation, useAssignTagMutation } from '../../graphql/tag';
 import { useCompleteTagMutation } from '../../graphql/tag';
-import {NoTagNotification} from '../../components/contribute/NoTagNotification.component';
+import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
 import { Study } from '../../graphql/graphql';
-
 
 export const TaggingInterface: React.FC = () => {
   const { study } = useStudy();
   const [tag, setTag] = useState<AssignTagMutation['assignTag'] | null>(null);
-  const [assignTag, assignTagResult]= useAssignTagMutation();
+  const [assignTag, assignTagResult] = useAssignTagMutation();
   const [tagData, setTagData] = useState<any>({});
   const [completeTag, completeTagResult] = useCompleteTagMutation();
 
@@ -25,7 +24,7 @@ export const TaggingInterface: React.FC = () => {
     }
 
     // Assign a tag
-    assignTag({ variables: { study: study._id }});
+    assignTag({ variables: { study: study._id } });
   }, [study]);
 
   // Update to the assigned tag
@@ -42,7 +41,7 @@ export const TaggingInterface: React.FC = () => {
   useEffect(() => {
     if (tagData && tag) {
       // Submit the tag data
-      completeTag({ variables: { tag: tag._id, data: tagData }});
+      completeTag({ variables: { tag: tag._id, data: tagData } });
     }
   }, [tagData]);
 
@@ -51,7 +50,7 @@ export const TaggingInterface: React.FC = () => {
   useEffect(() => {
     if (completeTagResult.data && study) {
       // Assign a new tag
-      assignTag({ variables: { study: study._id }});
+      assignTag({ variables: { study: study._id } });
     }
   }, [completeTagResult.data]);
 
@@ -60,7 +59,11 @@ export const TaggingInterface: React.FC = () => {
     <>
       {study && (
         <>
-          {tag ? <MainView tag={tag} study={study} setTagData={setTagData} /> : <NoTagNotification studyName={study.name} />}
+          {tag ? (
+            <MainView tag={tag} study={study} setTagData={setTagData} />
+          ) : (
+            <NoTagNotification studyName={study.name} />
+          )}
         </>
       )}
     </>
@@ -76,7 +79,14 @@ interface MainViewProps {
 const MainView: React.FC<MainViewProps> = (props) => {
   return (
     <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: 1000, margin: 'auto' }}>
-      <EntryView entry={props.tag.entry} width={500} autoPlay={true} pauseFrame='start' mouseOverControls={false} displayControls={true} />
+      <EntryView
+        entry={props.tag.entry}
+        width={500}
+        autoPlay={true}
+        pauseFrame="start"
+        mouseOverControls={false}
+        displayControls={true}
+      />
       <TagForm study={props.study} setTagData={props.setTagData} />
     </Box>
   );

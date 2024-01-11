@@ -8,7 +8,7 @@ import { ErrorObject } from 'ajv';
 export interface TagFormProps {
   study: Study;
   setTagData: Dispatch<SetStateAction<any>>;
-};
+}
 
 export const TagForm: React.FC<TagFormProps> = (props) => {
   const [data, setData] = useState<any>({});
@@ -42,7 +42,7 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
 
   return (
     <Box sx={{ maxWidth: 500 }}>
-      <Stack direction='column' spacing={2}>
+      <Stack direction="column" spacing={2}>
         <JsonForms
           schema={props.study.tagSchema.dataSchema}
           uischema={props.study.tagSchema.uiSchema}
@@ -50,9 +50,13 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
           onChange={({ data, errors }) => handleFormChange(data, errors)}
           renderers={materialRenderers}
         />
-        <Stack direction='row'>
-          <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>Submit</Button>
-          <Button variant="outlined" onClick={handleClear}>Clear</Button>
+        <Stack direction="row">
+          <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>
+            Submit
+          </Button>
+          <Button variant="outlined" onClick={handleClear}>
+            Clear
+          </Button>
         </Stack>
       </Stack>
     </Box>

@@ -1,4 +1,4 @@
-import {Box} from '@mui/material';
+import { Box } from '@mui/material';
 import { Entry } from '../graphql/graphql';
 import { useEffect, useRef } from 'react';
 
@@ -97,7 +97,14 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 
   return (
     <Box sx={{ maxWidth: props.width }}>
-      <video width={props.width} onMouseEnter={handleStart} onMouseLeave={handleStop} ref={videoRef} autoPlay={props.autoPlay} controls={props.displayControls}>
+      <video
+        width={props.width}
+        onMouseEnter={handleStart}
+        onMouseLeave={handleStop}
+        ref={videoRef}
+        autoPlay={props.autoPlay}
+        controls={props.displayControls}
+      >
         <source src={props.entry.signedUrl} />
       </video>
     </Box>
@@ -107,7 +114,7 @@ const VideoEntryView: React.FC<EntryViewProps> = (props) => {
 const ImageEntryView: React.FC<EntryViewProps> = (props) => {
   return (
     <Box sx={{ maxWidth: props.width }}>
-      <img src={props.entry.signedUrl} width='100%' />
+      <img src={props.entry.signedUrl} width="100%" />
     </Box>
   );
 };
