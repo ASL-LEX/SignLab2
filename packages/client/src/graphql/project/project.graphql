@@ -1,9 +1,20 @@
 query getProjects {
   getProjects {
-    _id,
-    name,
-    description,
+    _id
+    name
+    description
     created
+  }
+}
+
+query projectExists($name: String!) {
+  projectExists(name: $name)
+}
+
+mutation createProject($project: ProjectCreate!) {
+  signLabCreateProject(project: $project) {
+    name
+    description
   }
 }
 
