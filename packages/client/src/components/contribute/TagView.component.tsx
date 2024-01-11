@@ -1,9 +1,9 @@
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Typography, Stack } from '@mui/material';
+import { Box, Button, Typography, Stack } from '@mui/material';
 import { useState } from 'react';
-import { useStudy } from '../context/Study.context';
+import { useStudy } from '../../context/Study.context';
 
 export const TagView = () => {
   const { study } = useStudy();
@@ -32,7 +32,7 @@ export const TagView = () => {
   };
 
   return (
-    <Container>
+    <>
       {study ? (
         <Stack direction='column'>
           <JsonForms
@@ -59,6 +59,6 @@ export const TagView = () => {
           </Button>
         </Box>
       )}
-    </Container>
+    </>
   );
 };

@@ -7,8 +7,8 @@ import { NewProject } from './pages/projects/NewProject';
 import { ProjectControl } from './pages/projects/ProjectControl';
 import { SuccessPage } from './pages/SuccessPage';
 import { NewStudy } from './pages/studies/NewStudy';
-import { ContributePage } from './pages/contribute/Contribute';
-import { TagView } from './components/TagView.component';
+import { ContributeLanding } from './pages/contribute/ContributeLanding';
+import { TaggingInterface } from './pages/contribute/TaggingInterface';
 import { StudyControl } from './pages/studies/StudyControl';
 import { ProjectAccess } from './pages/datasets/ProjectAccess';
 import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions';
@@ -29,6 +29,7 @@ import { setContext } from '@apollo/client/link/context';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
+import {TaggingInterface} from './pages/contribute/TaggingInterface';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -131,8 +132,8 @@ const MyRoutes: FC = () => {
         <Route path={'/successpage'} element={<SuccessPage />} />
         <Route path={'/dataset/controls'} element={<DatasetControls />} />
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
-        <Route path={'/study/contribute'} element={<ContributePage />} />
-        <Route path={'/tagging'} element={<TagView />} />
+        <Route path={'/contribute/landing'} element={<ContributeLanding />} />
+        <Route path={'/contribute/tagging'} element={<TaggingInterface />} />
         <Route path={'/logoutpage'} element={<LogoutPage />} />
       </Route>
     </Routes>

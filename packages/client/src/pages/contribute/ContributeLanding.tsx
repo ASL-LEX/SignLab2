@@ -2,12 +2,12 @@ import { Typography, Box, Stack, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useStudy } from '../../context/Study.context';
 
-export const ContributePage: React.FC = () => {
+export const ContributeLanding: React.FC = () => {
   const navigate = useNavigate();
   const { study } = useStudy();
 
   const enterTagging = () => {
-    navigate('/tagging');
+    navigate('/contribute/tagging');
   };
 
   // TODO: Add in check for training completion

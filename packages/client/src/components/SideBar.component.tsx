@@ -50,7 +50,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       name: 'Contribute',
       action: () => {},
       icon: <GroupWork />,
-      subItems: [{ name: 'Tag in Study', action: () => navigate('/study/contribute') }]
+      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing') }]
     },
     {
       name: 'Logout',
