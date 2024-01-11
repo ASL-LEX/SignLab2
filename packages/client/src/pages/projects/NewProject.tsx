@@ -76,7 +76,6 @@ export const NewProject: React.FC = () => {
 
   useEffect(() => {
     if (createProjectResults) {
-      console.log('succesfully created');
       navigate('/successpage');
     }
   }, [createProjectResults]);
