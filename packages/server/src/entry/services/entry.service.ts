@@ -37,7 +37,6 @@ export class EntryService {
   }
 
   async delete(entry: Entry): Promise<void> {
-    console.log('deleting entry..', entry);
     await this.entryModel.deleteOne({ _id: entry._id });
   }
 
