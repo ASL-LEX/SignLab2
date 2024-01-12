@@ -8,6 +8,7 @@ import { TokenPayload } from '../jwt/token.dto';
 import { Study } from '../study/study.model';
 import { ProjectPermissionModel } from './models/project.model';
 import { StudyPermissionModel } from './models/study.model';
+import {Dataset} from 'src/dataset/dataset.model';
 
 @Injectable()
 export class PermissionService {
@@ -161,6 +162,12 @@ export class PermissionService {
     } else {
       await this.enforcer.removePolicy(user, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
     }
+    return true;
+  }
+
+  async grantProjectDatasetAccess(project: Project, dataset: Dataset): Promise<boolean> {
+    await this.enforcer.addNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
+
     return true;
   }
 }

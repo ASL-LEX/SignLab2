@@ -152,6 +152,7 @@ type Mutation {
   grantStudyAdmin(study: ID!, user: ID!, isAdmin: Boolean!): Boolean!
   grantContributor(study: ID!, user: ID!, isContributor: Boolean!): Boolean!
   grantTrainedContributor(study: ID!, user: ID!, isTrained: Boolean!): Boolean!
+  grantProjectDatasetAccess(project: ID!, dataset: ID!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!

@@ -7,15 +7,18 @@ import { StudyModule } from '../study/study.module';
 import { ProjectPermissionResolver } from './resolvers/project.resolver';
 import { OwnerPermissionResolver } from './resolvers/owner.resolver';
 import { StudyPermissionResolver } from './resolvers/study.resolver';
+import { DatasetPermissionResolver } from './resolvers/dataset.resolver';
+import { DatasetModule } from '../dataset/dataset.module';
 
 @Module({
-  imports: [forwardRef(() => ProjectModule), AuthModule, forwardRef(() => StudyModule)],
+  imports: [forwardRef(() => ProjectModule), AuthModule, forwardRef(() => StudyModule), forwardRef(() => DatasetModule)],
   providers: [
     casbinProvider,
     PermissionService,
     ProjectPermissionResolver,
     OwnerPermissionResolver,
-    StudyPermissionResolver
+    StudyPermissionResolver,
+    DatasetPermissionResolver
   ],
   exports: [casbinProvider]
 })

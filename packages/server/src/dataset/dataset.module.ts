@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { DatasetResolver } from './dataset.resolver';
 import { DatasetService } from './dataset.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,7 +8,7 @@ import { PermissionModule } from '../permission/permission.module';
 import { JwtModule } from '../jwt/jwt.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Dataset.name, schema: DatasetSchema }]), PermissionModule, JwtModule],
+  imports: [MongooseModule.forFeature([{ name: Dataset.name, schema: DatasetSchema }]), forwardRef(() => PermissionModule), JwtModule],
   providers: [DatasetResolver, DatasetService, DatasetPipe],
   exports: [DatasetService, DatasetPipe]
 })
