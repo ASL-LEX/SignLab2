@@ -302,7 +302,7 @@ export type MutationCreateUploadSessionArgs = {
 
 
 export type MutationDeleteEntryArgs = {
-  entryId: Scalars['ID']['input'];
+  entry: Scalars['ID']['input'];
 };
 
 

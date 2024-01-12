@@ -13,6 +13,6 @@ query entryForDataset($dataset: ID!) {
   }
 }
 
-mutation deleteEntry($entryId: ID!) {
-  deleteEntry(entryId: $entryId)
+mutation deleteEntry($entry: ID!) {
+  deleteEntry(entry: $entry)
 }

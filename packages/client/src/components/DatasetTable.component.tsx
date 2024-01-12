@@ -1,7 +1,7 @@
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Dataset, Entry } from '../graphql/graphql';
-import { useDeleteEntryMutation, useEntryForDatasetQuery } from '../graphql/entry';
+import { useDeleteEntryMutation, useEntryForDatasetQuery } from '../graphql/entry/entry';
 import { EntryView } from './EntryView.component';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { useConfirmation } from '../context/Confirmation.context';
@@ -65,11 +65,11 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
       title: 'Delete Entry',
       message: 'Are you sure you want to delete this project? Doing so will delete all associated tags',
       onConfirm: async () => {
-        const res = await deleteEntryMutation({ variables: { entryId: id.toString() } });        
+        const res = await deleteEntryMutation({ variables: { entry: id.toString() } });
         if (res.errors) {
           //TODO show error owith snackbar
         } else if (res.data) {
-          setEntries([ ...entries.filter((item) => item._id != id.toString()) ]);
+          setEntries([...entries.filter((item) => item._id != id.toString())]);
         }
       },
       onCancel: () => {}

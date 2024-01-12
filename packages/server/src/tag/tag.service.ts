@@ -15,8 +15,14 @@ export class TagService {
     middlewareService: MongooseMiddlewareService
   ) {
     // Subscribe to study delete events
-    middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
-      await this.removeByStudy(study);
+    // middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
+    //   await this.removeByStudy(study);
+    // });
+
+    // Remove corresponding tags when an entry is deleted
+    middlewareService.register(Entry.name, 'deleteOne', async (entry: Entry) => {
+      console.log('entry register called');
+      await this.removeByEntry(entry);
     });
   }
 
@@ -116,5 +122,12 @@ export class TagService {
 
   private async removeByStudy(study: Study): Promise<void> {
     await this.tagModel.deleteMany({ study: study._id });
+  }
+
+  private async removeByEntry(entry: Entry): Promise<void> {
+    console.log('remove tag by entry', entry);
+
+    await this.tagModel.deleteMany({ entry: entry._id });
+    console.log('tag after del', this.tagModel.findOne({ entry: entry._id }));
   }
 }

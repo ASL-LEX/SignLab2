@@ -7,7 +7,7 @@ import { Dataset } from '../../dataset/dataset.model';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
-import { TokenPayload } from 'src/jwt/token.dto';
+import { TokenPayload } from '../../jwt/token.dto';
 
 @Injectable()
 export class EntryService {
@@ -36,8 +36,9 @@ export class EntryService {
     });
   }
 
-  async delete(entryId: string): Promise<void> {
-    await this.entryModel.deleteOne({ _id: entryId });
+  async delete(entry: Entry): Promise<void> {
+    console.log('deleting entry..', entry);
+    await this.entryModel.deleteOne({ _id: entry._id });
   }
 
   async findForDataset(dataset: Dataset): Promise<Entry[]> {

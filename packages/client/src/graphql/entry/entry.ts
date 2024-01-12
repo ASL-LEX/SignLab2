@@ -1,6 +1,6 @@
 /* Generated File DO NOT EDIT. */
 /* tslint:disable */
-import * as Types from './graphql';
+import * as Types from '../graphql';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -13,7 +13,7 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta: any, signedUrl: string, signedUrlExpiration: number }> };
 
 export type DeleteEntryMutationVariables = Types.Exact<{
-  entryId: Types.Scalars['ID']['input'];
+  entry: Types.Scalars['ID']['input'];
 }>;
 
 
@@ -65,8 +65,8 @@ export type EntryForDatasetQueryHookResult = ReturnType<typeof useEntryForDatase
 export type EntryForDatasetLazyQueryHookResult = ReturnType<typeof useEntryForDatasetLazyQuery>;
 export type EntryForDatasetQueryResult = Apollo.QueryResult<EntryForDatasetQuery, EntryForDatasetQueryVariables>;
 export const DeleteEntryDocument = gql`
-    mutation deleteEntry($entryId: ID!) {
-  deleteEntry(entryId: $entryId)
+    mutation deleteEntry($entry: ID!) {
+  deleteEntry(entry: $entry)
 }
     `;
 export type DeleteEntryMutationFn = Apollo.MutationFunction<DeleteEntryMutation, DeleteEntryMutationVariables>;
@@ -84,7 +84,7 @@ export type DeleteEntryMutationFn = Apollo.MutationFunction<DeleteEntryMutation,
  * @example
  * const [deleteEntryMutation, { data, loading, error }] = useDeleteEntryMutation({
  *   variables: {
- *      entryId: // value for 'entryId'
+ *      entry: // value for 'entry'
  *   },
  * });
  */

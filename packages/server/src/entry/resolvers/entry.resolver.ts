@@ -10,8 +10,8 @@ import { CASBIN_PROVIDER } from '../../permission/casbin.provider';
 import * as casbin from 'casbin';
 import { TokenPayload } from '../../jwt/token.dto';
 import { TokenContext } from '../../jwt/token.context';
-import { OrganizationContext } from 'src/organization/organization.context';
-import { Organization } from 'src/organization/organization.model';
+import { OrganizationContext } from '../../organization/organization.context';
+import { Organization } from '../../organization/organization.model';
 import { EntryPipe } from '../pipes/entry.pipe';
 
 @UseGuards(JwtAuthGuard)
@@ -56,13 +56,13 @@ export class EntryResolver {
 
   @Mutation(() => Boolean)
   async deleteEntry(
-    @Args('entryId', { type: () => ID }, EntryPipe) entryId: string,
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
     @TokenContext() user: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
     //TODO check if user is allowed to delete entry
 
-    await this.entryService.delete(entryId);
+    await this.entryService.delete(entry);
     return true;
   }
 }
