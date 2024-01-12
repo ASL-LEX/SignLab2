@@ -3,8 +3,8 @@ import { EntryView } from '../../components/EntryView.component';
 import { TagForm } from '../../components/contribute/TagForm.component';
 import { useStudy } from '../../context/Study.context';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { AssignTagMutation, useAssignTagMutation } from '../../graphql/tag';
-import { useCompleteTagMutation } from '../../graphql/tag';
+import { AssignTagMutation, useAssignTagMutation } from '../../graphql/tag/tag';
+import { useCompleteTagMutation } from '../../graphql/tag/tag';
 import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
 import { Study } from '../../graphql/graphql';
 
