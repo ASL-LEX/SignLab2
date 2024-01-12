@@ -6,6 +6,7 @@ import { DatasetCreate } from './dtos/create.dto';
 import { ConfigService } from '@nestjs/config';
 import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
+import { Project } from '../project/project.model';
 
 @Injectable()
 export class DatasetService {
@@ -50,5 +51,18 @@ export class DatasetService {
 
   async changeDescription(dataset: Dataset, newDescription: string): Promise<void> {
     await this.datasetModel.updateOne({ _id: dataset._id }, { $set: { description: newDescription } });
+  }
+
+  /** Get datasets a given project has access to */
+  async findByProject(project: Project): Promise<Dataset[]> {
+    const datasets = await this.datasetModel.find({ organization: project.organization });
+    const filteredDatasets: Dataset[] = [];
+    for (const dataset of datasets) {
+      if (await this.enforcer.hasNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString())) {
+        filteredDatasets.push(dataset);
+      }
+    }
+
+    return filteredDatasets;
   }
 }

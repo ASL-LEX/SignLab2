@@ -12,6 +12,9 @@ import * as casbin from 'casbin';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
 import { DatasetPermissions } from '../permission/permissions/dataset';
+import { ProjectPipe } from '../project/pipes/project.pipe';
+import { Project } from '../project/project.model';
+import {ProjectPermissions} from '../permission/permissions/project';
 
 // TODO: Add authentication
 @UseGuards(JwtAuthGuard)
@@ -79,5 +82,18 @@ export class DatasetResolver {
     await this.datasetService.changeDescription(dataset, newDescription);
 
     return true;
+  }
+
+  @Query(() => [Dataset])
+  async getDatasetsByProject(
+    @Args('project', { type: () => ID }, ProjectPipe) project: Project,
+    @TokenContext() user: TokenPayload
+  ): Promise<Dataset[]> {
+    // Make sure the user has access to the project
+    if (!(await this.enforcer.enforce(user.id, ProjectPermissions.READ, project._id))) {
+      throw new UnauthorizedException('User does not have permission to read this project');
+    }
+
+    return this.datasetService.findByProject(project);
   }
 }
