@@ -60,8 +60,9 @@ export class EntryResolver {
     @TokenContext() user: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
-    //TODO check if user is allowed to delete entry
-
+    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.DELETE, entry.dataset))) {
+      throw new UnauthorizedException('User cannot delete entries on this dataset');
+    }
     await this.entryService.delete(entry);
     return true;
   }
