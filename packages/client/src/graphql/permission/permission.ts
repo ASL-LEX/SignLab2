@@ -71,6 +71,14 @@ export type GrantProjectDatasetAccessMutationVariables = Types.Exact<{
 
 export type GrantProjectDatasetAccessMutation = { __typename?: 'Mutation', grantProjectDatasetAccess: boolean };
 
+export type GetRolesQueryVariables = Types.Exact<{
+  project?: Types.InputMaybe<Types.Scalars['ID']['input']>;
+  study?: Types.InputMaybe<Types.Scalars['ID']['input']>;
+}>;
+
+
+export type GetRolesQuery = { __typename?: 'Query', getRoles: { __typename?: 'Permission', owner: boolean, projectAdmin: boolean, studyAdmin: boolean, trainedContributor: boolean, contributor: boolean } };
+
 
 export const GetProjectPermissionsDocument = gql`
     query getProjectPermissions($project: ID!) {
@@ -379,3 +387,43 @@ export function useGrantProjectDatasetAccessMutation(baseOptions?: Apollo.Mutati
 export type GrantProjectDatasetAccessMutationHookResult = ReturnType<typeof useGrantProjectDatasetAccessMutation>;
 export type GrantProjectDatasetAccessMutationResult = Apollo.MutationResult<GrantProjectDatasetAccessMutation>;
 export type GrantProjectDatasetAccessMutationOptions = Apollo.BaseMutationOptions<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>;
+export const GetRolesDocument = gql`
+    query getRoles($project: ID, $study: ID) {
+  getRoles(project: $project, study: $study) {
+    owner
+    projectAdmin
+    studyAdmin
+    trainedContributor
+    contributor
+  }
+}
+    `;
+
+/**
+ * __useGetRolesQuery__
+ *
+ * To run a query within a React component, call `useGetRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRolesQuery({
+ *   variables: {
+ *      project: // value for 'project'
+ *      study: // value for 'study'
+ *   },
+ * });
+ */
+export function useGetRolesQuery(baseOptions?: Apollo.QueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+      }
+export function useGetRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+        }
+export type GetRolesQueryHookResult = ReturnType<typeof useGetRolesQuery>;
+export type GetRolesLazyQueryHookResult = ReturnType<typeof useGetRolesLazyQuery>;
+export type GetRolesQueryResult = Apollo.QueryResult<GetRolesQuery, GetRolesQueryVariables>;

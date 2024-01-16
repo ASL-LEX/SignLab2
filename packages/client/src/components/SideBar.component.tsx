@@ -1,9 +1,13 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
 import { useAuth } from '../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
 import { Environment } from './Environment.component';
+import { Permission } from '../graphql/graphql';
+import { useGetRolesQuery } from '../graphql/permission/permission';
+import { useProject } from '../context/Project.context';
+import { useStudy } from '../context/Study.context';
 
 interface SideBarProps {
   open: boolean;
@@ -13,48 +17,62 @@ interface SideBarProps {
 export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [permission, setPermission] = useState<Permission | null>(null);
+  const { project } = useProject();
+  const { study } = useStudy();
+  const rolesQueryResults = useGetRolesQuery({ variables: { project: project?._id, study: study?._id } });
+
+  useEffect(() => {
+    if (rolesQueryResults.data) {
+      setPermission(rolesQueryResults.data.getRoles);
+    }
+  }, [rolesQueryResults.data]);
 
   const navItems: NavItemProps[] = [
     {
       name: 'Projects',
       icon: <Work />,
       action: () => {},
-      visible: () => true,
+      visible: (p) => p!.owner || p!.projectAdmin,
+      permission,
       subItems: [
-        { name: 'New Project', action: () => navigate('/project/new'), visible: () => true },
-        { name: 'Project Control', action: () => navigate('/project/controls'), visible: () => true },
-        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: () => true },
+        { name: 'New Project', action: () => navigate('/project/new'), visible: (p) => p!.owner },
+        { name: 'Project Control', action: () => navigate('/project/controls'), visible: (p) => p!.owner },
+        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: (p) => p!.projectAdmin },
       ]
     },
     {
       name: 'Studies',
       action: () => {},
       icon: <School />,
-      visible: () => true,
+      visible: (p) => p!.projectAdmin || p!.studyAdmin,
+      permission,
       subItems: [
-        { name: 'New Study', action: () => navigate('/study/new'), visible: () => true },
-        { name: 'Study Control', action: () => navigate('/study/controls'), visible: () => true },
-        { name: 'User Permissions', action: () => navigate('/study/permissions'), visible: () => true },
-        { name: 'Entry Controls', action: () => navigate('/study/controls'), visible: () => true },
-        { name: 'Download Tags', action: () => navigate('/study/tags'), visible: () => true },
+        { name: 'New Study', action: () => navigate('/study/new'), visible: (p) => p!.projectAdmin },
+        { name: 'Study Control', action: () => navigate('/study/controls'), visible: (p) => p!.projectAdmin },
+        { name: 'User Permissions', action: () => navigate('/study/permissions'), visible: (p) => p!.studyAdmin },
+        { name: 'Entry Controls', action: () => navigate('/study/controls'), visible: (p) => p!.studyAdmin },
+        { name: 'Download Tags', action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
       ]
     },
     {
       name: 'Datasets',
       action: () => {},
       icon: <Dataset />,
-      visible: () => true,
+      visible: (p) => p!.owner,
+      permission,
       subItems: [
-        { name: 'Dataset Control', action: () => navigate('/dataset/controls'), visible: () => true },
-        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: () => true },
+        { name: 'Dataset Control', action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
+        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner },
       ]
     },
     {
       name: 'Contribute',
       action: () => {},
       icon: <GroupWork />,
-      visible: () => true,
-      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: () => true }]
+      permission,
+      visible: (p) => p!.contributor,
+      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: (p) => p!.contributor }]
     },
     {
       name: 'Logout',
@@ -82,12 +100,14 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       anchor="left"
       open={open}
     >
-      <List sx={{ paddingTop: '30px' }}>
-        {navItems
-          .filter((navItem) => navItem.visible())
-          .map((navItem) => <NavItem {...navItem} key={navItem.name} />)
-        }
-      </List>
+      {permission && (
+        <List sx={{ paddingTop: '30px' }}>
+          {navItems
+            .filter((navItem) => navItem.visible(permission))
+            .map((navItem) => <NavItem {...navItem} key={navItem.name} />)
+          }
+        </List>
+      )}
       <Environment />
     </Drawer>
   );
@@ -98,10 +118,11 @@ interface NavItemProps {
   name: string;
   icon?: ReactNode;
   subItems?: NavItemProps[];
-  visible: () => boolean;
+  permission?: Permission | null;
+  visible: (permission: Permission | null | undefined) => boolean;
 }
 
-const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
+const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems, permission }) => {
   const isExpandable = subItems && subItems.length > 0;
   const [open, setOpen] = useState(false);
 
@@ -114,9 +135,10 @@ const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
     <Collapse in={open} timeout="auto" unmountOnExit>
       <Divider />
       <List disablePadding>
-        {subItems.map((item, index) => (
-          <NavItem {...item} key={index} />
-        ))}
+        {subItems
+          .filter((subItem) => subItem.visible(permission))
+          .map((item, index) => <NavItem {...item} key={index} />)
+        }
       </List>
     </Collapse>
   ) : null;
