@@ -59,6 +59,12 @@ export type DatasetCreate = {
   name: Scalars['String']['input'];
 };
 
+export type DatasetProjectPermission = {
+  __typename?: 'DatasetProjectPermission';
+  dataset: Dataset;
+  projectHasAccess: Scalars['Boolean']['output'];
+};
+
 export type EmailLoginDto = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -192,6 +198,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean']['output'];
   grantContributor: Scalars['Boolean']['output'];
   grantOwner: Scalars['Boolean']['output'];
+  grantProjectDatasetAccess: Scalars['Boolean']['output'];
   grantProjectPermissions: Scalars['Boolean']['output'];
   grantStudyAdmin: Scalars['Boolean']['output'];
   grantTrainedContributor: Scalars['Boolean']['output'];
@@ -330,6 +337,13 @@ export type MutationGrantContributorArgs = {
 
 export type MutationGrantOwnerArgs = {
   targetUser: Scalars['ID']['input'];
+};
+
+
+export type MutationGrantProjectDatasetAccessArgs = {
+  dataset: Scalars['ID']['input'];
+  hasAccess: Scalars['Boolean']['input'];
+  project: Scalars['ID']['input'];
 };
 
 
@@ -526,7 +540,9 @@ export type Query = {
   findStudies: Array<Study>;
   /** Get the presigned URL for where to upload the CSV against */
   getCSVUploadURL: Scalars['String']['output'];
+  getDatasetProjectPermissions: Array<DatasetProjectPermission>;
   getDatasets: Array<Dataset>;
+  getDatasetsByProject: Array<Dataset>;
   getEntryUploadURL: Scalars['String']['output'];
   getOrganizations: Array<Organization>;
   getProject: ProjectModel;
@@ -567,6 +583,16 @@ export type QueryFindStudiesArgs = {
 
 export type QueryGetCsvUploadUrlArgs = {
   session: Scalars['ID']['input'];
+};
+
+
+export type QueryGetDatasetProjectPermissionsArgs = {
+  project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetDatasetsByProjectArgs = {
+  project: Scalars['ID']['input'];
 };
 
 
