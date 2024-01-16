@@ -9,6 +9,7 @@ import { OwnerPermissionResolver } from './resolvers/owner.resolver';
 import { StudyPermissionResolver } from './resolvers/study.resolver';
 import { DatasetPermissionResolver } from './resolvers/dataset.resolver';
 import { DatasetModule } from '../dataset/dataset.module';
+import { PermissionResolver } from './resolvers/permission.resolver';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { DatasetModule } from '../dataset/dataset.module';
     ProjectPermissionResolver,
     OwnerPermissionResolver,
     StudyPermissionResolver,
-    DatasetPermissionResolver
+    DatasetPermissionResolver,
+    PermissionResolver
   ],
   exports: [casbinProvider]
 })

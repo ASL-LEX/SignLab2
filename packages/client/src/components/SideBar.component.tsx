@@ -19,43 +19,48 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       name: 'Projects',
       icon: <Work />,
       action: () => {},
+      visible: () => true,
       subItems: [
-        { name: 'New Project', action: () => navigate('/project/new') },
-        { name: 'Project Control', action: () => navigate('/project/controls') },
-        { name: 'User Permissions', action: () => navigate('/project/permissions') }
+        { name: 'New Project', action: () => navigate('/project/new'), visible: () => true },
+        { name: 'Project Control', action: () => navigate('/project/controls'), visible: () => true },
+        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: () => true },
       ]
     },
     {
       name: 'Studies',
       action: () => {},
       icon: <School />,
+      visible: () => true,
       subItems: [
-        { name: 'New Study', action: () => navigate('/study/new') },
-        { name: 'Study Control', action: () => navigate('/study/controls') },
-        { name: 'User Permissions', action: () => navigate('/study/permissions') },
-        { name: 'Entry Controls', action: () => navigate('/study/controls') },
-        { name: 'Download Tags', action: () => navigate('/study/tags') }
+        { name: 'New Study', action: () => navigate('/study/new'), visible: () => true },
+        { name: 'Study Control', action: () => navigate('/study/controls'), visible: () => true },
+        { name: 'User Permissions', action: () => navigate('/study/permissions'), visible: () => true },
+        { name: 'Entry Controls', action: () => navigate('/study/controls'), visible: () => true },
+        { name: 'Download Tags', action: () => navigate('/study/tags'), visible: () => true },
       ]
     },
     {
       name: 'Datasets',
       action: () => {},
       icon: <Dataset />,
+      visible: () => true,
       subItems: [
-        { name: 'Dataset Control', action: () => navigate('/dataset/controls') },
-        { name: 'Project Access', action: () => navigate('/dataset/projectaccess') }
+        { name: 'Dataset Control', action: () => navigate('/dataset/controls'), visible: () => true },
+        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: () => true },
       ]
     },
     {
       name: 'Contribute',
       action: () => {},
       icon: <GroupWork />,
-      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing') }]
+      visible: () => true,
+      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: () => true }]
     },
     {
       name: 'Logout',
       action: logout,
-      icon: <Logout />
+      icon: <Logout />,
+      visible: () => true
     }
   ];
 
@@ -78,9 +83,10 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       open={open}
     >
       <List sx={{ paddingTop: '30px' }}>
-        {navItems.map((navItem) => (
-          <NavItem {...navItem} key={navItem.name} />
-        ))}
+        {navItems
+          .filter((navItem) => navItem.visible())
+          .map((navItem) => <NavItem {...navItem} key={navItem.name} />)
+        }
       </List>
       <Environment />
     </Drawer>
@@ -92,6 +98,7 @@ interface NavItemProps {
   name: string;
   icon?: ReactNode;
   subItems?: NavItemProps[];
+  visible: () => boolean;
 }
 
 const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems }) => {
