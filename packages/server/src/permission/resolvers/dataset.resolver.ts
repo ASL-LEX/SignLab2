@@ -14,7 +14,6 @@ import { DatasetPermissions } from '../permissions/dataset';
 import { DatasetProjectPermission } from '../models/dataset.model';
 import { DatasetService } from '../../dataset/dataset.service';
 
-
 @UseGuards(JwtAuthGuard)
 @Resolver(() => DatasetProjectPermission)
 export class DatasetPermissionResolver {
@@ -24,11 +23,11 @@ export class DatasetPermissionResolver {
     private readonly datasetService: DatasetService
   ) {}
 
-
   @Mutation(() => Boolean)
   async grantProjectDatasetAccess(
     @Args('project', { type: () => ID }, ProjectPipe) project: Project,
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
+    @Args('hasAccess') hasAccess: boolean,
     @TokenContext() requestingUser: TokenPayload
   ) {
     // Make sure the requesting user has access
@@ -37,7 +36,7 @@ export class DatasetPermissionResolver {
       throw new UnauthorizedException('Requesting user does not have permission to manage dataset permissions');
     }
 
-    return this.permissionService.grantProjectDatasetAccess(project, dataset);
+    return this.permissionService.grantProjectDatasetAccess(project, dataset, hasAccess);
   }
 
   @Query(() => [DatasetProjectPermission])
@@ -55,9 +54,7 @@ export class DatasetPermissionResolver {
   }
 
   @ResolveField(() => Dataset)
-  async dataset(
-    @Parent() datasetProjectPermission: DatasetProjectPermission
-  ) {
+  async dataset(@Parent() datasetProjectPermission: DatasetProjectPermission) {
     return this.datasetService.findById(datasetProjectPermission.dataset);
   }
 }

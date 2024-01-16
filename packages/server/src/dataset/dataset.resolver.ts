@@ -14,7 +14,7 @@ import { TokenPayload } from '../jwt/token.dto';
 import { DatasetPermissions } from '../permission/permissions/dataset';
 import { ProjectPipe } from '../project/pipes/project.pipe';
 import { Project } from '../project/project.model';
-import {ProjectPermissions} from '../permission/permissions/project';
+import { ProjectPermissions } from '../permission/permissions/project';
 
 // TODO: Add authentication
 @UseGuards(JwtAuthGuard)

@@ -11,7 +11,12 @@ import { DatasetPermissionResolver } from './resolvers/dataset.resolver';
 import { DatasetModule } from '../dataset/dataset.module';
 
 @Module({
-  imports: [forwardRef(() => ProjectModule), AuthModule, forwardRef(() => StudyModule), forwardRef(() => DatasetModule)],
+  imports: [
+    forwardRef(() => ProjectModule),
+    AuthModule,
+    forwardRef(() => StudyModule),
+    forwardRef(() => DatasetModule)
+  ],
   providers: [
     casbinProvider,
     PermissionService,

@@ -168,9 +168,12 @@ export class PermissionService {
     return true;
   }
 
-  async grantProjectDatasetAccess(project: Project, dataset: Dataset): Promise<boolean> {
-    await this.enforcer.addNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
-
+  async grantProjectDatasetAccess(project: Project, dataset: Dataset, hasAccess: boolean): Promise<boolean> {
+    if (hasAccess) {
+      await this.enforcer.addNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
+    } else {
+      await this.enforcer.removeNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
+    }
     return true;
   }
 
@@ -179,7 +182,11 @@ export class PermissionService {
 
     return await Promise.all(
       datasets.map(async (dataset) => {
-        const hasAccess = await this.enforcer.hasNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
+        const hasAccess = await this.enforcer.hasNamedGroupingPolicy(
+          'g2',
+          project._id.toString(),
+          dataset._id.toString()
+        );
 
         return {
           dataset: dataset._id.toString(),
