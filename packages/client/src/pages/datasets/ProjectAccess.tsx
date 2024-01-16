@@ -38,7 +38,7 @@ export const ProjectAccess: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 200, valueGetter: (params) => params.row.dataset.name },
+    { field: 'name', headerName: 'Dataset Name', width: 200, valueGetter: (params) => params.row.dataset.name },
     {
       field: 'description',
       headerName: 'Description',
@@ -59,10 +59,12 @@ export const ProjectAccess: React.FC = () => {
     <>
       {project ? (
         <>
-          <Typography variant="h5">Project Access</Typography>
+          <Typography variant="h5">Dataset Access for "{project.name}"</Typography>
           <DataGrid columns={columns} rows={projectAccess} getRowId={(row) => row.dataset._id} />
         </>
-      ) : <Typography variant="h5">Select a Project to Continue</Typography>}
+      ) : (
+        <Typography variant="h5">Select a Project to Continue</Typography>
+      )}
     </>
   );
 };
