@@ -11,8 +11,8 @@ import { StudyPermissionModel } from './models/study.model';
 import { Dataset } from '../dataset/dataset.model';
 import { DatasetService } from '../dataset/dataset.service';
 import { DatasetProjectPermission } from './models/dataset.model';
-import {Permission} from './models/permission.model';
-import {Organization} from '../organization/organization.model';
+import { Permission } from './models/permission.model';
+import { Organization } from '../organization/organization.model';
 
 @Injectable()
 export class PermissionService {
@@ -198,13 +198,19 @@ export class PermissionService {
     );
   }
 
-  async getRoles(user: TokenPayload, organization: Organization, project: Project | null, study: Study | null): Promise<Permission> {
-
+  async getRoles(
+    user: TokenPayload,
+    organization: Organization,
+    project: Project | null,
+    study: Study | null
+  ): Promise<Permission> {
     return {
       owner: await this.enforcer.enforce(user.id, Roles.OWNER, organization._id.toString()),
       projectAdmin: project ? await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, project._id.toString()) : false,
       studyAdmin: study ? await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString()) : false,
-      trainedContributor: study ? await this.enforcer.enforce(user.id, Roles.TRAINED_CONTRIBUTOR, study._id.toString()) : false,
+      trainedContributor: study
+        ? await this.enforcer.enforce(user.id, Roles.TRAINED_CONTRIBUTOR, study._id.toString())
+        : false,
       contributor: study ? await this.enforcer.enforce(user.id, Roles.CONTRIBUTOR, study._id.toString()) : false
     };
   }

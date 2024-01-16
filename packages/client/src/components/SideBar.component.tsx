@@ -38,7 +38,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       subItems: [
         { name: 'New Project', action: () => navigate('/project/new'), visible: (p) => p!.owner },
         { name: 'Project Control', action: () => navigate('/project/controls'), visible: (p) => p!.owner },
-        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: (p) => p!.projectAdmin },
+        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: (p) => p!.projectAdmin }
       ]
     },
     {
@@ -63,7 +63,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       permission,
       subItems: [
         { name: 'Dataset Control', action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
-        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner },
+        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
       ]
     },
     {
@@ -72,7 +72,9 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       icon: <GroupWork />,
       permission,
       visible: (p) => p!.contributor,
-      subItems: [{ name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: (p) => p!.contributor }]
+      subItems: [
+        { name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: (p) => p!.contributor }
+      ]
     },
     {
       name: 'Logout',
@@ -104,8 +106,9 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
         <List sx={{ paddingTop: '30px' }}>
           {navItems
             .filter((navItem) => navItem.visible(permission))
-            .map((navItem) => <NavItem {...navItem} key={navItem.name} />)
-          }
+            .map((navItem) => (
+              <NavItem {...navItem} key={navItem.name} />
+            ))}
         </List>
       )}
       <Environment />
@@ -137,8 +140,9 @@ const NavItem: FC<NavItemProps> = ({ action, name, icon, subItems, permission })
       <List disablePadding>
         {subItems
           .filter((subItem) => subItem.visible(permission))
-          .map((item, index) => <NavItem {...item} key={index} />)
-        }
+          .map((item, index) => (
+            <NavItem {...item} key={index} />
+          ))}
       </List>
     </Collapse>
   ) : null;

@@ -15,15 +15,19 @@ import { JwtAuthGuard } from '../../jwt/jwt.guard';
 @UseGuards(JwtAuthGuard)
 @Resolver()
 export class PermissionResolver {
-  constructor(private readonly studyPipe: StudyPipe,
-              private readonly projectPipe: ProjectPipe,
-              private readonly permissionService: PermissionService) {}
+  constructor(
+    private readonly studyPipe: StudyPipe,
+    private readonly projectPipe: ProjectPipe,
+    private readonly permissionService: PermissionService
+  ) {}
 
   @Query(() => Permission)
-  async getRoles(@Args('project', { type: () => ID, nullable: true }) projectID: string | null,
-                 @Args('study', { type: () => ID, nullable: true }) studyID: string | null,
-                 @TokenContext() tokenContext: TokenPayload,
-                 @OrganizationContext() organization: Organization): Promise<Permission> {
+  async getRoles(
+    @Args('project', { type: () => ID, nullable: true }) projectID: string | null,
+    @Args('study', { type: () => ID, nullable: true }) studyID: string | null,
+    @TokenContext() tokenContext: TokenPayload,
+    @OrganizationContext() organization: Organization
+  ): Promise<Permission> {
     let project: Project | null = null;
     let study: Study | null = null;
 
