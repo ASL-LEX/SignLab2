@@ -163,6 +163,7 @@ type Mutation {
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!
+  setEntryEnabled(study: ID!, tag: ID!, enabled: Boolean!): Boolean!
 }
 
 input OrganizationCreate {

@@ -56,6 +56,16 @@ export class TagResolver {
     return true;
   }
 
+  @Mutation(() => Boolean)
+  async setEntryEnabled(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('tag', { type: () => ID }, TagPipe) entry: Entry,
+    @Args('enabled', { type: () => Boolean }) enabled: boolean
+  ): Promise<boolean> {
+    await this.tagService.setEnabled(study, entry, enabled);
+    return true;
+  }
+
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {
     return this.entryPipe.transform(tag.entry);
