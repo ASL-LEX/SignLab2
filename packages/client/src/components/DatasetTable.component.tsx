@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Dataset, Entry } from '../graphql/graphql';
-import { useEntryForDatasetQuery } from '../graphql/entry';
+import { useEntryForDatasetQuery } from '../graphql/entry/entry';
 import { EntryView } from './EntryView.component';
 
 export interface DatasetTableProps {
@@ -10,6 +10,21 @@ export interface DatasetTableProps {
 }
 
 export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
+  const defaultColumns: GridColDef[] = [
+    {
+      field: 'view',
+      headerName: 'View',
+      width: 300,
+      renderCell: (params) => <EntryView entry={params.row as Entry} width={300} />
+    },
+    {
+      field: 'entryID',
+      headerName: 'Entry ID',
+      width: 150,
+      editable: false
+    }
+  ];
+
   const [entries, setEntries] = useState<Entry[]>([]);
   const columns = [...defaultColumns, ...(props.additionalColumns ?? [])];
 
@@ -41,18 +56,3 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
     />
   );
 };
-
-const defaultColumns: GridColDef[] = [
-  {
-    field: 'view',
-    headerName: 'View',
-    width: 300,
-    renderCell: (params) => <EntryView entry={params.row as Entry} width={300} />
-  },
-  {
-    field: 'entryID',
-    headerName: 'Entry ID',
-    width: 150,
-    editable: false
-  }
-];

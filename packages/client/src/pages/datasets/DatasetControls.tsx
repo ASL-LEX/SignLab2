@@ -6,13 +6,19 @@ import { UploadEntries } from '../../components/UploadEntries.component';
 import { Dataset } from '../../graphql/graphql';
 import { useGetDatasetsQuery } from '../../graphql/dataset/dataset';
 import { DatasetsView } from '../../components/DatasetsView.component';
+import { GridColDef, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import { useConfirmation } from '../../context/Confirmation.context';
+import { useDeleteEntryMutation } from '../../graphql/entry/entry';
 
 export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
   const [upload, setUpload] = useState(false);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const getDatasetsResults = useGetDatasetsQuery();
+  const [deleteEntryMutation] = useDeleteEntryMutation();
 
+  const confirmation = useConfirmation();
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasets);
@@ -34,6 +40,44 @@ export const DatasetControls: React.FC = () => {
   const toggleUpload = () => {
     setUpload((upload) => !upload);
   };
+
+  const handleDelete = async (id: GridRowId) => {
+    // Execute delete mutation
+    confirmation.pushConfirmationRequest({
+      title: 'Delete Entry',
+      message: 'Are you sure you want to delete this project? Doing so will delete all associated tags',
+      onConfirm: async () => {
+        const res = await deleteEntryMutation({ variables: { entry: id.toString() } });
+        if (res.errors) {
+          //TODO show error with snackbar
+        } else if (res.data) {
+          // force rerender
+          setDatasets([...datasets]);
+        }
+      },
+      onCancel: () => {}
+    });
+  };
+
+  const additionalColumns: GridColDef[] = [
+    {
+      field: 'delete',
+      type: 'actions',
+      headerName: 'Delete',
+      width: 120,
+      maxWidth: 120,
+      cellClassName: 'delete',
+      getActions: (params) => {
+        return [
+          <GridActionsCellItem
+            icon={<DeleteIcon color={'error'} />}
+            label="Delete"
+            onClick={() => handleDelete(params.id)}
+          />
+        ];
+      }
+    }
+  ];
 
   return (
     <>
@@ -62,7 +106,7 @@ export const DatasetControls: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <DatasetsView datasets={datasets} />
+      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
     </>
   );
 };
