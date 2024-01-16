@@ -15,11 +15,27 @@ import { GcpModule } from '../gcp/gcp.module';
 import { CsvValidationService } from './services/csv-validation.service';
 import { PermissionModule } from '../permission/permission.module';
 import { JwtModule } from '../jwt/jwt.module';
+import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: Entry.name,
+        useFactory: (middlewareService: MongooseMiddlewareService) => {
+          const schema = EntrySchema;
+          schema.pre('deleteOne', async function () {
+            const entry = await this.model.findOne(this.getQuery());
+            await middlewareService.apply(Entry.name, 'deleteOne', entry);
+          });
+          return schema;
+        },
+        imports: [SharedModule],
+        inject: [MongooseMiddlewareService]
+      }
+    ]),
     MongooseModule.forFeature([
-      { name: Entry.name, schema: EntrySchema },
       { name: UploadSession.name, schema: UploadSessionSchema },
       { name: EntryUpload.name, schema: EntryUploadSchema }
     ]),

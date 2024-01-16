@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Study } from './study.model';
 import { StudyCreate } from './dtos/create.dto';
 import { Validator } from 'jsonschema';
-import { Project } from 'src/project/project.model';
+import { Project } from '../project/project.model';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
@@ -16,7 +16,7 @@ export class StudyService {
     middlewareService: MongooseMiddlewareService,
     @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
   ) {
-    // Remove cooresponding studies when a project is deleted
+    // Remove corresponding studies when a project is deleted
     middlewareService.register(Project.name, 'deleteOne', async (project: Project) => {
       // TODO: Update Casbin policies
       await this.removeForProject(project);

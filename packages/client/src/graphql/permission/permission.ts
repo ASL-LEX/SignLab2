@@ -55,6 +55,22 @@ export type GrantTrainedContributorMutationVariables = Types.Exact<{
 
 export type GrantTrainedContributorMutation = { __typename?: 'Mutation', grantTrainedContributor: boolean };
 
+export type GetDatasetProjectPermissionsQueryVariables = Types.Exact<{
+  project: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetDatasetProjectPermissionsQuery = { __typename?: 'Query', getDatasetProjectPermissions: Array<{ __typename?: 'DatasetProjectPermission', projectHasAccess: boolean, dataset: { __typename?: 'Dataset', _id: string, name: string, description: string } }> };
+
+export type GrantProjectDatasetAccessMutationVariables = Types.Exact<{
+  project: Types.Scalars['ID']['input'];
+  dataset: Types.Scalars['ID']['input'];
+  hasAccess: Types.Scalars['Boolean']['input'];
+}>;
+
+
+export type GrantProjectDatasetAccessMutation = { __typename?: 'Mutation', grantProjectDatasetAccess: boolean };
+
 
 export const GetProjectPermissionsDocument = gql`
     query getProjectPermissions($project: ID!) {
@@ -286,3 +302,80 @@ export function useGrantTrainedContributorMutation(baseOptions?: Apollo.Mutation
 export type GrantTrainedContributorMutationHookResult = ReturnType<typeof useGrantTrainedContributorMutation>;
 export type GrantTrainedContributorMutationResult = Apollo.MutationResult<GrantTrainedContributorMutation>;
 export type GrantTrainedContributorMutationOptions = Apollo.BaseMutationOptions<GrantTrainedContributorMutation, GrantTrainedContributorMutationVariables>;
+export const GetDatasetProjectPermissionsDocument = gql`
+    query getDatasetProjectPermissions($project: ID!) {
+  getDatasetProjectPermissions(project: $project) {
+    dataset {
+      _id
+      name
+      description
+    }
+    projectHasAccess
+  }
+}
+    `;
+
+/**
+ * __useGetDatasetProjectPermissionsQuery__
+ *
+ * To run a query within a React component, call `useGetDatasetProjectPermissionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDatasetProjectPermissionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDatasetProjectPermissionsQuery({
+ *   variables: {
+ *      project: // value for 'project'
+ *   },
+ * });
+ */
+export function useGetDatasetProjectPermissionsQuery(baseOptions: Apollo.QueryHookOptions<GetDatasetProjectPermissionsQuery, GetDatasetProjectPermissionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDatasetProjectPermissionsQuery, GetDatasetProjectPermissionsQueryVariables>(GetDatasetProjectPermissionsDocument, options);
+      }
+export function useGetDatasetProjectPermissionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDatasetProjectPermissionsQuery, GetDatasetProjectPermissionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDatasetProjectPermissionsQuery, GetDatasetProjectPermissionsQueryVariables>(GetDatasetProjectPermissionsDocument, options);
+        }
+export type GetDatasetProjectPermissionsQueryHookResult = ReturnType<typeof useGetDatasetProjectPermissionsQuery>;
+export type GetDatasetProjectPermissionsLazyQueryHookResult = ReturnType<typeof useGetDatasetProjectPermissionsLazyQuery>;
+export type GetDatasetProjectPermissionsQueryResult = Apollo.QueryResult<GetDatasetProjectPermissionsQuery, GetDatasetProjectPermissionsQueryVariables>;
+export const GrantProjectDatasetAccessDocument = gql`
+    mutation grantProjectDatasetAccess($project: ID!, $dataset: ID!, $hasAccess: Boolean!) {
+  grantProjectDatasetAccess(
+    project: $project
+    dataset: $dataset
+    hasAccess: $hasAccess
+  )
+}
+    `;
+export type GrantProjectDatasetAccessMutationFn = Apollo.MutationFunction<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>;
+
+/**
+ * __useGrantProjectDatasetAccessMutation__
+ *
+ * To run a mutation, you first call `useGrantProjectDatasetAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGrantProjectDatasetAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [grantProjectDatasetAccessMutation, { data, loading, error }] = useGrantProjectDatasetAccessMutation({
+ *   variables: {
+ *      project: // value for 'project'
+ *      dataset: // value for 'dataset'
+ *      hasAccess: // value for 'hasAccess'
+ *   },
+ * });
+ */
+export function useGrantProjectDatasetAccessMutation(baseOptions?: Apollo.MutationHookOptions<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>(GrantProjectDatasetAccessDocument, options);
+      }
+export type GrantProjectDatasetAccessMutationHookResult = ReturnType<typeof useGrantProjectDatasetAccessMutation>;
+export type GrantProjectDatasetAccessMutationResult = Apollo.MutationResult<GrantProjectDatasetAccessMutation>;
+export type GrantProjectDatasetAccessMutationOptions = Apollo.BaseMutationOptions<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>;

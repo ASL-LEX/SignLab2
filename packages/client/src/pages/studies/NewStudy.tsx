@@ -9,7 +9,7 @@ import { CreateStudyDocument } from '../../graphql/study/study';
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
-import { CreateTagsDocument } from '../../graphql/tag';
+import { CreateTagsDocument } from '../../graphql/tag/tag';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);

@@ -68,6 +68,11 @@ type StudyPermissionModel {
   isTrainedEditable: Boolean!
 }
 
+type DatasetProjectPermission {
+  dataset: Dataset!
+  projectHasAccess: Boolean!
+}
+
 type Entry {
   _id: String!
   organization: ID!
@@ -128,8 +133,10 @@ type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
   getDatasets: [Dataset!]!
+  getDatasetsByProject(project: ID!): [Dataset!]!
   getProjectPermissions(project: ID!): [ProjectPermissionModel!]!
   getStudyPermissions(study: ID!): [StudyPermissionModel!]!
+  getDatasetProjectPermissions(project: ID!): [DatasetProjectPermission!]!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!
@@ -152,12 +159,14 @@ type Mutation {
   grantStudyAdmin(study: ID!, user: ID!, isAdmin: Boolean!): Boolean!
   grantContributor(study: ID!, user: ID!, isContributor: Boolean!): Boolean!
   grantTrainedContributor(study: ID!, user: ID!, isTrained: Boolean!): Boolean!
+  grantProjectDatasetAccess(project: ID!, dataset: ID!, hasAccess: Boolean!): Boolean!
   signLabCreateProject(project: ProjectCreate!): Project!
   deleteProject(project: ID!): Boolean!
   createStudy(study: StudyCreate!): Study!
   deleteStudy(study: ID!): Boolean!
   changeStudyName(study: ID!, newName: String!): Study!
   changeStudyDescription(study: ID!, newDescription: String!): Study!
+  deleteEntry(entry: ID!): Boolean!
   createUploadSession(dataset: ID!): UploadSession!
   completeUploadSession(session: ID!): UploadResult!
   createTags(study: ID!, entries: [ID!]!): [Tag!]!

@@ -53,3 +53,18 @@ mutation grantContributor($study: ID!, $user: ID!, $isContributor: Boolean!) {
 mutation grantTrainedContributor($study: ID!, $user: ID!, $isTrained: Boolean!) {
   grantTrainedContributor(study: $study, user: $user, isTrained: $isTrained)
 }
+
+query getDatasetProjectPermissions($project: ID!) {
+  getDatasetProjectPermissions(project: $project) {
+    dataset {
+      _id,
+      name,
+      description
+    },
+    projectHasAccess
+  }
+}
+
+mutation grantProjectDatasetAccess($project: ID!, $dataset: ID!, $hasAccess: Boolean!) {
+  grantProjectDatasetAccess(project: $project, dataset: $dataset, hasAccess: $hasAccess)
+}

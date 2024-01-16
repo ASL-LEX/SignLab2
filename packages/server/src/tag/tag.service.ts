@@ -18,6 +18,11 @@ export class TagService {
     middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
       await this.removeByStudy(study);
     });
+
+    // Remove corresponding tags when an entry is deleted
+    middlewareService.register(Entry.name, 'deleteOne', async (entry: Entry) => {
+      await this.removeByEntry(entry);
+    });
   }
 
   async find(id: string): Promise<Tag | null> {
@@ -133,5 +138,9 @@ export class TagService {
 
   private async removeByStudy(study: Study): Promise<void> {
     await this.tagModel.deleteMany({ study: study._id });
+  }
+
+  private async removeByEntry(entry: Entry): Promise<void> {
+    await this.tagModel.deleteMany({ entry: entry._id });
   }
 }
