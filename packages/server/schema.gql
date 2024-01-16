@@ -68,6 +68,11 @@ type StudyPermissionModel {
   isTrainedEditable: Boolean!
 }
 
+type DatasetProjectPermission {
+  dataset: Dataset!
+  projectHasAccess: Boolean!
+}
+
 type Entry {
   _id: String!
   organization: ID!
@@ -131,6 +136,7 @@ type Query {
   getDatasetsByProject(project: ID!): [Dataset!]!
   getProjectPermissions(project: ID!): [ProjectPermissionModel!]!
   getStudyPermissions(study: ID!): [StudyPermissionModel!]!
+  getDatasetProjectPermissions(project: ID!): [DatasetProjectPermission!]!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!

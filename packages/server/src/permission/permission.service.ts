@@ -8,13 +8,16 @@ import { TokenPayload } from '../jwt/token.dto';
 import { Study } from '../study/study.model';
 import { ProjectPermissionModel } from './models/project.model';
 import { StudyPermissionModel } from './models/study.model';
-import {Dataset} from 'src/dataset/dataset.model';
+import { Dataset } from '../dataset/dataset.model';
+import { DatasetService } from '../dataset/dataset.service';
+import { DatasetProjectPermission } from './models/dataset.model';
 
 @Injectable()
 export class PermissionService {
   constructor(
     @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly datasetService: DatasetService
   ) {}
 
   /** requestingUser must be an owner themselves */
@@ -169,5 +172,20 @@ export class PermissionService {
     await this.enforcer.addNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
 
     return true;
+  }
+
+  async getDatasetProjectPermissions(project: Project): Promise<DatasetProjectPermission[]> {
+    const datasets = await this.datasetService.findAll(project.organization);
+
+    return await Promise.all(
+      datasets.map(async (dataset) => {
+        const hasAccess = await this.enforcer.hasNamedGroupingPolicy('g2', project._id.toString(), dataset._id.toString());
+
+        return {
+          dataset: dataset._id.toString(),
+          projectHasAccess: hasAccess
+        };
+      })
+    );
   }
 }
