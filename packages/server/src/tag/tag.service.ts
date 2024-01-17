@@ -115,8 +115,17 @@ export class TagService {
     await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data, complete: true } });
   }
 
-  async setEnabled(study: Study, entry: Entry, enabled: boolean): Promise<void> {
-    const existingTag = await this.tagModel.findOne({ _id: entry._id });
+  async isEntryEnabled(study: Study, entry: Entry) {
+    const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
+    return  existingTag ? existingTag.enabled : false
+  }
+
+  async setEnabled(study: Study, entry: Entry, enabled: boolean): Promise<boolean> {
+    console.log('setEnabled called with', enabled);
+
+    const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
+    console.log('existingTag', existingTag);
+
     if (existingTag) {
       await this.tagModel.updateMany({ entry: entry._id, study: study._id }, { $set: { enabled: enabled } });
     } else {
@@ -130,6 +139,11 @@ export class TagService {
         });
       }
     }
+    console.log('find all tags');
+    const all = await this.tagModel.find({ entry: entry._id, study: study._id });
+    console.log(all);
+
+    return true;
   }
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {

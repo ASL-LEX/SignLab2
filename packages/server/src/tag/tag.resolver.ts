@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { TagService } from './tag.service';
 import { Tag } from './tag.model';
 import { StudyPipe } from '../study/pipes/study.pipe';
@@ -59,12 +59,21 @@ export class TagResolver {
   @Mutation(() => Boolean)
   async setEntryEnabled(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @Args('tag', { type: () => ID }, TagPipe) entry: Entry,
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
     @Args('enabled', { type: () => Boolean }) enabled: boolean
   ): Promise<boolean> {
     await this.tagService.setEnabled(study, entry, enabled);
     return true;
   }
+
+  @Query(() => Boolean)
+  async isEntryEnabled(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
+  ): Promise<Boolean> {
+    return this.tagService.isEntryEnabled(study, entry,);
+  }
+
 
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {

@@ -4,19 +4,27 @@ mutation createTags($study: ID!, $entries: [ID!]!) {
   }
 }
 
+mutation setEntryEnabled($study: ID!, $entry: ID!, $enabled: Boolean!) {
+  setEntryEnabled(study: $study, entry: $entry, enabled: $enabled)
+}
+
+query isEntryEnabled($study: ID!, $entry: ID!) {
+  isEntryEnabled(study: $study, entry: $entry)
+}
+
 mutation assignTag($study: ID!) {
   assignTag(study: $study) {
-    _id,
+    _id
     entry {
-      _id,
-      organization,
-      entryID,
-      contentType,
-      dataset,
-      creator,
-      dateCreated,
-      meta,
-      signedUrl,
+      _id
+      organization
+      entryID
+      contentType
+      dataset
+      creator
+      dateCreated
+      meta
+      signedUrl
       signedUrlExpiration
     }
   }

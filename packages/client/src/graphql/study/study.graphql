@@ -1,13 +1,13 @@
 query findStudies($project: ID!) {
   findStudies(project: $project) {
-    _id,
-    name,
-    description,
-    instructions,
-    project,
-    tagsPerEntry,
+    _id
+    name
+    description
+    instructions
+    project
+    tagsPerEntry
     tagSchema {
-      dataSchema,
+      dataSchema
       uiSchema
     }
   }
@@ -19,14 +19,14 @@ mutation deleteStudy($study: ID!) {
 
 mutation createStudy($study: StudyCreate!) {
   createStudy(study: $study) {
-    _id,
-    name,
-    description,
-    instructions,
-    project,
-    tagsPerEntry,
+    _id
+    name
+    description
+    instructions
+    project
+    tagsPerEntry
     tagSchema {
-      dataSchema,
+      dataSchema
       uiSchema
     }
   }

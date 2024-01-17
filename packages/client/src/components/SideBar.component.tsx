@@ -33,7 +33,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
         { name: 'New Study', action: () => navigate('/study/new') },
         { name: 'Study Control', action: () => navigate('/study/controls') },
         { name: 'User Permissions', action: () => navigate('/study/permissions') },
-        { name: 'Entry Controls', action: () => navigate('/study/controls') },
+        { name: 'Entry Controls', action: () => navigate('/study/entries') },
         { name: 'Download Tags', action: () => navigate('/study/tags') }
       ]
     },

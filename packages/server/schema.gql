@@ -147,6 +147,7 @@ type Query {
   getCSVUploadURL(session: ID!): String!
   validateCSV(session: ID!): UploadResult!
   getEntryUploadURL(session: ID!, filename: String!, contentType: String!): String!
+  isEntryEnabled(study: ID!, entry: ID!): Boolean!
 }
 
 type Mutation {
@@ -172,7 +173,7 @@ type Mutation {
   createTags(study: ID!, entries: [ID!]!): [Tag!]!
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!
-  setEntryEnabled(study: ID!, tag: ID!, enabled: Boolean!): Boolean!
+  setEntryEnabled(study: ID!, entry: ID!, enabled: Boolean!): Boolean!
 }
 
 input OrganizationCreate {
