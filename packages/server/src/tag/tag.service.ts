@@ -117,7 +117,7 @@ export class TagService {
 
   async isEntryEnabled(study: Study, entry: Entry) {
     const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
-    return  existingTag ? existingTag.enabled : false
+    return existingTag ? existingTag.enabled : false;
   }
 
   async setEnabled(study: Study, entry: Entry, enabled: boolean): Promise<boolean> {

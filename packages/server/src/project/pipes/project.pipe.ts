@@ -7,7 +7,7 @@ export class ProjectPipe implements PipeTransform<string, Promise<Project>> {
   constructor(private readonly projectService: ProjectService) {}
 
   async transform(value: string): Promise<Project> {
-    if (!value){
+    if (!value) {
       throw new BadRequestException(`Invalid project ID ${value}given`);
     }
     const project = await this.projectService.findById(value);
