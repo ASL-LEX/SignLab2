@@ -14,6 +14,7 @@ import * as casbin from 'casbin';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
 import { StudyPermissions } from '../permission/permissions/study';
+import { TagPermissions } from 'src/permission/permissions/tag';
 
 // TODO: Add permissioning
 @UseGuards(JwtAuthGuard)
@@ -60,8 +61,12 @@ export class TagResolver {
   async setEntryEnabled(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
-    @Args('enabled', { type: () => Boolean }) enabled: boolean
+    @Args('enabled', { type: () => Boolean }) enabled: boolean,
+    @TokenContext() user: TokenPayload
   ): Promise<boolean> {
+    if (!(await this.enforcer.enforce(user.id, TagPermissions.UPDATE, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot update tags in this study');
+    }
     await this.tagService.setEnabled(study, entry, enabled);
     return true;
   }
@@ -70,10 +75,13 @@ export class TagResolver {
   async isEntryEnabled(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
+    @TokenContext() user: TokenPayload
   ): Promise<Boolean> {
-    return this.tagService.isEntryEnabled(study, entry,);
+    if (!(await this.enforcer.enforce(user.id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+    return this.tagService.isEntryEnabled(study, entry);
   }
-
 
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {
