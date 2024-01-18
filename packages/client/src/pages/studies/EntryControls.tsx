@@ -3,27 +3,24 @@ import { useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { Dataset } from '../../graphql/graphql';
 import { DatasetsView } from '../../components/DatasetsView.component';
-import { useGetDatasetsByProjectQuery, useGetDatasetsQuery } from '../../graphql/dataset/dataset';
+import { useGetDatasetsByProjectQuery } from '../../graphql/dataset/dataset';
 import { useProject } from '../../context/Project.context';
 import ToggleEntryEnabled from '../../components/ToggleEntryEnabled.component';
 
 export const EntryControls: React.FC = () => {
-
   const { project } = useProject();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const getDatasetsResults = useGetDatasetsQuery();
   const getDatasetsByProjectResults = useGetDatasetsByProjectQuery({
     variables: {
-      project: project ? project._id : '' // value for 'project'
+      project: project ? project._id : ''
     }
   });
 
   useEffect(() => {
-    if (getDatasetsResults.data) {
-      setDatasets(getDatasetsResults.data.getDatasets);
+    if (getDatasetsByProjectResults.data) {
+      setDatasets(getDatasetsByProjectResults.data.getDatasetsByProject);
     }
-  }, [getDatasetsResults.data]);
-
+  }, [getDatasetsByProjectResults.data]);
 
   const additionalColumns: GridColDef[] = [
     {
@@ -34,9 +31,7 @@ export const EntryControls: React.FC = () => {
       maxWidth: 120,
       cellClassName: 'enabled',
       getActions: (params) => {
-        return [
-            <ToggleEntryEnabled entryId={params.id.toString()}/>
-        ];
+        return [<ToggleEntryEnabled entryId={params.id.toString()} />];
       }
     }
   ];
