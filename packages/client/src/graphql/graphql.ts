@@ -469,6 +469,15 @@ export type OrganizationCreate = {
   projectId: Scalars['String']['input'];
 };
 
+export type Permission = {
+  __typename?: 'Permission';
+  contributor: Scalars['Boolean']['output'];
+  owner: Scalars['Boolean']['output'];
+  projectAdmin: Scalars['Boolean']['output'];
+  studyAdmin: Scalars['Boolean']['output'];
+  trainedContributor: Scalars['Boolean']['output'];
+};
+
 export type Project = {
   __typename?: 'Project';
   _id: Scalars['ID']['output'];
@@ -556,6 +565,7 @@ export type Query = {
   getProject: ProjectModel;
   getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
+  getRoles: Permission;
   getStudyPermissions: Array<StudyPermissionModel>;
   getUser: UserModel;
   invite: InviteModel;
@@ -619,6 +629,12 @@ export type QueryGetProjectArgs = {
 
 export type QueryGetProjectPermissionsArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryGetRolesArgs = {
+  project?: InputMaybe<Scalars['ID']['input']>;
+  study?: InputMaybe<Scalars['ID']['input']>;
 };
 
 

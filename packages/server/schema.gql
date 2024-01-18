@@ -73,6 +73,14 @@ type DatasetProjectPermission {
   projectHasAccess: Boolean!
 }
 
+type Permission {
+  owner: Boolean!
+  projectAdmin: Boolean!
+  studyAdmin: Boolean!
+  trainedContributor: Boolean!
+  contributor: Boolean!
+}
+
 type Entry {
   _id: String!
   organization: ID!
@@ -137,6 +145,7 @@ type Query {
   getProjectPermissions(project: ID!): [ProjectPermissionModel!]!
   getStudyPermissions(study: ID!): [StudyPermissionModel!]!
   getDatasetProjectPermissions(project: ID!): [DatasetProjectPermission!]!
+  getRoles(project: ID, study: ID): Permission!
   projectExists(name: String!): Boolean!
   getProjects: [Project!]!
   studyExists(name: String!, project: ID!): Boolean!

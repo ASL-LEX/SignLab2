@@ -68,3 +68,13 @@ query getDatasetProjectPermissions($project: ID!) {
 mutation grantProjectDatasetAccess($project: ID!, $dataset: ID!, $hasAccess: Boolean!) {
   grantProjectDatasetAccess(project: $project, dataset: $dataset, hasAccess: $hasAccess)
 }
+
+query getRoles($project: ID, $study: ID) {
+  getRoles(project: $project, study: $study) {
+    owner,
+    projectAdmin,
+    studyAdmin,
+    trainedContributor,
+    contributor
+  }
+}
