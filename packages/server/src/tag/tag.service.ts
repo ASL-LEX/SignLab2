@@ -121,11 +121,7 @@ export class TagService {
   }
 
   async setEnabled(study: Study, entry: Entry, enabled: boolean): Promise<boolean> {
-    console.log('setEnabled called with', enabled);
-
     const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
-    console.log('existingTag', existingTag);
-
     if (existingTag) {
       await this.tagModel.updateMany({ entry: entry._id, study: study._id }, { $set: { enabled: enabled } });
     } else {
@@ -139,10 +135,6 @@ export class TagService {
         });
       }
     }
-    console.log('find all tags');
-    const all = await this.tagModel.find({ entry: entry._id, study: study._id });
-    console.log(all);
-
     return true;
   }
 

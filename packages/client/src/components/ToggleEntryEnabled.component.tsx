@@ -1,5 +1,5 @@
 import { Switch } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIsEntryEnabledLazyQuery, useSetEntryEnabledMutation } from '../graphql/tag/tag';
 import { useStudy } from '../context/Study.context';
 import { useConfirmation } from '../context/Confirmation.context';
@@ -17,50 +17,48 @@ export default function ToggleEntryEnabled(props: { entryId: string }) {
         variables: {
           study: study._id,
           entry: props.entryId
-        }
+        },
+        fetchPolicy: 'network-only'
       });
     }
-  }, [study]);
-  console.log('isEntryEnabledResults',isEntryEnabledResults);
-  
+  }, [study, setEntryEnabledResults.data]);
 
   useEffect(() => {
-    console.log('setEntryEnabledResults: ', setEntryEnabledResults);
-
-    if (setEntryEnabledResults.error) {
-      //show error message
-      console.log('error toggling entry', setEntryEnabledResults.error);
-    } else {
+    if (setEntryEnabledResults.called) {
+      if (setEntryEnabledResults.error) {
+        //show error message
+        console.log('error toggling entry', setEntryEnabledResults.error);
+      }
     }
   }, [setEntryEnabledResults.data]);
 
   const handleToggleEnabled = async (entryId: string, checked: boolean) => {
-    console.log('checked', checked);
-
     if (study) {
-      confirmation.pushConfirmationRequest({
-        title: 'Enable Entry',
-        message: 'Are you sure you want to delete this study? Doing so will delete all contained tags',
-        onConfirm: () => {
-          setEntryEnabledMutation({
-            variables: { study: study._id, entry: entryId, enabled: checked }
-          });
-        },
-        onCancel: () => {}
-      });
-    } else {
-      console.log('default study not selected', study);
+      if (!checked) {
+        confirmation.pushConfirmationRequest({
+          title: 'Disable Entry',
+          message: 'Are you sure you want to disable this entry? Doing so will exclude this entry from study',
+          onConfirm: () => {
+            setEntryEnabledMutation({
+              variables: { study: study._id, entry: entryId, enabled: checked }
+            });
+          },
+          onCancel: () => {}
+        });
+      } else {
+        setEntryEnabledMutation({
+          variables: { study: study._id, entry: entryId, enabled: checked }
+        });
+      }
     }
   };
+
   return (
-    <>
-      <Switch
-        disabled={setEntryEnabledResults.loading || !isEntryEnabledResults.data}
-        checked={isEntryEnabledResults.data?.isEntryEnabled}
-        // checked={true}
-        onChange={(event) => handleToggleEnabled(props.entryId, event.target.checked)}
-        inputProps={{ 'aria-label': 'controlled' }}
-      />
-    </>
+    <Switch
+      disabled={setEntryEnabledResults.loading || !isEntryEnabledResults.data}
+      checked={isEntryEnabledResults.data ? isEntryEnabledResults.data.isEntryEnabled : false}
+      onChange={(event) => handleToggleEnabled(props.entryId, event.target.checked)}
+      inputProps={{ 'aria-label': 'controlled' }}
+    />
   );
 }
