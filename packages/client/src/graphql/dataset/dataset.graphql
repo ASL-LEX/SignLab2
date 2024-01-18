@@ -1,7 +1,15 @@
 query getDatasets {
   getDatasets {
-    _id,
-    name,
+    _id
+    name
+    description
+  }
+}
+
+query getDatasetsByProject($project: ID!) {
+  getDatasetsByProject(project: $project) {
+    _id
+    name
     description
   }
 }

@@ -115,6 +115,29 @@ export class TagService {
     await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data, complete: true } });
   }
 
+  async isEntryEnabled(study: Study, entry: Entry) {
+    const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
+    return existingTag ? existingTag.enabled : false;
+  }
+
+  async setEnabled(study: Study, entry: Entry, enabled: boolean): Promise<boolean> {
+    const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
+    if (existingTag) {
+      await this.tagModel.updateMany({ entry: entry._id, study: study._id }, { $set: { enabled: enabled } });
+    } else {
+      for (let order = 0; order < study.tagsPerEntry; order++) {
+        await this.tagModel.create({
+          entry: entry._id,
+          study: study._id,
+          complete: false,
+          order,
+          enabled: enabled
+        });
+      }
+    }
+    return true;
+  }
+
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
     return this.tagModel.findOne({ study: study._id, user, complete: false, enabled: true });
   }

@@ -29,6 +29,7 @@ import { setContext } from '@apollo/client/link/context';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
+import { EntryControls } from './pages/studies/EntryControls';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -127,6 +128,7 @@ const MyRoutes: FC = () => {
         <Route path={'/study/new'} element={<NewStudy />} />
         <Route path={'/study/controls'} element={<StudyControl />} />
         <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
+        <Route path={'/study/entries'} element={<EntryControls />} />
         <Route path={'/study/tags'} element={<DownloadTags />} />
         <Route path={'/successpage'} element={<SuccessPage />} />
         <Route path={'/dataset/controls'} element={<DatasetControls />} />

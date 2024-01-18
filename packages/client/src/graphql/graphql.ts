@@ -212,6 +212,7 @@ export type Mutation = {
   refresh: AccessToken;
   resendInvite: InviteModel;
   resetPassword: Scalars['Boolean']['output'];
+  setEntryEnabled: Scalars['Boolean']['output'];
   signLabCreateProject: Project;
   signup: AccessToken;
   updateProject: ProjectModel;
@@ -413,6 +414,13 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSetEntryEnabledArgs = {
+  enabled: Scalars['Boolean']['input'];
+  entry: Scalars['ID']['input'];
+  study: Scalars['ID']['input'];
+};
+
+
 export type MutationSignLabCreateProjectArgs = {
   project: ProjectCreate;
 };
@@ -562,6 +570,7 @@ export type Query = {
   getUser: UserModel;
   invite: InviteModel;
   invites: Array<InviteModel>;
+  isEntryEnabled: Scalars['Boolean']['output'];
   lexFindAll: Array<Lexicon>;
   lexiconByKey: LexiconEntry;
   lexiconSearch: Array<LexiconEntry>;
@@ -646,6 +655,12 @@ export type QueryInviteArgs = {
 
 export type QueryInvitesArgs = {
   status?: InputMaybe<InviteStatus>;
+};
+
+
+export type QueryIsEntryEnabledArgs = {
+  entry: Scalars['ID']['input'];
+  study: Scalars['ID']['input'];
 };
 
 

@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { TagService } from './tag.service';
 import { Tag } from './tag.model';
 import { StudyPipe } from '../study/pipes/study.pipe';
@@ -14,6 +14,7 @@ import * as casbin from 'casbin';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
 import { StudyPermissions } from '../permission/permissions/study';
+import { TagPermissions } from 'src/permission/permissions/tag';
 
 // TODO: Add permissioning
 @UseGuards(JwtAuthGuard)
@@ -54,6 +55,32 @@ export class TagResolver {
     // TODO: Add user context and verify the correct user has completed the tag
     await this.tagService.complete(tag, data);
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  async setEntryEnabled(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
+    @Args('enabled', { type: () => Boolean }) enabled: boolean,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
+    if (!(await this.enforcer.enforce(user.id, TagPermissions.UPDATE, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot update tags in this study');
+    }
+    await this.tagService.setEnabled(study, entry, enabled);
+    return true;
+  }
+
+  @Query(() => Boolean)
+  async isEntryEnabled(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
+    @TokenContext() user: TokenPayload
+  ): Promise<Boolean> {
+    if (!(await this.enforcer.enforce(user.id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+    return this.tagService.isEntryEnabled(study, entry);
   }
 
   @ResolveField(() => Entry)

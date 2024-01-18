@@ -13,6 +13,23 @@ export type CreateTagsMutationVariables = Types.Exact<{
 
 export type CreateTagsMutation = { __typename?: 'Mutation', createTags: Array<{ __typename?: 'Tag', _id: string }> };
 
+export type SetEntryEnabledMutationVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+  entry: Types.Scalars['ID']['input'];
+  enabled: Types.Scalars['Boolean']['input'];
+}>;
+
+
+export type SetEntryEnabledMutation = { __typename?: 'Mutation', setEntryEnabled: boolean };
+
+export type IsEntryEnabledQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+  entry: Types.Scalars['ID']['input'];
+}>;
+
+
+export type IsEntryEnabledQuery = { __typename?: 'Query', isEntryEnabled: boolean };
+
 export type AssignTagMutationVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
 }>;
@@ -63,6 +80,73 @@ export function useCreateTagsMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTagsMutationHookResult = ReturnType<typeof useCreateTagsMutation>;
 export type CreateTagsMutationResult = Apollo.MutationResult<CreateTagsMutation>;
 export type CreateTagsMutationOptions = Apollo.BaseMutationOptions<CreateTagsMutation, CreateTagsMutationVariables>;
+export const SetEntryEnabledDocument = gql`
+    mutation setEntryEnabled($study: ID!, $entry: ID!, $enabled: Boolean!) {
+  setEntryEnabled(study: $study, entry: $entry, enabled: $enabled)
+}
+    `;
+export type SetEntryEnabledMutationFn = Apollo.MutationFunction<SetEntryEnabledMutation, SetEntryEnabledMutationVariables>;
+
+/**
+ * __useSetEntryEnabledMutation__
+ *
+ * To run a mutation, you first call `useSetEntryEnabledMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetEntryEnabledMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setEntryEnabledMutation, { data, loading, error }] = useSetEntryEnabledMutation({
+ *   variables: {
+ *      study: // value for 'study'
+ *      entry: // value for 'entry'
+ *      enabled: // value for 'enabled'
+ *   },
+ * });
+ */
+export function useSetEntryEnabledMutation(baseOptions?: Apollo.MutationHookOptions<SetEntryEnabledMutation, SetEntryEnabledMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetEntryEnabledMutation, SetEntryEnabledMutationVariables>(SetEntryEnabledDocument, options);
+      }
+export type SetEntryEnabledMutationHookResult = ReturnType<typeof useSetEntryEnabledMutation>;
+export type SetEntryEnabledMutationResult = Apollo.MutationResult<SetEntryEnabledMutation>;
+export type SetEntryEnabledMutationOptions = Apollo.BaseMutationOptions<SetEntryEnabledMutation, SetEntryEnabledMutationVariables>;
+export const IsEntryEnabledDocument = gql`
+    query isEntryEnabled($study: ID!, $entry: ID!) {
+  isEntryEnabled(study: $study, entry: $entry)
+}
+    `;
+
+/**
+ * __useIsEntryEnabledQuery__
+ *
+ * To run a query within a React component, call `useIsEntryEnabledQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsEntryEnabledQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsEntryEnabledQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *      entry: // value for 'entry'
+ *   },
+ * });
+ */
+export function useIsEntryEnabledQuery(baseOptions: Apollo.QueryHookOptions<IsEntryEnabledQuery, IsEntryEnabledQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IsEntryEnabledQuery, IsEntryEnabledQueryVariables>(IsEntryEnabledDocument, options);
+      }
+export function useIsEntryEnabledLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsEntryEnabledQuery, IsEntryEnabledQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IsEntryEnabledQuery, IsEntryEnabledQueryVariables>(IsEntryEnabledDocument, options);
+        }
+export type IsEntryEnabledQueryHookResult = ReturnType<typeof useIsEntryEnabledQuery>;
+export type IsEntryEnabledLazyQueryHookResult = ReturnType<typeof useIsEntryEnabledLazyQuery>;
+export type IsEntryEnabledQueryResult = Apollo.QueryResult<IsEntryEnabledQuery, IsEntryEnabledQueryVariables>;
 export const AssignTagDocument = gql`
     mutation assignTag($study: ID!) {
   assignTag(study: $study) {
