@@ -131,7 +131,7 @@ export class TagService {
           study: study._id,
           complete: false,
           order,
-          enabled: true
+          enabled: enabled
         });
       }
     }

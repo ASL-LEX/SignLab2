@@ -27,17 +27,18 @@ export default function ToggleEntryEnabled(props: { entryId: string }) {
     if (setEntryEnabledResults.called) {
       if (setEntryEnabledResults.error) {
         //show error message
-        console.log('error toggling entry', setEntryEnabledResults.error);
+        console.error('error toggling entry', setEntryEnabledResults.error);
       }
     }
-  }, [setEntryEnabledResults.data]);
+  }, [setEntryEnabledResults.error]);
 
   const handleToggleEnabled = async (entryId: string, checked: boolean) => {
     if (study) {
       if (!checked) {
         confirmation.pushConfirmationRequest({
           title: 'Disable Entry',
-          message: 'Are you sure you want to disable this entry? Doing so will exclude this entry from study',
+          message:
+            'Are you sure you want to disable this entry? Doing so will exclude this entry from the current study.',
           onConfirm: () => {
             setEntryEnabledMutation({
               variables: { study: study._id, entry: entryId, enabled: checked }
