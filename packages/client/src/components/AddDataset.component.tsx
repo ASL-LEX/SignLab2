@@ -79,11 +79,9 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   }, [createDatasetResults]);
 
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
-    console.log('data', data);
     setData(data);
     if (!errors || errors.length === 0) {
       datasetExistsQuery({ variables: { name: data.name } });
-      console.log('setting error to false');
       setError(false);
     } else {
       setError(true);
