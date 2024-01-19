@@ -109,7 +109,7 @@ export const NewStudy: React.FC = () => {
 
   return (
     <>
-      <Typography sx={{ margin: '10px 0px 15px 10px' }} variant="h5">
+      <Typography variant="h5">
         Create New Study
       </Typography>
       <Stepper activeStep={activeStep}>

@@ -1,4 +1,4 @@
-import { Grid, Button, Typography, Stack } from '@mui/material';
+import { Grid, Button, Typography, Stack, Box } from '@mui/material';
 import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
 import AssistantPhotoIcon from '@mui/icons-material/AssistantPhoto';
@@ -114,7 +114,7 @@ export const TagsDisplay: React.FC<TagsDisplayProps> = (props) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={3}>
-        <Stack direction="column" spacing={1}>
+        <Stack direction="column" spacing={1} sx={{ maxWidth: 400 }}>
           <Typography variant="h5">Tag Fields</Typography>
           {tagFieldOptions.map((button: any) => (
             <Button
@@ -128,14 +128,16 @@ export const TagsDisplay: React.FC<TagsDisplayProps> = (props) => {
           ))}
         </Stack>
 
-        <Button
-          variant="outlined"
-          onClick={openTagFormPreview}
-          disabled={valid.includes(false)}
-          sx={{ width: '100%', marginTop: 3 }}
-        >
-          Preview
-        </Button>
+        <Box sx={{ maxWidth: 400, marginTop: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={openTagFormPreview}
+            disabled={valid.includes(false)}
+            sx={{ width: '100%' }}
+          >
+            Preview
+          </Button>
+        </Box>
 
         <TagFormPreviewDialog data={data} clicked={open} toggleModal={toggleModal} />
       </Grid>
