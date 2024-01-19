@@ -19,7 +19,6 @@ const schema = {
   properties: {
     name: {
       type: 'string',
-      pattern: '^[a-zA-Z 0-9]*$',
       description: 'Please enter new dataset name'
     },
     description: {
@@ -51,15 +50,10 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const [datasetExistsQuery, datasetExistsResults] = useDatasetExistsLazyQuery();
 
-  const initialData = {
-    name: '',
-    description: ''
-  };
+  const initialData = {} as { name: string; description: string };
 
   const [data, setData] = useState(initialData);
-  const [createDataset, { data: createDatasetResults, loading }] = useCreateDatasetMutation({
-    variables: { dataset: data }
-  });
+  const [createDataset, { data: createDatasetResults, loading }] = useCreateDatasetMutation();
 
   useEffect(() => {
     if (datasetExistsResults.data?.datasetExists) {
@@ -67,7 +61,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
         {
           instancePath: '/name',
           keyword: 'uniqueProjectName',
-          message: 'A project with this name already exists',
+          message: 'A dataset with this name already exists',
           schemaPath: '#/properties/name/name',
           params: { keyword: 'uniqueProjectName' }
         }
@@ -85,13 +79,19 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   }, [createDatasetResults]);
 
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
+    console.log('data', data);
     setData(data);
     if (!errors || errors.length === 0) {
       datasetExistsQuery({ variables: { name: data.name } });
+      console.log('setting error to false');
       setError(false);
     } else {
       setError(true);
     }
+  };
+
+  const onCreate = () => {
+    createDataset({ variables: { dataset: data } });
   };
 
   return (
@@ -116,9 +116,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
           <Button
             variant="contained"
             disabled={loading || error || datasetExistsResults.data?.datasetExists}
-            onClick={() => {
-              createDataset();
-            }}
+            onClick={onCreate}
             type="submit"
           >
             Create
