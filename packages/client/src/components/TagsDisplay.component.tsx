@@ -1,4 +1,4 @@
-import { Box, Grid, Button, Container, Typography } from '@mui/material';
+import { Grid, Button, Typography, Stack } from '@mui/material';
 import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
 import AssistantPhotoIcon from '@mui/icons-material/AssistantPhoto';
@@ -113,52 +113,47 @@ export const TagsDisplay: React.FC<TagsDisplayProps> = (props) => {
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={3} sx={{ margin: '0px 40px 10px -40px', display: 'table-row' }}>
-        <Container sx={{ display: 'flex', maxWidth: '100%', flexDirection: 'column', marginRight: '50px' }}>
+      <Grid item xs={3}>
+        <Stack direction="column" spacing={1}>
           <Typography variant="h5">Tag Fields</Typography>
           {tagFieldOptions.map((button: any) => (
             <Button
               variant="outlined"
-              color="secondary"
               key={button.name}
-              sx={{ color: 'black', fontSize: '14px', width: '12rem', marginBottom: '6px' }}
               startIcon={button.icon}
               onClick={() => addTagField(button.type)}
             >
               {button.name}
             </Button>
           ))}
-          <Button
-            variant="outlined"
-            sx={{ marginTop: '5%', width: '12rem' }}
-            onClick={openTagFormPreview}
-            disabled={valid.includes(false)}
-          >
-            Preview
-          </Button>
-        </Container>
+        </Stack>
+
+        <Button
+          variant="outlined"
+          onClick={openTagFormPreview}
+          disabled={valid.includes(false)}
+          sx={{ width: '100%', marginTop: 3 }}
+        >
+          Preview
+        </Button>
 
         <TagFormPreviewDialog data={data} clicked={open} toggleModal={toggleModal} />
       </Grid>
+
       <Grid item xs={9} sx={{ overflow: 'auto' }}>
-        <Box sx={{ height: 400, textAlign: 'center' }}>
+        <Stack direction="column" sx={{ maxHeight: 400 }} spacing={2}>
           {tagFields.length > 0 ? (
             tagFields.map((value: TagField, index: number) => (
-              <Box key={index} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Stack direction="row" key={index} spacing={1}>
                 <TagFieldView field={value} valid={valid} validate={setValid} index={index} />
-                <Button
-                  size="large"
-                  sx={{ marginTop: '45px' }}
-                  startIcon={<DeleteIcon />}
-                  onClick={() => removeField(index)}
-                />
-              </Box>
+                <Button startIcon={<DeleteIcon />} onClick={() => removeField(index)} />
+              </Stack>
             ))
           ) : (
-            <Box>No Tags Selected</Box>
+            <Typography variant="h5">No Tags Selected</Typography>
           )}
           <br />
-        </Box>
+        </Stack>
       </Grid>
     </Grid>
   );
