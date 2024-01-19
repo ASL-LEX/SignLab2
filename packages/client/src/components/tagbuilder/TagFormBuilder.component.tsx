@@ -5,6 +5,9 @@ import { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { TagFieldView } from './TagField.component';
 import { TagSchema } from '../../graphql/graphql';
 import { AslLexFieldProvider } from './AslLexTagProvider';
+import { AutocompleteProvider } from './AutocompleteProvider';
+import { BooleanProvider } from './BooleanProvider';
+import { EmbeddedProvider } from './EmbeddedVideoProvider';
 import { TagField, TagFieldFragmentSchema } from './TagProvider';
 
 export interface TagsDisplayProps {
@@ -69,8 +72,6 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
         elements: uiElements
       }
     });
-
-
   }, [tagSchemaFragments]);
 
   const openTagFormPreview = () => {
@@ -87,6 +88,9 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
         <Stack direction="column" spacing={1} sx={{ maxWidth: 400 }}>
           <Typography variant="h5">Tag Fields</Typography>
           <AslLexFieldProvider handleClick={addTagField} />
+          <AutocompleteProvider handleClick={addTagField} />
+          <BooleanProvider handleClick={addTagField} />
+          <EmbeddedProvider handleClick={addTagField} />
         </Stack>
 
         <Box sx={{ maxWidth: 400, marginTop: 3 }}>
