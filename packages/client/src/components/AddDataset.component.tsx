@@ -2,13 +2,16 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
+import { useCreateDatasetMutation, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
+import { Button } from '@mui/material';
+import { ErrorObject } from 'ajv';
 
 interface ShowProps {
   show: boolean;
-  toggleModal: () => void;
+  toggleModal: (newDatasetCreated: boolean) => void;
 }
 
 const schema = {
@@ -16,6 +19,7 @@ const schema = {
   properties: {
     name: {
       type: 'string',
+      pattern: '^[a-zA-Z 0-9]*$',
       description: 'Please enter new dataset name'
     },
     description: {
@@ -44,16 +48,46 @@ const uischema = {
 
 export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [error, setError] = useState(true);
+  const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
+  const [datasetExistsQuery, datasetExistsResults] = useDatasetExistsLazyQuery();
+
   const initialData = {
     name: '',
     description: ''
   };
 
   const [data, setData] = useState(initialData);
+  const [createDataset, { data: createDatasetResults, loading }] = useCreateDatasetMutation({
+    variables: { dataset: data }
+  });
 
-  const handleChange = (data: any) => {
+  useEffect(() => {
+    if (datasetExistsResults.data?.datasetExists) {
+      setAdditionalErrors([
+        {
+          instancePath: '/name',
+          keyword: 'uniqueProjectName',
+          message: 'A project with this name already exists',
+          schemaPath: '#/properties/name/name',
+          params: { keyword: 'uniqueProjectName' }
+        }
+      ]);
+    } else {
+      setAdditionalErrors([]);
+    }
+  }, [datasetExistsResults.data]);
+
+  useEffect(() => {
+    if (createDatasetResults?.createDataset) {
+      props.toggleModal(true);
+    }
+    //TODO handle creation server error with snackbar
+  }, [createDatasetResults]);
+
+  const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
-    if (data.name.length > 1 && data.description.length > 1) {
+    if (!errors || errors.length === 0) {
+      datasetExistsQuery({ variables: { name: data.name } });
       setError(false);
     } else {
       setError(true);
@@ -71,16 +105,24 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
             data={data}
             renderers={materialRenderers}
             cells={materialCells}
-            onChange={({ data }) => handleChange(data)}
+            onChange={({ data, errors }) => handleChange(data, errors)}
+            additionalErrors={additionalErrors}
           />
         </DialogContent>
         <DialogActions>
-          <button onClick={props.toggleModal} type="submit">
+          <Button onClick={() => props.toggleModal(false)} type="submit">
             Cancel
-          </button>
-          <button disabled={error} onClick={props.toggleModal} type="submit">
+          </Button>
+          <Button
+            variant="contained"
+            disabled={loading || error || datasetExistsResults.data?.datasetExists}
+            onClick={() => {
+              createDataset();
+            }}
+            type="submit"
+          >
             Create
-          </button>
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

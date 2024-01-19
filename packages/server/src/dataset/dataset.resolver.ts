@@ -32,6 +32,15 @@ export class DatasetResolver {
     return this.datasetService.findAll(organization._id);
   }
 
+  @Query(() => Boolean)
+  async datasetExists(
+    @Args('name') name: string,
+    @OrganizationContext() organization: Organization,
+    @TokenContext() _user: TokenPayload
+  ): Promise<boolean> {
+    return this.datasetService.exists(name, organization._id);
+  }
+
   @Mutation(() => Dataset)
   async createDataset(
     @Args('dataset') dataset: DatasetCreate,

@@ -4,7 +4,7 @@ import { AddDataset } from '../../components/AddDataset.component';
 import { useEffect, useState } from 'react';
 import { UploadEntries } from '../../components/UploadEntries.component';
 import { Dataset } from '../../graphql/graphql';
-import { useGetDatasetsQuery } from '../../graphql/dataset/dataset';
+import { useGetDatasetsLazyQuery } from '../../graphql/dataset/dataset';
 import { DatasetsView } from '../../components/DatasetsView.component';
 import { GridColDef, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -15,10 +15,15 @@ export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
   const [upload, setUpload] = useState(false);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const getDatasetsResults = useGetDatasetsQuery();
+  const [getDatasets, getDatasetsResults] = useGetDatasetsLazyQuery();
   const [deleteEntryMutation] = useDeleteEntryMutation();
 
   const confirmation = useConfirmation();
+
+  useEffect(() => {
+    getDatasets();
+  }, []);
+
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasets);
@@ -33,8 +38,11 @@ export const DatasetControls: React.FC = () => {
     }
   };
 
-  const toggleAdd = () => {
+  const toggleAdd = (newDatasetCreated: boolean) => {
     setAdd((add) => !add);
+    if (newDatasetCreated) {
+      getDatasets({ fetchPolicy: 'network-only' });
+    }
   };
 
   const toggleUpload = () => {

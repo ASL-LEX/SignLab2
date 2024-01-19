@@ -30,6 +30,11 @@ export class DatasetService {
     return this.datasetModel.findOne({ organization, name });
   }
 
+  async exists(name: string, organization: string): Promise<boolean> {
+    const dataset = await this.datasetModel.findOne({ name, organization });
+    return !!dataset;
+  }
+
   async create(organization: string, datasetCreate: DatasetCreate): Promise<Dataset> {
     // Create the dataset
     const dataset = await this.datasetModel.create({ ...datasetCreate, organization });
