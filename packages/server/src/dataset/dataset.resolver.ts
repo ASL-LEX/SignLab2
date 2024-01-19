@@ -32,6 +32,18 @@ export class DatasetResolver {
     return this.datasetService.findAll(organization._id);
   }
 
+  @Query(() => Boolean)
+  async datasetExists(
+    @Args('name') name: string,
+    @OrganizationContext() organization: Organization,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
+    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, organization._id))) {
+      throw new UnauthorizedException('User does not have permission to read a dataset in this organization');
+    }
+    return this.datasetService.exists(name, organization._id);
+  }
+
   @Mutation(() => Dataset)
   async createDataset(
     @Args('dataset') dataset: DatasetCreate,

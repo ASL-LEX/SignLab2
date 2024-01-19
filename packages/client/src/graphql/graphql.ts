@@ -552,6 +552,7 @@ export type ProjectSettingsModel = {
 
 export type Query = {
   __typename?: 'Query';
+  datasetExists: Scalars['Boolean']['output'];
   entryForDataset: Array<Entry>;
   exists: Scalars['Boolean']['output'];
   findStudies: Array<Study>;
@@ -582,6 +583,11 @@ export type Query = {
   studyExists: Scalars['Boolean']['output'];
   users: Array<UserModel>;
   validateCSV: UploadResult;
+};
+
+
+export type QueryDatasetExistsArgs = {
+  name: Scalars['String']['input'];
 };
 
 
