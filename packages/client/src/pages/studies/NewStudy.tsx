@@ -1,5 +1,5 @@
-import { Container, Typography, Button, Box, Stepper, Step, StepLabel } from '@mui/material';
-import { TagsDisplay } from '../../components/TagsDisplay.component';
+import { Typography, Button, Box, Stepper, Step, StepLabel } from '@mui/material';
+import { TagFormBuilder } from '../../components/tagbuilder/TagFormBuilder.component';
 import { NewStudyJsonForm } from '../../components/NewStudyJsonForm.component';
 import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
@@ -99,7 +99,7 @@ export const NewStudy: React.FC = () => {
       case 0:
         return <NewStudyJsonForm newStudy={partialNewStudy} setNewStudy={setPartialNewStudy} />;
       case 1:
-        return <TagsDisplay tagSchema={tagSchema} setTagSchema={setTagSchema} />;
+        return <TagFormBuilder tagSchema={tagSchema} setTagSchema={setTagSchema} />;
       case 2:
         return <TagTrainingComponent setTaggingSet={setTaggingSet} setTrainingSet={setTrainingSet} />;
       default:
