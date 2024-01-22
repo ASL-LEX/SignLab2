@@ -1,7 +1,7 @@
 import { TagFieldProviderProps, produceJSONForm, ProviderButton } from './TagProvider.tsx';
 import { AssistantPhoto } from '@mui/icons-material';
 import { Dataset } from '../../graphql/graphql';
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../../graphql/dataset/dataset.ts';
 import { useProject } from '../../context/Project.context.tsx';
 
@@ -35,22 +35,22 @@ export const VideoRecordProvider: React.FC<TagFieldProviderProps> = (props) => {
     maximumOptional: {
       type: 'number',
       description: 'The maximum number of videos the user can record (including required, defaults to 1)'
-    },
+    }
   };
 
   const customUISchema = [
     {
       type: 'Control',
-      scope: '#/properties/dataset',
+      scope: '#/properties/dataset'
     },
     {
       type: 'Control',
-      scope: '#/properties/minimumRequired',
+      scope: '#/properties/minimumRequired'
     },
     {
       type: 'Control',
-      scope: '#/properties/maximumOptional',
-    },
+      scope: '#/properties/maximumOptional'
+    }
   ];
 
   const produceDataSchema = (data: any) => {
@@ -59,9 +59,9 @@ export const VideoRecordProvider: React.FC<TagFieldProviderProps> = (props) => {
         type: 'array',
         description: data.description,
         items: {
-          type: 'string',
+          type: 'string'
         },
-        minItems: data.minimumRequired || 1,
+        minItems: data.minimumRequired || 1
       }
     };
   };
@@ -91,5 +91,5 @@ export const VideoRecordProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<AssistantPhoto />} name="Video Record" onClick={handleClick} />
+  return <ProviderButton icon={<AssistantPhoto />} name="Video Record" onClick={handleClick} />;
 };

@@ -120,7 +120,7 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
           {tagFields.length > 0 ? (
             tagFields.map((value: TagField, index: number) => (
               <Stack direction="row" key={index} spacing={1}>
-                <TagFieldView field={value} setFieldFragment={(fragment) => updateTagSchemaFragment(index, fragment)}  />
+                <TagFieldView field={value} setFieldFragment={(fragment) => updateTagSchemaFragment(index, fragment)} />
                 <Button startIcon={<DeleteIcon />} onClick={() => removeField(index)} />
               </Stack>
             ))

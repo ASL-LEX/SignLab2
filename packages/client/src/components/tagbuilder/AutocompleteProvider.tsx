@@ -49,5 +49,5 @@ export const AutocompleteProvider: React.FC<TagFieldProviderProps> = (props) => 
     });
   };
 
-  return <ProviderButton icon={<TextFormat />} name="Categorical" onClick={handleClick} />
+  return <ProviderButton icon={<TextFormat />} name="Categorical" onClick={handleClick} />;
 };

@@ -1,5 +1,5 @@
 import { JsonForms } from '@jsonforms/react';
-import Ajv, {ErrorObject} from 'ajv';
+import Ajv, { ErrorObject } from 'ajv';
 import { Card, CardContent, Typography } from '@mui/material';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { useState } from 'react';
@@ -37,10 +37,7 @@ export const TagFieldView: React.FC<FieldProps> = ({ field, setFieldFragment }: 
     <Card sx={{ width: '90%', height: '15%' }}>
       <>
         <Typography sx={{ fontSize: '22px' }}>{'Empty'}</Typography>
-        <Typography
-          sx={{ color: 'gray', fontWeight: 'medium', fontSize: '12px' }}
-          variant="body2"
-        >
+        <Typography sx={{ color: 'gray', fontWeight: 'medium', fontSize: '12px' }} variant="body2">
           {field.fieldKind}
         </Typography>
       </>

@@ -42,7 +42,7 @@ export const EmbeddedProvider: React.FC<TagFieldProviderProps> = (props) => {
     return {
       [data.fieldName]: {
         type: 'string',
-        description: data.description,
+        description: data.description
       }
     };
   };
@@ -71,5 +71,5 @@ export const EmbeddedProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<VideoLibrary />} name="List of Video Options" onClick={handleClick} />
+  return <ProviderButton icon={<VideoLibrary />} name="List of Video Options" onClick={handleClick} />;
 };

@@ -109,9 +109,7 @@ export const NewStudy: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h5">
-        Create New Study
-      </Typography>
+      <Typography variant="h5">Create New Study</Typography>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
           return (

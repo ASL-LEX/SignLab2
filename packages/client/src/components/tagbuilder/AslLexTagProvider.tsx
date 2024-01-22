@@ -17,7 +17,7 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
     return {
       [data.fieldName]: {
         type: 'string',
-        description: data.description,
+        description: data.description
       }
     };
   };
@@ -45,5 +45,5 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<Accessibility />} name="ASL-LEX" onClick={handleClick} />
+  return <ProviderButton icon={<Accessibility />} name="ASL-LEX" onClick={handleClick} />;
 };

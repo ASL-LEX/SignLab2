@@ -6,7 +6,7 @@ export const NumericProvider: React.FC<TagFieldProviderProps> = (props) => {
     return {
       [data.fieldName]: {
         type: 'number',
-        description: data.description,
+        description: data.description
       }
     };
   };
@@ -15,7 +15,7 @@ export const NumericProvider: React.FC<TagFieldProviderProps> = (props) => {
     return [
       {
         type: 'Control',
-        scope: `#/properties/${data.fieldName}`,
+        scope: `#/properties/${data.fieldName}`
       }
     ];
   };
@@ -29,5 +29,5 @@ export const NumericProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<AssistantPhoto />} name="Numeric" onClick={handleClick} />
+  return <ProviderButton icon={<AssistantPhoto />} name="Numeric" onClick={handleClick} />;
 };

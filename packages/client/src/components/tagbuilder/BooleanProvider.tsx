@@ -6,7 +6,7 @@ export const BooleanProvider: React.FC<TagFieldProviderProps> = (props) => {
     return {
       [data.fieldName]: {
         type: 'boolean',
-        description: data.description,
+        description: data.description
       }
     };
   };
@@ -15,7 +15,7 @@ export const BooleanProvider: React.FC<TagFieldProviderProps> = (props) => {
     return [
       {
         type: 'Control',
-        scope: `#/properties/${data.fieldName}`,
+        scope: `#/properties/${data.fieldName}`
       }
     ];
   };
@@ -29,5 +29,5 @@ export const BooleanProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<AssistantPhoto />} name="True/False Option" onClick={handleClick} />
+  return <ProviderButton icon={<AssistantPhoto />} name="True/False Option" onClick={handleClick} />;
 };

@@ -5,22 +5,22 @@ export const SliderProvider: React.FC<TagFieldProviderProps> = (props) => {
   const customFields = {
     minimum: { type: 'number', description: 'The minimum value of the slider' },
     maximum: { type: 'number', description: 'The maximum value of the slider' },
-    stepSize: { type: 'number', description: 'The step size of the slider' },
+    stepSize: { type: 'number', description: 'The step size of the slider' }
   };
 
   const customUISchema = [
     {
       type: 'Control',
-      scope: '#/properties/minimum',
+      scope: '#/properties/minimum'
     },
     {
       type: 'Control',
-      scope: '#/properties/maximum',
+      scope: '#/properties/maximum'
     },
     {
       type: 'Control',
-      scope: '#/properties/stepSize',
-    },
+      scope: '#/properties/stepSize'
+    }
   ];
 
   const produceDataSchema = (data: any) => {
@@ -43,7 +43,7 @@ export const SliderProvider: React.FC<TagFieldProviderProps> = (props) => {
         scope: `#/properties/${data.fieldName}`,
         options: {
           slider: true,
-          showUnfocusedDescription: true,
+          showUnfocusedDescription: true
         }
       }
     ];
@@ -58,5 +58,5 @@ export const SliderProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<AssistantPhoto />} name="Slider" onClick={handleClick} />
+  return <ProviderButton icon={<AssistantPhoto />} name="Slider" onClick={handleClick} />;
 };

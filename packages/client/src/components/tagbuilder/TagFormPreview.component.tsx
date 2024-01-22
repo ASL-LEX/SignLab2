@@ -2,7 +2,7 @@ import { JsonForms } from '@jsonforms/react';
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import { useState } from 'react';
 import { TagSchema } from '../../graphql/graphql';
-import {materialRenderers} from '@jsonforms/material-renderers';
+import { materialRenderers } from '@jsonforms/material-renderers';
 
 interface DialogProps {
   schema: TagSchema;
