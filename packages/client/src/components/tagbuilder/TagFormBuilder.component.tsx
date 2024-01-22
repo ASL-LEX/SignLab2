@@ -8,6 +8,10 @@ import { AslLexFieldProvider } from './AslLexTagProvider';
 import { AutocompleteProvider } from './AutocompleteProvider';
 import { BooleanProvider } from './BooleanProvider';
 import { EmbeddedProvider } from './EmbeddedVideoProvider';
+import { FreeTextProvider } from './FreeTextProvider';
+import { NumericProvider } from './NumericProvider';
+import { SliderProvider } from './SliderProvider';
+import { VideoRecordProvider } from './VideoRecordProvider';
 import { TagField, TagFieldFragmentSchema } from './TagProvider';
 
 export interface TagsDisplayProps {
@@ -91,6 +95,10 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
           <AutocompleteProvider handleClick={addTagField} />
           <BooleanProvider handleClick={addTagField} />
           <EmbeddedProvider handleClick={addTagField} />
+          <FreeTextProvider handleClick={addTagField} />
+          <NumericProvider handleClick={addTagField} />
+          <SliderProvider handleClick={addTagField} />
+          <VideoRecordProvider handleClick={addTagField} />
         </Stack>
 
         <Box sx={{ maxWidth: 400, marginTop: 3 }}>
