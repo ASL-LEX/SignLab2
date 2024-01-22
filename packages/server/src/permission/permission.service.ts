@@ -84,7 +84,6 @@ export class PermissionService {
       users.map(async (user) => {
         const isStudyAdmin = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString());
         const isStudyAdminEditable = !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study._id.toString()));
-        console.log(user, isStudyAdminEditable);
 
         const isContributor = await this.enforcer.enforce(user.id, Roles.CONTRIBUTOR, study._id.toString());
         const isContributorEditable = !(await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString()));

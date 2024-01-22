@@ -1,15 +1,11 @@
-import { JsonFormsRendererRegistryEntry, JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { JsonForms } from '@jsonforms/react';
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import { useState } from 'react';
+import { TagSchema } from '../../graphql/graphql';
+import { materialRenderers } from '@jsonforms/material-renderers';
 
-type TagPreviewInformation = {
-  previewDataSchema: JsonSchema;
-  previewUiSchema: UISchemaElement;
-  renderers: JsonFormsRendererRegistryEntry[];
-};
 interface DialogProps {
-  data: TagPreviewInformation;
+  schema: TagSchema;
   clicked: boolean;
   toggleModal: () => void;
 }
@@ -31,9 +27,9 @@ export const TagFormPreviewDialog: React.FC<DialogProps> = (props: DialogProps) 
               <JsonForms
                 data={data}
                 onChange={(event) => setData(event.data)}
-                schema={props.data.previewDataSchema}
-                uischema={props.data.previewUiSchema}
-                renderers={props.data.renderers}
+                schema={props.schema.dataSchema}
+                uischema={props.schema.uiSchema}
+                renderers={materialRenderers}
               />
             </Box>
           </Container>
