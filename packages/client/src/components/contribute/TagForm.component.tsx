@@ -15,7 +15,7 @@ export interface TagFormProps {
 const renderers = [...materialRenderers, { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }];
 
 export const TagForm: React.FC<TagFormProps> = (props) => {
-  const [data, setData] = useState<any>({ Truf: true, rating: 4 });
+  const [data, setData] = useState<any>();
   const [dataValid, setDataValid] = useState<boolean>(false);
 
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {

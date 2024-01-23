@@ -1,5 +1,5 @@
-import { Search } from '@bu-sail/saas-view';
 import { withJsonFormsControlProps } from '@jsonforms/react';
+import { TextSearch } from '@bu-sail/saas-view/dist/components/TextSearch/TextSearch.component';
 
 interface AslLexSearchControlProps {
   data: any;
@@ -13,10 +13,10 @@ function getAslLexCode(aslLexObject: any) {
 
 const AslLexSearchControl = ({ data, handleChange, path }: AslLexSearchControlProps) => (
   <>
-    <Search
+    <TextSearch
       width={300}
-      value={data}
-      setValue={(entry) => {
+      lexicon={data}
+      setSearchResults={(entry) => {
         handleChange(path, getAslLexCode(entry));
       }}
     />
