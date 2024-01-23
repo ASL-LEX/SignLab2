@@ -6,15 +6,13 @@ import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import AslLexSearchControl from '../../jsonForms/customRenderes/AslLexSearchControl';
 import AslLexSearchControlTester from '../../jsonForms/customRenderes/aslLexSearchControlTester';
-import VideoRecordField, { videoFieldTester } from '../tag/VideoRecordField.component';
+import VideoRecordField, { videoFieldTester } from '../tag/videorecord/VideoRecordField.component';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 
 export interface TagFormProps {
   study: Study;
   setTagData: Dispatch<SetStateAction<any>>;
 }
-
-const renderers = [...materialRenderers, { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }];
 
 export const TagForm: React.FC<TagFormProps> = (props) => {
   const [data, setData] = useState<any>();

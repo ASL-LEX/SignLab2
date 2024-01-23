@@ -1,16 +1,21 @@
 import { ControlProps, RankedTester, rankWith } from '@jsonforms/core';
 import { ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack } from '@mui/material';
 import { withJsonFormsControlProps } from '@jsonforms/react';
+import { StatusProcessCircles } from './StatusCircles.component';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
-console.log(props.label);
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Typography sx={{ width: '33%' }}>{props.label}</Typography>
         <Typography>{props.description}</Typography>
       </AccordionSummary>
+      <AccordionDetails>
+        <Stack direction="column" spacing={2} sx={{ width: '50%' }}>
+          <StatusProcessCircles isComplete={[true, false, false]} setState={() => {}} activeIndex={2} />
+        </Stack>
+      </AccordionDetails>
     </Accordion>
   );
 };
