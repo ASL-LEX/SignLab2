@@ -6,6 +6,8 @@ import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import AslLexSearchControl from '../../jsonForms/customRenderes/AslLexSearchControl';
 import AslLexSearchControlTester from '../../jsonForms/customRenderes/aslLexSearchControlTester';
+import VideoRecordField, { videoFieldTester } from '../tag/VideoRecordField.component';
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 
 export interface TagFormProps {
   study: Study;
@@ -43,6 +45,12 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
   const handleClear = () => {
     setData({});
   };
+
+  const renderers: JsonFormsRendererRegistryEntry[] = [
+    ...materialRenderers,
+    { tester: videoFieldTester, renderer: VideoRecordField },
+    { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }
+  ];
 
   return (
     <Box sx={{ maxWidth: 500 }}>

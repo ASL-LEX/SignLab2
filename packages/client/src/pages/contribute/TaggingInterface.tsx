@@ -78,7 +78,7 @@ interface MainViewProps {
 
 const MainView: React.FC<MainViewProps> = (props) => {
   return (
-    <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: 1000, margin: 'auto' }}>
+    <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: '80%', margin: 'auto' }}>
       <EntryView
         entry={props.tag.entry}
         width={500}
