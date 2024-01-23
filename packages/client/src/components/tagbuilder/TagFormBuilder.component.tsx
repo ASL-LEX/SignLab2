@@ -28,7 +28,7 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
 
   const [open, setOpen] = useState(false);
 
-  const addTagField = (tagField: TagField) => {    
+  const addTagField = (tagField: TagField) => {
     setTagFields([...tagFields, tagField]);
 
     tagSchemaFragments.push(null);
