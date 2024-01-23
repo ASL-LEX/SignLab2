@@ -37,11 +37,13 @@ interface StatusProcessCircleProps {
 }
 
 const StatusProcessCircle: React.FC<StatusProcessCircleProps> = (props) => {
+  const circleSize = '50px';
+
   return (
     <Box
       sx={{
-        width: '50px',
-        height: '50px',
+        width: circleSize,
+        height: circleSize,
         borderRadius: '50%',
         backgroundColor: props.isComplete ? 'success.main' : '',
         cursor: 'pointer',
