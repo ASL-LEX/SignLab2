@@ -1,5 +1,5 @@
 import { withJsonFormsControlProps } from '@jsonforms/react';
-import { TextSearch } from '@bu-sail/saas-view/dist/components/TextSearch/TextSearch.component';
+import { TextSearch } from '@bu-sail/saas-view';
 
 interface AslLexSearchControlProps {
   data: any;
