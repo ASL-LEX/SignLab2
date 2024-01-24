@@ -77,7 +77,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
             {/* Right navigation button */}
             <IconButton
               size='large'
-              disabled={activeIndex == validVideos.length - 1}
+              disabled={activeIndex == validVideos.length - 1 || validVideos[activeIndex] === false}
               onClick={() => setActiveIndex(activeIndex + 1)}
             ><ArrowRight fontSize='large' /></IconButton>
           </Stack>
