@@ -12,6 +12,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [validVideos, setValidVideos] = useState<boolean[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
+  const [recording, setRecording] = useState<boolean>(false);
 
   useEffect(() => {
     if (!props.uischema.options?.minimumRequired) {
@@ -31,12 +32,13 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
 
-  const handleVideoRecord = (video: Blob) => {
+  const handleVideoRecord = (video: Blob | null) => {
     blobs[activeIndex] = video;
-    setBlobs(blobs);
+    validVideos[activeIndex] = !!video;
 
-    validVideos[activeIndex] = true;
+    setBlobs(blobs);
     setValidVideos(validVideos);
+    console.log(blobs);
   };
 
   return (
@@ -54,12 +56,12 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
             {/* Left navigation button */}
             <IconButton size='large'><ArrowLeft fontSize='large'/></IconButton>
 
-            <VideoRecordInterface />
+            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={handleVideoRecord} recording={recording} />
 
             {/* Right navigation button */}
             <IconButton size='large'><ArrowRight fontSize='large' /></IconButton>
           </Stack>
-          <Button variant="outlined">Start Recording</Button>
+          <Button variant="outlined" onClick={() => setRecording(!recording)}>{recording ? 'Stop' : 'Start' } Recording</Button>
         </Stack>
       </AccordionDetails>
     </Accordion>
