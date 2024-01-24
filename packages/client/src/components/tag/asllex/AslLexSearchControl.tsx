@@ -20,8 +20,6 @@ const AslLexSearchControl = ({ handleChange, path }: AslLexSearchControlProps) =
   const [searchResults, setSearchResults] = useState<LexiconEntry[]>([]);
   const [value, setValue] = useState<LexiconEntry | null>(null);
 
-  console.log('searchre', searchResults);
-
   return (
     <>
       <TextSearch width={300} lexicon={aslLexicon} setSearchResults={setSearchResults} />
