@@ -10,6 +10,7 @@ export interface StatusProcessCirclesProps {
 };
 
 export const StatusProcessCircles: React.FC<StatusProcessCirclesProps> = (props) => {
+  console.log(props.isComplete);
   return (
     <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: '80%', margin: 'auto' }}>
       {props.isComplete.map((isComplete, index) => (

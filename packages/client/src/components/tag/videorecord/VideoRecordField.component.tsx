@@ -13,8 +13,8 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
-  const stateRef = useRef<{ validVideos: boolean[], blobs: (Blob | null)[]}>();
-  stateRef.current = { validVideos, blobs };
+  const stateRef = useRef<{ validVideos: boolean[], blobs: (Blob | null)[], activeIndex: number}>();
+  stateRef.current = { validVideos, blobs, activeIndex };
 
   useEffect(() => {
     if (!props.uischema.options?.minimumRequired) {
@@ -37,13 +37,13 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
 
   const handleVideoRecord = (video: Blob | null) => {
     const updatedBlobs = stateRef.current!.blobs.map((blob, index) => {
-      if (index === activeIndex) {
+      if (index === stateRef.current!.activeIndex) {
         return video;
       }
       return blob;
     });
     const updateValidVideos = stateRef.current!.validVideos.map((valid, index) => {
-      if (index === activeIndex) {
+      if (index === stateRef.current!.activeIndex) {
         return video !== null;
       }
       return valid;
@@ -66,12 +66,20 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
 
           <Stack direction='row' spacing={2} sx={{ justifyContent: 'center' }}>
             {/* Left navigation button */}
-            <IconButton size='large'><ArrowLeft fontSize='large'/></IconButton>
+            <IconButton
+              size='large'
+              disabled={activeIndex == 0}
+              onClick={() => setActiveIndex(activeIndex - 1)}
+            ><ArrowLeft fontSize='large'/></IconButton>
 
             <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={(blob) => handleVideoRecord(blob)} recording={recording} />
 
             {/* Right navigation button */}
-            <IconButton size='large'><ArrowRight fontSize='large' /></IconButton>
+            <IconButton
+              size='large'
+              disabled={activeIndex == validVideos.length - 1}
+              onClick={() => setActiveIndex(activeIndex + 1)}
+            ><ArrowRight fontSize='large' /></IconButton>
           </Stack>
           <Button variant="outlined" onClick={() => setRecording(!recording)}>{recording ? 'Stop' : 'Start' } Recording</Button>
         </Stack>
