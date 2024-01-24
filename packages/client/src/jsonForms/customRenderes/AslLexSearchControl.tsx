@@ -14,11 +14,13 @@ function getAslLexCode(aslLexObject: any) {
 }
 
 const width = 300;
-const aslLexicon = { _id: '64e4e63ecade2ec090d6765e', name: 'ASL-LEX', schema: {} };
+const aslLexicon = { _id: import.meta.env.VITE_ASL_LEXICON_ID, name: import.meta.env.VITE_NAME, schema: {} };
 
 const AslLexSearchControl = ({ handleChange, path }: AslLexSearchControlProps) => {
   const [searchResults, setSearchResults] = useState<LexiconEntry[]>([]);
   const [value, setValue] = useState<LexiconEntry | null>(null);
+
+  console.log('searchre', searchResults);
 
   return (
     <>
