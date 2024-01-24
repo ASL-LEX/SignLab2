@@ -4,14 +4,18 @@ import { materialRenderers } from '@jsonforms/material-renderers';
 import { SetStateAction, useState, Dispatch } from 'react';
 import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
+import AslLexSearchControl from '../../jsonForms/customRenderes/AslLexSearchControl';
+import AslLexSearchControlTester from '../../jsonForms/customRenderes/aslLexSearchControlTester';
 
 export interface TagFormProps {
   study: Study;
   setTagData: Dispatch<SetStateAction<any>>;
 }
 
+const renderers = [...materialRenderers, { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }];
+
 export const TagForm: React.FC<TagFormProps> = (props) => {
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>();
   const [dataValid, setDataValid] = useState<boolean>(false);
 
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {
@@ -48,7 +52,7 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
           uischema={props.study.tagSchema.uiSchema}
           data={data}
           onChange={({ data, errors }) => handleFormChange(data, errors)}
-          renderers={materialRenderers}
+          renderers={renderers}
         />
         <Stack direction="row">
           <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>
