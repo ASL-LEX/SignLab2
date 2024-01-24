@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
 export interface StatusProcessCirclesProps {
   /** List of statuses to display */
@@ -7,12 +7,12 @@ export interface StatusProcessCirclesProps {
   setState: (index: number) => void;
   /** The active index */
   activeIndex: number;
-};
+}
 
 export const StatusProcessCircles: React.FC<StatusProcessCirclesProps> = (props) => {
   console.log(props.isComplete);
   return (
-    <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: '80%', margin: 'auto' }}>
+    <Stack direction="row" spacing={2}>
       {props.isComplete.map((isComplete, index) => (
         <StatusProcessCircle
           key={index}
@@ -22,7 +22,7 @@ export const StatusProcessCircles: React.FC<StatusProcessCirclesProps> = (props)
           index={index}
         />
       ))}
-    </Box>
+    </Stack>
   );
 };
 
@@ -54,4 +54,4 @@ const StatusProcessCircle: React.FC<StatusProcessCircleProps> = (props) => {
       onClick={props.onClick}
     />
   );
-}
+};

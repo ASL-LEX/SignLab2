@@ -13,7 +13,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
-  const stateRef = useRef<{ validVideos: boolean[], blobs: (Blob | null)[], activeIndex: number}>();
+  const stateRef = useRef<{ validVideos: boolean[]; blobs: (Blob | null)[]; activeIndex: number }>();
   stateRef.current = { validVideos, blobs, activeIndex };
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     if (props.uischema.options?.maximumOptional) {
       maxVideos = props.uischema.options.maximumOptional;
     }
-
 
     setValidVideos(Array.from({ length: maxVideos }, (_, _i) => false));
     setMinimumVideos(minimumVideos);
@@ -61,27 +60,35 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2} sx={{ width: '50%', margin: 'auto' }}>
-          <Typography variant="h5">Required: {minimumVideos}, Optional Max: {maxVideos}</Typography>
+          <Typography variant="h5">
+            Required: {minimumVideos}, Optional Max: {maxVideos}
+          </Typography>
           <StatusProcessCircles isComplete={validVideos} setState={() => {}} activeIndex={activeIndex} />
 
-          <Stack direction='row' spacing={2} sx={{ justifyContent: 'center' }}>
+          <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
             {/* Left navigation button */}
-            <IconButton
-              size='large'
-              disabled={activeIndex == 0}
-              onClick={() => setActiveIndex(activeIndex - 1)}
-            ><ArrowLeft fontSize='large'/></IconButton>
+            <IconButton size="large" disabled={activeIndex == 0} onClick={() => setActiveIndex(activeIndex - 1)}>
+              <ArrowLeft fontSize="large" />
+            </IconButton>
 
-            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={(blob) => handleVideoRecord(blob)} recording={recording} />
+            <VideoRecordInterface
+              activeBlob={blobs[activeIndex]}
+              recordVideo={(blob) => handleVideoRecord(blob)}
+              recording={recording}
+            />
 
             {/* Right navigation button */}
             <IconButton
-              size='large'
+              size="large"
               disabled={activeIndex == validVideos.length - 1 || validVideos[activeIndex] === false}
               onClick={() => setActiveIndex(activeIndex + 1)}
-            ><ArrowRight fontSize='large' /></IconButton>
+            >
+              <ArrowRight fontSize="large" />
+            </IconButton>
           </Stack>
-          <Button variant="outlined" onClick={() => setRecording(!recording)}>{recording ? 'Stop' : 'Start' } Recording</Button>
+          <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)}>
+            {recording ? 'Stop' : 'Start'} Recording
+          </Button>
         </Stack>
       </AccordionDetails>
     </Accordion>

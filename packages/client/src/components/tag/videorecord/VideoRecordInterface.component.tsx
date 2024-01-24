@@ -14,15 +14,18 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
   stateRef.current = { blobs };
 
   // On data available, store the blob
-  const handleOnDataAvailable = useCallback((event: BlobEvent) => {
-    const newBlobs = [...stateRef.current!.blobs, event.data];
-    setBlobs(newBlobs);
+  const handleOnDataAvailable = useCallback(
+    (event: BlobEvent) => {
+      const newBlobs = [...stateRef.current!.blobs, event.data];
+      setBlobs(newBlobs);
 
-    // If the recording is complete, send the blob to the parent
-    if (!props.recording) {
-      props.recordVideo(new Blob(newBlobs, { type: 'video/webm' }));
-    }
-  }, [setBlobs, blobs]);
+      // If the recording is complete, send the blob to the parent
+      if (!props.recording) {
+        props.recordVideo(new Blob(newBlobs, { type: 'video/webm' }));
+      }
+    },
+    [setBlobs, blobs]
+  );
 
   const startRecording = async () => {
     // Clear the blobs
@@ -81,7 +84,7 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
 
   return (
     <>
-      <video width={'100%'} ref={videoRef} controls/>
+      <video style={{ minWidth: 500 }} ref={videoRef} controls />
     </>
   );
 };
