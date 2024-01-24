@@ -4,7 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack, Butto
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [maxVideos, setMaxVideos] = useState<number>(0);
@@ -28,7 +28,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       maxVideos = props.uischema.options.maximumOptional;
     }
 
-    console.log('Minimum videos', minimumVideos, maxVideos);
 
     setValidVideos(Array.from({ length: maxVideos }, (_, _i) => false));
     setMinimumVideos(minimumVideos);
@@ -36,9 +35,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
 
-  const handleVideoRecord = (video: Blob | null, blobs: (Blob | null)[], validVideos: boolean[]) => {
-    console.log('Video', video);
-    console.log('Original, blobs', stateRef.current!.blobs);
+  const handleVideoRecord = (video: Blob | null) => {
     const updatedBlobs = stateRef.current!.blobs.map((blob, index) => {
       if (index === activeIndex) {
         return video;
@@ -51,8 +48,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       }
       return valid;
     });
-
-    console.log('Updated blobs', updatedBlobs);
 
     setBlobs(updatedBlobs);
     setValidVideos(updateValidVideos);
@@ -73,7 +68,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
             {/* Left navigation button */}
             <IconButton size='large'><ArrowLeft fontSize='large'/></IconButton>
 
-            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={(blob) => handleVideoRecord(blob, blobs, validVideos)} recording={recording} />
+            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={(blob) => handleVideoRecord(blob)} recording={recording} />
 
             {/* Right navigation button */}
             <IconButton size='large'><ArrowRight fontSize='large' /></IconButton>

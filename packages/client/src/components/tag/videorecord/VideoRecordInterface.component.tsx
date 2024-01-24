@@ -20,7 +20,6 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
 
     // If the recording is complete, send the blob to the parent
     if (!props.recording) {
-      console.log('Recording complete');
       props.recordVideo(new Blob(newBlobs, { type: 'video/webm' }));
     }
   }, [setBlobs, blobs]);
@@ -67,7 +66,6 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
 
   // Control the display based on if an active blob is present
   useEffect(() => {
-    console.log('Blob Changed', props.activeBlob);
     // If there is no active blob, show the video preview
     if (!props.activeBlob) {
       videoRef.current!.style.display = 'block';
