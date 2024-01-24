@@ -4,8 +4,8 @@ import { materialRenderers } from '@jsonforms/material-renderers';
 import { SetStateAction, useState, Dispatch } from 'react';
 import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
-import AslLexSearchControl from '../../jsonForms/customRenderes/AslLexSearchControl';
-import AslLexSearchControlTester from '../../jsonForms/customRenderes/aslLexSearchControlTester';
+import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
+import AslLexSearchControlTester from '../tag/asllex/aslLexSearchControlTester';
 import VideoRecordField, { videoFieldTester } from '../tag/videorecord/VideoRecordField.component';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 

@@ -1,7 +1,7 @@
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { TextSearch, SearchResults } from '@bu-sail/saas-view';
 import { useState } from 'react';
-import { LexiconEntry } from '../../graphql/graphql';
+import { LexiconEntry } from '../../../graphql/graphql';
 
 interface AslLexSearchControlProps {
   data: any;

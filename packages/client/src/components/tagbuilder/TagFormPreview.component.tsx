@@ -3,8 +3,8 @@ import { Box, Button, Container, Dialog, DialogActions, DialogContent, Typograph
 import { useState } from 'react';
 import { TagSchema } from '../../graphql/graphql';
 import { materialRenderers } from '@jsonforms/material-renderers';
-import AslLexSearchControl from '../../jsonForms/customRenderes/AslLexSearchControl';
-import AslLexSearchControlTester from '../../jsonForms/customRenderes/aslLexSearchControlTester';
+import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
+import AslLexSearchControlTester from '../tag/asllex/aslLexSearchControlTester';
 
 interface DialogProps {
   schema: TagSchema;
