@@ -4,7 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack, Butto
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [maxVideos, setMaxVideos] = useState<number>(0);
@@ -13,6 +13,8 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
+  const stateRef = useRef<{ validVideos: boolean[], blobs: (Blob | null)[]}>();
+  stateRef.current = { validVideos, blobs };
 
   useEffect(() => {
     if (!props.uischema.options?.minimumRequired) {
@@ -26,19 +28,34 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       maxVideos = props.uischema.options.maximumOptional;
     }
 
+    console.log('Minimum videos', minimumVideos, maxVideos);
+
     setValidVideos(Array.from({ length: maxVideos }, (_, _i) => false));
     setMinimumVideos(minimumVideos);
     setMaxVideos(maxVideos);
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
 
-  const handleVideoRecord = (video: Blob | null) => {
-    blobs[activeIndex] = video;
-    validVideos[activeIndex] = !!video;
+  const handleVideoRecord = (video: Blob | null, blobs: (Blob | null)[], validVideos: boolean[]) => {
+    console.log('Video', video);
+    console.log('Original, blobs', stateRef.current!.blobs);
+    const updatedBlobs = stateRef.current!.blobs.map((blob, index) => {
+      if (index === activeIndex) {
+        return video;
+      }
+      return blob;
+    });
+    const updateValidVideos = stateRef.current!.validVideos.map((valid, index) => {
+      if (index === activeIndex) {
+        return video !== null;
+      }
+      return valid;
+    });
 
-    setBlobs(blobs);
-    setValidVideos(validVideos);
-    console.log(blobs);
+    console.log('Updated blobs', updatedBlobs);
+
+    setBlobs(updatedBlobs);
+    setValidVideos(updateValidVideos);
   };
 
   return (
@@ -56,7 +73,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
             {/* Left navigation button */}
             <IconButton size='large'><ArrowLeft fontSize='large'/></IconButton>
 
-            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={handleVideoRecord} recording={recording} />
+            <VideoRecordInterface activeBlob={blobs[activeIndex]} recordVideo={(blob) => handleVideoRecord(blob, blobs, validVideos)} recording={recording} />
 
             {/* Right navigation button */}
             <IconButton size='large'><ArrowRight fontSize='large' /></IconButton>

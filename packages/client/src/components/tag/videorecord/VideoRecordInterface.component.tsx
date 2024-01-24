@@ -10,16 +10,20 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [blobs, setBlobs] = useState<Blob[]>([]);
+  const stateRef = useRef<{ blobs: Blob[] }>();
+  stateRef.current = { blobs };
 
   // On data available, store the blob
   const handleOnDataAvailable = useCallback((event: BlobEvent) => {
-    console.log('New Blob', event.data);
-    blobs.push(event.data);
-    setBlobs(blobs);
+    const newBlobs = [...stateRef.current!.blobs, event.data];
+    setBlobs(newBlobs);
+
+    // If the recording is complete, send the blob to the parent
     if (!props.recording) {
-      props.recordVideo(new Blob(blobs, { type: 'video/webm' }));
+      console.log('Recording complete');
+      props.recordVideo(new Blob(newBlobs, { type: 'video/webm' }));
     }
-  }, [setBlobs]);
+  }, [setBlobs, blobs]);
 
   const startRecording = async () => {
     // Clear the blobs
@@ -54,7 +58,6 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
 
   // Handle changes to the recording status
   useEffect(() => {
-    console.log('Recording status changed to: ' + props.recording);
     if (props.recording) {
       startRecording();
     } else {
@@ -64,7 +67,7 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
 
   // Control the display based on if an active blob is present
   useEffect(() => {
-    console.log('Active blob changed to: ', props.activeBlob);
+    console.log('Blob Changed', props.activeBlob);
     // If there is no active blob, show the video preview
     if (!props.activeBlob) {
       videoRef.current!.style.display = 'block';
@@ -76,7 +79,7 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = (props)
     const blobUrl = URL.createObjectURL(props.activeBlob);
     videoRef.current!.srcObject = null;
     videoRef.current!.src = blobUrl;
-  }, [props]);
+  }, [props.activeBlob]);
 
   return (
     <>
