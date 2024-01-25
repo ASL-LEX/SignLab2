@@ -45,6 +45,15 @@ export type CompleteTagMutationVariables = Types.Exact<{
 
 export type CompleteTagMutation = { __typename?: 'Mutation', completeTag: boolean };
 
+export type SaveVideoFieldMutationVariables = Types.Exact<{
+  tag: Types.Scalars['ID']['input'];
+  field: Types.Scalars['String']['input'];
+  index: Types.Scalars['Int']['input'];
+}>;
+
+
+export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: { __typename?: 'VideoField', _id: string, uploadURL: string } };
+
 
 export const CreateTagsDocument = gql`
     mutation createTags($study: ID!, $entries: [ID!]!) {
@@ -224,3 +233,39 @@ export function useCompleteTagMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CompleteTagMutationHookResult = ReturnType<typeof useCompleteTagMutation>;
 export type CompleteTagMutationResult = Apollo.MutationResult<CompleteTagMutation>;
 export type CompleteTagMutationOptions = Apollo.BaseMutationOptions<CompleteTagMutation, CompleteTagMutationVariables>;
+export const SaveVideoFieldDocument = gql`
+    mutation saveVideoField($tag: ID!, $field: String!, $index: Int!) {
+  saveVideoField(tag: $tag, field: $field, index: $index) {
+    _id
+    uploadURL
+  }
+}
+    `;
+export type SaveVideoFieldMutationFn = Apollo.MutationFunction<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>;
+
+/**
+ * __useSaveVideoFieldMutation__
+ *
+ * To run a mutation, you first call `useSaveVideoFieldMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveVideoFieldMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveVideoFieldMutation, { data, loading, error }] = useSaveVideoFieldMutation({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *      field: // value for 'field'
+ *      index: // value for 'index'
+ *   },
+ * });
+ */
+export function useSaveVideoFieldMutation(baseOptions?: Apollo.MutationHookOptions<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>(SaveVideoFieldDocument, options);
+      }
+export type SaveVideoFieldMutationHookResult = ReturnType<typeof useSaveVideoFieldMutation>;
+export type SaveVideoFieldMutationResult = Apollo.MutationResult<SaveVideoFieldMutation>;
+export type SaveVideoFieldMutationOptions = Apollo.BaseMutationOptions<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>;

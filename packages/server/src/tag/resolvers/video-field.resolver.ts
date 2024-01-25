@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, Mutation, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Args, Mutation, ID, ResolveField, Parent, Int } from '@nestjs/graphql';
 import { VideoFieldService } from '../services/video-field.service';
 import { TagPipe } from '../pipes/tag.pipe';
 import { Tag } from '../models/tag.model';
@@ -23,8 +23,8 @@ export class VideoFieldResolver {
   @Mutation(() => VideoField)
   async saveVideoField(
     @Args('tag', { type: () => ID }, TagPipe) tag: Tag,
-    @Args('field', { type: () => ID }) field: string,
-    @Args('index', { type: () => Number }) index: number,
+    @Args('field') field: string,
+    @Args('index', { type: () => Int }) index: number,
     @TokenContext() user: TokenPayload
   ): Promise<VideoField> {
     // Make sure the user first has permission to create video fields for this tag
