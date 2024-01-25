@@ -28,5 +28,10 @@ export default () => ({
     mongo: {
       uri: process.env.CASBIN_MONGO_URI || 'mongodb://127.0.0.1:27017/casbin'
     }
+  },
+  tag: {
+    videoFieldFolder: process.env.TAG_VIDEO_FIELD_FOLDER || 'video-fields',
+    videoRecordFileType: 'webm',
+    videoUploadExpiration: process.env.TAG_VIDEO_UPLOAD_EXPIRATION || 15 * 60 * 1000 // 15 minutes
   }
 });

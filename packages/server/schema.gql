@@ -184,6 +184,7 @@ type Mutation {
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!
   setEntryEnabled(study: ID!, entry: ID!, enabled: Boolean!): Boolean!
+  saveVideoField(tag: ID!, field: ID!, index: Float!): String!
 }
 
 input OrganizationCreate {
