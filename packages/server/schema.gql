@@ -137,6 +137,11 @@ type Tag {
   enabled: Boolean!
 }
 
+type VideoField {
+  _id: String!
+  uploadURL: String!
+}
+
 type Query {
   getOrganizations: [Organization!]!
   exists(name: String!): Boolean!
@@ -184,7 +189,7 @@ type Mutation {
   assignTag(study: ID!): Tag
   completeTag(tag: ID!, data: JSON!): Boolean!
   setEntryEnabled(study: ID!, entry: ID!, enabled: Boolean!): Boolean!
-  saveVideoField(tag: ID!, field: ID!, index: Float!): String!
+  saveVideoField(tag: ID!, field: ID!, index: Float!): VideoField!
 }
 
 input OrganizationCreate {
