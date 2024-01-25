@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TagService } from './tag.service';
-import { TagResolver } from './tag.resolver';
+import { TagService } from './services/tag.service';
+import { TagResolver } from './resolvers/tag.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Tag, TagSchema } from './tag.model';
+import { Tag, TagSchema } from './models/tag.model';
 import { StudyModule } from '../study/study.module';
 import { EntryModule } from '../entry/entry.module';
 import { TagPipe } from './pipes/tag.pipe';
