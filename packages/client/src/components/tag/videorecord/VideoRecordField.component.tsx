@@ -6,7 +6,9 @@ import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
 import { useEffect, useState, useRef } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { SaveVideoFieldDocument, SaveVideoFieldMutationResult, SaveVideoFieldMutationVariables } from '../../../graphql/tag/tag';
+import { SaveVideoFieldDocument, SaveVideoFieldMutation, SaveVideoFieldMutationVariables } from '../../../graphql/tag/tag';
+import { useTag } from '../../../context/Tag.context';
+import axios from 'axios';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [maxVideos, setMaxVideos] = useState<number>(0);
@@ -15,9 +17,16 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
-  const stateRef = useRef<{ validVideos: boolean[]; blobs: (Blob | null)[]; activeIndex: number }>();
-  stateRef.current = { validVideos, blobs, activeIndex };
+  const [videoFragmentID, setVideoFragmentID] = useState<(string | null)[]>([]);
+  const stateRef = useRef<{
+    validVideos: boolean[];
+    blobs: (Blob | null)[];
+    activeIndex: number;
+    videoFragmentID: (string | null)[];
+  }>();
+  stateRef.current = { validVideos, blobs, activeIndex, videoFragmentID };
   const client = useApolloClient();
+  const { tag } = useTag();
 
   useEffect(() => {
     if (!props.uischema.options?.minimumRequired) {
@@ -35,18 +44,47 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setMinimumVideos(minimumVideos);
     setMaxVideos(maxVideos);
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
+    setVideoFragmentID(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
 
+  console.log(props);
+
   /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
-  /*const saveVideoFragment = async (blob: Blob) => {
-    const result = await client.mutate<SaveVideoFieldMutationResult, SaveVideoFieldMutationVariables>({
+  const saveVideoFragment = async (blob: Blob) => {
+    // Save the video fragment
+    const result = await client.mutate<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>({
       mutation: SaveVideoFieldDocument,
       variables: {
-        tag: props.data.id,
-        field: props.
+        tag: tag!._id,
+        field: props.path,
+        index: stateRef.current!.activeIndex
       },
     });
-  }; */
+
+    console.log(result);
+
+    if (!result.data?.saveVideoField) {
+      console.error('Failed to save video fragment');
+      return;
+    }
+
+    // Upload the video to the provided URL
+    await axios.put(result.data.saveVideoField.uploadURL, blob, {
+      headers: {
+        'Content-Type': 'video/webm'
+      }
+    });
+
+    // Update the JSON Forms representation of the data to be the ID of the video fragment
+    const updatedVideoFragmentID = stateRef.current!.videoFragmentID.map((id, index) => {
+      if (index === stateRef.current!.activeIndex) {
+        return result.data!.saveVideoField._id;
+      }
+      return id;
+    });
+    setVideoFragmentID(updatedVideoFragmentID);
+    props.handleChange(props.path, updatedVideoFragmentID);
+  };
 
   /** Store the blob and check if the video needs to be saved */
   const handleVideoRecord = (video: Blob | null) => {
@@ -63,6 +101,9 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       return valid;
     });
 
+    if (video !== null) {
+      saveVideoFragment(video);
+    }
     setBlobs(updatedBlobs);
     setValidVideos(updateValidVideos);
   };
