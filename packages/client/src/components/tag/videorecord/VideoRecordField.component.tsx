@@ -5,6 +5,8 @@ import { withJsonFormsControlProps } from '@jsonforms/react';
 import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
 import { useEffect, useState, useRef } from 'react';
+import { useApolloClient } from '@apollo/client';
+import { SaveVideoFieldDocument, SaveVideoFieldMutationResult, SaveVideoFieldMutationVariables } from '../../../graphql/tag/tag';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [maxVideos, setMaxVideos] = useState<number>(0);
@@ -15,6 +17,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [recording, setRecording] = useState<boolean>(false);
   const stateRef = useRef<{ validVideos: boolean[]; blobs: (Blob | null)[]; activeIndex: number }>();
   stateRef.current = { validVideos, blobs, activeIndex };
+  const client = useApolloClient();
 
   useEffect(() => {
     if (!props.uischema.options?.minimumRequired) {
@@ -34,6 +37,18 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
 
+  /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
+  /*const saveVideoFragment = async (blob: Blob) => {
+    const result = await client.mutate<SaveVideoFieldMutationResult, SaveVideoFieldMutationVariables>({
+      mutation: SaveVideoFieldDocument,
+      variables: {
+        tag: props.data.id,
+        field: props.
+      },
+    });
+  }; */
+
+  /** Store the blob and check if the video needs to be saved */
   const handleVideoRecord = (video: Blob | null) => {
     const updatedBlobs = stateRef.current!.blobs.map((blob, index) => {
       if (index === stateRef.current!.activeIndex) {
