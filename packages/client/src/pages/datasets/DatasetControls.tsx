@@ -60,7 +60,7 @@ export const DatasetControls: React.FC = () => {
           //TODO show error with snackbar
         } else if (res.data) {
           // force rerender
-          setDatasets([...datasets]);
+          setDatasets([...datasets, {} as Dataset]);
         }
       },
       onCancel: () => {}

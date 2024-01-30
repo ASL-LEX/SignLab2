@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Dataset, Entry } from '../graphql/graphql';
-import { useEntryForDatasetQuery } from '../graphql/entry/entry';
+import { useEntryForDatasetLazyQuery, useEntryForDatasetQuery } from '../graphql/entry/entry';
 import { EntryView } from './EntryView.component';
 
 export interface DatasetTableProps {
@@ -28,14 +28,27 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const columns = [...defaultColumns, ...(props.additionalColumns ?? [])];
 
-  const entryForDatasetResult = useEntryForDatasetQuery({ variables: { dataset: props.dataset._id } });
+  const [entryForDataset, entryForDatasetResult] = useEntryForDatasetLazyQuery();
+  // const entryForDatasetResult = useEntryForDatasetQuery({
+  //   variables: { dataset: props.dataset._id },
+  //   fetchPolicy: 'network-only'
+  // });
+  console.log('rendering DatasetTable');
+
+  useEffect(() => {
+    console.log('refetching entryForDataset');
+    entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
+  }, [props.dataset]);
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
   useEffect(() => {
+    console.log('resseting entryForDatasetResult', entryForDatasetResult.data);
+
     if (entryForDatasetResult.data) {
+      console.log('new emtries', entryForDatasetResult.data.entryForDataset);
       setEntries(entryForDatasetResult.data.entryForDataset);
     }
-  }, [entryForDatasetResult.data]);
+  }, [entryForDatasetResult]);
 
   return (
     <DataGrid
