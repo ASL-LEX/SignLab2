@@ -51,6 +51,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
         { name: 'New Study', action: () => navigate('/study/new'), visible: (p) => p!.projectAdmin },
         { name: 'Study Control', action: () => navigate('/study/controls'), visible: (p) => p!.projectAdmin },
         { name: 'User Permissions', action: () => navigate('/study/permissions'), visible: (p) => p!.studyAdmin },
+        { name: 'Entry Controls', action: () => navigate('/study/controls'), visible: (p) => p!.studyAdmin },
         { name: 'Entry Controls', action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
         { name: 'Download Tags', action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
       ]
@@ -96,7 +97,8 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           backgroundColor: '#103F68',
           color: 'white',
           paddingTop: 2,
-          mt: '64px'
+          mt: '64px',
+          paddingBottom: 10
         }
       }}
       anchor="left"
