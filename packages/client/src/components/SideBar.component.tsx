@@ -96,6 +96,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           backgroundColor: '#103F68',
           color: 'white',
           paddingTop: 2,
+          paddingBottom: 10,
           mt: '64px'
         }
       }}
