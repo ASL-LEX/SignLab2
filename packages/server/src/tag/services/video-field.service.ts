@@ -9,8 +9,8 @@ import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Storage, Bucket } from '@google-cloud/storage';
 import { Entry } from '../../entry/models/entry.model';
 import { EntryService } from '../../entry/services/entry.service';
-import {DatasetPipe} from '../../dataset/pipes/dataset.pipe';
-import {TokenPayload} from '../../jwt/token.dto';
+import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
+import { TokenPayload } from '../../jwt/token.dto';
 
 @Injectable()
 export class VideoFieldService {
@@ -81,11 +81,15 @@ export class VideoFieldService {
     const dataset = await this.datasetPipe.transform(datasetID);
 
     // Make the entry
-    const entry = await this.entryService.create({
-      entryID: 'TODO: Generate entry ID',
-      contentType: 'video/webm',
-      meta: {}
-    }, dataset, user);
+    const entry = await this.entryService.create(
+      {
+        entryID: 'TODO: Generate entry ID',
+        contentType: 'video/webm',
+        meta: {}
+      },
+      dataset,
+      user
+    );
 
     // Move the video to the permanent location
     const source = this.bucket.file(videoField.bucketLocation);

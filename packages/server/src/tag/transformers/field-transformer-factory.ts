@@ -1,9 +1,9 @@
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { Injectable } from '@nestjs/common';
 import { FieldTransformer, FieldTransformerTest, NOT_APPLICABLE } from './field-transformer';
-import {VideoFieldTransformer, VideoFieldTransformerTest} from './video-field-transformer';
+import { VideoFieldTransformer, VideoFieldTransformerTest } from './video-field-transformer';
 
-type FieldTransformerOptions = { tester: FieldTransformerTest, transformer: FieldTransformer };
+type FieldTransformerOptions = { tester: FieldTransformerTest; transformer: FieldTransformer };
 
 @Injectable()
 export class FieldTransformerFactory {

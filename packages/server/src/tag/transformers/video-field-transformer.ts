@@ -8,16 +8,23 @@ import { TokenPayload } from '../../jwt/token.dto';
 export class VideoFieldTransformer implements FieldTransformer {
   constructor(private readonly videoFieldService: VideoFieldService) {}
 
-  async transformField (data: string[], uischema: UISchemaElement, _schema: JsonSchema, user: TokenPayload): Promise<any> {
+  async transformField(
+    data: string[],
+    uischema: UISchemaElement,
+    _schema: JsonSchema,
+    user: TokenPayload
+  ): Promise<any> {
     const datasetID = uischema.options?.dataset;
     if (!datasetID) {
       throw new BadRequestException('Dataset ID not provided');
     }
 
-    const videoFields = await Promise.all(data.map(async (videoFieldId) => {
-      const entry = await this.videoFieldService.markComplete(videoFieldId, datasetID, user);
-      return entry._id;
-    }));
+    const videoFields = await Promise.all(
+      data.map(async (videoFieldId) => {
+        const entry = await this.videoFieldService.markComplete(videoFieldId, datasetID, user);
+        return entry._id;
+      })
+    );
 
     return videoFields;
   }

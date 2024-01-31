@@ -8,11 +8,11 @@ export class TagTransformer {
   constructor(private readonly fieldTransformerFactory: FieldTransformerFactory) {}
 
   /**
-  * Transforms the tag data. Takes in the whole tag and produces the modified
-  * tag data.
-  */
+   * Transforms the tag data. Takes in the whole tag and produces the modified
+   * tag data.
+   */
   async transformTagData(data: any, study: Study, user: TokenPayload): Promise<any> {
-    const transformedData: { [property: string] : any } = { };
+    const transformedData: { [property: string]: any } = {};
 
     const schema = study.tagSchema.dataSchema;
     const uischema = study.tagSchema.uiSchema;
@@ -35,7 +35,9 @@ export class TagTransformer {
       const transformer = this.fieldTransformerFactory.getTransformer(fieldUiSchema, fieldSchema);
 
       // Apply the transformation if present, otherwise just return the data
-      const transformed = transformer ? await transformer.transformField(data[field], fieldUiSchema, fieldSchema, user) : data[field];
+      const transformed = transformer
+        ? await transformer.transformField(data[field], fieldUiSchema, fieldSchema, user)
+        : data[field];
       transformedData[field] = transformed;
     }
 
