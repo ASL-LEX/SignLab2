@@ -15,6 +15,7 @@ import { GcpModule } from '../gcp/gcp.module';
 import { TagTransformer } from './services/tag-transformer.service';
 import { FieldTransformerFactory } from './transformers/field-transformer-factory';
 import { VideoFieldTransformer } from './transformers/video-field-transformer';
+import { DatasetModule } from '../dataset/dataset.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { VideoFieldTransformer } from './transformers/video-field-transformer';
     EntryModule,
     SharedModule,
     PermissionModule,
-    GcpModule
+    GcpModule,
+    DatasetModule
   ],
   providers: [
     TagService,

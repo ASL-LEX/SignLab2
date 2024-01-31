@@ -7,6 +7,7 @@ import { Entry } from '../../entry/models/entry.model';
 import { StudyService } from '../../study/study.service';
 import { MongooseMiddlewareService } from '../../shared/service/mongoose-callback.service';
 import { TagTransformer } from './tag-transformer.service';
+import { TokenPayload } from '../../jwt/token.dto';
 
 @Injectable()
 export class TagService {
@@ -101,7 +102,7 @@ export class TagService {
   }
 
   /** Store the data and mark the tag as complete */
-  async complete(tag: Tag, data: any, study: Study): Promise<void> {
+  async complete(tag: Tag, data: any, study: Study, user: TokenPayload): Promise<void> {
     // If the tag is already complete, it cannot be saved again
     if (tag.complete) {
       throw new BadRequestException(`Cannot re-save tag data`);
@@ -114,7 +115,8 @@ export class TagService {
     }
 
     // Handle any transformations
-    const transformed = await this.tagTransformService.transformTagData(data, study);
+    const transformed = await this.tagTransformService.transformTagData(data, study, user);
+    console.log(transformed);
 
     // Save the tag information and mark the tag as complete
     // await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data, complete: true } });

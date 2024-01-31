@@ -7,6 +7,10 @@ import { StudyService } from '../../study/study.service';
 import { ConfigService } from '@nestjs/config';
 import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
 import { Storage, Bucket } from '@google-cloud/storage';
+import { Entry } from '../../entry/models/entry.model';
+import { EntryService } from '../../entry/services/entry.service';
+import {DatasetPipe} from '../../dataset/pipes/dataset.pipe';
+import {TokenPayload} from '../../jwt/token.dto';
 
 @Injectable()
 export class VideoFieldService {
@@ -20,7 +24,9 @@ export class VideoFieldService {
     @InjectModel(VideoField.name) private readonly videoFieldModel: Model<VideoFieldDocument>,
     private readonly studyService: StudyService,
     private readonly configService: ConfigService,
-    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage
+    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
+    private readonly entryService: EntryService,
+    private readonly datasetPipe: DatasetPipe
   ) {}
 
   async saveVideoField(tag: Tag, field: string, index: number): Promise<VideoField> {
@@ -60,6 +66,39 @@ export class VideoFieldService {
       contentType: 'video/webm'
     });
     return url;
+  }
+
+  /**
+   * Move the video itself to the permanent storage location and create the
+   * cooresponding entry.
+   */
+  async markComplete(videoFieldID: string, datasetID: string, user: TokenPayload): Promise<Entry> {
+    const videoField = await this.videoFieldModel.findById(videoFieldID);
+    if (!videoField) {
+      throw new BadRequestException(`Video field ${videoFieldID} not found`);
+    }
+
+    const dataset = await this.datasetPipe.transform(datasetID);
+
+    // Make the entry
+    const entry = await this.entryService.create({
+      entryID: 'TODO: Generate entry ID',
+      contentType: 'video/webm',
+      meta: {}
+    }, dataset, user);
+
+    // Move the video to the permanent location
+    const source = this.bucket.file(videoField.bucketLocation);
+    const newLocation = `${dataset.bucketPrefix}/${entry._id}.webm`;
+    await source.move(newLocation);
+    await this.entryService.setBucketLocation(entry, newLocation);
+    entry.bucketLocation = newLocation;
+
+    // Remove the video field
+    await this.videoFieldModel.deleteOne({ _id: videoField._id });
+
+    // Return the completed entry
+    return entry;
   }
 
   private getVideoFieldBucketLocation(tagID: string, field: string, index: number): string {

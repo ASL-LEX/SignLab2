@@ -1,4 +1,5 @@
 import { JsonSchema, UISchemaElement } from "@jsonforms/core";
+import { TokenPayload } from "../../jwt/token.dto";
 
 /**
  * A field transformer handles converting and operating on fields of a tag.
@@ -6,7 +7,7 @@ import { JsonSchema, UISchemaElement } from "@jsonforms/core";
  * and ensuring that the data meets any additional formatting requirements.
  */
 export interface FieldTransformer {
-  transformField(field: unknown, uischema: UISchemaElement, schema: JsonSchema): Promise<any>;
+  transformField(field: any, uischema: UISchemaElement, schema: JsonSchema, user: TokenPayload): Promise<any>;
 };
 
 /**
