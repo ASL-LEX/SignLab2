@@ -22,7 +22,8 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additional
             </Stack>
           </AccordionSummary>
           <AccordionDetails>
-            <DatasetTable dataset={dataset} additionalColumns={additionalColumns} />
+            {/* provide new dataset object to allow DatasetTable to refetch entries after entries are updated */}
+            <DatasetTable dataset={{ ...dataset }} additionalColumns={additionalColumns} />
           </AccordionDetails>
         </Accordion>
       ))}
