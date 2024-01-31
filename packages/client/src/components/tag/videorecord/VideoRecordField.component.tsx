@@ -6,7 +6,11 @@ import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
 import { useEffect, useState, useRef } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { SaveVideoFieldDocument, SaveVideoFieldMutation, SaveVideoFieldMutationVariables } from '../../../graphql/tag/tag';
+import {
+  SaveVideoFieldDocument,
+  SaveVideoFieldMutation,
+  SaveVideoFieldMutationVariables
+} from '../../../graphql/tag/tag';
 import { useTag } from '../../../context/Tag.context';
 import axios from 'axios';
 
@@ -55,7 +59,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
         tag: tag!._id,
         field: props.path,
         index: stateRef.current!.activeIndex
-      },
+      }
     });
 
     if (!result.data?.saveVideoField) {

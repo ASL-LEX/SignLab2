@@ -21,8 +21,6 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
 
-    console.log(data, errors);
-
     // No errors, data could be submitted
     if (!errors || errors.length === 0) {
       setDataValid(true);

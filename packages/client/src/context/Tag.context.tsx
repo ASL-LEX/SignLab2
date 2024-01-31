@@ -9,7 +9,6 @@ export interface TagContextProps {
 
 const TagContext = createContext<TagContextProps>({} as TagContextProps);
 
-
 export interface TagProviderProps {
   children: ReactNode;
 }

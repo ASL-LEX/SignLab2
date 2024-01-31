@@ -52,7 +52,7 @@ const MainView: React.FC<MainViewProps> = (props) => {
   }, [completeTagResult.data]);
 
   return (
-      <>
+    <>
       {tag ? (
         <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: '80%', margin: 'auto' }}>
           <EntryView
