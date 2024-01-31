@@ -17,12 +17,12 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
-  const [videoFragmentID, setVideoFragmentID] = useState<(string | null)[]>([]);
+  const [videoFragmentID, setVideoFragmentID] = useState<string[]>([]);
   const stateRef = useRef<{
     validVideos: boolean[];
     blobs: (Blob | null)[];
     activeIndex: number;
-    videoFragmentID: (string | null)[];
+    videoFragmentID: string[];
   }>();
   stateRef.current = { validVideos, blobs, activeIndex, videoFragmentID };
   const client = useApolloClient();
@@ -44,10 +44,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setMinimumVideos(minimumVideos);
     setMaxVideos(maxVideos);
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
-    setVideoFragmentID(Array.from({ length: maxVideos }, (_, _i) => null));
   }, [props.uischema]);
-
-  console.log(props);
 
   /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
   const saveVideoFragment = async (blob: Blob) => {
@@ -60,8 +57,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
         index: stateRef.current!.activeIndex
       },
     });
-
-    console.log(result);
 
     if (!result.data?.saveVideoField) {
       console.error('Failed to save video fragment');
@@ -76,14 +71,22 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     });
 
     // Update the JSON Forms representation of the data to be the ID of the video fragment
-    const updatedVideoFragmentID = stateRef.current!.videoFragmentID.map((id, index) => {
-      if (index === stateRef.current!.activeIndex) {
-        return result.data!.saveVideoField._id;
-      }
-      return id;
-    });
-    setVideoFragmentID(updatedVideoFragmentID);
-    props.handleChange(props.path, updatedVideoFragmentID);
+
+    // If the index is longer than the current videoFragmentID array, then add the new ID to the end
+    if (stateRef.current!.activeIndex >= stateRef.current!.videoFragmentID.length) {
+      const updatedVideoFragmentID = [...stateRef.current!.videoFragmentID, result.data!.saveVideoField._id];
+      setVideoFragmentID(updatedVideoFragmentID);
+      props.handleChange(props.path, updatedVideoFragmentID);
+    } else {
+      const updatedVideoFragmentID = stateRef.current!.videoFragmentID.map((id, index) => {
+        if (index === stateRef.current!.activeIndex) {
+          return result.data!.saveVideoField._id;
+        }
+        return id;
+      });
+      setVideoFragmentID(updatedVideoFragmentID);
+      props.handleChange(props.path, updatedVideoFragmentID);
+    }
   };
 
   /** Store the blob and check if the video needs to be saved */
