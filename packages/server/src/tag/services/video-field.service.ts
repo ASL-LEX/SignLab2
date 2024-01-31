@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Inject } from '@nestjs/common';
-import { InjectModel} from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { VideoField, VideoFieldDocument } from '../models/video-field.model';
 import { Model } from 'mongoose';
 import { Tag } from '../models/tag.model';
@@ -45,7 +45,10 @@ export class VideoFieldService {
 
     // Otherwise make a new one and return it
     return this.videoFieldModel.create({
-      tag: tag._id, field, index, bucketLocation: this.getVideoFieldBucketLocation(tag._id, field, index)
+      tag: tag._id,
+      field,
+      index,
+      bucketLocation: this.getVideoFieldBucketLocation(tag._id, field, index)
     });
   }
 

@@ -15,7 +15,10 @@ import { GcpModule } from '../gcp/gcp.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Tag.name, schema: TagSchema }, { name: VideoField.name, schema: VideoFieldSchema }]),
+    MongooseModule.forFeature([
+      { name: Tag.name, schema: TagSchema },
+      { name: VideoField.name, schema: VideoFieldSchema }
+    ]),
     StudyModule,
     EntryModule,
     SharedModule,
