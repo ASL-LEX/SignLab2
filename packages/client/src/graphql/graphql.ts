@@ -212,6 +212,7 @@ export type Mutation = {
   refresh: AccessToken;
   resendInvite: InviteModel;
   resetPassword: Scalars['Boolean']['output'];
+  saveVideoField: VideoField;
   setEntryEnabled: Scalars['Boolean']['output'];
   signLabCreateProject: Project;
   signup: AccessToken;
@@ -411,6 +412,13 @@ export type MutationResendInviteArgs = {
 
 export type MutationResetPasswordArgs = {
   user: ResetDto;
+};
+
+
+export type MutationSaveVideoFieldArgs = {
+  field: Scalars['String']['input'];
+  index: Scalars['Int']['input'];
+  tag: Scalars['ID']['input'];
 };
 
 
@@ -812,4 +820,10 @@ export type UsernameLoginDto = {
   password: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+export type VideoField = {
+  __typename?: 'VideoField';
+  _id: Scalars['String']['output'];
+  uploadURL: Scalars['String']['output'];
 };

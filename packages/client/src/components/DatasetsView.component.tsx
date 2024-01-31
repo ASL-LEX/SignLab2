@@ -11,8 +11,6 @@ export interface DatasetsViewProps {
 
 // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
 export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additionalColumns }) => {
-  console.log('rendering DatasetsView');
-
   return (
     <>
       {datasets.map((dataset: Dataset) => (

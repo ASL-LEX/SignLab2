@@ -4,6 +4,10 @@ import { materialRenderers } from '@jsonforms/material-renderers';
 import { SetStateAction, useState, Dispatch } from 'react';
 import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
+import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
+import AslLexSearchControlTester from '../tag/asllex/aslLexSearchControlTester';
+import VideoRecordField, { videoFieldTester } from '../tag/videorecord/VideoRecordField.component';
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 
 export interface TagFormProps {
   study: Study;
@@ -11,7 +15,7 @@ export interface TagFormProps {
 }
 
 export const TagForm: React.FC<TagFormProps> = (props) => {
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>();
   const [dataValid, setDataValid] = useState<boolean>(false);
 
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {
@@ -40,6 +44,12 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
     setData({});
   };
 
+  const renderers: JsonFormsRendererRegistryEntry[] = [
+    ...materialRenderers,
+    { tester: videoFieldTester, renderer: VideoRecordField },
+    { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }
+  ];
+
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack direction="column" spacing={2}>
@@ -48,7 +58,7 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
           uischema={props.study.tagSchema.uiSchema}
           data={data}
           onChange={({ data, errors }) => handleFormChange(data, errors)}
-          renderers={materialRenderers}
+          renderers={renderers}
         />
         <Stack direction="row">
           <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>

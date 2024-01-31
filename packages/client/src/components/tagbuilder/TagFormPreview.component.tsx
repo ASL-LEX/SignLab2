@@ -3,12 +3,16 @@ import { Box, Button, Container, Dialog, DialogActions, DialogContent, Typograph
 import { useState } from 'react';
 import { TagSchema } from '../../graphql/graphql';
 import { materialRenderers } from '@jsonforms/material-renderers';
+import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
+import AslLexSearchControlTester from '../tag/asllex/aslLexSearchControlTester';
 
 interface DialogProps {
   schema: TagSchema;
   clicked: boolean;
   toggleModal: () => void;
 }
+
+const renderers = [...materialRenderers, { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }];
 
 export const TagFormPreviewDialog: React.FC<DialogProps> = (props: DialogProps) => {
   const [data, setData] = useState('');
@@ -29,7 +33,7 @@ export const TagFormPreviewDialog: React.FC<DialogProps> = (props: DialogProps) 
                 onChange={(event) => setData(event.data)}
                 schema={props.schema.dataSchema}
                 uischema={props.schema.uiSchema}
-                renderers={materialRenderers}
+                renderers={renderers}
               />
             </Box>
           </Container>

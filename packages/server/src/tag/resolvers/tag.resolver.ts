@@ -1,19 +1,19 @@
 import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
-import { TagService } from './tag.service';
-import { Tag } from './tag.model';
-import { StudyPipe } from '../study/pipes/study.pipe';
-import { Study } from '../study/study.model';
-import { EntriesPipe, EntryPipe } from '../entry/pipes/entry.pipe';
-import { Entry } from '../entry/models/entry.model';
-import { TagPipe } from './pipes/tag.pipe';
+import { TagService } from '../services/tag.service';
+import { Tag } from '../models/tag.model';
+import { StudyPipe } from '../../study/pipes/study.pipe';
+import { Study } from '../../study/study.model';
+import { EntriesPipe, EntryPipe } from '../../entry/pipes/entry.pipe';
+import { Entry } from '../../entry/models/entry.model';
+import { TagPipe } from '../pipes/tag.pipe';
 import JSON from 'graphql-type-json';
 import { Inject, UseGuards, UnauthorizedException } from '@nestjs/common';
-import { JwtAuthGuard } from '../jwt/jwt.guard';
-import { CASBIN_PROVIDER } from 'src/permission/casbin.provider';
+import { JwtAuthGuard } from '../../jwt/jwt.guard';
+import { CASBIN_PROVIDER } from '../../permission/casbin.provider';
 import * as casbin from 'casbin';
-import { TokenContext } from '../jwt/token.context';
-import { TokenPayload } from '../jwt/token.dto';
-import { StudyPermissions } from '../permission/permissions/study';
+import { TokenContext } from '../../jwt/token.context';
+import { TokenPayload } from '../../jwt/token.dto';
+import { StudyPermissions } from '../../permission/permissions/study';
 import { TagPermissions } from 'src/permission/permissions/tag';
 
 // TODO: Add permissioning
