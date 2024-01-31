@@ -116,10 +116,9 @@ export class TagService {
 
     // Handle any transformations
     const transformed = await this.tagTransformService.transformTagData(data, study, user);
-    console.log(transformed);
 
     // Save the tag information and mark the tag as complete
-    // await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data, complete: true } });
+    await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data: transformed, complete: true } });
   }
 
   async isEntryEnabled(study: Study, entry: Entry) {
