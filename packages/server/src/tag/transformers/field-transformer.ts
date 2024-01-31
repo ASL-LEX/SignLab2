@@ -1,10 +1,12 @@
+import { JsonSchema, UISchemaElement } from "@jsonforms/core";
+
 /**
  * A field transformer handles converting and operating on fields of a tag.
  * It handles adding in additional information, update intermediate data,
  * and ensuring that the data meets any additional formatting requirements.
  */
 export interface FieldTransformer {
-  transformField(field: any): Promise<any>;
+  transformField(field: unknown, uischema: UISchemaElement, schema: JsonSchema): Promise<any>;
 };
 
 /**
@@ -14,5 +16,9 @@ export interface FieldTransformer {
  *
  * The rank is used to determine if one transformer should be used over another.
  * The larger the rank, the higher the priority.
+ *
+ * This is similar to the `RankedTester` interface in `@jsonforms/core`.
  */
-export type FieldTransformerTest = (field: any) => [boolean, number];
+export type FieldTransformerTest = (uischema: UISchemaElement, schema: JsonSchema) => number;
+/** Number returned when a transformer does not apply to a given field */
+export const NOT_APPLICABLE = -1;

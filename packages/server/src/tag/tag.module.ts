@@ -12,6 +12,9 @@ import { VideoField, VideoFieldSchema } from './models/video-field.model';
 import { VideoFieldService } from './services/video-field.service';
 import { VideoFieldResolver } from './resolvers/video-field.resolver';
 import { GcpModule } from '../gcp/gcp.module';
+import { TagTransformer } from './services/tag-transformer.service';
+import { FieldTransformerFactory } from './transformers/field-transformer-factory';
+import { VideoFieldTransformer } from './transformers/video-field-transformer';
 
 @Module({
   imports: [
@@ -25,6 +28,15 @@ import { GcpModule } from '../gcp/gcp.module';
     PermissionModule,
     GcpModule
   ],
-  providers: [TagService, TagResolver, TagPipe, VideoFieldService, VideoFieldResolver]
+  providers: [
+    TagService,
+    TagResolver,
+    TagPipe,
+    VideoFieldService,
+    VideoFieldResolver,
+    TagTransformer,
+    FieldTransformerFactory,
+    VideoFieldTransformer
+  ]
 })
 export class TagModule {}

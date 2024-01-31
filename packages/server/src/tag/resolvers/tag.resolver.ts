@@ -53,7 +53,8 @@ export class TagResolver {
     @Args('data', { type: () => JSON }) data: any
   ): Promise<boolean> {
     // TODO: Add user context and verify the correct user has completed the tag
-    await this.tagService.complete(tag, data);
+    const study = await this.studyPipe.transform(tag.study);
+    await this.tagService.complete(tag, data, study);
     return true;
   }
 
