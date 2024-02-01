@@ -32,7 +32,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const client = useApolloClient();
   const { tag } = useTag();
 
-  useEffect(() => {
+  const resetState = () => {
     if (!props.uischema.options?.minimumRequired) {
       console.error('Minimum number of videos required not specified');
       return;
@@ -48,7 +48,19 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setMinimumVideos(minimumVideos);
     setMaxVideos(maxVideos);
     setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
+    setActiveIndex(0);
+  };
+
+  useEffect(() => {
+    resetState();
   }, [props.uischema]);
+
+  useEffect(() => {
+    if (!props.data) {
+      resetState();
+      return;
+    }
+  }, [props.data]);
 
   /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
   const saveVideoFragment = async (blob: Blob) => {
