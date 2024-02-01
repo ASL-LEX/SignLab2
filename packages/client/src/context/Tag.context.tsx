@@ -23,10 +23,7 @@ export const TagProvider: FC<TagProviderProps> = ({ children }) => {
   }, [study]);
 
   useEffect(() => {
-    if (!assignTagResult.data?.assignTag) {
-      return;
-    }
-    setTag(assignTagResult.data.assignTag);
+    setTag(assignTagResult.data?.assignTag);
   }, [assignTagResult.data]);
 
   const requestTag = () => {
@@ -35,7 +32,7 @@ export const TagProvider: FC<TagProviderProps> = ({ children }) => {
       return;
     }
 
-    assignTag({ variables: { study: study._id } });
+    assignTag({ variables: { study: study._id }, fetchPolicy: 'network-only' });
   };
 
   return <TagContext.Provider value={{ tag, requestTag }}>{children}</TagContext.Provider>;
