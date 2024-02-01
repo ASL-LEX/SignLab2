@@ -50,10 +50,12 @@ export class TagResolver {
   @Mutation(() => Boolean)
   async completeTag(
     @Args('tag', { type: () => ID }, TagPipe) tag: Tag,
-    @Args('data', { type: () => JSON }) data: any
+    @Args('data', { type: () => JSON }) data: any,
+    @TokenContext() user: TokenPayload
   ): Promise<boolean> {
     // TODO: Add user context and verify the correct user has completed the tag
-    await this.tagService.complete(tag, data);
+    const study = await this.studyPipe.transform(tag.study);
+    await this.tagService.complete(tag, data, study, user);
     return true;
   }
 
