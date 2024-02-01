@@ -1,13 +1,8 @@
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { TextSearch, SearchResults } from '@bu-sail/saas-view';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LexiconEntry } from '../../../graphql/graphql';
-
-interface AslLexSearchControlProps {
-  data: any;
-  handleChange(path: string, value: any): void;
-  path: string;
-}
+import { ControlProps } from '@jsonforms/core';
 
 function getAslLexCode(aslLexObject: any) {
   return aslLexObject.key ? aslLexObject.key : '';
@@ -16,9 +11,17 @@ function getAslLexCode(aslLexObject: any) {
 const width = 300;
 const aslLexicon = { _id: import.meta.env.VITE_ASL_LEXICON_ID, name: import.meta.env.VITE_NAME, schema: {} };
 
-const AslLexSearchControl = ({ handleChange, path }: AslLexSearchControlProps) => {
+const AslLexSearchControl: React.FC<ControlProps> = (props) => {
   const [searchResults, setSearchResults] = useState<LexiconEntry[]>([]);
   const [value, setValue] = useState<LexiconEntry | null>(null);
+
+  useEffect(() => {
+    if (!props.data) {
+      setValue(null);
+      setSearchResults([]);
+      return;
+    }
+  }, [props.data]);
 
   return (
     <>
@@ -29,7 +32,7 @@ const AslLexSearchControl = ({ handleChange, path }: AslLexSearchControlProps) =
           value={value}
           setValue={(entry) => {
             setValue(entry);
-            handleChange(path, getAslLexCode(entry));
+            props.handleChange(props.path, getAslLexCode(entry));
           }}
           width={width}
         />
