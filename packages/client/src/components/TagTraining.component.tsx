@@ -1,9 +1,10 @@
 import { DatasetsView } from './DatasetsView.component';
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
-import { useGetDatasetsQuery } from '../graphql/dataset/dataset';
+import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
 import { Switch } from '@mui/material';
+import { useProject } from '../context/Project.context';
 
 export interface TagTrainingComponentProps {
   setTrainingSet: Dispatch<SetStateAction<string[]>>;
@@ -12,7 +13,14 @@ export interface TagTrainingComponentProps {
 
 export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props) => {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const getDatasetsResults = useGetDatasetsQuery();
+  const { project } = useProject();
+  const [getDatasetsQuery, getDatasetsResults] = useGetDatasetsByProjectLazyQuery();
+
+  useEffect(() => {
+    if (project) {
+      getDatasetsQuery({ variables: { project: project._id } });
+    }
+  }, [project]);
 
   const trainingSet: Set<string> = new Set();
   const fullSet: Set<string> = new Set();
@@ -67,7 +75,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   //       accessible by the current project
   useEffect(() => {
     if (getDatasetsResults.data) {
-      setDatasets(getDatasetsResults.data.getDatasets);
+      setDatasets(getDatasetsResults.data.getDatasetsByProject);
     }
   }, [getDatasetsResults.data]);
 
