@@ -4,24 +4,21 @@ import { TagForm } from '../../components/contribute/TagForm.component';
 import { useStudy } from '../../context/Study.context';
 import { useEffect, useState } from 'react';
 import { useCompleteTagMutation } from '../../graphql/tag/tag';
-import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
 import { Study } from '../../graphql/graphql';
 import { TagProvider, useTag } from '../../context/Tag.context';
+import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
 
 export const TaggingInterface: React.FC = () => {
   const { study } = useStudy();
-
   // TODO: View for when there is no study vs when there is no tag
   return (
-    <>
-      <TagProvider>
-        {study && (
-          <>
-            <MainView study={study} />
-          </>
-        )}
-      </TagProvider>
-    </>
+    <TagProvider>
+      {study && (
+        <>
+          <MainView study={study} />
+        </>
+      )}
+    </TagProvider>
   );
 };
 
