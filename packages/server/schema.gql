@@ -89,7 +89,7 @@ type Entry {
   dataset: ID!
   creator: ID!
   dateCreated: DateTime!
-  meta: JSON!
+  meta: JSON
   signedUrl: String!
 
   """Get the number of milliseconds the signed URL is valid for."""
