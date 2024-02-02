@@ -45,7 +45,7 @@ export class Entry {
   dateCreated: Date;
 
   @Prop({ type: mongoose.Schema.Types.Mixed })
-  @Field(() => JSON)
+  @Field(() => JSON, { nullable: true })
   meta: any;
 
   @Prop({ required: false })
