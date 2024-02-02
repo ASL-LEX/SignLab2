@@ -38,10 +38,8 @@ const ContributeLandingInernal: React.FC = () => {
 
 export const ContributeLanding = () => {
   return (
-    
       <TagProvider>
         <ContributeLandingInernal />
       </TagProvider>
-  
   );
 };

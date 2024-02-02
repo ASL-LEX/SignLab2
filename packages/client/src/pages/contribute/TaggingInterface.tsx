@@ -6,19 +6,18 @@ import { useEffect, useState } from 'react';
 import { useCompleteTagMutation } from '../../graphql/tag/tag';
 import { Study } from '../../graphql/graphql';
 import { TagProvider, useTag } from '../../context/Tag.context';
+import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
 
 export const TaggingInterface: React.FC = () => {
   const { study } = useStudy();
   // TODO: View for when there is no study vs when there is no tag
   return (
     <TagProvider>
-      <>
-        {study && (
-          <>
-            <MainView study={study} />
-          </>
-        )}
-      </>
+      {study && (
+        <>
+          <MainView study={study} />
+        </>
+      )}
     </TagProvider>
   );
 };
@@ -51,20 +50,20 @@ const MainView: React.FC<MainViewProps> = (props) => {
 
   return (
     <>
-      {tag && (
+      {tag ? (
         <Box sx={{ justifyContent: 'space-between', display: 'flex', maxWidth: '80%', margin: 'auto' }}>
-          <>
-            <EntryView
-              entry={tag.entry}
-              width={500}
-              autoPlay={true}
-              pauseFrame="start"
-              mouseOverControls={false}
-              displayControls={true}
-            />
-            <TagForm study={props.study} setTagData={setTagData} />
-          </>
+          <EntryView
+            entry={tag.entry}
+            width={500}
+            autoPlay={true}
+            pauseFrame="start"
+            mouseOverControls={false}
+            displayControls={true}
+          />
+          <TagForm study={props.study} setTagData={setTagData} />
         </Box>
+      ) : (
+        <NoTagNotification studyName={props.study.name} />
       )}
     </>
   );
