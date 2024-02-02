@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStudy } from '../../context/Study.context';
 import { TagProvider, useTag } from '../../context/Tag.context';
 
-const ContributeLandingInernal: React.FC = () => {
+const ContributeLandingInternal: React.FC = () => {
   const navigate = useNavigate();
   const { study } = useStudy();
   const { tag } = useTag();
@@ -36,10 +36,10 @@ const ContributeLandingInernal: React.FC = () => {
   );
 };
 
-export const ContributeLanding = () => {
+export const ContributeLanding: React.FC = () => {
   return (
-      <TagProvider>
-        <ContributeLandingInernal />
-      </TagProvider>
+    <TagProvider>
+      <ContributeLandingInternal />
+    </TagProvider>
   );
 };
