@@ -4,3 +4,6 @@ service: gateway
 basic_scaling:
   max_instances: 2
   idle_timeout: 5m
+
+includes:
+  - env_variables.yaml
