@@ -1,14 +1,16 @@
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { useAuth } from '../context/Auth.context';
+import { useTranslation } from 'react-i18next';
 
 export const HomePage: React.FC = () => {
   const { token, authenticated } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div>
-      <AnimatedGradientText>Welcome to SignLab</AnimatedGradientText>
-      {authenticated && token ? <p>You are signed in</p> : <p>Please login to continue</p>}
+      <AnimatedGradientText>{t('home.welcome')}</AnimatedGradientText>
+      {authenticated && token ? <p>{t('home.signedIn')}</p> : <p>{t('home.logIn')}</p>}
     </div>
   );
 };

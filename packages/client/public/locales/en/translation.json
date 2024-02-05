@@ -1,0 +1,24 @@
+{
+  "home": {
+    "welcome": "Welcome to SignLab",
+    "signedIn": "You are signed in",
+    "logIn": "Please login to continue"
+  },
+  "menu": {
+    "projects": "Projects",
+    "newProject": "New Project",
+    "projectControl": "Project Control",
+    "userPermissions": "User Permissions",
+    "studies": "Studies",
+    "newStudy": "New Study",
+    "studyControl": "Study Control",
+    "entryControls": "Entry Controls",
+    "downloadTags": "Download Tags",
+    "datasets": "Datasets",
+    "datasetControl": "Dataset Control",
+    "projectAccess": "Project Access",
+    "contribute": "Contribute",
+    "tagInStudy": "Tag in Study",
+    "logout": "Logout"
+  }
+}
