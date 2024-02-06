@@ -1,0 +1,6 @@
+runtime: nodejs18
+service: default
+
+basic_scaling:
+  max_instances: 2
+  idle_timeout: 5m

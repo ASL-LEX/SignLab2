@@ -19,12 +19,12 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true
+      isGlobal: true,
+      ignoreEnvVars: false
     }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       autoSchemaFile: {
-        federation: 2,
-        path: 'schema.gql'
+        federation: 2
       },
       driver: ApolloFederationDriver
     }),
