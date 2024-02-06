@@ -62,7 +62,7 @@ jobs:
 
   # Handles pushing changes to the staging deployment
   # Runs if linting, building passes and its a push to main/tag
-  staging:
+  staging-deploy:
     runs-on: ubuntu-latest
     name: Deploy to Staging
     needs: [lint, build]
@@ -71,6 +71,9 @@ jobs:
       run:
         working-directory: packages/gateway
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       # App Engine deploy logic does not play well with
       - name: Cleanup
         run: rm package-lock.json
