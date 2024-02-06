@@ -88,7 +88,7 @@ jobs:
         uses: 'google-github-actions/deploy-appengine@v2'
         with:
           working_directory: 'packages/gateway'
-          env_vars:
-            SIGNLAB_URI: ${{ secrets.STAGING_SIGNLAB_URI }}
-            LEX_URI: ${{ secrets.STAGING_LEX_URI }}
-            AUTH_URI: ${{ secrets.STAGING_AUTH_URI }}
+          env_vars: |-
+            SIGNLAB_URI=${{ secrets.STAGING_SIGNLAB_URI }}
+            LEX_URI=${{ secrets.STAGING_LEX_URI }}
+            AUTH_URI=${{ secrets.STAGING_AUTH_URI }}
