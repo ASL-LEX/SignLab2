@@ -12,7 +12,7 @@ const languages = {
   es: 'Spanish'
 };
 
-export default function LanguageSelector() {
+export const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
   const [language, setLanguage] = React.useState(i18n.resolvedLanguage);
 
@@ -25,14 +25,8 @@ export default function LanguageSelector() {
   return (
     <Paper sx={{ padding: 1, marginTop: 5, minWidth: '200px' }}>
       <FormControl sx={{ minWidth: '200px' }}>
-        <InputLabel id="demo-simple-select-label">Select Language</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={language}
-          label="Language"
-          onChange={handleChange}
-        >
+        <InputLabel>Select Language</InputLabel>
+        <Select value={language} label="Language" onChange={handleChange}>
           {Object.entries(languages).map((lang) => (
             <MenuItem value={lang[0]}>{lang[1]}</MenuItem>
           ))}
@@ -40,4 +34,4 @@ export default function LanguageSelector() {
       </FormControl>
     </Paper>
   );
-}
+};

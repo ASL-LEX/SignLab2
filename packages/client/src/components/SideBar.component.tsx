@@ -8,8 +8,8 @@ import { Permission } from '../graphql/graphql';
 import { useGetRolesQuery } from '../graphql/permission/permission';
 import { useProject } from '../context/Project.context';
 import { useStudy } from '../context/Study.context';
-import LanguageSelector from './LanguageSelector';
 import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from './LanguageSelector';
 
 interface SideBarProps {
   open: boolean;
@@ -41,7 +41,11 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       subItems: [
         { name: t('menu.newProject'), action: () => navigate('/project/new'), visible: (p) => p!.owner },
         { name: t('menu.projectControl'), action: () => navigate('/project/controls'), visible: (p) => p!.owner },
-        { name: t('menu.userPermissions'), action: () => navigate('/project/permissions'), visible: (p) => p!.projectAdmin }
+        {
+          name: t('menu.userPermissions'),
+          action: () => navigate('/project/permissions'),
+          visible: (p) => p!.projectAdmin
+        }
       ]
     },
     {
@@ -53,7 +57,11 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       subItems: [
         { name: t('menu.newStudy'), action: () => navigate('/study/new'), visible: (p) => p!.projectAdmin },
         { name: t('menu.studyControl'), action: () => navigate('/study/controls'), visible: (p) => p!.projectAdmin },
-        { name: t('menu.userPermissions'), action: () => navigate('/study/permissions'), visible: (p) => p!.studyAdmin },
+        {
+          name: t('menu.userPermissions'),
+          action: () => navigate('/study/permissions'),
+          visible: (p) => p!.studyAdmin
+        },
         { name: t('menu.entryControls'), action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
         { name: t('menu.downloadTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
       ]
