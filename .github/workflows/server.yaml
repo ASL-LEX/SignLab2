@@ -94,4 +94,4 @@ jobs:
           working_directory: 'packages/server'
           env_vars: |-
             MONGO_URI=${{ secrets.STAGING_MONGO_URI }}
-            CASBIN_MONGO_URI=${{ secrets.STAGING_CASBIN_URI }}
+            CASBIN_MONGO_URI=${{ secrets.STAGING_CASBIN_MONGO_URI }}

@@ -25,7 +25,9 @@ export const LanguageSelector: React.FC = () => {
         <InputLabel>{t('components.languageSelector.selectLanguage')}</InputLabel>
         <Select value={language} label="Language" onChange={handleChange}>
           {languages.map((lang) => (
-            <MenuItem key={lang} value={lang}>{t('languages.' + lang)}</MenuItem>
+            <MenuItem key={lang} value={lang}>
+              {t('languages.' + lang)}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
