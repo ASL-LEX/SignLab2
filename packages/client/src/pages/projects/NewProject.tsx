@@ -5,44 +5,7 @@ import { materialRenderers, materialCells } from '@jsonforms/material-renderers'
 import { JsonForms } from '@jsonforms/react';
 import { useCreateProjectMutation, useProjectExistsLazyQuery } from '../../graphql/project/project';
 import { ErrorObject } from 'ajv';
-
-const schema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      pattern: '^[a-zA-Z 0-9]*$',
-      description: 'Please enter project name'
-    },
-    description: {
-      type: 'string',
-      description: 'Please enter project description'
-    }
-  },
-  required: ['name', 'description'],
-  errorMessage: {
-    type: 'data should be an object',
-    properties: { name: 'Project name should be ...' },
-    _: 'data should ...'
-  }
-};
-
-const uischema = {
-  type: 'Group',
-  label: 'Create New Project',
-  elements: [
-    {
-      type: 'Control',
-      label: 'Name',
-      scope: '#/properties/name'
-    },
-    {
-      type: 'Control',
-      label: 'Description',
-      scope: '#/properties/description'
-    }
-  ]
-};
+import { useTranslation } from 'react-i18next';
 
 const initialData = {
   name: '',
@@ -57,6 +20,45 @@ export const NewProject: React.FC = () => {
   });
   const [projectExistsQuery, projectExistsResults] = useProjectExistsLazyQuery();
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
+  const { t } = useTranslation();
+
+  const schema = {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        pattern: '^[a-zA-Z 0-9]*$',
+        description: t('components.newProject.nameDescription')
+      },
+      description: {
+        type: 'string',
+        description: t('components.newProject.descriptionDescription')
+      }
+    },
+    required: ['name', 'description'],
+    errorMessage: {
+      type: 'data should be an object',
+      properties: { name: 'Project name should be ...' },
+      _: 'data should ...'
+    }
+  };
+
+  const uischema = {
+    type: 'Group',
+    label: t('components.newProject.formLabel'),
+    elements: [
+      {
+        type: 'Control',
+        label: t('common.name'),
+        scope: '#/properties/name'
+      },
+      {
+        type: 'Control',
+        label: t('common.description'),
+        scope: '#/properties/description'
+      }
+    ]
+  };
 
   useEffect(() => {
     if (projectExistsResults.data?.projectExists) {
@@ -101,7 +103,7 @@ export const NewProject: React.FC = () => {
     <>
       {error && (
         <Typography color={'red'} variant="h6">
-          Failed to create project! Try again.
+          {t('components.newProject.failMessage')}
         </Typography>
       )}
       <JsonForms
@@ -114,7 +116,7 @@ export const NewProject: React.FC = () => {
         additionalErrors={additionalErrors}
       />
       <Button variant="contained" onClick={handleSubmit} disabled={loading || projectExistsResults.data?.projectExists}>
-        Submit
+        {t('submit')}
       </Button>
     </>
   );

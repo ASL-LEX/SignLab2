@@ -1,4 +1,16 @@
 {
+  "common": {
+    "name": "Name",
+    "description": "Description",
+    "instruction": "Instruction",
+    "project": "Project",
+    "study": "Study",
+    "submit": "Submit"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Spanish"
+  },
   "home": {
     "welcome": "Welcome to SignLab",
     "signedIn": "You are signed in",
@@ -20,5 +32,19 @@
     "contribute": "Contribute",
     "tagInStudy": "Tag in Study",
     "logout": "Logout"
+  },
+  "components": {
+    "environment": {
+      "title": "Environment"
+    },
+    "languageSelector": {
+      "selectLanguage": "Select Language"
+    },
+    "newProject": {
+      "formLabel": "Create New Project",
+      "nameDescription": "Please enter project name",
+      "descriptionDescription": "Please enter project description",
+      "failMessage": "  Failed to create project! Try again."
+    }
   }
 }
