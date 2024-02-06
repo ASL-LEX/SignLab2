@@ -2,22 +2,24 @@ import { Select, MenuItem, FormControl, InputLabel, Stack, Paper, Typography } f
 import { useProject } from '../context/Project.context';
 import { useStudy } from '../context/Study.context';
 import { Dispatch, SetStateAction, FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const Environment: FC = () => {
   const { project, projects, setProject } = useProject();
   const { study, studies, setStudy } = useStudy();
+  const { t } = useTranslation();
 
   return (
     <Paper sx={{ padding: 1 }}>
       <Typography variant="body1" sx={{ paddingBottom: 1 }}>
-        Environment
+        {t('components.environment.title')}
       </Typography>
       <Stack sx={{ width: '100%' }} spacing={2}>
         {/* Project Selection */}
         <FieldSelector
           value={project}
           setValue={setProject}
-          label={'Project'}
+          label={t('common.project')}
           options={projects}
           getKey={(option) => option._id}
           display={(option) => option.name}
@@ -26,7 +28,7 @@ export const Environment: FC = () => {
         <FieldSelector
           value={study}
           setValue={setStudy}
-          label={'Study'}
+          label={t('common.study')}
           options={studies}
           getKey={(option) => option._id}
           display={(option) => option.name}

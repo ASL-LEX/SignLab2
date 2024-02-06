@@ -8,6 +8,8 @@ import { Permission } from '../graphql/graphql';
 import { useGetRolesQuery } from '../graphql/permission/permission';
 import { useProject } from '../context/Project.context';
 import { useStudy } from '../context/Study.context';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from './LanguageSelector';
 
 interface SideBarProps {
   open: boolean;
@@ -21,6 +23,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
   const { project } = useProject();
   const { study } = useStudy();
   const rolesQueryResults = useGetRolesQuery({ variables: { project: project?._id, study: study?._id } });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (rolesQueryResults.data) {
@@ -30,54 +33,62 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
 
   const navItems: NavItemProps[] = [
     {
-      name: 'Projects',
+      name: t('menu.projects'),
       icon: <Work />,
       action: () => {},
       visible: (p) => p!.owner || p!.projectAdmin,
       permission,
       subItems: [
-        { name: 'New Project', action: () => navigate('/project/new'), visible: (p) => p!.owner },
-        { name: 'Project Control', action: () => navigate('/project/controls'), visible: (p) => p!.owner },
-        { name: 'User Permissions', action: () => navigate('/project/permissions'), visible: (p) => p!.projectAdmin }
+        { name: t('menu.newProject'), action: () => navigate('/project/new'), visible: (p) => p!.owner },
+        { name: t('menu.projectControl'), action: () => navigate('/project/controls'), visible: (p) => p!.owner },
+        {
+          name: t('menu.userPermissions'),
+          action: () => navigate('/project/permissions'),
+          visible: (p) => p!.projectAdmin
+        }
       ]
     },
     {
-      name: 'Studies',
+      name: t('menu.studies'),
       action: () => {},
       icon: <School />,
       visible: (p) => p!.projectAdmin || p!.studyAdmin,
       permission,
       subItems: [
-        { name: 'New Study', action: () => navigate('/study/new'), visible: (p) => p!.projectAdmin },
-        { name: 'Study Control', action: () => navigate('/study/controls'), visible: (p) => p!.projectAdmin },
-        { name: 'User Permissions', action: () => navigate('/study/permissions'), visible: (p) => p!.studyAdmin },
-        { name: 'Entry Controls', action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
-        { name: 'Download Tags', action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
+        { name: t('menu.newStudy'), action: () => navigate('/study/new'), visible: (p) => p!.projectAdmin },
+        { name: t('menu.studyControl'), action: () => navigate('/study/controls'), visible: (p) => p!.projectAdmin },
+        {
+          name: t('menu.userPermissions'),
+          action: () => navigate('/study/permissions'),
+          visible: (p) => p!.studyAdmin
+        },
+        { name: t('menu.entryControls'), action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
+        { name: t('menu.downloadTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
       ]
     },
     {
-      name: 'Datasets',
+      name: t('menu.datasets'),
       action: () => {},
       icon: <Dataset />,
       visible: (p) => p!.owner,
       permission,
       subItems: [
-        { name: 'Dataset Control', action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
-        { name: 'Project Access', action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
+        { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
+        { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
       ]
     },
     {
-      name: 'Contribute',
+      name: t('menu.contribute'),
       action: () => {},
       icon: <GroupWork />,
       permission,
       visible: (p) => p!.contributor,
       subItems: [
-        { name: 'Tag in Study', action: () => navigate('/contribute/landing'), visible: (p) => p!.contributor }
+        { name: t('menu.tagInStudy'), action: () => navigate('/contribute/landing'), visible: (p) => p!.contributor }
       ]
     },
     {
-      name: 'Logout',
+      name: t('menu.logout'),
       action: logout,
       icon: <Logout />,
       visible: () => true
@@ -113,6 +124,8 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
         </List>
       )}
       <Environment />
+
+      <LanguageSelector />
     </Drawer>
   );
 };
