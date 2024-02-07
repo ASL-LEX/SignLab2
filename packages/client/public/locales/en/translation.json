@@ -101,7 +101,8 @@
       "enterTagging": "Enter tagging",
       "noTaggingLeft": "No tagging left",
       "studyTraining": "Study Training",
-      "studyTagging": "Study Tagging"
+      "studyTagging": "Study Tagging",
+      "failMessage": "  Failed to create project! Try again."
     }
   }
 }

@@ -10,7 +10,7 @@
     "build": "nest build",
     "prettier": "prettier -l \"src/**/*.ts\"",
     "prettier:fix": "prettier -wl \"src/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

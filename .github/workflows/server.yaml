@@ -58,3 +58,40 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Handles pushing changes to the staging deployment
+  # Runs if linting, building passes and its a push to main/tag
+  staging-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Staging
+    needs: [lint, build]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    defaults:
+      run:
+        working-directory: packages/server
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # App Engine deploy logic does not play well with
+      - name: Cleanup
+        run: rm package-lock.json
+
+      - name: GCP Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ secrets.GCP_STAGING_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_STAGING_ID_PROVIDER }}
+          service_account: ${{ secrets.STAGING_GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Staging
+        uses: 'google-github-actions/deploy-appengine@v2'
+        with:
+          working_directory: 'packages/server'
+          env_vars: |-
+            MONGO_URI=${{ secrets.STAGING_MONGO_URI }}
+            CASBIN_MONGO_URI=${{ secrets.STAGING_CASBIN_MONGO_URI }}
