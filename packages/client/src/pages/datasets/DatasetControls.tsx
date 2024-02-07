@@ -10,6 +10,7 @@ import { GridColDef, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { useConfirmation } from '../../context/Confirmation.context';
 import { useDeleteEntryMutation } from '../../graphql/entry/entry';
+import { useTranslation } from 'react-i18next';
 
 export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
@@ -17,6 +18,7 @@ export const DatasetControls: React.FC = () => {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [getDatasets, getDatasetsResults] = useGetDatasetsLazyQuery();
   const [deleteEntryMutation] = useDeleteEntryMutation();
+  const { t } = useTranslation();
 
   const confirmation = useConfirmation();
 
@@ -52,8 +54,8 @@ export const DatasetControls: React.FC = () => {
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
     confirmation.pushConfirmationRequest({
-      title: 'Delete Entry',
-      message: 'Are you sure you want to delete this project? Doing so will delete all associated tags',
+      title: t('components.datasetControl.deleteEntry'),
+      message: t('components.datasetControl.deleteDescription'),
       onConfirm: async () => {
         const res = await deleteEntryMutation({ variables: { entry: id.toString() } });
         if (res.errors) {
@@ -71,7 +73,7 @@ export const DatasetControls: React.FC = () => {
     {
       field: 'delete',
       type: 'actions',
-      headerName: 'Delete',
+      headerName: t('common.delete'),
       width: 120,
       maxWidth: 120,
       cellClassName: 'delete',
@@ -79,7 +81,7 @@ export const DatasetControls: React.FC = () => {
         return [
           <GridActionsCellItem
             icon={<DeleteIcon color={'error'} />}
-            label="Delete"
+            label={t('common.delete')}
             onClick={() => handleDelete(params.id)}
           />
         ];
@@ -89,7 +91,7 @@ export const DatasetControls: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h3">Dataset Controls</Typography>
+      <Typography variant="h3">{t('menu.datasetControl')}</Typography>
       <Box sx={{ display: 'flex', paddingBottom: '20px' }}>
         <Box
           sx={{ width: '22%', height: '10%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}
@@ -99,7 +101,7 @@ export const DatasetControls: React.FC = () => {
           </IconButton>
           <AddDataset show={add} toggleModal={toggleAdd} />
           <Typography variant="body2" sx={{ paddingTop: '7px' }}>
-            Add New Dataset
+            {t('components.datasetControl.addDataset')}
           </Typography>
         </Box>
         <Box
@@ -110,7 +112,7 @@ export const DatasetControls: React.FC = () => {
           </IconButton>
           <UploadEntries show={upload} toggleModal={toggleUpload} />
           <Typography variant="body2" sx={{ paddingTop: '7px' }}>
-            Upload Entries
+            {t('components.datasetControl.uploadEntries')}
           </Typography>
         </Box>
       </Box>

@@ -66,7 +66,7 @@ export const NewProject: React.FC = () => {
         {
           instancePath: '/name',
           keyword: 'uniqueProjectName',
-          message: 'A project with this name already exists',
+          message: t('components.newProject.projectExists'),
           schemaPath: '#/properties/name/name',
           params: { keyword: 'uniqueProjectName' }
         }
@@ -116,7 +116,7 @@ export const NewProject: React.FC = () => {
         additionalErrors={additionalErrors}
       />
       <Button variant="contained" onClick={handleSubmit} disabled={loading || projectExistsResults.data?.projectExists}>
-        {t('submit')}
+        {t('common.submit')}
       </Button>
     </>
   );

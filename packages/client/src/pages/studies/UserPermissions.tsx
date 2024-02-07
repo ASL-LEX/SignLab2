@@ -10,13 +10,15 @@ import {
   useGrantTrainedContributorMutation
 } from '../../graphql/permission/permission';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const StudyUserPermissions: React.FC = () => {
   const { study } = useStudy();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Typography variant="h3">User Permissions</Typography>
+      <Typography variant="h3">{t('menu.userPermissions')}</Typography>
       {study && <UserPermissionTable study={study} />}
     </>
   );
@@ -122,6 +124,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
   });
 
   const [permissions, setPermissions] = useState<StudyPermissionModel[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data) {
@@ -132,7 +135,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
   const columns: GridColDef[] = [
     {
       field: 'email',
-      headerName: 'Email',
+      headerName: t('common.email'),
       valueGetter: (params) => params.row.user.email,
       flex: 1.75,
       editable: false
@@ -140,7 +143,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
     {
       field: 'studyAdmin',
       type: 'boolean',
-      headerName: 'Study Admin',
+      headerName: t('components.userPermissions.studyAdmin'),
       valueGetter: (params) => params.row.isStudyAdmin,
       renderCell: (params: GridRenderCellParams) => {
         return (
@@ -152,7 +155,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
     },
     {
       field: 'contributor',
-      headerName: 'Contributor',
+      headerName: t('components.userPermissions.contributor'),
       valueGetter: (params) => params.row.isContributor,
       renderCell: (params: GridRenderCellParams) => {
         return (
@@ -164,7 +167,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
     },
     {
       field: 'trained',
-      headerName: 'Trained',
+      headerName: t('components.userPermissions.trained'),
       valueGetter: (params) => params.row.isTrained,
       renderCell: (params: GridRenderCellParams) => {
         return (

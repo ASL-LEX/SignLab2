@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogActions, Button, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export interface ConfirmationRequest {
   message: string;
@@ -21,6 +22,7 @@ export interface ConfirmationProviderProps {
 export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [confirmationRequest, setConfirmationRequest] = useState<ConfirmationRequest | null>(null);
+  const { t } = useTranslation();
 
   const pushConfirmationRequest = (confirmationRequest: ConfirmationRequest) => {
     setConfirmationRequest(confirmationRequest);
@@ -50,9 +52,9 @@ export const ConfirmationProvider: React.FC<ConfirmationProviderProps> = ({ chil
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleCancel}>
-            Cancel
+            {t('common.cancel')}
           </Button>
-          <Button onClick={handleConfirm}>Ok</Button>
+          <Button onClick={handleConfirm}> {t('common.ok')}</Button>
         </DialogActions>
       </Dialog>
       {children}

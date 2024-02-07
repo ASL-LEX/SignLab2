@@ -6,6 +6,7 @@ import { DatasetsView } from '../../components/DatasetsView.component';
 import { useGetDatasetsByProjectQuery } from '../../graphql/dataset/dataset';
 import { useProject } from '../../context/Project.context';
 import ToggleEntryEnabled from '../../components/ToggleEntryEnabled.component';
+import { useTranslation } from 'react-i18next';
 
 export const EntryControls: React.FC = () => {
   const { project } = useProject();
@@ -15,6 +16,7 @@ export const EntryControls: React.FC = () => {
       project: project ? project._id : ''
     }
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (getDatasetsByProjectResults.data) {
@@ -26,7 +28,7 @@ export const EntryControls: React.FC = () => {
     {
       field: 'enabled',
       type: 'actions',
-      headerName: 'Enable',
+      headerName: t('common.enable'),
       width: 120,
       maxWidth: 120,
       cellClassName: 'enabled',
@@ -38,7 +40,7 @@ export const EntryControls: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h3">Entry Control</Typography>
+      <Typography variant="h3">{t('menu.entryControl')}</Typography>
       <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
     </>
   );
