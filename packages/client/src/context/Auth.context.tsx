@@ -31,26 +31,20 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const uiRef = useRef<HTMLDivElement>(null);
-
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
 
   const handleUnauthenticated = () => {
     // Clear the token and authenticated state
     setToken(null);
     setAuthenticated(false);
     localStorage.removeItem(AUTH_TOKEN_STR);
-
-    // Redirect to login
-    if (uiRef.current) {
-      uiRef.current.style.display = 'none';
-    }
   };
 
   const handleAuthenticated = (token: string) => {
     setToken(token);
     setAuthenticated(true);
+    localStorage.setItem(AUTH_TOKEN_STR, token);
   };
 
   // Handle loading the login UI
@@ -79,18 +73,22 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
     return (
     <AuthContext.Provider value={{ token, authenticated }}>
-      {!authenticated && <FirebaseLoginWrapper />}
+      {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
       {authenticated && children}
     </AuthContext.Provider>
   );
 };
 
-const FirebaseLoginWrapper: FC = () => {
+interface FirebaseLoginWrapperProps {
+  setToken: (token: string) => void;
+}
+
+const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken }) => {
   firebase.initializeApp(firebaseConfig);
   const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
 
   const signInSuccess = async (authResult: any) => {
-    console.log(await authResult.user.getIdToken());
+    setToken(await authResult.user.getIdToken());
   };
 
   useEffect(() => {
@@ -101,8 +99,7 @@ const FirebaseLoginWrapper: FC = () => {
       signInOptions: [
           firebaseauth.GoogleAuthProvider.PROVIDER_ID,
           firebaseauth.EmailAuthProvider.PROVIDER_ID
-      ],
-      signInSuccessUrl: '/'
+      ]
     });
   }, []);
 
