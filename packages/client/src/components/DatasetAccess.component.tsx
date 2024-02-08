@@ -3,6 +3,7 @@ import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { DataGrid, GridColDef, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { GridRowModesModel } from '@mui/x-data-grid-pro';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Row {
   id: number;
@@ -41,6 +42,7 @@ const renderSwitchEditInputCell: GridColDef['renderCell'] = (params) => {
 export const DatasetAccess: React.FC<Table> = ({ tableRows }: Table) => {
   const [rows] = useState(tableRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const { t } = useTranslation();
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -50,20 +52,20 @@ export const DatasetAccess: React.FC<Table> = ({ tableRows }: Table) => {
     { field: 'id', headerName: 'ID', width: 55 },
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: t('common.name'),
       width: 200,
       editable: true
     },
     {
       field: 'description',
-      headerName: 'Description',
+      headerName: t('common.description'),
       width: 450,
       editable: true
     },
     {
       field: 'switch',
       type: 'boolean',
-      headerName: 'Project Access',
+      headerName: t('menu.projectAccess'),
       renderCell: (params) => <Switch value={params.value} />,
       renderEditCell: renderSwitchEditInputCell,
       editable: true,

@@ -7,18 +7,20 @@ import { Study } from '../../graphql/graphql';
 import { useDeleteStudyMutation } from '../../graphql/study/study';
 import { useEffect } from 'react';
 import { useConfirmation } from '../../context/Confirmation.context';
+import { useTranslation } from 'react-i18next';
 
 export const StudyControl: React.FC = () => {
   const { studies, updateStudies } = useStudy();
 
   const [deleteStudyMutation, deleteStudyResults] = useDeleteStudyMutation();
   const confirmation = useConfirmation();
+  const { t } = useTranslation();
 
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
     confirmation.pushConfirmationRequest({
-      title: 'Delete Study',
-      message: 'Are you sure you want to delete this study? Doing so will delete all contained tags',
+      title: t('components.studyControl.deleteStudy'),
+      message: t('components.studyControl.deleteDescription'),
       onConfirm: () => {
         deleteStudyMutation({ variables: { study: id.toString() } });
       },
@@ -36,32 +38,38 @@ export const StudyControl: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: t('common.name'),
       width: 200,
       editable: false
     },
     {
       field: 'description',
-      headerName: 'Description',
+      headerName: t('common.description'),
       width: 500,
       editable: false
     },
     {
       field: 'delete',
       type: 'actions',
-      headerName: 'Delete',
+      headerName: t('common.delete'),
       width: 120,
       maxWidth: 120,
       cellClassName: 'delete',
       getActions: (params) => {
-        return [<GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.id)} />];
+        return [
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label={t('common.delete')}
+            onClick={() => handleDelete(params.id)}
+          />
+        ];
       }
     }
   ];
 
   return (
     <>
-      <Typography variant="h3">Study Control</Typography>
+      <Typography variant="h3">{t('menu.studyControl')}</Typography>
       <Box sx={{ maxWidth: '1000px', margin: 'auto' }}>
         <DataGrid rows={studies || []} columns={columns} getRowId={(row: Study) => row._id} />
       </Box>

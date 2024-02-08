@@ -13,11 +13,14 @@
     "back": "Back",
     "finish": "Finish",
     "next": "Next",
+    "continue": "Continue",
     "required": "Required",
     "preview": "Preview",
     "enable": "Enable",
     "view": "View",
-    "entryId": "Entry ID"
+    "entryId": "Entry ID",
+    "login": "Login",
+    "clear": "clear"
   },
   "languages": {
     "en": "English",
@@ -97,12 +100,23 @@
       "formTitle": "Study Information",
       "tagsDescription": "Number of times each entry needs to be tagged (default 1)"
     },
+    "studyControl": {
+      "deleteStudy": "Delete Study",
+      "deleteDescription": "Are you sure you want to delete this study? Doing so will delete all contained tags"
+    },
     "contribute": {
       "enterTagging": "Enter tagging",
       "noTaggingLeft": "No tagging left",
       "studyTraining": "Study Training",
       "studyTagging": "Study Tagging",
       "failMessage": "  Failed to create project! Try again."
+    },
+    "successPage": {
+      "succefullyCreated": "Successfully created!"
+    },
+    "login": {
+      "selectOrg": "Select an Organization to Login",
+      "redirectToOrg": "Redirect to Organization Login"
     }
   }
 }
