@@ -20,7 +20,8 @@ export interface DecodedToken {
 }
 
 export interface AuthContextProps {
-
+  authenticated: boolean;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -31,41 +32,82 @@ export interface AuthProviderProps {
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const uiRef = useRef<HTMLDivElement>(null);
-  firebase.initializeApp(firebaseConfig);
-  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
 
-  const signInSuccess = (authResult: any, redirectUrl?: string | null): boolean => {
+  const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
 
-    return true;
-  };
+  const handleUnauthenticated = () => {
+    // Clear the token and authenticated state
+    setToken(null);
+    setAuthenticated(false);
+    localStorage.removeItem(AUTH_TOKEN_STR);
 
-  const uiShown = () => {
+    // Redirect to login
     if (uiRef.current) {
       uiRef.current.style.display = 'none';
     }
   };
 
+  const handleAuthenticated = (token: string) => {
+    setToken(token);
+    setAuthenticated(true);
+  };
+
+  // Handle loading the login UI
+  useEffect(() => {
+    // Check local storage for token
+    const token = localStorage.getItem(AUTH_TOKEN_STR);
+
+    // If no token, need to login
+    if (!token) {
+      handleUnauthenticated();
+      return;
+    }
+
+    // Decode the token
+    const decodedToken = jwt_decode<DecodedToken>(token);
+
+    // If token is expired, need to login
+    if (decodedToken.exp * 1000 < Date.now()) {
+      handleUnauthenticated();
+      return;
+    }
+
+    // Otherwise, can set the token and authenticated state
+    handleAuthenticated(token);
+  }, []);
+
+    return (
+    <AuthContext.Provider value={{ token, authenticated }}>
+      {!authenticated && <FirebaseLoginWrapper />}
+      {authenticated && children}
+    </AuthContext.Provider>
+  );
+};
+
+const FirebaseLoginWrapper: FC = () => {
+  firebase.initializeApp(firebaseConfig);
+  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
+
+  const signInSuccess = async (authResult: any) => {
+    console.log(await authResult.user.getIdToken());
+  };
+
   useEffect(() => {
     ui.start('#firebaseui-auth-container', {
       callbacks: {
-        signInSuccessWithAuthResult: signInSuccess,
-        uiShown
+        signInSuccessWithAuthResult: (authResult, _redirectUrl) => { signInSuccess(authResult); return true }
       },
       signInOptions: [
           firebaseauth.GoogleAuthProvider.PROVIDER_ID,
           firebaseauth.EmailAuthProvider.PROVIDER_ID
-      ]
+      ],
+      signInSuccessUrl: '/'
     });
-
   }, []);
 
-    return (
-    <AuthContext.Provider value={{ }}>
-      <div id="firebaseui-auth-container"/>
-      <div id="main-container" ref={uiRef}>
-        {children}
-      </div>
-    </AuthContext.Provider>
+  return (
+    <div id="firebaseui-auth-container" />
   );
 };
 
