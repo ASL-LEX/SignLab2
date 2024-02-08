@@ -1,6 +1,14 @@
-import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, FC, useContext, useEffect, useState, ReactNode, useRef } from 'react';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import * as firebaseui from 'firebaseui';
+import * as firebase from '@firebase/app';
+import * as firebaseauth from '@firebase/auth';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_AUTH_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+};
 
 export const AUTH_TOKEN_STR = 'token';
 
@@ -12,13 +20,7 @@ export interface DecodedToken {
 }
 
 export interface AuthContextProps {
-  authenticated: boolean;
-  setAuthenticated: (authenticated: boolean) => void;
-  token: string | null;
-  decodedToken: DecodedToken | null;
-  setToken: (token: string) => void;
-  login: (token: string) => void;
-  logout: () => void;
+
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -28,83 +30,43 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
-  const navigate = useNavigate();
+  const uiRef = useRef<HTMLDivElement>(null);
+  firebase.initializeApp(firebaseConfig);
+  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
 
-  const setUnautheticated = () => {
-    clearToken();
-    setAuthenticated(false);
-    setToken(null);
-    setDecodedToken(null);
+  const signInSuccess = (authResult: any, redirectUrl?: string | null): boolean => {
+
+    return true;
   };
 
-  const makeAuthenticated = (token: string, tokenPayload: DecodedToken) => {
-    setAuthenticated(true);
-    setToken(token);
-    setDecodedToken(tokenPayload);
-    saveToken(token);
-  };
-
-  const logout = () => {
-    setUnautheticated();
-    navigate('/loginpage');
-  };
-
-  const login = (token: string) => {
-    makeAuthenticated(token, jwt_decode(token));
-    navigate('/');
+  const uiShown = () => {
+    if (uiRef.current) {
+      uiRef.current.style.display = 'none';
+    }
   };
 
   useEffect(() => {
-    const token = restoreToken();
+    ui.start('#firebaseui-auth-container', {
+      callbacks: {
+        signInSuccessWithAuthResult: signInSuccess,
+        uiShown
+      },
+      signInOptions: [
+          firebaseauth.GoogleAuthProvider.PROVIDER_ID,
+          firebaseauth.EmailAuthProvider.PROVIDER_ID
+      ]
+    });
 
-    // If not token present, redirect to login
-    if (!token) {
-      setUnautheticated();
-      navigate('/loginpage');
-      return;
-    }
-
-    // Decode the current token payload
-    const decodedToken: DecodedToken = jwt_decode(token);
-    const currentTime = new Date().getTime() / 1000;
-
-    // Handle expired token
-    if (currentTime > decodedToken.exp) {
-      setUnautheticated();
-      navigate('/loginpage');
-      return;
-    }
-
-    // User is authenticated with presoent token
-    makeAuthenticated(token, decodedToken);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      makeAuthenticated(token, jwt_decode(token));
-    }
-  }, [token]);
-
-  return (
-    <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }}>
-      {children}
+    return (
+    <AuthContext.Provider value={{ }}>
+      <div id="firebaseui-auth-container"/>
+      <div id="main-container" ref={uiRef}>
+        {children}
+      </div>
     </AuthContext.Provider>
   );
-};
-
-const saveToken = (token: string) => {
-  localStorage.setItem(AUTH_TOKEN_STR, token);
-};
-
-const restoreToken = (): string | null => {
-  return localStorage.getItem(AUTH_TOKEN_STR);
-};
-
-const clearToken = (): void => {
-  localStorage.removeItem(AUTH_TOKEN_STR);
 };
 
 export const useAuth = () => useContext(AuthContext);
