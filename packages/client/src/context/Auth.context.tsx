@@ -13,15 +13,29 @@ const firebaseConfig = {
 export const AUTH_TOKEN_STR = 'token';
 
 export interface DecodedToken {
-  id: string;
-  projectId: string;
-  role: number;
+  aud: string;
+  auth_time: number;
+  email: string;
+  email_verified: boolean;
   exp: number;
+  firebase: {
+    identities: {
+      email: string[];
+      email_verified: boolean;
+    };
+    sign_in_provider: string;
+    user_id: string;
+  };
+  iat: number;
+  iss: string;
+  sub: string;
+  user_id: string;
 }
 
 export interface AuthContextProps {
   authenticated: boolean;
   token: string | null;
+  decodedToken: DecodedToken | null;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -33,6 +47,7 @@ export interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
   const [authenticated, setAuthenticated] = useState<boolean>(true);
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
 
   const handleUnauthenticated = () => {
     // Clear the token and authenticated state
@@ -45,6 +60,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setToken(token);
     setAuthenticated(true);
     localStorage.setItem(AUTH_TOKEN_STR, token);
+
+    const decodedToken = jwt_decode<DecodedToken>(token);
+    setDecodedToken(decodedToken);
   };
 
   // Handle loading the login UI
@@ -72,7 +90,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
     return (
-    <AuthContext.Provider value={{ token, authenticated }}>
+    <AuthContext.Provider value={{ token, authenticated, decodedToken }}>
       {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
       {authenticated && children}
     </AuthContext.Provider>
