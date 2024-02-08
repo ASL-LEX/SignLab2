@@ -14,12 +14,9 @@ import { ProjectAccess } from './pages/datasets/ProjectAccess';
 import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions';
 import { StudyUserPermissions } from './pages/studies/UserPermissions';
 import { DownloadTags } from './pages/studies/DownloadTags';
-import { LoginPage } from './pages/LoginPage';
 import { DatasetControls } from './pages/datasets/DatasetControls';
-import { AuthCallback } from './pages/AuthCallback';
 import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
-import { LogoutPage } from './pages/LogoutPage';
 import { CssBaseline, Box, styled } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { SideBar } from './components/SideBar.component';
@@ -119,8 +116,6 @@ const MyRoutes: FC = () => {
   return (
     <Routes>
       <Route path={'/'} element={<HomePage />} />
-      <Route path={'/callback'} element={<AuthCallback />} />
-      <Route path={'/loginpage'} element={<LoginPage />} />
       <Route element={<AdminGuard />}>
         <Route path={'/project/new'} element={<NewProject />} />
         <Route path={'/project/controls'} element={<ProjectControl />} />
@@ -135,7 +130,6 @@ const MyRoutes: FC = () => {
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
         <Route path={'/contribute/landing'} element={<ContributeLanding />} />
         <Route path={'/contribute/tagging'} element={<TaggingInterface />} />
-        <Route path={'/logoutpage'} element={<LogoutPage />} />
       </Route>
     </Routes>
   );

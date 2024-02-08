@@ -53,7 +53,7 @@ const EditStudyAdminSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isStudyAdmin}
-      disabled={!props.permission.isStudyAdminEditable || props.permission.user.id === props.currentUser.id}
+      disabled={!props.permission.isStudyAdminEditable || props.permission.user.id === props.currentUser.user_id}
       onChange={handleChange}
     />
   );
@@ -81,7 +81,7 @@ const EditContributorSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isContributor}
-      disabled={!props.permission.isContributorEditable || props.permission.user.id === props.currentUser.id}
+      disabled={!props.permission.isContributorEditable || props.permission.user.id === props.currentUser.user_id}
       onChange={handleChange}
     />
   );

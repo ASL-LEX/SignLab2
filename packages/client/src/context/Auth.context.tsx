@@ -1,6 +1,5 @@
-import { createContext, FC, useContext, useEffect, useState, ReactNode, useRef } from 'react';
+import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
 import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
 import * as firebaseui from 'firebaseui';
 import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
@@ -36,6 +35,7 @@ export interface AuthContextProps {
   authenticated: boolean;
   token: string | null;
   decodedToken: DecodedToken | null;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -89,8 +89,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     handleAuthenticated(token);
   }, []);
 
+  const logout = () => {
+    handleUnauthenticated();
+  };
+
     return (
-    <AuthContext.Provider value={{ token, authenticated, decodedToken }}>
+    <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
       {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
       {authenticated && children}
     </AuthContext.Provider>
