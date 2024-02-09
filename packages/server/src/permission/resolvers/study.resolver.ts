@@ -26,7 +26,7 @@ export class StudyPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ): Promise<StudyPermissionModel[]> {
     // Make sure the user has the ability to manage study permissions
-    const hasPermission = await this.enforcer.enforce(requestingUser.id, StudyPermissions.GRANT_ACCESS, study._id);
+    const hasPermission = await this.enforcer.enforce(requestingUser.user_id, StudyPermissions.GRANT_ACCESS, study._id);
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage study permissions');
     }
@@ -43,7 +43,7 @@ export class StudyPermissionResolver {
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
     const hasPermission = await this.enforcer.enforce(
-      requestingUser.id,
+      requestingUser.user_id,
       StudyPermissions.GRANT_ACCESS,
       study._id.toString()
     );
@@ -63,7 +63,7 @@ export class StudyPermissionResolver {
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
     const hasPermission = await this.enforcer.enforce(
-      requestingUser.id,
+      requestingUser.user_id,
       StudyPermissions.GRANT_ACCESS,
       study._id.toString()
     );
@@ -83,7 +83,7 @@ export class StudyPermissionResolver {
   ): Promise<boolean> {
     // Make sure the user has the ability to manage study permissions
     const hasPermission = await this.enforcer.enforce(
-      requestingUser.id,
+      requestingUser.user_id,
       StudyPermissions.GRANT_ACCESS,
       study._id.toString()
     );

@@ -23,13 +23,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Check if the token is present
     const rawToken = req.headers.authorization;
     if (!rawToken) {
-      throw new UnauthorizedException();
+      this.fail({ meessage: 'Invalid Token' }, 400);
+      return;
     }
 
     // Validate the token
     const payload = await this.jwtService.validate(rawToken);
     if (!payload) {
-      throw new UnauthorizedException();
+      this.fail({ meessage: 'Invalid Token' }, 400);
+      return;
     }
 
 
