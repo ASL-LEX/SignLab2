@@ -19,7 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, _options?: any): Promise<void> {
+  async authenticate(
+    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
+    _options?: any
+  ): Promise<void> {
     // Check if the token is present
     const rawToken = req.headers.authorization;
     if (!rawToken) {
@@ -33,7 +36,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       this.fail({ meessage: 'Invalid Token' }, 400);
       return;
     }
-
 
     this.success(await this.validate(payload));
   }

@@ -6,7 +6,7 @@ import * as firebaseauth from '@firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN
 };
 
 export const AUTH_TOKEN_STR = 'token';
@@ -93,7 +93,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     handleUnauthenticated();
   };
 
-    return (
+  return (
     <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
       {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
       {authenticated && children}
@@ -116,18 +116,16 @@ const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken }) => {
   useEffect(() => {
     ui.start('#firebaseui-auth-container', {
       callbacks: {
-        signInSuccessWithAuthResult: (authResult, _redirectUrl) => { signInSuccess(authResult); return true }
+        signInSuccessWithAuthResult: (authResult, _redirectUrl) => {
+          signInSuccess(authResult);
+          return true;
+        }
       },
-      signInOptions: [
-          firebaseauth.GoogleAuthProvider.PROVIDER_ID,
-          firebaseauth.EmailAuthProvider.PROVIDER_ID
-      ]
+      signInOptions: [firebaseauth.GoogleAuthProvider.PROVIDER_ID, firebaseauth.EmailAuthProvider.PROVIDER_ID]
     });
   }, []);
 
-  return (
-    <div id="firebaseui-auth-container" />
-  );
+  return <div id="firebaseui-auth-container" />;
 };
 
 export const useAuth = () => useContext(AuthContext);

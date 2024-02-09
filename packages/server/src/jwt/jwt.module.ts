@@ -6,15 +6,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
-  imports: [
-    HttpModule,
-    forwardRef(() => OrganizationModule)
-  ],
-  providers: [
-    JwtService,
-    JwtAuthGuard,
-    JwtStrategy
-  ],
+  imports: [HttpModule, forwardRef(() => OrganizationModule)],
+  providers: [JwtService, JwtAuthGuard, JwtStrategy],
   exports: [JwtService]
 })
 export class JwtModule {}

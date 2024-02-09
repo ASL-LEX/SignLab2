@@ -26,7 +26,11 @@ export class ProjectPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ): Promise<ProjectPermissionModel[]> {
     // Make sure the user has the ability to manage project permissions
-    const hasPermission = await this.enforcer.enforce(requestingUser.user_id, ProjectPermissions.GRANT_ADMIN, project._id);
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.user_id,
+      ProjectPermissions.GRANT_ADMIN,
+      project._id
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage project permissions');
     }
@@ -41,7 +45,11 @@ export class ProjectPermissionResolver {
     @Args('isAdmin', { type: () => Boolean }) isAdmin: boolean,
     @TokenContext() requestingUser: TokenPayload
   ): Promise<boolean> {
-    const hasPermission = await this.enforcer.enforce(requestingUser.user_id, ProjectPermissions.GRANT_ADMIN, project._id);
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.user_id,
+      ProjectPermissions.GRANT_ADMIN,
+      project._id
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage project permissions');
     }

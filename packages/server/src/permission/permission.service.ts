@@ -207,7 +207,9 @@ export class PermissionService {
   ): Promise<Permission> {
     return {
       owner: await this.enforcer.enforce(user.user_id, Roles.OWNER, organization._id.toString()),
-      projectAdmin: project ? await this.enforcer.enforce(user.user_id, Roles.PROJECT_ADMIN, project._id.toString()) : false,
+      projectAdmin: project
+        ? await this.enforcer.enforce(user.user_id, Roles.PROJECT_ADMIN, project._id.toString())
+        : false,
       studyAdmin: study ? await this.enforcer.enforce(user.user_id, Roles.STUDY_ADMIN, study._id.toString()) : false,
       trainedContributor: study
         ? await this.enforcer.enforce(user.user_id, Roles.TRAINED_CONTRIBUTOR, study._id.toString())

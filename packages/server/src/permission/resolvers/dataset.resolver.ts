@@ -31,7 +31,11 @@ export class DatasetPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ) {
     // Make sure the requesting user has access
-    const hasPermission = await this.enforcer.enforce(requestingUser.user_id, DatasetPermissions.GRANT_ACCESS, dataset._id);
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.user_id,
+      DatasetPermissions.GRANT_ACCESS,
+      dataset._id
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage dataset permissions');
     }
@@ -45,7 +49,11 @@ export class DatasetPermissionResolver {
     @TokenContext() requestingUser: TokenPayload
   ) {
     // Make sure the requesting user has access
-    const hasPermission = await this.enforcer.enforce(requestingUser.user_id, DatasetPermissions.GRANT_ACCESS, project._id);
+    const hasPermission = await this.enforcer.enforce(
+      requestingUser.user_id,
+      DatasetPermissions.GRANT_ACCESS,
+      project._id
+    );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage dataset permissions');
     }
