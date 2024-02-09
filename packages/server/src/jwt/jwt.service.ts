@@ -28,7 +28,7 @@ export class JwtService {
     return this.publicKeys[kid] || null;
   }
 
-  async validate(rawToken: string): Promise<boolean> {
+  async validate(rawToken: string): Promise<any | null> {
     // Parse out the token
     const tokenString = rawToken.split(' ')[1];
     const token = jwt.decode(tokenString, { complete: true }) as any;
@@ -36,19 +36,19 @@ export class JwtService {
     // Get the kid to verify the JWT against
     const kid = token.header.kid;
     if (!kid) {
-      return false;
+      return null;
     }
 
     const publicKey = await this.getPublicKey(kid);
     if (!publicKey) {
-      return false;
+      return null;
     }
 
     try {
       jwt.verify(tokenString, publicKey);
-      return true;
+      return token.payload;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 }

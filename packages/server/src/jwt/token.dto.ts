@@ -1,9 +1,19 @@
-// TODO: In the future this type will be retrived from the auth microservice
 export interface TokenPayload {
-  id: string;
-  projectId: string;
-  role: number;
-  iat: number;
+  aud: string;
+  auth_time: number;
+  email: string;
+  email_verified: boolean;
   exp: number;
+  firebase: {
+    identities: {
+      email: string[];
+      email_verified: boolean;
+    };
+    sign_in_provider: string;
+    user_id: string;
+  };
+  iat: number;
   iss: string;
+  sub: string;
+  user_id: string;
 }

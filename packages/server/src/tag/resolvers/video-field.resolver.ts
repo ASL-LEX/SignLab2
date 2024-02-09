@@ -28,12 +28,12 @@ export class VideoFieldResolver {
     @TokenContext() user: TokenPayload
   ): Promise<VideoField> {
     // Make sure the user first has permission to create video fields for this tag
-    if (!(await this.enforcer.enforce(user.id, TagPermissions.CREATE, tag.study.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.CREATE, tag.study.toString()))) {
       throw new UnauthorizedException('User does not have permission to create video fields for this tag');
     }
 
     // Make sure its the user assigned to the tag
-    if (user.id !== tag.user?.toString()) {
+    if (user.user_id !== tag.user?.toString()) {
       throw new UnauthorizedException('User does not have permission to create video fields for this tag');
     }
 
@@ -46,7 +46,7 @@ export class VideoFieldResolver {
     if (!tag) {
       throw new Error(`Tag ${videoField.tag} not found`);
     }
-    if (!(await this.enforcer.enforce(user.id, TagPermissions.CREATE, tag.study.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.CREATE, tag.study.toString()))) {
       throw new UnauthorizedException('User does not have permission to create video fields for this tag');
     }
 

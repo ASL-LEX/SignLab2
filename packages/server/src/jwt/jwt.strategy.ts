@@ -1,4 +1,4 @@
-import { Injectable, BadGatewayException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { TokenPayload } from './token.dto';
@@ -27,10 +27,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     // Validate the token
-    const valid = await this.jwtService.validate(rawToken);
-    if (!valid) {
+    const payload = await this.jwtService.validate(rawToken);
+    if (!payload) {
       throw new UnauthorizedException();
     }
+
+
+    this.success(await this.validate(payload));
   }
 
   /**
@@ -39,9 +42,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * the organization to then be pulled in via the organization context
    */
   async validate(payload: TokenPayload): Promise<JwtStrategyValidate> {
-    const organization = await this.organizationService.findByProject(payload.projectId);
+    // TODO: Change out hardcoded project ID
+    const organization = await this.organizationService.findByProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
     if (!organization) {
-      throw new BadGatewayException('Organization not found');
+      throw new BadRequestException('Organization not found');
     }
 
     return {

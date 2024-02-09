@@ -28,7 +28,7 @@ export class ProjectResolver {
     @TokenContext() user: TokenPayload
   ): Promise<Project> {
     // Make sure the user is allowed to create projects
-    if (!(await this.enforcer.enforce(user.id, ProjectPermissions.CREATE, organization._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, ProjectPermissions.CREATE, organization._id))) {
       throw new UnauthorizedException('User does not have permission to create projects');
     }
 
@@ -55,7 +55,7 @@ export class ProjectResolver {
     @TokenContext() user: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
-    if (!(await this.enforcer.enforce(user.id, ProjectPermissions.DELETE, organization._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, ProjectPermissions.DELETE, organization._id))) {
       throw new UnauthorizedException('User does not have permission to delete projects');
     }
 
@@ -69,7 +69,7 @@ export class ProjectResolver {
     @OrganizationContext() organization: Organization,
     @TokenContext() user: TokenPayload
   ): Promise<Project[]> {
-    if (!(await this.enforcer.enforce(user.id, ProjectPermissions.READ, organization._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, ProjectPermissions.READ, organization._id))) {
       throw new UnauthorizedException('User does not have permission to read projects');
     }
     return this.projectService.findAll(organization._id);

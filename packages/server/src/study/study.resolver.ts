@@ -27,7 +27,7 @@ export class StudyResolver {
     @Args('study', { type: () => StudyCreate }, StudyCreatePipe) study: StudyCreate,
     @TokenContext() user: TokenPayload
   ): Promise<Study> {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.CREATE, study.project))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.CREATE, study.project))) {
       throw new UnauthorizedException('User cannot create studies on this project');
     }
 
@@ -40,7 +40,7 @@ export class StudyResolver {
     @Args('project', { type: () => ID }, ProjectPipe) project: Project,
     @TokenContext() user: TokenPayload
   ): Promise<Boolean> {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.READ, project._id.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.READ, project._id.toString()))) {
       throw new UnauthorizedException('User cannot read studies on this project');
     }
 
@@ -58,7 +58,7 @@ export class StudyResolver {
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @TokenContext() user: TokenPayload
   ): Promise<boolean> {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.DELETE, study._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.DELETE, study._id))) {
       throw new UnauthorizedException('User cannot delete studies on this project');
     }
 
@@ -72,7 +72,7 @@ export class StudyResolver {
     @Args('newName') newName: string,
     @TokenContext() user: TokenPayload
   ): Promise<Study> {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.UPDATE, study._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }
 
@@ -85,7 +85,7 @@ export class StudyResolver {
     @Args('newDescription') newDescription: string,
     @TokenContext() user: TokenPayload
   ): Promise<Study> {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.UPDATE, study._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.UPDATE, study._id))) {
       throw new UnauthorizedException('User cannot update studies on this project');
     }
 
