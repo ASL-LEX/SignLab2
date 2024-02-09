@@ -1,9 +1,13 @@
-import { Injectable, BadGatewayException } from '@nestjs/common';
+import { Injectable, BadGatewayException, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-local';
 import { TokenPayload } from './token.dto';
 import { OrganizationService } from '../organization/organization.service';
 import { Organization } from 'src/organization/organization.model';
+import { Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
+import { JwtService } from './jwt.service';
 
 interface JwtStrategyValidate extends TokenPayload {
   organization: Organization;
@@ -11,12 +15,22 @@ interface JwtStrategyValidate extends TokenPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(publicKey: string, private readonly organizationService: OrganizationService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: publicKey
-    });
+  constructor(private readonly organizationService: OrganizationService, private readonly jwtService: JwtService) {
+    super();
+  }
+
+  async authenticate(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, _options?: any): Promise<void> {
+    // Check if the token is present
+    const rawToken = req.headers.authorization;
+    if (!rawToken) {
+      throw new UnauthorizedException();
+    }
+
+    // Validate the token
+    const valid = await this.jwtService.validate(rawToken);
+    if (!valid) {
+      throw new UnauthorizedException();
+    }
   }
 
   /**

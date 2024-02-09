@@ -9,33 +9,13 @@ import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
   imports: [
-    NestJwtModule.registerAsync({
-      imports: [forwardRef(() => JwtModule)],
-      inject: [JwtService],
-      useFactory: async (jwtService: JwtService) => {
-        const options: NestJwtModuleOptions = {
-          publicKey: await jwtService.getPublicKey(),
-          signOptions: {
-            algorithm: 'RS256'
-          }
-        };
-        return options;
-      }
-    }),
     HttpModule,
     forwardRef(() => OrganizationModule)
   ],
   providers: [
     JwtService,
     JwtAuthGuard,
-    {
-      provide: JwtStrategy,
-      inject: [JwtService, OrganizationService],
-      useFactory: async (jwtService: JwtService, organizationService: OrganizationService) => {
-        const key = await jwtService.getPublicKey();
-        return new JwtStrategy(key, organizationService);
-      }
-    }
+    JwtStrategy
   ],
   exports: [JwtService]
 })
