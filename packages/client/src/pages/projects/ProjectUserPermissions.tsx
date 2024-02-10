@@ -6,13 +6,15 @@ import { ProjectPermissionModel, Project } from '../../graphql/graphql';
 import { useGetProjectPermissionsQuery } from '../../graphql/permission/permission';
 import { DecodedToken, useAuth } from '../../context/Auth.context';
 import { useGrantProjectPermissionsMutation } from '../../graphql/permission/permission';
+import { useTranslation } from 'react-i18next';
 
 export const ProjectUserPermissions: React.FC = () => {
   const { project } = useProject();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Typography variant="h3">User Permissions</Typography>
+      <Typography variant="h3">{t('menu.userPermissions')}</Typography>
       {project && <UserPermissionTable project={project} />}
     </>
   );
@@ -62,6 +64,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
 
   const [rows, setRows] = useState<ProjectPermissionModel[]>([]);
   const { decodedToken } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.getProjectPermissions) {
@@ -88,7 +91,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
     */
     {
       field: 'email',
-      headerName: 'Email',
+      headerName: t('common.email'),
       valueGetter: (params) => params.row.user.email,
       flex: 1.75,
       editable: false
@@ -96,7 +99,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
     {
       field: 'projectAdmin',
       type: 'boolean',
-      headerName: 'Project Admin',
+      headerName: t('components.projectUserPermissions.projectAdmin'),
       valueGetter: (params) => params.row.hasRole,
       renderCell: (params: GridRenderCellParams) => {
         return (

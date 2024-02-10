@@ -8,6 +8,7 @@ import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
 import AslLexSearchControlTester from '../tag/asllex/aslLexSearchControlTester';
 import VideoRecordField, { videoFieldTester } from '../tag/videorecord/VideoRecordField.component';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
+import { useTranslation } from 'react-i18next';
 
 export interface TagFormProps {
   study: Study;
@@ -17,6 +18,7 @@ export interface TagFormProps {
 export const TagForm: React.FC<TagFormProps> = (props) => {
   const [data, setData] = useState<any>();
   const [dataValid, setDataValid] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
@@ -62,10 +64,10 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
         />
         <Stack direction="row">
           <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>
-            Submit
+            {t('common.submit')}
           </Button>
           <Button variant="outlined" onClick={handleClear}>
-            Clear
+            {t('common.clear')}
           </Button>
         </Stack>
       </Stack>

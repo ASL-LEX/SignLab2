@@ -10,6 +10,7 @@ import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
 import { CreateTagsDocument } from '../../graphql/tag/tag';
+import { useTranslation } from 'react-i18next';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -21,6 +22,7 @@ export const NewStudy: React.FC = () => {
   const [_trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
   const apolloClient = useApolloClient();
+  const { t } = useTranslation();
 
   // Handles mantaining which step the user is on and the step limit
   useEffect(() => {
@@ -109,22 +111,22 @@ export const NewStudy: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h5">Create New Study</Typography>
+      <Typography variant="h5">{t('components.newStudy.createStudy')}</Typography>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
           return (
             <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel>{t('components.newStudy.steps.' + label)}</StepLabel>
             </Step>
           );
         })}
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - your new study is created</Typography>
+          <Typography sx={{ mt: 2, mb: 1 }}>{t('components.newStudy.completed')}</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Start Over</Button>
+            <Button onClick={handleReset}>{t('components.newStudy.startOver')}</Button>
           </Box>
         </>
       ) : (
@@ -132,10 +134,10 @@ export const NewStudy: React.FC = () => {
           {getSectionComponent()}
           <Box sx={{ marginTop: '30px', display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button variant="outlined" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
+              {t('common.back')}
             </Button>
             <Button variant="outlined" disabled={activeStep === stepLimit} onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {activeStep === steps.length - 1 ? t('common.finish') : t('common.next')}
             </Button>
           </Box>
         </>

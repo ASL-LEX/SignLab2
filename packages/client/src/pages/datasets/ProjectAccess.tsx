@@ -5,12 +5,14 @@ import { useGetDatasetProjectPermissionsLazyQuery } from '../../graphql/permissi
 import { useEffect, useState } from 'react';
 import { DatasetProjectPermission, Project } from '../../graphql/graphql';
 import { useGrantProjectDatasetAccessMutation } from '../../graphql/permission/permission';
+import { useTranslation } from 'react-i18next';
 
 export const ProjectAccess: React.FC = () => {
   const { project } = useProject();
   const [getDatasetProjectPermissions, datasetProjectPermissionResults] = useGetDatasetProjectPermissionsLazyQuery();
   const [projectAccess, setProjectAccess] = useState<DatasetProjectPermission[]>([]);
   const [grantProjectDatasetAccess, grantProjectDatasetAccessResults] = useGrantProjectDatasetAccessMutation();
+  const { t } = useTranslation();
 
   // For querying for the permissions
   useEffect(() => {
@@ -38,16 +40,21 @@ export const ProjectAccess: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Dataset Name', width: 200, valueGetter: (params) => params.row.dataset.name },
+    {
+      field: 'name',
+      headerName: t('components.projectAccess.datasetName'),
+      width: 200,
+      valueGetter: (params) => params.row.dataset.name
+    },
     {
       field: 'description',
-      headerName: 'Description',
+      headerName: t('common.description'),
       width: 200,
       valueGetter: (params) => params.row.dataset.description
     },
     {
       field: 'access',
-      headerName: 'Project Has Access',
+      headerName: t('components.projectAccess.projectHasAccess'),
       width: 200,
       renderCell: (params) => (
         <DatasetAccess permission={params.row} project={project!} changeAccess={handleAccessChange} />
@@ -59,11 +66,13 @@ export const ProjectAccess: React.FC = () => {
     <>
       {project ? (
         <>
-          <Typography variant="h5">Dataset Access for "{project.name}"</Typography>
+          <Typography variant="h5">
+            {t('components.projectAccess.accessFor')}"{project.name}"
+          </Typography>
           <DataGrid columns={columns} rows={projectAccess} getRowId={(row) => row.dataset._id} />
         </>
       ) : (
-        <Typography variant="h5">Select a Project to Continue</Typography>
+        <Typography variant="h5">{t('components.projectAccess.selectProject')}</Typography>
       )}
     </>
   );

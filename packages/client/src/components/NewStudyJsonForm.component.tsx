@@ -5,6 +5,7 @@ import { PartialStudyCreate } from '../types/study';
 import { ErrorObject } from 'ajv';
 import { useStudyExistsLazyQuery } from '../graphql/study/study';
 import { useProject } from '../context/Project.context';
+import { useTranslation } from 'react-i18next';
 
 export interface NewStudyFormProps {
   newStudy: PartialStudyCreate | null;
@@ -12,11 +13,6 @@ export interface NewStudyFormProps {
 }
 
 export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
-  const initialData = {
-    tagsPerEntry: schema.properties.tagsPerEntry.default
-  };
-
-  const [data, setData] = useState<any>(initialData);
   const [studyExistsQuery, studyExistsResults] = useStudyExistsLazyQuery();
   const { project } = useProject();
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
@@ -24,6 +20,60 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
   // Keep track of the new study internally to check to make sure the name is
   // unique before submitting
   const [potentialNewStudy, setPotentialNewStudy] = useState<PartialStudyCreate | null>(null);
+  const { t } = useTranslation();
+
+  const schema = {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        pattern: '^[a-zA-Z 0-9]*$'
+      },
+      description: {
+        type: 'string'
+      },
+      instructions: {
+        type: 'string'
+      },
+      tagsPerEntry: {
+        type: 'number',
+        default: 1
+      }
+    },
+    required: ['name', 'description', 'instructions', 'tagsPerEntry']
+  };
+
+  const uischema = {
+    type: 'Group',
+    label: t('components.newStudy.formTitle'),
+    elements: [
+      {
+        type: 'Control',
+        label: t('common.name'),
+        scope: '#/properties/name'
+      },
+      {
+        type: 'Control',
+        label: t('common.description'),
+        scope: '#/properties/description'
+      },
+      {
+        type: 'Control',
+        label: t('common.instruction'),
+        scope: '#/properties/instructions'
+      },
+      {
+        type: 'Control',
+        label: t('components.newStudy.tagsDescription'),
+        scope: '#/properties/tagsPerEntry'
+      }
+    ]
+  };
+
+  const initialData = {
+    tagsPerEntry: schema.properties.tagsPerEntry.default
+  };
+  const [data, setData] = useState<any>(initialData);
 
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
@@ -67,52 +117,4 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
       additionalErrors={additionalErrors}
     />
   );
-};
-
-const schema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      pattern: '^[a-zA-Z 0-9]*$'
-    },
-    description: {
-      type: 'string'
-    },
-    instructions: {
-      type: 'string'
-    },
-    tagsPerEntry: {
-      type: 'number',
-      default: 1
-    }
-  },
-  required: ['name', 'description', 'instructions', 'tagsPerEntry']
-};
-
-const uischema = {
-  type: 'Group',
-  label: 'Study Information',
-  elements: [
-    {
-      type: 'Control',
-      label: 'Name',
-      scope: '#/properties/name'
-    },
-    {
-      type: 'Control',
-      label: 'Description',
-      scope: '#/properties/description'
-    },
-    {
-      type: 'Control',
-      label: 'Instructions',
-      scope: '#/properties/instructions'
-    },
-    {
-      type: 'Control',
-      label: 'Number of times each entry needs to be tagged (default 1)',
-      scope: '#/properties/tagsPerEntry'
-    }
-  ]
 };

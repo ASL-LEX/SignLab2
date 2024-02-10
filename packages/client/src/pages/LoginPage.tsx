@@ -4,11 +4,13 @@ import { useAuth } from '../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
 import { Organization } from '../graphql/graphql';
 import { useGetOrganizationsQuery } from '../graphql/organization/organization';
+import { useTranslation } from 'react-i18next';
 
 export const LoginPage: FC = () => {
   // Construct the Auth URL
   const { authenticated } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [authURL, setAuthURL] = useState<string | null>(null);
@@ -62,7 +64,7 @@ export const LoginPage: FC = () => {
           alignItems: 'center'
         }}
       >
-        <Typography variant="h2">Login</Typography>
+        <Typography variant="h2">{t('common.login')}</Typography>
         <FormControl sx={{ m: 1 }}>
           <Select
             sx={{ width: 300, m: 1 }}
@@ -77,7 +79,7 @@ export const LoginPage: FC = () => {
             ))}
           </Select>
           <Button disabled={organization == null} variant="contained" onClick={loginRedirect}>
-            {organization ? 'Redirect to Organization Login' : 'Select an Organization to Login'}
+            {organization ? t('components.login.redirectToOrg') : t('components.login.selectOrg')}
           </Button>
         </FormControl>
       </Box>
