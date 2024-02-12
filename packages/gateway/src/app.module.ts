@@ -23,6 +23,8 @@ import configuration from './config/configuration';
                 if (context.req && context.req.headers) {
                   // Copy over authentication
                   request.http!.headers.set('authorization', context.req.headers.authorization);
+                  // Copy over the organization context
+                  request.http!.headers.set('organization', context.req.headers.organization);
                 }
               }
             });

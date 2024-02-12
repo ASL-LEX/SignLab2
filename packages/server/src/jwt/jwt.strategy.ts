@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { TokenPayload } from './token.dto';
@@ -30,14 +30,32 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       return;
     }
 
-    // Validate the token
-    const payload = await this.jwtService.validate(rawToken);
-    if (!payload) {
-      this.fail({ meessage: 'Invalid Token' }, 400);
+    // Grab the organization
+    const organizationID = req.headers.organization;
+    console.log('organizationID', organizationID);
+    if (organizationID == undefined || organizationID == 'undefined') {
+      this.fail({ message: 'Invalid Organization' }, 400);
+      return;
+    }
+    if (typeof organizationID !== 'string') {
+      this.fail({ message: 'Invalid Organization' }, 400);
+      return;
+    }
+    const organization = await this.organizationService.findOne(organizationID);
+    if (!organization) {
+      console.log('no organization');
+      this.fail({ message: 'Invalid Organization' }, 400);
       return;
     }
 
-    this.success(await this.validate(payload));
+    // Validate the token
+    const payload = await this.jwtService.validate(rawToken);
+    if (!payload) {
+      this.fail({ message: 'Invalid Token' }, 400);
+      return;
+    }
+
+    this.success(await this.validate(payload, organization));
   }
 
   /**
@@ -45,16 +63,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * queried from the database and not part of the JWT token. This allows
    * the organization to then be pulled in via the organization context
    */
-  async validate(payload: TokenPayload): Promise<JwtStrategyValidate> {
-    // TODO: Change out hardcoded project ID
-    const organization = await this.organizationService.findByProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
-    if (!organization) {
-      throw new BadRequestException('Organization not found');
-    }
-
+  async validate(payload: TokenPayload, organization: Organization): Promise<JwtStrategyValidate> {
     return {
       ...payload,
-      organization: organization
+      organization
     };
   }
 }
