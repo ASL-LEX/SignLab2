@@ -7,13 +7,17 @@ import { DatasetPipe } from './pipes/dataset.pipe';
 import { PermissionModule } from '../permission/permission.module';
 import { JwtModule } from '../jwt/jwt.module';
 import { ProjectModule } from '../project/project.module';
+import { OrganizationModule } from '../organization/organization.module';
+import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Dataset.name, schema: DatasetSchema }]),
     forwardRef(() => PermissionModule),
     JwtModule,
-    ProjectModule
+    ProjectModule,
+    OrganizationModule,
+    UserOrgModule
   ],
   providers: [DatasetResolver, DatasetService, DatasetPipe],
   exports: [DatasetService, DatasetPipe]

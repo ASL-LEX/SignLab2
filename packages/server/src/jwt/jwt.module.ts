@@ -4,9 +4,10 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtAuthGuard } from './jwt.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { OrganizationModule } from '../organization/organization.module';
+import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
-  imports: [HttpModule, forwardRef(() => OrganizationModule)],
+  imports: [HttpModule, forwardRef(() => OrganizationModule), UserOrgModule],
   providers: [JwtService, JwtAuthGuard, JwtStrategy],
   exports: [JwtService]
 })

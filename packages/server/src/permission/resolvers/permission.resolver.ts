@@ -11,8 +11,9 @@ import { OrganizationContext } from '../../organization/organization.context';
 import { Organization } from '../../organization/organization.model';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
+import { OrganizationGuard } from '../../organization/organization.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver()
 export class PermissionResolver {
   constructor(
