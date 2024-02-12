@@ -15,9 +15,9 @@ import { DatasetPermissions } from '../permission/permissions/dataset';
 import { ProjectPipe } from '../project/pipes/project.pipe';
 import { Project } from '../project/project.model';
 import { ProjectPermissions } from '../permission/permissions/project';
+import { OrganizationGuard } from '../organization/organization.guard';
 
-// TODO: Add authentication
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => Dataset)
 export class DatasetResolver {
   constructor(

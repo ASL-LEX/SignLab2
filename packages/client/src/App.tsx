@@ -55,7 +55,8 @@ const App: FC = () => {
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: token ? `Bearer ${token}` : '',
+        organization: import.meta.env.VITE_ORGANIZATION_ID || ''
       }
     };
   });

@@ -12,8 +12,9 @@ import { TokenPayload } from '../jwt/token.dto';
 import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 import { ProjectPermissions } from '../permission/permissions/project';
+import { OrganizationGuard } from '../organization/organization.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => Project)
 export class ProjectResolver {
   constructor(

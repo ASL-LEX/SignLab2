@@ -10,13 +10,17 @@ import { StudyPermissionResolver } from './resolvers/study.resolver';
 import { DatasetPermissionResolver } from './resolvers/dataset.resolver';
 import { DatasetModule } from '../dataset/dataset.module';
 import { PermissionResolver } from './resolvers/permission.resolver';
+import { OrganizationModule } from '../organization/organization.module';
+import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
     forwardRef(() => ProjectModule),
     AuthModule,
     forwardRef(() => StudyModule),
-    forwardRef(() => DatasetModule)
+    forwardRef(() => DatasetModule),
+    OrganizationModule,
+    UserOrgModule
   ],
   providers: [
     casbinProvider,

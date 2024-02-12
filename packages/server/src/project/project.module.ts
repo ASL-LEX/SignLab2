@@ -8,6 +8,8 @@ import { MongooseMiddlewareService } from 'src/shared/service/mongoose-callback.
 import { SharedModule } from 'src/shared/shared.module';
 import { JwtModule } from '../jwt/jwt.module';
 import { PermissionModule } from '../permission/permission.module';
+import { OrganizationModule } from '../organization/organization.module';
+import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { PermissionModule } from '../permission/permission.module';
       }
     ]),
     JwtModule,
-    forwardRef(() => PermissionModule)
+    forwardRef(() => PermissionModule),
+    OrganizationModule,
+    UserOrgModule
   ],
   providers: [ProjectResolver, ProjectService, ProjectPipe],
   exports: [ProjectPipe, ProjectService]

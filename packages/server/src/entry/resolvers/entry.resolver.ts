@@ -13,8 +13,9 @@ import { TokenContext } from '../../jwt/token.context';
 import { OrganizationContext } from '../../organization/organization.context';
 import { Organization } from '../../organization/organization.model';
 import { EntryPipe } from '../pipes/entry.pipe';
+import { OrganizationGuard } from '../../organization/organization.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(
