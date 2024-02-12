@@ -91,6 +91,8 @@ jobs:
           echo VITE_GRAPHQL_ENDPOINT=${{ secrets.STAGING_GRAPHQL_ENDPOINT }} >> .env
           echo VITE_ASL_LEXICON_ID=${{ secrets.STAGING_ASL_LEXICON_ID }} >> .env
           echo VITE_NAME=${{ secrets.STAGING_ASL_LEX_NAME }} >> .env
+          echo VITE_AUTH_API_KEY=${{ secrets.STAGING_AUTH_API_KEY }} >> .env
+          echo VITE_AUTH_DOMAIN=${{ secrets.STAGING_AUTH_DOMAIN }} >> .env
 
       - name: NPM Install
         run: npm install

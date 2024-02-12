@@ -33,7 +33,7 @@ export class TagResolver {
     @Args('entries', { type: () => [ID] }, EntriesPipe) entries: Entry[],
     @TokenContext() user: TokenPayload
   ) {
-    if (!(await this.enforcer.enforce(user.id, StudyPermissions.CREATE, study._id.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.CREATE, study._id.toString()))) {
       throw new UnauthorizedException('User cannot add tags to this study');
     }
     return this.tagService.createTags(study, entries);
@@ -44,7 +44,7 @@ export class TagResolver {
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @TokenContext() user: TokenPayload
   ): Promise<Tag | null> {
-    return this.tagService.assignTag(study, user.id);
+    return this.tagService.assignTag(study, user.user_id);
   }
 
   @Mutation(() => Boolean)
@@ -66,7 +66,7 @@ export class TagResolver {
     @Args('enabled', { type: () => Boolean }) enabled: boolean,
     @TokenContext() user: TokenPayload
   ): Promise<boolean> {
-    if (!(await this.enforcer.enforce(user.id, TagPermissions.UPDATE, study._id.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.UPDATE, study._id.toString()))) {
       throw new UnauthorizedException('User cannot update tags in this study');
     }
     await this.tagService.setEnabled(study, entry, enabled);
@@ -79,7 +79,7 @@ export class TagResolver {
     @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
     @TokenContext() user: TokenPayload
   ): Promise<Boolean> {
-    if (!(await this.enforcer.enforce(user.id, TagPermissions.READ, study._id.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
       throw new UnauthorizedException('User cannot read tags in this study');
     }
     return this.tagService.isEntryEnabled(study, entry);

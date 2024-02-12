@@ -1,9 +1,13 @@
-import { Injectable, BadGatewayException } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-local';
 import { TokenPayload } from './token.dto';
 import { OrganizationService } from '../organization/organization.service';
 import { Organization } from 'src/organization/organization.model';
+import { Request } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
+import { JwtService } from './jwt.service';
 
 interface JwtStrategyValidate extends TokenPayload {
   organization: Organization;
@@ -11,12 +15,29 @@ interface JwtStrategyValidate extends TokenPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(publicKey: string, private readonly organizationService: OrganizationService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: publicKey
-    });
+  constructor(private readonly organizationService: OrganizationService, private readonly jwtService: JwtService) {
+    super();
+  }
+
+  async authenticate(
+    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
+    _options?: any
+  ): Promise<void> {
+    // Check if the token is present
+    const rawToken = req.headers.authorization;
+    if (!rawToken) {
+      this.fail({ meessage: 'Invalid Token' }, 400);
+      return;
+    }
+
+    // Validate the token
+    const payload = await this.jwtService.validate(rawToken);
+    if (!payload) {
+      this.fail({ meessage: 'Invalid Token' }, 400);
+      return;
+    }
+
+    this.success(await this.validate(payload));
   }
 
   /**
@@ -25,9 +46,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * the organization to then be pulled in via the organization context
    */
   async validate(payload: TokenPayload): Promise<JwtStrategyValidate> {
-    const organization = await this.organizationService.findByProject(payload.projectId);
+    // TODO: Change out hardcoded project ID
+    const organization = await this.organizationService.findByProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
     if (!organization) {
-      throw new BadGatewayException('Organization not found');
+      throw new BadRequestException('Organization not found');
     }
 
     return {

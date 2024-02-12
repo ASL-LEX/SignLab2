@@ -32,7 +32,7 @@ export class EntryService {
       organization: dataset.organization,
       recordedInSignLab: false,
       dateCreated: new Date(),
-      creator: user.id
+      creator: user.user_id
     });
   }
 

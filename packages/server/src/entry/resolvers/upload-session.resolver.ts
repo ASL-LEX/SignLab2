@@ -27,7 +27,7 @@ export class UploadSessionResolver {
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @TokenContext() user: TokenPayload
   ): Promise<UploadSession> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, dataset._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.UPDATE, dataset._id))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 
@@ -40,7 +40,7 @@ export class UploadSessionResolver {
     @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
     @TokenContext() user: TokenPayload
   ): Promise<UploadResult> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 
@@ -52,7 +52,7 @@ export class UploadSessionResolver {
     @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
     @TokenContext() user: TokenPayload
   ): Promise<string> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 
@@ -64,7 +64,7 @@ export class UploadSessionResolver {
     @Args('session', { type: () => ID }, UploadSessionPipe) uploadSession: UploadSession,
     @TokenContext() user: TokenPayload
   ): Promise<UploadResult> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 
@@ -79,7 +79,7 @@ export class UploadSessionResolver {
     @Args('contentType') contentType: string,
     @TokenContext() user: TokenPayload
   ): Promise<string> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.UPDATE, uploadSession.dataset))) {
       throw new UnauthorizedException('User cannot write entries on this dataset');
     }
 

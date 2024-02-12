@@ -27,7 +27,7 @@ export class EntryResolver {
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @TokenContext() user: TokenPayload
   ): Promise<Entry[]> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, dataset._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -36,7 +36,7 @@ export class EntryResolver {
 
   @ResolveField(() => String)
   async signedUrl(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<string> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, entry.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, entry.dataset))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -47,7 +47,7 @@ export class EntryResolver {
   //       if the request to `signedUrl` is made.
   @ResolveField(() => Number, { description: 'Get the number of milliseconds the signed URL is valid for.' })
   async signedUrlExpiration(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<number> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, entry.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, entry.dataset))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -60,7 +60,7 @@ export class EntryResolver {
     @TokenContext() user: TokenPayload,
     @OrganizationContext() organization: Organization
   ): Promise<boolean> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.DELETE, entry.dataset))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.DELETE, entry.dataset))) {
       throw new UnauthorizedException('User cannot delete entries on this dataset');
     }
     await this.entryService.delete(entry);

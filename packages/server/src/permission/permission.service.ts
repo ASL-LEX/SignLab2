@@ -27,9 +27,10 @@ export class PermissionService {
     await this.enforcer.addPolicy(targetUser, Roles.OWNER, organization);
   }
 
-  async getProjectPermissions(project: Project, requestingUser: TokenPayload): Promise<ProjectPermissionModel[]> {
+  async getProjectPermissions(project: Project, _requestingUser: TokenPayload): Promise<ProjectPermissionModel[]> {
     // Get all the users associated with the organization
-    const users = await this.userService.getUsersForProject(requestingUser.projectId);
+    // TODO: Change out hardcoded project ID
+    const users = await this.userService.getUsersForProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
 
     // Create the cooresponding permission representation
     const permissions = await Promise.all(
@@ -61,7 +62,7 @@ export class PermissionService {
     }
 
     // The user cannot change its own permissions
-    if (user === requestingUser.id) {
+    if (user === requestingUser.user_id) {
       throw new UnauthorizedException('Cannot change your own permissions');
     }
 
@@ -75,9 +76,10 @@ export class PermissionService {
     return true;
   }
 
-  async getStudyPermissions(study: Study, requestingUser: TokenPayload): Promise<StudyPermissionModel[]> {
+  async getStudyPermissions(study: Study, _requestingUser: TokenPayload): Promise<StudyPermissionModel[]> {
     // Get all the users associated with the organization
-    const users = await this.userService.getUsersForProject(requestingUser.projectId);
+    // TODO: Change out hardcoded project ID
+    const users = await this.userService.getUsersForProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
 
     // Create the cooresponding permission representation
     const permissions = await Promise.all(
@@ -114,7 +116,7 @@ export class PermissionService {
     }
 
     // The user cannot change its own permissions
-    if (user === requestingUser.id) {
+    if (user === requestingUser.user_id) {
       throw new UnauthorizedException('Cannot change your own permissions');
     }
 
@@ -141,7 +143,7 @@ export class PermissionService {
     }
 
     // The user cannot change its own permissions
-    if (user === requestingUser.id) {
+    if (user === requestingUser.user_id) {
       throw new UnauthorizedException('Cannot change your own permissions');
     }
 
@@ -204,13 +206,15 @@ export class PermissionService {
     study: Study | null
   ): Promise<Permission> {
     return {
-      owner: await this.enforcer.enforce(user.id, Roles.OWNER, organization._id.toString()),
-      projectAdmin: project ? await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, project._id.toString()) : false,
-      studyAdmin: study ? await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString()) : false,
-      trainedContributor: study
-        ? await this.enforcer.enforce(user.id, Roles.TRAINED_CONTRIBUTOR, study._id.toString())
+      owner: await this.enforcer.enforce(user.user_id, Roles.OWNER, organization._id.toString()),
+      projectAdmin: project
+        ? await this.enforcer.enforce(user.user_id, Roles.PROJECT_ADMIN, project._id.toString())
         : false,
-      contributor: study ? await this.enforcer.enforce(user.id, Roles.CONTRIBUTOR, study._id.toString()) : false
+      studyAdmin: study ? await this.enforcer.enforce(user.user_id, Roles.STUDY_ADMIN, study._id.toString()) : false,
+      trainedContributor: study
+        ? await this.enforcer.enforce(user.user_id, Roles.TRAINED_CONTRIBUTOR, study._id.toString())
+        : false,
+      contributor: study ? await this.enforcer.enforce(user.user_id, Roles.CONTRIBUTOR, study._id.toString()) : false
     };
   }
 }

@@ -1,23 +1,40 @@
 import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
 import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import * as firebaseui from 'firebaseui';
+import * as firebase from '@firebase/app';
+import * as firebaseauth from '@firebase/auth';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_AUTH_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN
+};
 
 export const AUTH_TOKEN_STR = 'token';
 
 export interface DecodedToken {
-  id: string;
-  projectId: string;
-  role: number;
+  aud: string;
+  auth_time: number;
+  email: string;
+  email_verified: boolean;
   exp: number;
+  firebase: {
+    identities: {
+      email: string[];
+      email_verified: boolean;
+    };
+    sign_in_provider: string;
+    user_id: string;
+  };
+  iat: number;
+  iss: string;
+  sub: string;
+  user_id: string;
 }
 
 export interface AuthContextProps {
   authenticated: boolean;
-  setAuthenticated: (authenticated: boolean) => void;
   token: string | null;
   decodedToken: DecodedToken | null;
-  setToken: (token: string) => void;
-  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -28,83 +45,87 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
-  const navigate = useNavigate();
 
-  const setUnautheticated = () => {
-    clearToken();
-    setAuthenticated(false);
+  const handleUnauthenticated = () => {
+    // Clear the token and authenticated state
     setToken(null);
-    setDecodedToken(null);
+    setAuthenticated(false);
+    localStorage.removeItem(AUTH_TOKEN_STR);
   };
 
-  const makeAuthenticated = (token: string, tokenPayload: DecodedToken) => {
-    setAuthenticated(true);
+  const handleAuthenticated = (token: string) => {
     setToken(token);
-    setDecodedToken(tokenPayload);
-    saveToken(token);
+    setAuthenticated(true);
+    localStorage.setItem(AUTH_TOKEN_STR, token);
+
+    const decodedToken = jwt_decode<DecodedToken>(token);
+    setDecodedToken(decodedToken);
   };
 
-  const logout = () => {
-    setUnautheticated();
-    navigate('/loginpage');
-  };
-
-  const login = (token: string) => {
-    makeAuthenticated(token, jwt_decode(token));
-    navigate('/');
-  };
-
+  // Handle loading the login UI
   useEffect(() => {
-    const token = restoreToken();
+    // Check local storage for token
+    const token = localStorage.getItem(AUTH_TOKEN_STR);
 
-    // If not token present, redirect to login
+    // If no token, need to login
     if (!token) {
-      setUnautheticated();
-      navigate('/loginpage');
+      handleUnauthenticated();
       return;
     }
 
-    // Decode the current token payload
-    const decodedToken: DecodedToken = jwt_decode(token);
-    const currentTime = new Date().getTime() / 1000;
+    // Decode the token
+    const decodedToken = jwt_decode<DecodedToken>(token);
 
-    // Handle expired token
-    if (currentTime > decodedToken.exp) {
-      setUnautheticated();
-      navigate('/loginpage');
+    // If token is expired, need to login
+    if (decodedToken.exp * 1000 < Date.now()) {
+      handleUnauthenticated();
       return;
     }
 
-    // User is authenticated with presoent token
-    makeAuthenticated(token, decodedToken);
+    // Otherwise, can set the token and authenticated state
+    handleAuthenticated(token);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      makeAuthenticated(token, jwt_decode(token));
-    }
-  }, [token]);
+  const logout = () => {
+    handleUnauthenticated();
+  };
 
   return (
-    <AuthContext.Provider value={{ token, decodedToken, setToken, authenticated, setAuthenticated, logout, login }}>
-      {children}
+    <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
+      {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
+      {authenticated && children}
     </AuthContext.Provider>
   );
 };
 
-const saveToken = (token: string) => {
-  localStorage.setItem(AUTH_TOKEN_STR, token);
-};
+interface FirebaseLoginWrapperProps {
+  setToken: (token: string) => void;
+}
 
-const restoreToken = (): string | null => {
-  return localStorage.getItem(AUTH_TOKEN_STR);
-};
+const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken }) => {
+  firebase.initializeApp(firebaseConfig);
+  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
 
-const clearToken = (): void => {
-  localStorage.removeItem(AUTH_TOKEN_STR);
+  const signInSuccess = async (authResult: any) => {
+    setToken(await authResult.user.getIdToken());
+  };
+
+  useEffect(() => {
+    ui.start('#firebaseui-auth-container', {
+      callbacks: {
+        signInSuccessWithAuthResult: (authResult, _redirectUrl) => {
+          signInSuccess(authResult);
+          return true;
+        }
+      },
+      signInOptions: [firebaseauth.GoogleAuthProvider.PROVIDER_ID, firebaseauth.EmailAuthProvider.PROVIDER_ID]
+    });
+  }, []);
+
+  return <div id="firebaseui-auth-container" />;
 };
 
 export const useAuth = () => useContext(AuthContext);

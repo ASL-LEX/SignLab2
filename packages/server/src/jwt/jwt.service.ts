@@ -2,27 +2,53 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import * as jwt from 'jsonwebtoken';
+
+interface PublicKeys {
+  [key: string]: string;
+}
 
 @Injectable()
 export class JwtService {
-  private publicKey: string | null = null;
+  private publicKeys: PublicKeys | null = null;
 
   constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
 
-  // TODO: In the future this will be replaced by a library which handles
-  // key rotation
-  async queryForPublicKey(): Promise<string> {
+  private async queryForPublicKey(): Promise<PublicKeys> {
     const query = this.configService.getOrThrow('auth.publicKeyUrl');
 
-    const response = await firstValueFrom(this.httpService.get(query));
-    return response.data[0];
+    const response = await firstValueFrom(this.httpService.get<{ [key: string]: string }>(query));
+    return response.data;
   }
 
-  async getPublicKey(): Promise<string> {
-    if (this.publicKey === null) {
-      this.publicKey = await this.queryForPublicKey();
+  async getPublicKey(kid: string): Promise<string | null> {
+    if (!this.publicKeys || !this.publicKeys[kid]) {
+      this.publicKeys = await this.queryForPublicKey();
+    }
+    return this.publicKeys[kid] || null;
+  }
+
+  async validate(rawToken: string): Promise<any | null> {
+    // Parse out the token
+    const tokenString = rawToken.split(' ')[1];
+    const token = jwt.decode(tokenString, { complete: true }) as any;
+
+    // Get the kid to verify the JWT against
+    const kid = token.header.kid;
+    if (!kid) {
+      return null;
     }
 
-    return this.publicKey;
+    const publicKey = await this.getPublicKey(kid);
+    if (!publicKey) {
+      return null;
+    }
+
+    try {
+      jwt.verify(tokenString, publicKey);
+      return token.payload;
+    } catch (e) {
+      return null;
+    }
   }
 }

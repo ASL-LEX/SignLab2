@@ -50,7 +50,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
     <Switch
       checked={props.permission.isProjectAdmin}
       onChange={handleChange}
-      disabled={!props.permission.editable || props.permission.user.id === props.currentUser.id}
+      disabled={!props.permission.editable || props.permission.user.id === props.currentUser.user_id}
     />
   );
 };

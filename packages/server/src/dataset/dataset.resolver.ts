@@ -38,7 +38,7 @@ export class DatasetResolver {
     @OrganizationContext() organization: Organization,
     @TokenContext() user: TokenPayload
   ): Promise<boolean> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.READ, organization._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, organization._id))) {
       throw new UnauthorizedException('User does not have permission to read a dataset in this organization');
     }
     return this.datasetService.exists(name, organization._id);
@@ -50,7 +50,7 @@ export class DatasetResolver {
     @OrganizationContext() organization: Organization,
     @TokenContext() user: TokenPayload
   ): Promise<Dataset> {
-    if (!(await this.enforcer.enforce(user.id, DatasetPermissions.CREATE, organization._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.CREATE, organization._id))) {
       throw new UnauthorizedException('User does not have permission to create a dataset in this organization');
     }
 
@@ -102,7 +102,7 @@ export class DatasetResolver {
     @TokenContext() user: TokenPayload
   ): Promise<Dataset[]> {
     // Make sure the user has access to the project
-    if (!(await this.enforcer.enforce(user.id, ProjectPermissions.READ, project._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, ProjectPermissions.READ, project._id))) {
       throw new UnauthorizedException('User does not have permission to read this project');
     }
 
