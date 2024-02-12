@@ -5,7 +5,10 @@ import { UserOrgService } from '../userorg/userorg.service';
 
 @Injectable()
 export class OrganizationGuard implements CanActivate {
-  constructor(private readonly organizationService: OrganizationService, private readonly userOrgService: UserOrgService) {}
+  constructor(
+    private readonly organizationService: OrganizationService,
+    private readonly userOrgService: UserOrgService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);

@@ -16,7 +16,10 @@ export class UserOrgResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
-  async addUserToOrg(@Args('organization', { type: () => ID }) organization: string, @TokenContext() user: TokenPayload): Promise<boolean> {
+  async addUserToOrg(
+    @Args('organization', { type: () => ID }) organization: string,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
     await this.userOrgService.create(user.user_id, organization);
     return true;
   }
