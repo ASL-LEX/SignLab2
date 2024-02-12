@@ -21,10 +21,27 @@ export class JwtService {
     return response.data;
   }
 
-  async getPublicKey(kid: string): Promise<string | null> {
+  async getPublicKey(rawToken: string | null | Buffer | object): Promise<string | null> {
+    if (!rawToken) {
+      return null;
+    }
+    if (typeof rawToken === 'object') {
+      return null;
+    }
+
+    const token = jwt.decode(rawToken, { complete: true });
+    if (!token) {
+      return null;
+    }
+    const kid = token.header.kid;
+    if (!kid) {
+      return null;
+    }
+
     if (!this.publicKeys || !this.publicKeys[kid]) {
       this.publicKeys = await this.queryForPublicKey();
     }
+
     return this.publicKeys[kid] || null;
   }
 
