@@ -28,11 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       });
   }
 
-  /**
-   * Need to add the organization at this step since the organization is
-   * queried from the database and not part of the JWT token. This allows
-   * the organization to then be pulled in via the organization context
-   */
   async validate(payload: TokenPayload): Promise<TokenPayload> {
     return {
       ...payload
