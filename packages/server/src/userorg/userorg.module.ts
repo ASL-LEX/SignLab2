@@ -8,6 +8,7 @@ import { UserOrgResolver } from './userorg.resolver';
   imports: [
     MongooseModule.forFeature([{ name: UserOrg.name, schema: UserOrgSchema }])
   ],
-  providers: [UserOrgService, UserOrgResolver]
+  providers: [UserOrgService, UserOrgResolver],
+  exports: [UserOrgService]
 })
 export class UserOrgModule {}

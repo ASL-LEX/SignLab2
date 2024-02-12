@@ -1,10 +1,9 @@
-import { Resolver } from '@nestjs/graphql';
-import { Query, Mutation, Args } from '@nestjs/graphql';
+import { ID, Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UserOrgService } from './userorg.service';
-import { OrganizationContext } from '../organization/organization.context';
-import { Organization } from '../organization/organization.model';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class UserOrgResolver {
@@ -15,9 +14,10 @@ export class UserOrgResolver {
     return this.userOrgService.userIsInOrg(user, org);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
-  async addUserToOrg(@TokenContext() user: TokenPayload, @OrganizationContext() org: Organization): Promise<boolean> {
-    await this.userOrgService.create(user.user_id, org._id.toString());
+  async addUserToOrg(@Args('organization', { type: () => ID }) organization: string, @TokenContext() user: TokenPayload): Promise<boolean> {
+    await this.userOrgService.create(user.user_id, organization);
     return true;
   }
 }
