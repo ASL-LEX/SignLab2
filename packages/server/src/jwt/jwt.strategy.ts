@@ -11,9 +11,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKeyProvider: (_request: Request, rawJwtToken: any, done: (err: any, secretOrKey?: string | Buffer) => void) => {
+      secretOrKeyProvider: (
+        _request: Request,
+        rawJwtToken: any,
+        done: (err: any, secretOrKey?: string | Buffer) => void
+      ) => {
         // Can only verify tokens via the Google public key
-        jwtService.getPublicKey(rawJwtToken)
+        jwtService
+          .getPublicKey(rawJwtToken)
           .then((publicKey) => {
             if (!publicKey) {
               done(new Error('No public key found for token'));
@@ -24,8 +29,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           .catch((err) => {
             done(err);
           });
-        }
-      });
+      }
+    });
   }
 
   async validate(payload: TokenPayload): Promise<TokenPayload> {

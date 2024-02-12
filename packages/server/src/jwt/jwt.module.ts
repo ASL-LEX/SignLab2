@@ -18,7 +18,7 @@ import { JwtSecretRequestType, JwtModule as NestJwtModule } from '@nestjs/jwt';
       useFactory: (jwtService: JwtService) => ({
         secretOrKeyProvider: async (requestType, rawJwtToken) => {
           // Can only verify tokens via the Google public key
-          switch(requestType) {
+          switch (requestType) {
             case JwtSecretRequestType.SIGN:
               throw new Error('Cannot sign tokens');
             case JwtSecretRequestType.VERIFY:
@@ -32,7 +32,7 @@ import { JwtSecretRequestType, JwtModule as NestJwtModule } from '@nestjs/jwt';
           }
         }
       })
-    }),
+    })
   ],
   providers: [JwtService, JwtAuthGuard, JwtStrategy],
   exports: [JwtService]
