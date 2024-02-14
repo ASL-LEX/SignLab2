@@ -32,6 +32,8 @@ export class PermissionResolver {
     let project: Project | null = null;
     let study: Study | null = null;
 
+    console.log(organization);
+
     if (projectID) {
       project = await this.projectPipe.transform(projectID);
     }

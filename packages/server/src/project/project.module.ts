@@ -9,7 +9,6 @@ import { SharedModule } from 'src/shared/shared.module';
 import { JwtModule } from '../jwt/jwt.module';
 import { PermissionModule } from '../permission/permission.module';
 import { OrganizationModule } from '../organization/organization.module';
-import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
@@ -32,8 +31,7 @@ import { UserOrgModule } from '../userorg/userorg.module';
     ]),
     JwtModule,
     forwardRef(() => PermissionModule),
-    OrganizationModule,
-    UserOrgModule
+    OrganizationModule
   ],
   providers: [ProjectResolver, ProjectService, ProjectPipe],
   exports: [ProjectPipe, ProjectService]

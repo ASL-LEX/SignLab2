@@ -11,7 +11,6 @@ import { DatasetPermissionResolver } from './resolvers/dataset.resolver';
 import { DatasetModule } from '../dataset/dataset.module';
 import { PermissionResolver } from './resolvers/permission.resolver';
 import { OrganizationModule } from '../organization/organization.module';
-import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
@@ -19,8 +18,7 @@ import { UserOrgModule } from '../userorg/userorg.module';
     AuthModule,
     forwardRef(() => StudyModule),
     forwardRef(() => DatasetModule),
-    OrganizationModule,
-    UserOrgModule
+    OrganizationModule
   ],
   providers: [
     casbinProvider,

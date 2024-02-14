@@ -8,7 +8,6 @@ import { PermissionModule } from '../permission/permission.module';
 import { JwtModule } from '../jwt/jwt.module';
 import { ProjectModule } from '../project/project.module';
 import { OrganizationModule } from '../organization/organization.module';
-import { UserOrgModule } from '../userorg/userorg.module';
 
 @Module({
   imports: [
@@ -16,8 +15,7 @@ import { UserOrgModule } from '../userorg/userorg.module';
     forwardRef(() => PermissionModule),
     JwtModule,
     ProjectModule,
-    OrganizationModule,
-    UserOrgModule
+    OrganizationModule
   ],
   providers: [DatasetResolver, DatasetService, DatasetPipe],
   exports: [DatasetService, DatasetPipe]

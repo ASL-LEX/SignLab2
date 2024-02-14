@@ -3,8 +3,8 @@ import jwt_decode from 'jwt-decode';
 import * as firebaseui from 'firebaseui';
 import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
-import {Organization} from '../graphql/graphql';
-import {useGetOrganizationsQuery} from '../graphql/organization/organization';
+import { Organization } from '../graphql/graphql';
+import { useGetOrganizationsQuery } from '../graphql/organization/organization';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
@@ -26,6 +26,7 @@ export interface DecodedToken {
     };
     sign_in_provider: string;
     user_id: string;
+    tenant: string;
   };
   iat: number;
   iss: string;
@@ -107,7 +108,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
-      {!authenticated && organization && <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} />}
+      {!authenticated && organization && (
+        <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} />
+      )}
       {authenticated && children}
     </AuthContext.Provider>
   );
@@ -124,7 +127,6 @@ const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organiz
   // Handle multi-tenant login
   const auth = firebaseauth.getAuth();
   auth.tenantId = organization.tenantID;
-
 
   const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
 

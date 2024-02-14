@@ -14,7 +14,6 @@ import { SharedModule } from './shared/shared.module';
 import { JwtModule } from './jwt/jwt.module';
 import { PermissionModule } from './permission/permission.module';
 import { AuthModule } from './auth/auth.module';
-import { UserOrgModule } from './userorg/userorg.module';
 
 @Module({
   imports: [
@@ -45,8 +44,7 @@ import { UserOrgModule } from './userorg/userorg.module';
     SharedModule,
     JwtModule,
     PermissionModule,
-    AuthModule,
-    UserOrgModule
+    AuthModule
   ]
 })
 export class AppModule {}
