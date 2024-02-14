@@ -177,7 +177,6 @@ export type LexiconEntry = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvite: InviteModel;
-  addUserToOrg: Scalars['Boolean']['output'];
   assignTag?: Maybe<Tag>;
   cancelInvite: InviteModel;
   changeDatasetDescription: Scalars['Boolean']['output'];
@@ -226,11 +225,6 @@ export type Mutation = {
 
 export type MutationAcceptInviteArgs = {
   input: AcceptInviteModel;
-};
-
-
-export type MutationAddUserToOrgArgs = {
-  organization: Scalars['ID']['input'];
 };
 
 
@@ -599,7 +593,6 @@ export type Query = {
   projectUsers: Array<UserModel>;
   publicKey: Array<Scalars['String']['output']>;
   studyExists: Scalars['Boolean']['output'];
-  userIsInOrg: Scalars['Boolean']['output'];
   users: Array<UserModel>;
   validateCSV: UploadResult;
 };
@@ -714,12 +707,6 @@ export type QueryProjectUsersArgs = {
 export type QueryStudyExistsArgs = {
   name: Scalars['String']['input'];
   project: Scalars['ID']['input'];
-};
-
-
-export type QueryUserIsInOrgArgs = {
-  org: Scalars['String']['input'];
-  user: Scalars['String']['input'];
 };
 
 
