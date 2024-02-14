@@ -12,9 +12,9 @@ export class Organization {
   @Field()
   name: string;
 
-  /** Maps the `projectId` in the auth service back to the organization */
   @Prop()
-  projectId: string;
+  @Field({ description: 'Tenant ID in the Identity Platform' })
+  tenantID: string;
 
   @Prop()
   @Field({ description: 'URL where the user logs in against' })

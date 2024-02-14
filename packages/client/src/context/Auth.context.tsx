@@ -3,6 +3,8 @@ import jwt_decode from 'jwt-decode';
 import * as firebaseui from 'firebaseui';
 import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
+import {Organization} from '../graphql/graphql';
+import {useGetOrganizationsQuery} from '../graphql/organization/organization';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
@@ -48,6 +50,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
   const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
+  const [organization, setOrganization] = useState<Organization | null>(null);
+
+  const getOrganizationResult = useGetOrganizationsQuery();
+
+  useEffect(() => {
+    // TODO: Handle multi-organization login
+    if (getOrganizationResult.data && getOrganizationResult.data.getOrganizations.length > 0) {
+      setOrganization(getOrganizationResult.data.getOrganizations[0]);
+    }
+  }, [getOrganizationResult.data]);
 
   const handleUnauthenticated = () => {
     // Clear the token and authenticated state
@@ -95,7 +107,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
-      {!authenticated && <FirebaseLoginWrapper setToken={handleAuthenticated} />}
+      {!authenticated && organization && <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} />}
       {authenticated && children}
     </AuthContext.Provider>
   );
@@ -103,11 +115,18 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 interface FirebaseLoginWrapperProps {
   setToken: (token: string) => void;
+  organization: Organization;
 }
 
-const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken }) => {
+const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organization }) => {
   firebase.initializeApp(firebaseConfig);
-  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseauth.getAuth());
+
+  // Handle multi-tenant login
+  const auth = firebaseauth.getAuth();
+  auth.tenantId = organization.tenantID;
+
+
+  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
 
   const signInSuccess = async (authResult: any) => {
     setToken(await authResult.user.getIdToken());

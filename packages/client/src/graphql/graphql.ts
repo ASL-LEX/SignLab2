@@ -79,7 +79,7 @@ export type Entry = {
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
-  meta: Scalars['JSON']['output'];
+  meta?: Maybe<Scalars['JSON']['output']>;
   organization: Scalars['ID']['output'];
   signedUrl: Scalars['String']['output'];
   /** Get the number of milliseconds the signed URL is valid for. */
@@ -177,6 +177,7 @@ export type LexiconEntry = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptInvite: InviteModel;
+  addUserToOrg: Scalars['Boolean']['output'];
   assignTag?: Maybe<Tag>;
   cancelInvite: InviteModel;
   changeDatasetDescription: Scalars['Boolean']['output'];
@@ -225,6 +226,11 @@ export type Mutation = {
 
 export type MutationAcceptInviteArgs = {
   input: AcceptInviteModel;
+};
+
+
+export type MutationAddUserToOrgArgs = {
+  organization: Scalars['ID']['input'];
 };
 
 
@@ -468,6 +474,8 @@ export type Organization = {
   /** URL where the user logs in against */
   authURL: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  /** Tenant ID in the Identity Platform */
+  tenantID: Scalars['String']['output'];
 };
 
 export type OrganizationCreate = {
@@ -475,6 +483,8 @@ export type OrganizationCreate = {
   authURL: Scalars['String']['input'];
   name: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
+  /** Tenant ID in the Identity Platform */
+  tenantID: Scalars['String']['input'];
 };
 
 export type Permission = {
@@ -589,6 +599,7 @@ export type Query = {
   projectUsers: Array<UserModel>;
   publicKey: Array<Scalars['String']['output']>;
   studyExists: Scalars['Boolean']['output'];
+  userIsInOrg: Scalars['Boolean']['output'];
   users: Array<UserModel>;
   validateCSV: UploadResult;
 };
@@ -703,6 +714,12 @@ export type QueryProjectUsersArgs = {
 export type QueryStudyExistsArgs = {
   name: Scalars['String']['input'];
   project: Scalars['ID']['input'];
+};
+
+
+export type QueryUserIsInOrgArgs = {
+  org: Scalars['String']['input'];
+  user: Scalars['String']['input'];
 };
 
 
