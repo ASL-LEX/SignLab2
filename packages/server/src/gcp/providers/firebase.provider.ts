@@ -12,15 +12,14 @@ export const firebaseProvider: Provider<admin.app.App> = {
     // If no key file is provided, use the default credentials
     if (!keyFileName) {
       return admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
+        credential: admin.credential.applicationDefault()
       });
     }
 
     // Otherwise, use the provided key file
     return admin.initializeApp({
-      credential: admin.credential.cert(keyFileName),
+      credential: admin.credential.cert(keyFileName)
     });
   },
   inject: [ConfigService]
 };
-
