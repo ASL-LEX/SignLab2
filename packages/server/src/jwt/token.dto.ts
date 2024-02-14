@@ -11,6 +11,7 @@ export interface TokenPayload {
     };
     sign_in_provider: string;
     user_id: string;
+    tenant: string;
   };
   iat: number;
   iss: string;

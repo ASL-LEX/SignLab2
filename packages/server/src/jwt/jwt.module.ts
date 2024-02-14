@@ -4,14 +4,12 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtAuthGuard } from './jwt.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { OrganizationModule } from '../organization/organization.module';
-import { UserOrgModule } from '../userorg/userorg.module';
 import { JwtSecretRequestType, JwtModule as NestJwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     HttpModule,
     forwardRef(() => OrganizationModule),
-    UserOrgModule,
     NestJwtModule.registerAsync({
       imports: [forwardRef(() => JwtModule)],
       inject: [JwtService],

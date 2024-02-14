@@ -35,7 +35,7 @@ export type AssignTagMutationVariables = Types.Exact<{
 }>;
 
 
-export type AssignTagMutation = { __typename?: 'Mutation', assignTag?: { __typename?: 'Tag', _id: string, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta: any, signedUrl: string, signedUrlExpiration: number } } | null };
+export type AssignTagMutation = { __typename?: 'Mutation', assignTag?: { __typename?: 'Tag', _id: string, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } } | null };
 
 export type CompleteTagMutationVariables = Types.Exact<{
   tag: Types.Scalars['ID']['input'];

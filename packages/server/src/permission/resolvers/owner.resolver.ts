@@ -9,8 +9,9 @@ import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Roles } from '../permissions/roles';
 import { PermissionService } from '../permission.service';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
+import { OrganizationGuard } from '../../organization/organization.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver()
 export class OwnerPermissionResolver {
   constructor(

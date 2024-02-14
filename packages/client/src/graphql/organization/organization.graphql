@@ -2,6 +2,7 @@ query getOrganizations {
   getOrganizations {
     _id,
     name,
-    authURL
+    authURL,
+    tenantID
   }
 }

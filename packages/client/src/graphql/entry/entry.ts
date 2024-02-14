@@ -10,7 +10,7 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 }>;
 
 
-export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta: any, signedUrl: string, signedUrlExpiration: number }> };
+export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number }> };
 
 export type DeleteEntryMutationVariables = Types.Exact<{
   entry: Types.Scalars['ID']['input'];

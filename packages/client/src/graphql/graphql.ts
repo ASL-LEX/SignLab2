@@ -79,7 +79,7 @@ export type Entry = {
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
-  meta: Scalars['JSON']['output'];
+  meta?: Maybe<Scalars['JSON']['output']>;
   organization: Scalars['ID']['output'];
   signedUrl: Scalars['String']['output'];
   /** Get the number of milliseconds the signed URL is valid for. */
@@ -468,6 +468,8 @@ export type Organization = {
   /** URL where the user logs in against */
   authURL: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  /** Tenant ID in the Identity Platform */
+  tenantID: Scalars['String']['output'];
 };
 
 export type OrganizationCreate = {
@@ -475,6 +477,8 @@ export type OrganizationCreate = {
   authURL: Scalars['String']['input'];
   name: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
+  /** Tenant ID in the Identity Platform */
+  tenantID: Scalars['String']['input'];
 };
 
 export type Permission = {
