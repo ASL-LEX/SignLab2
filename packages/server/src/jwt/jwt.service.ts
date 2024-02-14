@@ -21,34 +21,34 @@ export class JwtService {
     return response.data;
   }
 
-  async getPublicKey(kid: string): Promise<string | null> {
-    if (!this.publicKeys || !this.publicKeys[kid]) {
-      this.publicKeys = await this.queryForPublicKey();
+  // TODO: Handle when key rotation has taken place
+  async getPublicKey(rawToken: string | null | Buffer | object): Promise<string | null> {
+    // Make sure the tokn is the correct type
+    if (!rawToken) {
+      return null;
     }
-    return this.publicKeys[kid] || null;
-  }
+    if (typeof rawToken === 'object') {
+      return null;
+    }
 
-  async validate(rawToken: string): Promise<any | null> {
-    // Parse out the token
-    const tokenString = rawToken.split(' ')[1];
-    const token = jwt.decode(tokenString, { complete: true }) as any;
+    // Decode the token to get the kid
+    const token = jwt.decode(rawToken, { complete: true });
+    if (!token) {
+      return null;
+    }
 
-    // Get the kid to verify the JWT against
+    // Get the kid from the token
     const kid = token.header.kid;
     if (!kid) {
       return null;
     }
 
-    const publicKey = await this.getPublicKey(kid);
-    if (!publicKey) {
-      return null;
+    // If we don't have the public keys yet or the kid isn't in the public keys, query for the public keys
+    if (!this.publicKeys || !this.publicKeys[kid]) {
+      this.publicKeys = await this.queryForPublicKey();
     }
 
-    try {
-      jwt.verify(tokenString, publicKey);
-      return token.payload;
-    } catch (e) {
-      return null;
-    }
+    // Return the public key
+    return this.publicKeys[kid] || null;
   }
 }
