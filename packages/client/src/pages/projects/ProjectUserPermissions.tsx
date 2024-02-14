@@ -34,7 +34,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
     grantProjectPermissions({
       variables: {
         project: props.project._id,
-        user: props.permission.user.id,
+        user: props.permission.user.uid,
         isAdmin: event.target.checked
       }
     });
@@ -50,7 +50,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
     <Switch
       checked={props.permission.isProjectAdmin}
       onChange={handleChange}
-      disabled={!props.permission.editable || props.permission.user.id === props.currentUser.user_id}
+      disabled={!props.permission.editable || props.permission.user.uid === props.currentUser.user_id}
     />
   );
 };
@@ -116,7 +116,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       getRowHeight={() => 'auto'}
       rows={rows}
       columns={columns}
-      getRowId={(row) => row.user.id}
+      getRowId={(row) => row.user.uid}
       initialState={{
         pagination: {
           paginationModel: {
