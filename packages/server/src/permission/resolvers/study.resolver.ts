@@ -10,14 +10,16 @@ import * as casbin from 'casbin';
 import { CASBIN_PROVIDER } from '../casbin.provider';
 import { StudyPermissions } from '../permissions/study';
 import { PermissionService } from '../permission.service';
-import { UserModel } from '../../auth/user.model';
+import { User } from '../../user/user.model';
+import { UserService } from '../../user/user.service';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => StudyPermissionModel)
 export class StudyPermissionResolver {
   constructor(
     @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
+    private readonly userService: UserService
   ) {}
 
   @Query(() => [StudyPermissionModel])
@@ -94,8 +96,8 @@ export class StudyPermissionResolver {
     return this.permissionService.grantTrainedContributor(study, user, isTrained, requestingUser);
   }
 
-  @ResolveField('user', () => UserModel)
-  resolveUser(@Parent() permission: StudyPermissionModel): any {
-    return { __typename: 'UserModel', id: permission.user };
+  @ResolveField('user', () => User)
+  resolveUser(@Parent() permission: StudyPermissionModel, @TokenContext() requestingUser: TokenPayload): Promise<User> {
+    return this.userService.getUserById(requestingUser.firebase.tenant, permission.user);
   }
 }

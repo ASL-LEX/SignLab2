@@ -1,9 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { UserModel } from '../../auth/user.model';
+import { User } from '../../user/user.model';
 
 @ObjectType()
 export class StudyPermissionModel {
-  @Field(() => UserModel)
+  @Field(() => User)
   user: string;
 
   @Field()

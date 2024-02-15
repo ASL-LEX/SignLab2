@@ -32,8 +32,7 @@ import configuration from './config/configuration';
           supergraphSdl: new IntrospectAndCompose({
             subgraphs: [
               { name: 'signlab', url: configService.getOrThrow('signlab.uri') },
-              { name: 'lex_service', url: configService.getOrThrow('lex_service.uri') },
-              { name: 'auth', url: configService.getOrThrow('auth.uri') }
+              { name: 'lex_service', url: configService.getOrThrow('lex_service.uri') }
             ]
           })
         }

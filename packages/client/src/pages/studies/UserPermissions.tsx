@@ -38,7 +38,7 @@ const EditStudyAdminSwitch: React.FC<EditSwitchProps> = (props) => {
     grantStudyAdmin({
       variables: {
         study: props.study._id,
-        user: props.permission.user.id,
+        user: props.permission.user.uid,
         isAdmin: event.target.checked
       }
     });
@@ -53,7 +53,7 @@ const EditStudyAdminSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isStudyAdmin}
-      disabled={!props.permission.isStudyAdminEditable || props.permission.user.id === props.currentUser.user_id}
+      disabled={!props.permission.isStudyAdminEditable || props.permission.user.uid === props.currentUser.user_id}
       onChange={handleChange}
     />
   );
@@ -66,7 +66,7 @@ const EditContributorSwitch: React.FC<EditSwitchProps> = (props) => {
     grantContributor({
       variables: {
         study: props.study._id,
-        user: props.permission.user.id,
+        user: props.permission.user.uid,
         isContributor: event.target.checked
       }
     });
@@ -81,7 +81,7 @@ const EditContributorSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isContributor}
-      disabled={!props.permission.isContributorEditable || props.permission.user.id === props.currentUser.user_id}
+      disabled={!props.permission.isContributorEditable || props.permission.user.uid === props.currentUser.user_id}
       onChange={handleChange}
     />
   );
@@ -94,7 +94,7 @@ const EditTrainedSwitch: React.FC<EditSwitchProps> = (props) => {
     grantTrainedContributor({
       variables: {
         study: props.study._id,
-        user: props.permission.user.id,
+        user: props.permission.user.uid,
         isTrained: event.target.checked
       }
     });
@@ -183,7 +183,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       getRowHeight={() => 'auto'}
       rows={permissions}
       columns={columns}
-      getRowId={(row) => row.user.id}
+      getRowId={(row) => row.user.uid}
       initialState={{
         pagination: {
           paginationModel: {

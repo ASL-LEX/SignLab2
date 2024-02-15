@@ -2,7 +2,7 @@ import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { CASBIN_PROVIDER } from './casbin.provider';
 import * as casbin from 'casbin';
 import { Roles } from './permissions/roles';
-import { UserService } from '../auth/services/user.service';
+import { UserService } from '../user/user.service';
 import { Project } from '../project/project.model';
 import { TokenPayload } from '../jwt/token.dto';
 import { Study } from '../study/study.model';
@@ -27,19 +27,19 @@ export class PermissionService {
     await this.enforcer.addPolicy(targetUser, Roles.OWNER, organization);
   }
 
-  async getProjectPermissions(project: Project, _requestingUser: TokenPayload): Promise<ProjectPermissionModel[]> {
+  async getProjectPermissions(project: Project, requestingUser: TokenPayload): Promise<ProjectPermissionModel[]> {
     // Get all the users associated with the organization
     // TODO: Change out hardcoded project ID
-    const users = await this.userService.getUsersForProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
+    const users = await this.userService.getUsersForTenant(requestingUser.firebase.tenant);
 
     // Create the cooresponding permission representation
     const permissions = await Promise.all(
       users.map(async (user) => {
-        const hasRole = await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, project._id);
-        const editable = !(await this.enforcer.enforce(user.id, Roles.OWNER, project._id));
+        const hasRole = await this.enforcer.enforce(user.uid, Roles.PROJECT_ADMIN, project._id);
+        const editable = !(await this.enforcer.enforce(user.uid, Roles.OWNER, project._id));
 
         return {
-          user: user.id,
+          user: user.uid,
           isProjectAdmin: hasRole,
           editable
         };
@@ -76,24 +76,28 @@ export class PermissionService {
     return true;
   }
 
-  async getStudyPermissions(study: Study, _requestingUser: TokenPayload): Promise<StudyPermissionModel[]> {
+  async getStudyPermissions(study: Study, requestingUser: TokenPayload): Promise<StudyPermissionModel[]> {
     // Get all the users associated with the organization
     // TODO: Change out hardcoded project ID
-    const users = await this.userService.getUsersForProject('fe231d0b-5f01-4e52-9bc1-561e76b1e02d');
+    const users = await this.userService.getUsersForTenant(requestingUser.firebase.tenant);
 
     // Create the cooresponding permission representation
     const permissions = await Promise.all(
       users.map(async (user) => {
-        const isStudyAdmin = await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString());
-        const isStudyAdminEditable = !(await this.enforcer.enforce(user.id, Roles.PROJECT_ADMIN, study._id.toString()));
+        const isStudyAdmin = await this.enforcer.enforce(user.uid, Roles.STUDY_ADMIN, study._id.toString());
+        const isStudyAdminEditable = !(await this.enforcer.enforce(
+          user.uid,
+          Roles.PROJECT_ADMIN,
+          study._id.toString()
+        ));
 
-        const isContributor = await this.enforcer.enforce(user.id, Roles.CONTRIBUTOR, study._id.toString());
-        const isContributorEditable = !(await this.enforcer.enforce(user.id, Roles.STUDY_ADMIN, study._id.toString()));
+        const isContributor = await this.enforcer.enforce(user.uid, Roles.CONTRIBUTOR, study._id.toString());
+        const isContributorEditable = !(await this.enforcer.enforce(user.uid, Roles.STUDY_ADMIN, study._id.toString()));
 
-        const isTrained = await this.enforcer.enforce(user.id, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
+        const isTrained = await this.enforcer.enforce(user.uid, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
 
         return {
-          user: user.id,
+          user: user.uid,
           isStudyAdmin,
           isStudyAdminEditable,
           isContributor,

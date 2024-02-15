@@ -548,7 +548,7 @@ export type ProjectPermissionModel = {
   __typename?: 'ProjectPermissionModel';
   editable: Scalars['Boolean']['output'];
   isProjectAdmin: Scalars['Boolean']['output'];
-  user: UserModel;
+  user: User;
 };
 
 export type ProjectSettingsInput = {
@@ -749,7 +749,7 @@ export type StudyPermissionModel = {
   isStudyAdminEditable: Scalars['Boolean']['output'];
   isTrained: Scalars['Boolean']['output'];
   isTrainedEditable: Scalars['Boolean']['output'];
-  user: UserModel;
+  user: User;
 };
 
 export type Tag = {
@@ -798,6 +798,14 @@ export enum UploadStatus {
   Success = 'SUCCESS',
   Warning = 'WARNING'
 }
+
+export type User = {
+  __typename?: 'User';
+  displayName?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  photoURL?: Maybe<Scalars['String']['output']>;
+  uid: Scalars['String']['output'];
+};
 
 export type UserModel = {
   __typename?: 'UserModel';

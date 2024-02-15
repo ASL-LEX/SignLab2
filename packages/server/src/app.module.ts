@@ -13,7 +13,7 @@ import { TagModule } from './tag/tag.module';
 import { SharedModule } from './shared/shared.module';
 import { JwtModule } from './jwt/jwt.module';
 import { PermissionModule } from './permission/permission.module';
-import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -44,7 +44,7 @@ import { AuthModule } from './auth/auth.module';
     SharedModule,
     JwtModule,
     PermissionModule,
-    AuthModule
+    UserModule
   ]
 })
 export class AppModule {}

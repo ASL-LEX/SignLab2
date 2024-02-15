@@ -10,14 +10,16 @@ import * as casbin from 'casbin';
 import { CASBIN_PROVIDER } from '../casbin.provider';
 import { ProjectPermissions } from '../permissions/project';
 import { PermissionService } from '../permission.service';
-import { UserModel } from '../../auth/user.model';
+import { User } from '../../user/user.model';
+import { UserService } from '../../user/user.service';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => ProjectPermissionModel)
 export class ProjectPermissionResolver {
   constructor(
     @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
+    private readonly userService: UserService
   ) {}
 
   @Query(() => [ProjectPermissionModel])
@@ -57,8 +59,8 @@ export class ProjectPermissionResolver {
     return this.permissionService.grantProjectPermissions(project, user, isAdmin, requestingUser);
   }
 
-  @ResolveField('user', () => UserModel)
-  resolveUser(@Parent() permission: ProjectPermissionModel): any {
-    return { __typename: 'UserModel', id: permission.user };
+  @ResolveField('user', () => User)
+  resolveUser(@Parent() permission: ProjectPermissionModel, @TokenContext() requestingUser: TokenPayload): any {
+    return this.userService.getUserById(requestingUser.firebase.tenant, permission.user);
   }
 }

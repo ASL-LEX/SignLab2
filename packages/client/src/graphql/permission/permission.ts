@@ -10,7 +10,7 @@ export type GetProjectPermissionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetProjectPermissionsQuery = { __typename?: 'Query', getProjectPermissions: Array<{ __typename?: 'ProjectPermissionModel', isProjectAdmin: boolean, editable: boolean, user: { __typename?: 'UserModel', id: string, projectId: string, fullname?: string | null, username?: string | null, email?: string | null, role: number, createdAt: any, updatedAt: any, deletedAt?: any | null } }> };
+export type GetProjectPermissionsQuery = { __typename?: 'Query', getProjectPermissions: Array<{ __typename?: 'ProjectPermissionModel', isProjectAdmin: boolean, editable: boolean, user: { __typename?: 'User', uid: string, email?: string | null, displayName?: string | null, photoURL?: string | null } }> };
 
 export type GrantProjectPermissionsMutationVariables = Types.Exact<{
   project: Types.Scalars['ID']['input'];
@@ -26,7 +26,7 @@ export type GetStudyPermissionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetStudyPermissionsQuery = { __typename?: 'Query', getStudyPermissions: Array<{ __typename?: 'StudyPermissionModel', isStudyAdmin: boolean, isStudyAdminEditable: boolean, isContributor: boolean, isContributorEditable: boolean, isTrained: boolean, isTrainedEditable: boolean, user: { __typename?: 'UserModel', id: string, projectId: string, fullname?: string | null, username?: string | null, email?: string | null, role: number, createdAt: any, updatedAt: any, deletedAt?: any | null } }> };
+export type GetStudyPermissionsQuery = { __typename?: 'Query', getStudyPermissions: Array<{ __typename?: 'StudyPermissionModel', isStudyAdmin: boolean, isStudyAdminEditable: boolean, isContributor: boolean, isContributorEditable: boolean, isTrained: boolean, isTrainedEditable: boolean, user: { __typename?: 'User', uid: string, email?: string | null, displayName?: string | null, photoURL?: string | null } }> };
 
 export type GrantStudyAdminMutationVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
@@ -84,15 +84,10 @@ export const GetProjectPermissionsDocument = gql`
     query getProjectPermissions($project: ID!) {
   getProjectPermissions(project: $project) {
     user {
-      id
-      projectId
-      fullname
-      username
+      uid
       email
-      role
-      createdAt
-      updatedAt
-      deletedAt
+      displayName
+      photoURL
     }
     isProjectAdmin
     editable
@@ -164,15 +159,10 @@ export const GetStudyPermissionsDocument = gql`
     query getStudyPermissions($study: ID!) {
   getStudyPermissions(study: $study) {
     user {
-      id
-      projectId
-      fullname
-      username
+      uid
       email
-      role
-      createdAt
-      updatedAt
-      deletedAt
+      displayName
+      photoURL
     }
     isStudyAdmin
     isStudyAdminEditable
