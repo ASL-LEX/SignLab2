@@ -8,6 +8,9 @@ import { useEffect, useState } from 'react';
 import { FreeTextGridView, freeTextTest} from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
 import { Checkbox } from '@mui/material';
+import { NumericGridView, numericTest } from './NumericGridView.component';
+import { sliderTest, SliderGridView } from './SliderGridView.component';
+import { booleanTest, BooleanGridView } from './BooleanGridView.component';
 
 export interface TagGridViewProps {
   study: Study;
@@ -18,7 +21,10 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
 
   const tagColumnViews: { tester: TagViewTest, view: TagColumnView }[] = [
-    { tester: freeTextTest, view: { component: FreeTextGridView } }
+    { tester: freeTextTest, view: { component: FreeTextGridView } },
+    { tester: numericTest, view: { component: NumericGridView } },
+    { tester: sliderTest, view: { component: SliderGridView } },
+    { tester: booleanTest, view: { component: BooleanGridView } }
   ];
 
   const getTagsResults = useGetTagsQuery({ variables: { study: study._id } });
