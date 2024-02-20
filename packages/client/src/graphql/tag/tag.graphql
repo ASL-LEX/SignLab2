@@ -40,3 +40,23 @@ mutation saveVideoField($tag: ID!, $field: String!, $index: Int!) {
     uploadURL
   }
 }
+
+query getTags($study: ID!) {
+  getTags(study: $study) {
+    _id
+    entry {
+      _id
+      organization
+      entryID
+      contentType
+      dataset
+      creator
+      dateCreated
+      meta
+      signedUrl
+      signedUrlExpiration
+    }
+    data
+    complete
+  }
+}

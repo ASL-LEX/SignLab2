@@ -1,4 +1,4 @@
-import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+import { JsonSchema, TesterContext, UISchemaElement } from '@jsonforms/core';
 
 export interface TagColumnViewProps {
   data: any;
@@ -17,5 +17,5 @@ export interface TagColumnView {
 /**
  * Test to see if a given field can be transformed into a tag column view.
  */
-export type TagViewTest = (uischema: UISchemaElement, schema: JsonSchema) => number;
+export type TagViewTest = (uischema: UISchemaElement, schema: JsonSchema, context: TesterContext) => number;
 export const NOT_APPLICABLE = -1;
