@@ -64,7 +64,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     const context = { rootSchema: study.tagSchema.dataSchema, config: {} };
     const reactNode = tagColumnViews
       .filter((view) => view.tester(fieldUiSchema, fieldSchema, context))
-      .sort((a, b) => a.tester(fieldUiSchema, fieldSchema, context) - b.tester(fieldUiSchema, fieldSchema, context));
+      .sort((a, b) => b.tester(fieldUiSchema, fieldSchema, context) - a.tester(fieldUiSchema, fieldSchema, context));
 
     if (reactNode.length === 0) {
       throw new Error(`No matching view for property ${property}`);

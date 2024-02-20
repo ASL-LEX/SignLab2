@@ -8,7 +8,7 @@ export const NumericGridView: React.FC<TagColumnViewProps> = ({ data }) => {
 
 export const numericTest: TagViewTest = (uischema, schema, context) => {
   if (materialNumberControlTester(uischema, schema, context) !== NOT_APPLICABLE) {
-    return 1;
+    return 2;
   }
   return NOT_APPLICABLE;
 }

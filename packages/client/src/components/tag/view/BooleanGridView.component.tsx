@@ -9,7 +9,7 @@ export const BooleanGridView: React.FC<TagColumnViewProps> = ({ data }) => {
 
 export const booleanTest: TagViewTest = (uischema, schema, context) => {
   if (materialBooleanControlTester(uischema, schema, context) !== NOT_APPLICABLE) {
-    return 1;
+    return 2;
   }
   return NOT_APPLICABLE;
 }
