@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { TagColumnView, TagColumnViewProps, TagViewTest } from '../../../types/TagColumnView';
-import { Study } from '../../../graphql/graphql';
+import { Study, Entry } from '../../../graphql/graphql';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { GetTagsQuery, useGetTagsQuery } from '../../../graphql/tag/tag';
 import { useEffect, useState } from 'react';
 import { FreeTextGridView, freeTextTest} from './FreeTextGridView.component';
+import { EntryView } from '../../EntryView.component';
 
 export interface TagGridViewProps {
   study: Study;
@@ -27,8 +28,17 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     }
   }, [getTagsResults.data]);
 
+  const entryColumns: GridColDef[] = [
+    {
+      field: 'entryView',
+      headerName: t('common.view'),
+      width: 300,
+      renderCell: (params: GridRenderCellParams) => <EntryView entry={params.row.entry as Entry} width={300} />
+    }
+  ];
+
   // Generate the dynamic columns for the grid
-  const columns: GridColDef[] = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties).map((property: string) => {
+  const dataColunms: GridColDef[] = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties).map((property: string) => {
     const fieldSchema = study.tagSchema.dataSchema.properties[property];
     const fieldUiSchema = study.tagSchema.uiSchema.elements.find((element: any) => element.scope === `#/properties/${property}`);
 
@@ -59,7 +69,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     <DataGrid
       getRowHeight={() => 'auto'}
       rows={tags}
-      columns={columns}
+      columns={entryColumns.concat(dataColunms)}
       getRowId={(row) => row._id}
     />
   );
