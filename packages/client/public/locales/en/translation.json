@@ -20,7 +20,8 @@
     "view": "View",
     "entryId": "Entry ID",
     "login": "Login",
-    "clear": "clear"
+    "clear": "clear",
+    "complete": "complete"
   },
   "languages": {
     "en": "English",
@@ -117,6 +118,9 @@
     "login": {
       "selectOrg": "Select an Organization to Login",
       "redirectToOrg": "Redirect to Organization Login"
+    },
+    "tagView": {
+      "originalEntry": "Original Entry"
     }
   }
 }

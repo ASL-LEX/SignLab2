@@ -7,6 +7,7 @@ import { GetTagsQuery, useGetTagsQuery } from '../../../graphql/tag/tag';
 import { useEffect, useState } from 'react';
 import { FreeTextGridView, freeTextTest} from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
+import { Checkbox } from '@mui/material';
 
 export interface TagGridViewProps {
   study: Study;
@@ -31,9 +32,17 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   const entryColumns: GridColDef[] = [
     {
       field: 'entryView',
-      headerName: t('common.view'),
+      headerName: t('components.tagView.originalEntry'),
       width: 300,
       renderCell: (params: GridRenderCellParams) => <EntryView entry={params.row.entry as Entry} width={300} />
+    }
+  ];
+
+  const tagMetaColumns: GridColDef[] = [
+    {
+      field: 'complete',
+      headerName: t('common.complete'),
+      renderCell: (params: GridRenderCellParams) => <Checkbox disabled checked={params.row.complete} />
     }
   ];
 
@@ -61,7 +70,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
       field: property,
       headerName: fieldUiSchema.title || property,
       editable: false,
-      renderCell: (params: GridRenderCellParams) => view({ data: params.row.data[property], schema: fieldSchema, uischema: fieldUiSchema })
+      renderCell: (params: GridRenderCellParams) => params.row.data && view({ data: params.row.data[property], schema: fieldSchema, uischema: fieldUiSchema })
     };
   });
 
@@ -69,7 +78,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     <DataGrid
       getRowHeight={() => 'auto'}
       rows={tags}
-      columns={entryColumns.concat(dataColunms)}
+      columns={entryColumns.concat(tagMetaColumns).concat(dataColunms)}
       getRowId={(row) => row._id}
     />
   );
