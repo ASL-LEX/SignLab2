@@ -63,7 +63,7 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           visible: (p) => p!.studyAdmin
         },
         { name: t('menu.entryControl'), action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
-        { name: t('menu.downloadTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
+        { name: t('menu.viewTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
       ]
     },
     {
