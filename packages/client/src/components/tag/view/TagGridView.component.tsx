@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { TagColumnView, TagColumnViewProps, TagViewTest } from '../../../types/TagColumnView';
+import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Study, Entry } from '../../../graphql/graphql';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { GetTagsQuery, useGetTagsQuery } from '../../../graphql/tag/tag';
 import { useEffect, useState } from 'react';
-import { FreeTextGridView, freeTextTest} from './FreeTextGridView.component';
+import { freeTextTest, getTextCols } from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
 import { Checkbox } from '@mui/material';
 import { NumericGridView, numericTest } from './NumericGridView.component';
@@ -20,12 +20,12 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   const { t } = useTranslation();
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
 
-  const tagColumnViews: { tester: TagViewTest, view: TagColumnView }[] = [
-    { tester: freeTextTest, view: { component: FreeTextGridView } },
-    { tester: numericTest, view: { component: NumericGridView } },
-    { tester: sliderTest, view: { component: SliderGridView } },
-    { tester: booleanTest, view: { component: BooleanGridView } }
-  ];
+  const tagColumnViews: { tester: TagViewTest, getGridColDefs: GetGridColDefs }[] = [
+    { tester: freeTextTest, getGridColDefs: getTextCols }, ];
+    // { tester: numericTest, view: { component: NumericGridView } },
+    // { tester: sliderTest, view: { component: SliderGridView } },
+    // { tester: booleanTest, view: { component: BooleanGridView } }
+  // ];
 
   const getTagsResults = useGetTagsQuery({ variables: { study: study._id } });
 
@@ -70,15 +70,8 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
       throw new Error(`No matching view for property ${property}`);
     }
 
-    const view: React.FC<TagColumnViewProps> = reactNode[0].view.component;
-
-    return {
-      field: property,
-      headerName: fieldUiSchema.title || property,
-      editable: false,
-      renderCell: (params: GridRenderCellParams) => params.row.data && view({ data: params.row.data[property], schema: fieldSchema, uischema: fieldUiSchema })
-    };
-  });
+    return reactNode[0].getGridColDefs(fieldUiSchema, fieldSchema, property);
+  }).flat();
 
   return (
     <DataGrid

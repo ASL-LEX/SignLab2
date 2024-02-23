@@ -1,4 +1,5 @@
 import { JsonSchema, TesterContext, UISchemaElement } from '@jsonforms/core';
+import { GridColDef } from '@mui/x-data-grid';
 
 export interface TagColumnViewProps {
   data: any;
@@ -10,9 +11,7 @@ export interface TagColumnViewProps {
  * Represents the view of a tag in a column format. Handles determining if
  * the given view is applicable and applying the view to the given data.
  */
-export interface TagColumnView {
-  component: React.FC<TagColumnViewProps>;
-}
+export type GetGridColDefs = (uischema: UISchemaElement, schema: JsonSchema, property: string) => GridColDef[];
 
 /**
  * Test to see if a given field can be transformed into a tag column view.
