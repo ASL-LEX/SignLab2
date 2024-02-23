@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
 import { Checkbox } from '@mui/material';
-import { NumericGridView, numericTest } from './NumericGridView.component';
-import { sliderTest, SliderGridView } from './SliderGridView.component';
-import { booleanTest, BooleanGridView } from './BooleanGridView.component';
+import { getNumericCols, numericTest } from './NumericGridView.component';
+import { getSliderCols, sliderTest } from './SliderGridView.component';
+import { getBoolCols, booleanTest } from './BooleanGridView.component';
 
 export interface TagGridViewProps {
   study: Study;
@@ -21,11 +21,11 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
 
   const tagColumnViews: { tester: TagViewTest, getGridColDefs: GetGridColDefs }[] = [
-    { tester: freeTextTest, getGridColDefs: getTextCols }, ];
-    // { tester: numericTest, view: { component: NumericGridView } },
-    // { tester: sliderTest, view: { component: SliderGridView } },
-    // { tester: booleanTest, view: { component: BooleanGridView } }
-  // ];
+    { tester: freeTextTest, getGridColDefs: getTextCols },
+    { tester: numericTest, getGridColDefs: getNumericCols },
+    { tester: sliderTest, getGridColDefs: getSliderCols },
+    { tester: booleanTest, getGridColDefs: getBoolCols }
+  ];
 
   const getTagsResults = useGetTagsQuery({ variables: { study: study._id } });
 
