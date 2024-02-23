@@ -338,6 +338,7 @@ export type Query = {
   __typename?: 'Query';
   datasetExists: Scalars['Boolean']['output'];
   entryForDataset: Array<Entry>;
+  entryFromID: Entry;
   exists: Scalars['Boolean']['output'];
   findStudies: Array<Study>;
   /** Get the presigned URL for where to upload the CSV against */
@@ -369,6 +370,11 @@ export type QueryDatasetExistsArgs = {
 
 export type QueryEntryForDatasetArgs = {
   dataset: Scalars['ID']['input'];
+};
+
+
+export type QueryEntryFromIdArgs = {
+  entry: Scalars['ID']['input'];
 };
 
 

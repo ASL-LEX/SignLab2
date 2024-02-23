@@ -13,6 +13,21 @@ query entryForDataset($dataset: ID!) {
   }
 }
 
+query entryFromID($entry: ID!) {
+  entryFromID(entry: $entry) {
+    _id
+    organization
+    entryID
+    contentType
+    dataset
+    creator
+    dateCreated
+    meta
+    signedUrl
+    signedUrlExpiration
+  }
+}
+
 mutation deleteEntry($entry: ID!) {
   deleteEntry(entry: $entry)
 }

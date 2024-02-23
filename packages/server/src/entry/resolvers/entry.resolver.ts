@@ -14,13 +14,15 @@ import { OrganizationContext } from '../../organization/organization.context';
 import { Organization } from '../../organization/organization.model';
 import { EntryPipe } from '../pipes/entry.pipe';
 import { OrganizationGuard } from '../../organization/organization.guard';
+import { DatasetService } from '../../dataset/dataset.service';
 
 @UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(
     private readonly entryService: EntryService,
-    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer
+    @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer,
+    private readonly datasetService: DatasetService
   ) {}
 
   @Query(() => [Entry])
@@ -33,6 +35,22 @@ export class EntryResolver {
     }
 
     return this.entryService.findForDataset(dataset);
+  }
+
+  @Query(() => Entry)
+  async entryFromID(
+    @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,
+    @TokenContext() user: TokenPayload
+  ): Promise<Entry> {
+    const dataset = await this.datasetService.findById(entry.dataset);
+    if (!dataset) {
+      throw new Error('Dataset not found for entry');
+    }
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id))) {
+      throw new UnauthorizedException('User cannot read entries on this dataset');
+    }
+
+    return entry;
   }
 
   @ResolveField(() => String)
