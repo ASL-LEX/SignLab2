@@ -21,7 +21,10 @@
     "entryId": "Entry ID",
     "login": "Login",
     "clear": "clear",
-    "complete": "complete"
+    "complete": "complete",
+    "video": "video",
+    "key": "key",
+    "primary": "primay"
   },
   "languages": {
     "en": "English",
