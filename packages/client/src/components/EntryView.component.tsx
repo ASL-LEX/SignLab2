@@ -21,7 +21,6 @@ const getEntryView = (props: EntryViewProps) => {
   return <p>Placeholder</p>;
 };
 
-
 const ImageEntryView: React.FC<EntryViewProps> = (props) => {
   return (
     <Box sx={{ maxWidth: props.width }}>

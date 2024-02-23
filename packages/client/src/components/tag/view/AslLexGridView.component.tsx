@@ -7,7 +7,9 @@ import i18next from 'i18next';
 const AslLexGridViewVideo: React.FC<TagColumnViewProps> = ({ data }) => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
-  const lexiconByKeyResult = useLexiconByKeyQuery({ variables: { lexicon: import.meta.env.VITE_ASL_LEXICON_ID, key: data } });
+  const lexiconByKeyResult = useLexiconByKeyQuery({
+    variables: { lexicon: import.meta.env.VITE_ASL_LEXICON_ID, key: data }
+  });
 
   useEffect(() => {
     if (lexiconByKeyResult.data) {
@@ -17,19 +19,30 @@ const AslLexGridViewVideo: React.FC<TagColumnViewProps> = ({ data }) => {
 
   return (
     <>
-      {videoUrl && <VideoEntryView url={videoUrl} width={300} pauseFrame='middle' autoPlay={true} mouseOverControls={true} displayControls={true} />}
+      {videoUrl && (
+        <VideoEntryView
+          url={videoUrl}
+          width={300}
+          pauseFrame="middle"
+          autoPlay={true}
+          mouseOverControls={true}
+          displayControls={true}
+        />
+      )}
     </>
   );
-}
+};
 
 const AslLexGridViewKey: React.FC<TagColumnViewProps> = ({ data }) => {
   return data;
-}
+};
 
 const AslLexGridViewPrimary: React.FC<TagColumnViewProps> = ({ data }) => {
   const [primary, setPrimary] = useState<string | null>(null);
 
-  const lexiconByKeyResult = useLexiconByKeyQuery({ variables: { lexicon: import.meta.env.VITE_ASL_LEXICON_ID, key: data } });
+  const lexiconByKeyResult = useLexiconByKeyQuery({
+    variables: { lexicon: import.meta.env.VITE_ASL_LEXICON_ID, key: data }
+  });
 
   useEffect(() => {
     if (lexiconByKeyResult.data) {
@@ -38,14 +51,18 @@ const AslLexGridViewPrimary: React.FC<TagColumnViewProps> = ({ data }) => {
   }, [lexiconByKeyResult]);
 
   return primary || '';
-}
+};
 
 export const aslLexTest: TagViewTest = (uischema, _schema, _context) => {
-  if (uischema.options != undefined && uischema.options.customType != undefined && uischema.options.customType == 'asl-lex') {
+  if (
+    uischema.options != undefined &&
+    uischema.options.customType != undefined &&
+    uischema.options.customType == 'asl-lex'
+  ) {
     return 5;
   }
   return NOT_APPLICABLE;
-}
+};
 
 export const getAslLexCols: GetGridColDefs = (uischema, schema, property) => {
   return [
@@ -53,17 +70,29 @@ export const getAslLexCols: GetGridColDefs = (uischema, schema, property) => {
       field: `${property}-video`,
       headerName: `${property}: ${i18next.t('common.video')}`,
       width: 300,
-      renderCell: (params) => params.row.data && params.row.data[property] && <AslLexGridViewVideo data={params.row.data[property]} schema={schema} uischema={uischema} />
+      renderCell: (params) =>
+        params.row.data &&
+        params.row.data[property] && (
+          <AslLexGridViewVideo data={params.row.data[property]} schema={schema} uischema={uischema} />
+        )
     },
     {
       field: `${property}-key`,
       headerName: `${property}: ${i18next.t('common.key')}`,
-      renderCell: (params) => params.row.data && params.row.data[property] && <AslLexGridViewKey data={params.row.data[property]} schema={schema} uischema={uischema} />
+      renderCell: (params) =>
+        params.row.data &&
+        params.row.data[property] && (
+          <AslLexGridViewKey data={params.row.data[property]} schema={schema} uischema={uischema} />
+        )
     },
     {
       field: `${property}-primary`,
       headerName: `${property}: ${i18next.t('common.primary')}`,
-      renderCell: (params) => params.row.data && params.row.data[property] && <AslLexGridViewPrimary data={params.row.data[property]} schema={schema} uischema={uischema} />
+      renderCell: (params) =>
+        params.row.data &&
+        params.row.data[property] && (
+          <AslLexGridViewPrimary data={params.row.data[property]} schema={schema} uischema={uischema} />
+        )
     }
   ];
-}
+};

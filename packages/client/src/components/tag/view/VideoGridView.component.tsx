@@ -8,28 +8,36 @@ import { VideoEntryView } from '../../VideoView.component';
 
 const VideoGridView: React.FC<TagColumnViewProps> = ({ data }) => {
   const [entry, setEntry] = useState<Entry | null>(null);
-  const entryFromIdResult = useEntryFromIdQuery({ variables: { entry: data }});
+  const entryFromIdResult = useEntryFromIdQuery({ variables: { entry: data } });
 
   useEffect(() => {
     if (entryFromIdResult.data) {
       setEntry(entryFromIdResult.data.entryFromID);
     }
-
-  }, [entryFromIdResult])
+  }, [entryFromIdResult]);
 
   return (
     <>
-      { entry && <VideoEntryView url={entry.signedUrl} width={300} pauseFrame='middle' autoPlay={true} mouseOverControls={true} displayControls={true} />}
+      {entry && (
+        <VideoEntryView
+          url={entry.signedUrl}
+          width={300}
+          pauseFrame="middle"
+          autoPlay={true}
+          mouseOverControls={true}
+          displayControls={true}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
 export const videoViewTest: TagViewTest = (uischema, _schema, _context) => {
   if (uischema.options && uischema.options.customType && uischema.options.customType === 'video') {
     return 5;
   }
   return NOT_APPLICABLE;
-}
+};
 
 export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
   const minVideos = uischema.options!.minimumRequired!;
@@ -43,12 +51,16 @@ export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
 
   for (let i = 0; i < maxVideos; i++) {
     columns.push({
-      field: `${property}-video-${i+1}`,
+      field: `${property}-video-${i + 1}`,
       headerName: `${property}: ${i18next.t('common.video')} ${i + 1}`,
       width: 300,
-      renderCell: (params) => params.row.data && params.row.data[property] && <VideoGridView data={params.row.data[property][i]} schema={schema} uischema={uischema} />
-    })
+      renderCell: (params) =>
+        params.row.data &&
+        params.row.data[property] && (
+          <VideoGridView data={params.row.data[property][i]} schema={schema} uischema={uischema} />
+        )
+    });
   }
 
   return columns;
-}
+};

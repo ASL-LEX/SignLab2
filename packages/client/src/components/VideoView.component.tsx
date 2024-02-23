@@ -93,4 +93,3 @@ export const VideoEntryView: React.FC<VideoViewProps> = (props) => {
     </Box>
   );
 };
-

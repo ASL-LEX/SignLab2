@@ -22,7 +22,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   const { t } = useTranslation();
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
 
-  const tagColumnViews: { tester: TagViewTest, getGridColDefs: GetGridColDefs }[] = [
+  const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
     { tester: freeTextTest, getGridColDefs: getTextCols },
     { tester: numericTest, getGridColDefs: getNumericCols },
     { tester: sliderTest, getGridColDefs: getSliderCols },
@@ -57,25 +57,29 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
   ];
 
   // Generate the dynamic columns for the grid
-  const dataColunms: GridColDef[] = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties).map((property: string) => {
-    const fieldSchema = study.tagSchema.dataSchema.properties[property];
-    const fieldUiSchema = study.tagSchema.uiSchema.elements.find((element: any) => element.scope === `#/properties/${property}`);
+  const dataColunms: GridColDef[] = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties)
+    .map((property: string) => {
+      const fieldSchema = study.tagSchema.dataSchema.properties[property];
+      const fieldUiSchema = study.tagSchema.uiSchema.elements.find(
+        (element: any) => element.scope === `#/properties/${property}`
+      );
 
-    if (!fieldSchema || !fieldUiSchema) {
-      throw new Error(`Could not find schema for property ${property}`);
-    }
+      if (!fieldSchema || !fieldUiSchema) {
+        throw new Error(`Could not find schema for property ${property}`);
+      }
 
-    const context = { rootSchema: study.tagSchema.dataSchema, config: {} };
-    const reactNode = tagColumnViews
-      .filter((view) => view.tester(fieldUiSchema, fieldSchema, context))
-      .sort((a, b) => b.tester(fieldUiSchema, fieldSchema, context) - a.tester(fieldUiSchema, fieldSchema, context));
+      const context = { rootSchema: study.tagSchema.dataSchema, config: {} };
+      const reactNode = tagColumnViews
+        .filter((view) => view.tester(fieldUiSchema, fieldSchema, context))
+        .sort((a, b) => b.tester(fieldUiSchema, fieldSchema, context) - a.tester(fieldUiSchema, fieldSchema, context));
 
-    if (reactNode.length === 0) {
-      throw new Error(`No matching view for property ${property}`);
-    }
+      if (reactNode.length === 0) {
+        throw new Error(`No matching view for property ${property}`);
+      }
 
-    return reactNode[0].getGridColDefs(fieldUiSchema, fieldSchema, property);
-  }).flat();
+      return reactNode[0].getGridColDefs(fieldUiSchema, fieldSchema, property);
+    })
+    .flat();
 
   return (
     <DataGrid
