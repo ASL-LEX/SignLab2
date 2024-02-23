@@ -12,6 +12,7 @@ import { getNumericCols, numericTest } from './NumericGridView.component';
 import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
+import { getVideoCols, videoViewTest } from './VideoGridView.component';
 
 export interface TagGridViewProps {
   study: Study;
@@ -26,7 +27,8 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     { tester: numericTest, getGridColDefs: getNumericCols },
     { tester: sliderTest, getGridColDefs: getSliderCols },
     { tester: booleanTest, getGridColDefs: getBoolCols },
-    { tester: aslLexTest, getGridColDefs: getAslLexCols }
+    { tester: aslLexTest, getGridColDefs: getAslLexCols },
+    { tester: videoViewTest, getGridColDefs: getVideoCols }
   ];
 
   const getTagsResults = useGetTagsQuery({ variables: { study: study._id } });
