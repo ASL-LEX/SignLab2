@@ -20,7 +20,11 @@
     "view": "View",
     "entryId": "Entry ID",
     "login": "Login",
-    "clear": "clear"
+    "clear": "clear",
+    "complete": "complete",
+    "video": "video",
+    "key": "key",
+    "primary": "primay"
   },
   "languages": {
     "en": "English",
@@ -40,7 +44,7 @@
     "newStudy": "New Study",
     "studyControl": "Study Control",
     "entryControl": "Entry Control",
-    "downloadTags": "Download Tags",
+    "viewTags": "Download Tags",
     "datasets": "Datasets",
     "datasetControl": "Dataset Control",
     "projectAccess": "Project Access",
@@ -117,6 +121,9 @@
     "login": {
       "selectOrg": "Select an Organization to Login",
       "redirectToOrg": "Redirect to Organization Login"
+    },
+    "tagView": {
+      "originalEntry": "Original Entry"
     }
   }
 }

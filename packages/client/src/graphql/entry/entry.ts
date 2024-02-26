@@ -12,6 +12,13 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 
 export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number }> };
 
+export type EntryFromIdQueryVariables = Types.Exact<{
+  entry: Types.Scalars['ID']['input'];
+}>;
+
+
+export type EntryFromIdQuery = { __typename?: 'Query', entryFromID: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } };
+
 export type DeleteEntryMutationVariables = Types.Exact<{
   entry: Types.Scalars['ID']['input'];
 }>;
@@ -64,6 +71,50 @@ export function useEntryForDatasetLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type EntryForDatasetQueryHookResult = ReturnType<typeof useEntryForDatasetQuery>;
 export type EntryForDatasetLazyQueryHookResult = ReturnType<typeof useEntryForDatasetLazyQuery>;
 export type EntryForDatasetQueryResult = Apollo.QueryResult<EntryForDatasetQuery, EntryForDatasetQueryVariables>;
+export const EntryFromIdDocument = gql`
+    query entryFromID($entry: ID!) {
+  entryFromID(entry: $entry) {
+    _id
+    organization
+    entryID
+    contentType
+    dataset
+    creator
+    dateCreated
+    meta
+    signedUrl
+    signedUrlExpiration
+  }
+}
+    `;
+
+/**
+ * __useEntryFromIdQuery__
+ *
+ * To run a query within a React component, call `useEntryFromIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEntryFromIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEntryFromIdQuery({
+ *   variables: {
+ *      entry: // value for 'entry'
+ *   },
+ * });
+ */
+export function useEntryFromIdQuery(baseOptions: Apollo.QueryHookOptions<EntryFromIdQuery, EntryFromIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EntryFromIdQuery, EntryFromIdQueryVariables>(EntryFromIdDocument, options);
+      }
+export function useEntryFromIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EntryFromIdQuery, EntryFromIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EntryFromIdQuery, EntryFromIdQueryVariables>(EntryFromIdDocument, options);
+        }
+export type EntryFromIdQueryHookResult = ReturnType<typeof useEntryFromIdQuery>;
+export type EntryFromIdLazyQueryHookResult = ReturnType<typeof useEntryFromIdLazyQuery>;
+export type EntryFromIdQueryResult = Apollo.QueryResult<EntryFromIdQuery, EntryFromIdQueryVariables>;
 export const DeleteEntryDocument = gql`
     mutation deleteEntry($entry: ID!) {
   deleteEntry(entry: $entry)

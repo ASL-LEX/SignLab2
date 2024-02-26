@@ -13,7 +13,7 @@ import { StudyControl } from './pages/studies/StudyControl';
 import { ProjectAccess } from './pages/datasets/ProjectAccess';
 import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions';
 import { StudyUserPermissions } from './pages/studies/UserPermissions';
-import { DownloadTags } from './pages/studies/DownloadTags';
+import { TagView } from './pages/studies/TagView';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
@@ -125,7 +125,7 @@ const MyRoutes: FC = () => {
         <Route path={'/study/controls'} element={<StudyControl />} />
         <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
         <Route path={'/study/entries'} element={<EntryControls />} />
-        <Route path={'/study/tags'} element={<DownloadTags />} />
+        <Route path={'/study/tags'} element={<TagView />} />
         <Route path={'/successpage'} element={<SuccessPage />} />
         <Route path={'/dataset/controls'} element={<DatasetControls />} />
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />

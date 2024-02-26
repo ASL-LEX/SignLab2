@@ -85,6 +85,17 @@ export class TagResolver {
     return this.tagService.isEntryEnabled(study, entry);
   }
 
+  @Query(() => [Tag])
+  async getTags(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<Tag[]> {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+    return this.tagService.getTags(study);
+  }
+
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {
     return this.entryPipe.transform(tag.entry);
