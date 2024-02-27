@@ -5,6 +5,9 @@ import { Project, ProjectDocument } from './project.model';
 import { ProjectCreate } from './dtos/create.dto';
 import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
+import { TokenPayload } from 'src/jwt/token.dto';
+import { ProjectPermissions } from 'src/permission/permissions/project';
+import { Roles } from 'src/permission/permissions/roles';
 
 @Injectable()
 export class ProjectService {
@@ -41,5 +44,18 @@ export class ProjectService {
 
   async delete(project: Project): Promise<void> {
     await this.projectModel.deleteOne({ _id: project._id });
+  }
+
+  async findAllForUser(user: TokenPayload, organization: string): Promise<Project[]> {
+    const projects = await this.findAll(organization);
+    const allowedProjects: Project[] = [];
+    for (const project of projects) {
+      const hasAccess = await this.enforcer.hasPolicy(user.user_id, ProjectPermissions.READ, project._id.toString());
+      console.log(hasAccess);
+      if (hasAccess) {
+        allowedProjects.push(project);
+      }
+    }
+    return allowedProjects;
   }
 }
