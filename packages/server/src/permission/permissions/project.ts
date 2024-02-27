@@ -19,10 +19,12 @@ export const roleToProjectPermissions: string[][] = [
   [Roles.PROJECT_ADMIN, ProjectPermissions.UPDATE],
   [Roles.OWNER, ProjectPermissions.GRANT_ADMIN],
 
+  // PROJECT_VIEWER permissions
+  [Roles.PROJECT_VIEWER, ProjectPermissions.READ]
+
   // STUDY_ADMIN permissions
 
   // CONTRIBUTOR permissions
-  [Roles.CONTRIBUTOR, ProjectPermissions.READ]
 
   // TRAINED_CONTRIBUTOR permissions
 ];

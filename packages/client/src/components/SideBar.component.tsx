@@ -28,7 +28,6 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
   useEffect(() => {
     if (rolesQueryResults.data) {
       setPermission(rolesQueryResults.data.getRoles);
-      console.log(rolesQueryResults.data);
     }
   }, [rolesQueryResults.data]);
 

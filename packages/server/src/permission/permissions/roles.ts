@@ -1,6 +1,7 @@
 export enum Roles {
   OWNER = 'owner',
   PROJECT_ADMIN = 'project_admin',
+  PROJECT_VIEWER = 'project_viewer',
   STUDY_ADMIN = 'study_admin',
   TRAINED_CONTRIBUTOR = 'trained_contributor',
   CONTRIBUTOR = 'contributor'
@@ -13,5 +14,6 @@ export enum Roles {
 export const roleHierarchy: string[][] = [
   [Roles.OWNER, Roles.PROJECT_ADMIN],
   [Roles.PROJECT_ADMIN, Roles.STUDY_ADMIN],
+  [Roles.PROJECT_ADMIN, Roles.PROJECT_VIEWER],
   [Roles.STUDY_ADMIN, Roles.CONTRIBUTOR]
 ];

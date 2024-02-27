@@ -114,7 +114,7 @@ export class PermissionService {
 
   async grantStudyAdmin(study: Study, user: string, isAdmin: boolean, requestingUser: TokenPayload): Promise<boolean> {
     // Make sure the target user is not a project admin
-    const isProjectAdmin = await this.enforcer.enforce(user, Roles.PROJECT_ADMIN, study._id);
+    const isProjectAdmin = await this.enforcer.enforce(user, Roles.PROJECT_ADMIN, study._id.toString());
     if (isProjectAdmin) {
       throw new UnauthorizedException('Target user is an owner');
     }
@@ -127,8 +127,13 @@ export class PermissionService {
     // Otherwise grant the permissions
     if (isAdmin) {
       await this.enforcer.addPolicy(user, Roles.STUDY_ADMIN, study._id.toString());
+      await this.enforcer.addPolicy(user, Roles.PROJECT_VIEWER, study.project);
     } else {
       await this.enforcer.removePolicy(user, Roles.STUDY_ADMIN, study._id.toString());
+      // If the user isn't a contributor, then also remove project PROJECT_VIEWER
+      if (!(await this.enforcer.enforce(user, Roles.CONTRIBUTOR, study._id.toString()))) {
+        await this.enforcer.removePolicy(user, Roles.PROJECT_VIEWER, study.project);
+      }
     }
 
     return true;
@@ -154,8 +159,10 @@ export class PermissionService {
     // Otherwise grant the permissions
     if (isContributor) {
       await this.enforcer.addPolicy(user, Roles.CONTRIBUTOR, study._id.toString());
+      await this.enforcer.addPolicy(user, Roles.PROJECT_VIEWER, study.project);
     } else {
       await this.enforcer.removePolicy(user, Roles.CONTRIBUTOR, study._id.toString());
+      await this.enforcer.removePolicy(user, Roles.PROJECT_VIEWER, study.project);
     }
 
     return true;
