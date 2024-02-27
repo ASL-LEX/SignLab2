@@ -64,15 +64,11 @@ export class ProjectResolver {
     return true;
   }
 
-  // TODO: Handle the ability to get project based on user access
   @Query(() => [Project])
   async getProjects(
     @OrganizationContext() organization: Organization,
     @TokenContext() user: TokenPayload
   ): Promise<Project[]> {
-    if (!(await this.enforcer.enforce(user.user_id, ProjectPermissions.READ, organization._id))) {
-      throw new UnauthorizedException('User does not have permission to read projects');
-    }
-    return this.projectService.findAll(organization._id);
+    return this.projectService.findAllForUser(user, organization._id);
   }
 }
