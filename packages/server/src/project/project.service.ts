@@ -50,8 +50,7 @@ export class ProjectService {
     const projects = await this.findAll(organization);
     const allowedProjects: Project[] = [];
     for (const project of projects) {
-      const hasAccess = await this.enforcer.hasPolicy(user.user_id, ProjectPermissions.READ, project._id.toString());
-      console.log(hasAccess);
+      const hasAccess = await this.enforcer.enforce(user.user_id, ProjectPermissions.READ, project._id.toString());
       if (hasAccess) {
         allowedProjects.push(project);
       }
