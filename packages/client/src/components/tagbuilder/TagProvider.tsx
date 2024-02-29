@@ -82,4 +82,5 @@ export interface TagFieldFragmentSchema {
   dataSchema: { [property: string]: JsonSchema7 };
   uiSchema: any[];
   required: string | null;
+  data: any;
 }
