@@ -11,6 +11,7 @@ import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
 import { CreateTagsDocument } from '../../graphql/tag/tag';
 import { useTranslation } from 'react-i18next';
+import { TagFieldFragmentSchema, TagField } from '../../components/tagbuilder/TagProvider';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -22,6 +23,12 @@ export const NewStudy: React.FC = () => {
   const [_trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
   const apolloClient = useApolloClient();
+  // The different fields that make up the tag schema
+  const [tagFields, setTagFields] = useState<TagField[]>([]);
+
+  // Fragments of the final tag schema
+  const [tagSchemaFragments, setTagSchemaFragments] = useState<(TagFieldFragmentSchema | null)[]>([]);
+
   const { t } = useTranslation();
 
   // Handles mantaining which step the user is on and the step limit
@@ -101,7 +108,16 @@ export const NewStudy: React.FC = () => {
       case 0:
         return <NewStudyJsonForm newStudy={partialNewStudy} setNewStudy={setPartialNewStudy} />;
       case 1:
-        return <TagFormBuilder tagSchema={tagSchema} setTagSchema={setTagSchema} />;
+        return (
+          <TagFormBuilder
+            tagSchema={tagSchema}
+            setTagSchema={setTagSchema}
+            tagFields={tagFields}
+            setTagFields={setTagFields}
+            tagSchemaFragments={tagSchemaFragments}
+            setTagSchemaFragments={setTagSchemaFragments}
+          />
+        );
       case 2:
         return <TagTrainingComponent setTaggingSet={setTaggingSet} setTrainingSet={setTrainingSet} />;
       default:

@@ -8,13 +8,15 @@ import { TagField, TagFieldFragmentSchema } from './TagProvider';
 interface FieldProps {
   /** Information on the tag field being constructed */
   field: TagField;
+  /** The existing fragment if it exists */
+  tagFieldSchema: TagFieldFragmentSchema | null;
   /** Function to set the field fragment */
   setFieldFragment: (fragment: TagFieldFragmentSchema | null) => void;
 }
 
-export const TagFieldView: React.FC<FieldProps> = ({ field, setFieldFragment }: FieldProps) => {
+export const TagFieldView: React.FC<FieldProps> = ({ field, setFieldFragment, tagFieldSchema }: FieldProps) => {
   const ajv = new Ajv({ allErrors: true, schemaId: 'id' });
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>(tagFieldSchema ? tagFieldSchema.data : {});
 
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
@@ -24,7 +26,8 @@ export const TagFieldView: React.FC<FieldProps> = ({ field, setFieldFragment }: 
       setFieldFragment({
         dataSchema: field.produceDataSchema(data),
         uiSchema: field.produceUISchema(data),
-        required: data.required ? data.fieldName : null
+        required: data.required ? data.fieldName : null,
+        data
       });
     }
     // Otherwise, set the field fragment to null

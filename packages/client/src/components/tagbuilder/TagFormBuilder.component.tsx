@@ -17,66 +17,66 @@ import { TagField, TagFieldFragmentSchema } from './TagProvider';
 export interface TagsDisplayProps {
   tagSchema: TagSchema | null;
   setTagSchema: Dispatch<SetStateAction<TagSchema | null>>;
+  tagFields: TagField[];
+  setTagFields: Dispatch<SetStateAction<TagField[]>>;
+  tagSchemaFragments: (TagFieldFragmentSchema | null)[];
+  setTagSchemaFragments: Dispatch<SetStateAction<(TagFieldFragmentSchema | null)[]>>;
 }
 
-export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSchema }) => {
-  // The different fields that make up the tag schema
-  const [tagFields, setTagFields] = useState<TagField[]>([]);
-
-  // Fragments of the final tag schema
-  const [tagSchemaFragments, setTagSchemaFragments] = useState<(TagFieldFragmentSchema | null)[]>([]);
-
+export const TagFormBuilder: React.FC<TagsDisplayProps> = (props) => {
   const [open, setOpen] = useState(false);
 
   const addTagField = (tagField: TagField) => {
-    setTagFields([...tagFields, tagField]);
+    props.setTagFields([...props.tagFields, tagField]);
 
-    tagSchemaFragments.push(null);
-    setTagSchemaFragments([...tagSchemaFragments]);
+    props.tagSchemaFragments.push(null);
+    props.setTagSchemaFragments([...props.tagSchemaFragments]);
   };
 
   const removeField = (index: number) => {
-    tagFields.splice(index, 1);
-    setTagFields([...tagFields]);
+    props.tagFields.splice(index, 1);
+    props.setTagFields([...props.tagFields]);
 
-    tagSchemaFragments.splice(index, 1);
-    setTagSchemaFragments([...tagSchemaFragments]);
+    props.tagSchemaFragments.splice(index, 1);
+    props.setTagSchemaFragments([...props.tagSchemaFragments]);
   };
 
   // Handle update a tag schema fragment
   const updateTagSchemaFragment = (index: number, fragment: TagFieldFragmentSchema | null) => {
-    tagSchemaFragments[index] = fragment;
-    setTagSchemaFragments([...tagSchemaFragments]);
+    props.tagSchemaFragments[index] = fragment;
+    props.setTagSchemaFragments([...props.tagSchemaFragments]);
   };
 
   // Handling keeping track of complete tag schema
   useEffect(() => {
     // If any frame is null, the tag schema is null
-    if (tagSchemaFragments.length == 0 || tagSchemaFragments.some((fragment) => fragment === null)) {
-      setTagSchema(null);
+    if (props.tagSchemaFragments.length == 0 || props.tagSchemaFragments.some((fragment) => fragment === null)) {
+      props.setTagSchema(null);
       return;
     }
 
     // Combine all the fragments into a single tag schema
     let dataProperties: any = {};
     let uiElements = [];
-    for (const fragment of tagSchemaFragments) {
+    for (const fragment of props.tagSchemaFragments) {
       dataProperties = { ...dataProperties, ...fragment!.dataSchema };
       uiElements.push(...fragment!.uiSchema);
     }
 
-    setTagSchema({
+    const tagSchema = {
       dataSchema: {
         type: 'object',
         properties: dataProperties,
-        required: tagSchemaFragments.map((fragment) => fragment!.required).filter((required) => required !== null)
+        required: props.tagSchemaFragments.map((fragment) => fragment!.required).filter((required) => required !== null)
       },
       uiSchema: {
         type: 'VerticalLayout',
         elements: uiElements
       }
-    });
-  }, [tagSchemaFragments]);
+    };
+
+    props.setTagSchema(tagSchema);
+  }, [props.tagSchemaFragments]);
 
   const openTagFormPreview = () => {
     setOpen(true);
@@ -105,22 +105,26 @@ export const TagFormBuilder: React.FC<TagsDisplayProps> = ({ tagSchema, setTagSc
           <Button
             variant="outlined"
             onClick={openTagFormPreview}
-            disabled={tagSchemaFragments.some((fragment) => fragment === null)}
+            disabled={props.tagSchemaFragments.some((fragment) => fragment === null)}
             sx={{ width: '100%' }}
           >
             Preview
           </Button>
         </Box>
 
-        {tagSchema && <TagFormPreviewDialog schema={tagSchema} clicked={open} toggleModal={toggleModal} />}
+        {props.tagSchema && <TagFormPreviewDialog schema={props.tagSchema} clicked={open} toggleModal={toggleModal} />}
       </Grid>
 
       <Grid item xs={9} sx={{ overflow: 'auto' }}>
         <Stack direction="column" sx={{ maxHeight: 400 }} spacing={2}>
-          {tagFields.length > 0 ? (
-            tagFields.map((value: TagField, index: number) => (
+          {props.tagFields.length > 0 ? (
+            props.tagFields.map((value: TagField, index: number) => (
               <Stack direction="row" key={index} spacing={1}>
-                <TagFieldView field={value} setFieldFragment={(fragment) => updateTagSchemaFragment(index, fragment)} />
+                <TagFieldView
+                  field={value}
+                  setFieldFragment={(fragment) => updateTagSchemaFragment(index, fragment)}
+                  tagFieldSchema={props.tagSchemaFragments[index]}
+                />
                 <Button startIcon={<DeleteIcon />} onClick={() => removeField(index)} />
               </Stack>
             ))
