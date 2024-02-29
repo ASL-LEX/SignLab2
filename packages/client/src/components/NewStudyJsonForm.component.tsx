@@ -1,11 +1,12 @@
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react';
 import { PartialStudyCreate } from '../types/study';
 import { ErrorObject } from 'ajv';
-import { useStudyExistsLazyQuery } from '../graphql/study/study';
+import { StudyExistsQuery, StudyExistsQueryVariables, StudyExistsDocument } from '../graphql/study/study';
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
+import { useApolloClient } from '@apollo/client';
 
 export interface NewStudyFormProps {
   newStudy: PartialStudyCreate | null;
@@ -13,13 +14,6 @@ export interface NewStudyFormProps {
 }
 
 export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
-  const [studyExistsQuery, studyExistsResults] = useStudyExistsLazyQuery();
-  const { project } = useProject();
-  const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
-
-  // Keep track of the new study internally to check to make sure the name is
-  // unique before submitting
-  const [potentialNewStudy, setPotentialNewStudy] = useState<PartialStudyCreate | null>(null);
   const { t } = useTranslation();
 
   const schema = {
@@ -70,26 +64,41 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
     ]
   };
 
+  const { project } = useProject();
+  const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
+  const client = useApolloClient();
+
   const initialData = {
-    tagsPerEntry: schema.properties.tagsPerEntry.default
+    tagsPerEntry: schema.properties.tagsPerEntry.default,
+    ...props.newStudy
   };
   const [data, setData] = useState<any>(initialData);
+  const stateRef = useRef<{ data: any }>();
+  stateRef.current = { data };
 
-  const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
+  const handleChange = async (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
-    if (!errors || errors.length === 0) {
-      // No errors in the format of the data, check if the study name is unique
-      setPotentialNewStudy({ ...data });
-      studyExistsQuery({ variables: { name: data.name, project: project!._id } });
-    } else {
-      setPotentialNewStudy(null);
-    }
-  };
 
-  useEffect(() => {
-    // If the study exists, notify the user of the error, otherwise the
-    // study is valid
-    if (studyExistsResults.data?.studyExists) {
+    // If there is any issue with the data, set the study to null
+    if (errors && errors.length > 0) {
+      props.setNewStudy(null);
+    }
+
+    if (!data || !data.name) {
+      return;
+    }
+
+    // No errors in the format of the data, check if the study name is unique
+    const exists = await client.query<StudyExistsQuery, StudyExistsQueryVariables>({
+      query: StudyExistsDocument,
+      variables: {
+        name: data.name,
+        project: project!._id
+      }
+    });
+
+    // Study with the name already exists, add the error
+    if (exists.data.studyExists) {
       setAdditionalErrors([
         {
           instancePath: '/name',
@@ -100,21 +109,26 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
         }
       ]);
       props.setNewStudy(null);
-    } else {
-      setAdditionalErrors([]);
-      props.setNewStudy(potentialNewStudy);
+      return;
     }
-  }, [studyExistsResults.data]);
+
+    // No errors
+    props.setNewStudy(data);
+  };
 
   return (
-    <JsonForms
-      schema={schema}
-      uischema={uischema}
-      data={data}
-      renderers={materialRenderers}
-      cells={materialCells}
-      onChange={({ data, errors }) => handleChange(data, errors)}
-      additionalErrors={additionalErrors}
-    />
+    <>
+      {project && (
+        <JsonForms
+          schema={schema}
+          uischema={uischema}
+          data={data}
+          renderers={materialRenderers}
+          cells={materialCells}
+          onChange={({ data, errors }) => handleChange(data, errors)}
+          additionalErrors={additionalErrors}
+        />
+      )}
+    </>
   );
 };
