@@ -108,14 +108,16 @@ export const NewStudy: React.FC = () => {
       case 0:
         return <NewStudyJsonForm newStudy={partialNewStudy} setNewStudy={setPartialNewStudy} />;
       case 1:
-        return <TagFormBuilder
-                  tagSchema={tagSchema}
-                  setTagSchema={setTagSchema}
-                  tagFields={tagFields}
-                  setTagFields={setTagFields}
-                  tagSchemaFragments={tagSchemaFragments}
-                  setTagSchemaFragments={setTagSchemaFragments}
-        />;
+        return (
+          <TagFormBuilder
+            tagSchema={tagSchema}
+            setTagSchema={setTagSchema}
+            tagFields={tagFields}
+            setTagFields={setTagFields}
+            tagSchemaFragments={tagSchemaFragments}
+            setTagSchemaFragments={setTagSchemaFragments}
+          />
+        );
       case 2:
         return <TagTrainingComponent setTaggingSet={setTaggingSet} setTrainingSet={setTrainingSet} />;
       default:
