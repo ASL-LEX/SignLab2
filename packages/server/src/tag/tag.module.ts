@@ -16,12 +16,16 @@ import { TagTransformer } from './services/tag-transformer.service';
 import { FieldTransformerFactory } from './transformers/field-transformer-factory';
 import { VideoFieldTransformer } from './transformers/video-field-transformer';
 import { DatasetModule } from '../dataset/dataset.module';
+import { TrainingSet, TrainingSetSchema } from './models/training-set';
+import { TrainingSetResolver } from './resolvers/training-set.resolver';
+import { TrainingSetService } from './services/training-set.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Tag.name, schema: TagSchema },
-      { name: VideoField.name, schema: VideoFieldSchema }
+      { name: VideoField.name, schema: VideoFieldSchema },
+      { name: TrainingSet.name, schema: TrainingSetSchema }
     ]),
     StudyModule,
     EntryModule,
@@ -38,7 +42,9 @@ import { DatasetModule } from '../dataset/dataset.module';
     VideoFieldResolver,
     TagTransformer,
     FieldTransformerFactory,
-    VideoFieldTransformer
+    VideoFieldTransformer,
+    TrainingSetResolver,
+    TrainingSetService
   ]
 })
 export class TagModule {}
