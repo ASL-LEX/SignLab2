@@ -112,6 +112,7 @@ export type Mutation = {
   createOrganization: Organization;
   createStudy: Study;
   createTags: Array<Tag>;
+  createTrainingSet: Scalars['Boolean']['output'];
   createUploadSession: UploadSession;
   deleteEntry: Scalars['Boolean']['output'];
   deleteProject: Scalars['Boolean']['output'];
@@ -188,6 +189,12 @@ export type MutationCreateStudyArgs = {
 
 
 export type MutationCreateTagsArgs = {
+  entries: Array<Scalars['ID']['input']>;
+  study: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateTrainingSetArgs = {
   entries: Array<Scalars['ID']['input']>;
   study: Scalars['ID']['input'];
 };
@@ -507,6 +514,8 @@ export type Tag = {
   /** Way to rank tags based on order to be tagged */
   order: Scalars['Float']['output'];
   study: Study;
+  /** If the tag is part of a training */
+  training: Scalars['Boolean']['output'];
   /** The user assigned to the tag  */
   user?: Maybe<Scalars['String']['output']>;
 };

@@ -13,6 +13,14 @@ export type CreateTagsMutationVariables = Types.Exact<{
 
 export type CreateTagsMutation = { __typename?: 'Mutation', createTags: Array<{ __typename?: 'Tag', _id: string }> };
 
+export type CreateTrainingSetMutationVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+  entries: Array<Types.Scalars['ID']['input']> | Types.Scalars['ID']['input'];
+}>;
+
+
+export type CreateTrainingSetMutation = { __typename?: 'Mutation', createTrainingSet: boolean };
+
 export type SetEntryEnabledMutationVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
   entry: Types.Scalars['ID']['input'];
@@ -96,6 +104,38 @@ export function useCreateTagsMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTagsMutationHookResult = ReturnType<typeof useCreateTagsMutation>;
 export type CreateTagsMutationResult = Apollo.MutationResult<CreateTagsMutation>;
 export type CreateTagsMutationOptions = Apollo.BaseMutationOptions<CreateTagsMutation, CreateTagsMutationVariables>;
+export const CreateTrainingSetDocument = gql`
+    mutation createTrainingSet($study: ID!, $entries: [ID!]!) {
+  createTrainingSet(study: $study, entries: $entries)
+}
+    `;
+export type CreateTrainingSetMutationFn = Apollo.MutationFunction<CreateTrainingSetMutation, CreateTrainingSetMutationVariables>;
+
+/**
+ * __useCreateTrainingSetMutation__
+ *
+ * To run a mutation, you first call `useCreateTrainingSetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTrainingSetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTrainingSetMutation, { data, loading, error }] = useCreateTrainingSetMutation({
+ *   variables: {
+ *      study: // value for 'study'
+ *      entries: // value for 'entries'
+ *   },
+ * });
+ */
+export function useCreateTrainingSetMutation(baseOptions?: Apollo.MutationHookOptions<CreateTrainingSetMutation, CreateTrainingSetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTrainingSetMutation, CreateTrainingSetMutationVariables>(CreateTrainingSetDocument, options);
+      }
+export type CreateTrainingSetMutationHookResult = ReturnType<typeof useCreateTrainingSetMutation>;
+export type CreateTrainingSetMutationResult = Apollo.MutationResult<CreateTrainingSetMutation>;
+export type CreateTrainingSetMutationOptions = Apollo.BaseMutationOptions<CreateTrainingSetMutation, CreateTrainingSetMutationVariables>;
 export const SetEntryEnabledDocument = gql`
     mutation setEntryEnabled($study: ID!, $entry: ID!, $enabled: Boolean!) {
   setEntryEnabled(study: $study, entry: $entry, enabled: $enabled)

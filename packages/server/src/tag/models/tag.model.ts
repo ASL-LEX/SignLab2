@@ -41,6 +41,10 @@ export class Tag {
   @Prop()
   @Field({ description: 'If the tag is enabled as part of the study, way to disable certain tags' })
   enabled: boolean;
+
+  @Prop()
+  @Field({ description: 'If the tag is part of a training' })
+  training: boolean;
 }
 
 export type TagDocument = Tag & Document;
