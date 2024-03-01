@@ -4,6 +4,10 @@ mutation createTags($study: ID!, $entries: [ID!]!) {
   }
 }
 
+mutation createTrainingSet($study: ID!, $entries: [ID!]!) {
+  createTrainingSet(study: $study, entries: $entries)
+}
+
 mutation setEntryEnabled($study: ID!, $entry: ID!, $enabled: Boolean!) {
   setEntryEnabled(study: $study, entry: $entry, enabled: $enabled)
 }
@@ -60,3 +64,4 @@ query getTags($study: ID!) {
     complete
   }
 }
+

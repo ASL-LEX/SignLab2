@@ -36,6 +36,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
           onLoad={(_entry) => {}}
           add={(entry) => {
             trainingSet.add(entry._id);
+            console.log(trainingSet);
             props.setTrainingSet(Array.from(trainingSet));
           }}
           remove={(entry) => {
@@ -59,6 +60,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
           }}
           add={(entry) => {
             fullSet.add(entry._id);
+            console.log(fullSet);
             props.setTaggingSet(Array.from(fullSet));
           }}
           remove={(entry) => {

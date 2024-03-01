@@ -5,13 +5,14 @@ import { TokenPayload } from '../../jwt/token.dto';
 import { TokenContext } from '../../jwt/token.context';
 import { StudyPipe } from '../../study/pipes/study.pipe';
 import { Study } from '../../study/study.model';
-import { Tag } from '../models/tag.model'
 import { TrainingSetService } from '../services/training-set.service';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CASBIN_PROVIDER } from 'src/permission/casbin.provider';
 import * as casbin from 'casbin';
 import { StudyPermissions } from 'src/permission/permissions/study';
+import { JwtAuthGuard } from '../../jwt/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Resolver()
 export class TrainingSetResolver {
 

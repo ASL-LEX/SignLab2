@@ -5,11 +5,11 @@ import { TagTrainingComponent } from '../../components/TagTraining.component';
 import { useState, useEffect } from 'react';
 import { StudyCreate, TagSchema } from '../../graphql/graphql';
 import { PartialStudyCreate } from '../../types/study';
-import { CreateStudyDocument } from '../../graphql/study/study';
+import { CreateStudyDocument, CreateStudyMutation, CreateStudyMutationVariables } from '../../graphql/study/study';
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
-import { CreateTagsDocument } from '../../graphql/tag/tag';
+import { CreateTagsDocument, CreateTrainingSetDocument, CreateTagsMutationVariables, CreateTagsMutation, CreateTrainingSetMutation, CreateTrainingSetMutationVariables } from '../../graphql/tag/tag';
 import { useTranslation } from 'react-i18next';
 import { TagFieldFragmentSchema, TagField } from '../../components/tagbuilder/TagProvider';
 
@@ -20,7 +20,7 @@ export const NewStudy: React.FC = () => {
   const [tagSchema, setTagSchema] = useState<TagSchema | null>(null);
   const { project } = useProject();
   const { updateStudies } = useStudy();
-  const [_trainingSet, setTrainingSet] = useState<string[]>([]);
+  const [trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
   const apolloClient = useApolloClient();
   // The different fields that make up the tag schema
@@ -70,7 +70,7 @@ export const NewStudy: React.FC = () => {
       };
 
       // Make the new study
-      const result = await apolloClient.mutate({
+      const result = await apolloClient.mutate<CreateStudyMutation, CreateStudyMutationVariables>({
         mutation: CreateStudyDocument,
         variables: { study: study }
       });
@@ -81,9 +81,18 @@ export const NewStudy: React.FC = () => {
       }
 
       // Create the corresponding tags
-      await apolloClient.mutate({
+      await apolloClient.mutate<CreateTagsMutation, CreateTagsMutationVariables>({
         mutation: CreateTagsDocument,
         variables: { study: result.data.createStudy._id, entries: taggingSet }
+      });
+
+      // Create the training set
+      await apolloClient.mutate<CreateTrainingSetMutation, CreateTrainingSetMutationVariables>({
+        mutation: CreateTrainingSetDocument,
+        variables: {
+          study: result.data.createStudy._id,
+          entries: trainingSet
+        }
       });
       updateStudies();
     }
