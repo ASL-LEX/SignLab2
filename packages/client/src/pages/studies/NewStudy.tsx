@@ -9,7 +9,14 @@ import { CreateStudyDocument, CreateStudyMutation, CreateStudyMutationVariables 
 import { useProject } from '../../context/Project.context';
 import { useStudy } from '../../context/Study.context';
 import { useApolloClient } from '@apollo/client';
-import { CreateTagsDocument, CreateTrainingSetDocument, CreateTagsMutationVariables, CreateTagsMutation, CreateTrainingSetMutation, CreateTrainingSetMutationVariables } from '../../graphql/tag/tag';
+import {
+  CreateTagsDocument,
+  CreateTrainingSetDocument,
+  CreateTagsMutationVariables,
+  CreateTagsMutation,
+  CreateTrainingSetMutation,
+  CreateTrainingSetMutationVariables
+} from '../../graphql/tag/tag';
 import { useTranslation } from 'react-i18next';
 import { TagFieldFragmentSchema, TagField } from '../../components/tagbuilder/TagProvider';
 

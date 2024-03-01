@@ -15,7 +15,6 @@ import { JwtAuthGuard } from '../../jwt/jwt.guard';
 @UseGuards(JwtAuthGuard)
 @Resolver()
 export class TrainingSetResolver {
-
   constructor(
     private readonly trainingService: TrainingSetService,
     @Inject(CASBIN_PROVIDER) private readonly enforcer: casbin.Enforcer

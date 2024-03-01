@@ -13,6 +13,6 @@ export class TrainingSetService {
     return this.trainingSetModel.create({
       study: study._id,
       entries: entries.map((entry) => entry._id)
-    })
+    });
   }
 }
