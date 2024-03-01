@@ -15,15 +15,14 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const { project } = useProject();
   const [getDatasetsQuery, getDatasetsResults] = useGetDatasetsByProjectLazyQuery();
+  const [trainingSet, setTrainingSet] = useState<string[]>([]);
+  const [taggingSet, setTaggingSet] = useState<string[]>([]);
 
   useEffect(() => {
     if (project) {
       getDatasetsQuery({ variables: { project: project._id } });
     }
   }, [project]);
-
-  const trainingSet: Set<string> = new Set();
-  const fullSet: Set<string> = new Set();
 
   const additionalColumns: GridColDef[] = [
     {
@@ -35,13 +34,10 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
           startingValue={false}
           onLoad={(_entry) => {}}
           add={(entry) => {
-            trainingSet.add(entry._id);
-            console.log(trainingSet);
-            props.setTrainingSet(Array.from(trainingSet));
+            setTrainingSet([...trainingSet, entry._id]);
           }}
           remove={(entry) => {
-            trainingSet.delete(entry._id);
-            props.setTrainingSet(Array.from(trainingSet));
+            setTrainingSet(trainingSet.filter((entryID) => entryID != entry._id));
           }}
           entry={params.row}
         />
@@ -53,25 +49,29 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       width: 200,
       renderCell: (params) => (
         <EditSetSwitch
-          startingValue={true}
-          onLoad={(entry) => {
-            fullSet.add(entry._id);
-            props.setTaggingSet(Array.from(fullSet));
-          }}
+          startingValue={false}
+          onLoad={(_entry) => {}}
           add={(entry) => {
-            fullSet.add(entry._id);
-            console.log(fullSet);
-            props.setTaggingSet(Array.from(fullSet));
+            setTaggingSet([...taggingSet, entry._id]);
           }}
           remove={(entry) => {
-            fullSet.delete(entry._id);
-            props.setTaggingSet(Array.from(fullSet));
+            setTaggingSet(taggingSet.filter((entryID) => entryID != entry._id));
           }}
           entry={params.row}
         />
       )
     }
   ];
+
+  useEffect(() => {
+    const entries = Array.from(new Set(taggingSet));
+    props.setTaggingSet(entries);
+  }, [taggingSet]);
+
+  useEffect(() => {
+    const entries = Array.from(new Set(trainingSet));
+    props.setTrainingSet(entries);
+  }, [trainingSet])
 
   // TODO: In the future, the datasets retrieved should only be datasets
   //       accessible by the current project
