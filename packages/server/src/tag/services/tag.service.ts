@@ -56,12 +56,22 @@ export class TagService {
     return tags;
   }
 
+  async assignTag(study: Study, user: string, isTrained: boolean): Promise<Tag | null> {
+    return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
+  }
+
+  private async assignTrainingTag(study: Study, user: string): Promise<Tag | null> {
+    return null;
+  }
+
   /**
+   * Assign tags based on the full (not training) data set.
+   *
    * Assign the tag to the given user. If the user already has an incomplete
    * tag, return that tag to the user. If there are no more remaining tags,
    * null is returned.
    */
-  async assignTag(study: Study, user: string): Promise<Tag | null> {
+  private async assignTagFull(study: Study, user: string): Promise<Tag | null> {
     // Check for incomplete tags
     const incomplete = await this.getIncomplete(study, user);
     if (incomplete) {
