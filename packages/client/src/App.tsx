@@ -27,6 +27,7 @@ import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
 import { EntryControls } from './pages/studies/EntryControls';
+import { PermissionProvider } from './context/Permission.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -90,17 +91,19 @@ const AppInternal: FC = () => {
     <ProjectProvider>
       <StudyProvider>
         <DatasetProvider>
-          <Box>
-            <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-          </Box>
-          <Main open={drawerOpen}>
-            <Box sx={{ display: 'flex' }}>
-              <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-              <Box sx={{ flexGrow: 1, width: '90%' }}>
-                <MyRoutes />
-              </Box>
+          <PermissionProvider>
+            <Box>
+              <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
             </Box>
-          </Main>
+            <Main open={drawerOpen}>
+              <Box sx={{ display: 'flex' }}>
+                <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
+                <Box sx={{ flexGrow: 1, width: '90%' }}>
+                  <MyRoutes />
+                </Box>
+              </Box>
+            </Main>
+          </PermissionProvider>
         </DatasetProvider>
       </StudyProvider>
     </ProjectProvider>

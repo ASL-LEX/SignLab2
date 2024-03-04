@@ -1,15 +1,13 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
 import { useAuth } from '../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
 import { Environment } from './Environment.component';
 import { Permission } from '../graphql/graphql';
-import { useGetRolesQuery } from '../graphql/permission/permission';
-import { useProject } from '../context/Project.context';
-import { useStudy } from '../context/Study.context';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './LanguageSelector';
+import { usePermission } from '../context/Permission.context';
 
 interface SideBarProps {
   open: boolean;
@@ -19,17 +17,8 @@ interface SideBarProps {
 export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [permission, setPermission] = useState<Permission | null>(null);
-  const { project } = useProject();
-  const { study } = useStudy();
-  const rolesQueryResults = useGetRolesQuery({ variables: { project: project?._id, study: study?._id } });
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (rolesQueryResults.data) {
-      setPermission(rolesQueryResults.data.getRoles);
-    }
-  }, [rolesQueryResults.data]);
+  const { permission } = usePermission();
 
   const navItems: NavItemProps[] = [
     {
