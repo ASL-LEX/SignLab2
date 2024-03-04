@@ -10,7 +10,6 @@ interface PermissionContextProps {
 
 const PermissionContext = createContext<PermissionContextProps>({} as PermissionContextProps);
 
-
 export interface PermissionProviderProps {
   children: ReactNode;
 }
@@ -20,7 +19,7 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
   const { project } = useProject();
   const { study } = useStudy();
 
-  const rolesQueryResult = useGetRolesQuery({ variables: { project: project?._id, study: study?._id }});
+  const rolesQueryResult = useGetRolesQuery({ variables: { project: project?._id, study: study?._id } });
 
   useEffect(() => {
     if (rolesQueryResult.data) {
@@ -28,11 +27,7 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
     }
   }, [rolesQueryResult]);
 
-  return (
-    <PermissionContext.Provider value={{ permission }}>
-      { children }
-    </PermissionContext.Provider>
-  )
+  return <PermissionContext.Provider value={{ permission }}>{children}</PermissionContext.Provider>;
 };
 
 export const usePermission = () => useContext(PermissionContext);

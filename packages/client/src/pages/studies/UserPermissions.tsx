@@ -135,8 +135,10 @@ const TagViewButton: React.FC<TagViewButtonProps> = (props) => {
   };
 
   return (
-    <Button variant="contained" onClick={onClick}>{t('components.userPermissions.trainingView')}</Button>
-  )
+    <Button variant="contained" onClick={onClick}>
+      {t('components.userPermissions.trainingView')}
+    </Button>
+  );
 };
 
 const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
@@ -205,9 +207,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       field: 'traingData',
       headerName: t('components.userPermissions.trainingView'),
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <TagViewButton permission={params.row} study={study} />
-        )
+        return <TagViewButton permission={params.row} study={study} />;
       },
       flex: 1
     }

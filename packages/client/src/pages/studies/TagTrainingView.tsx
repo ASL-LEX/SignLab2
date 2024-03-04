@@ -13,7 +13,7 @@ export const TagTrainingView: React.FC = () => {
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
   const { t } = useTranslation();
 
-  const trainingTags = useGetTrainingTagsQuery({ variables: { study: study._id, user: user.uid }});
+  const trainingTags = useGetTrainingTagsQuery({ variables: { study: study._id, user: user.uid } });
 
   useEffect(() => {
     if (trainingTags.data) {
@@ -23,7 +23,11 @@ export const TagTrainingView: React.FC = () => {
 
   return (
     <>
-      {(!tags || tags.length === 0) ? <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography> : <TagGridView tags={tags} study={study} />}
+      {!tags || tags.length === 0 ? (
+        <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography>
+      ) : (
+        <TagGridView tags={tags} study={study} />
+      )}
     </>
   );
-}
+};

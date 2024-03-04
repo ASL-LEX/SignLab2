@@ -98,28 +98,33 @@ export class TagService {
     }
 
     // At this point, the next incomplete training tag can be returned
-    const tags = await this.tagModel.find({
-      study: study._id,
-      user,
-      training: true,
-      complete: false
-    }).sort({ order: 1 }).limit(1);
+    const tags = await this.tagModel
+      .find({
+        study: study._id,
+        user,
+        training: true,
+        complete: false
+      })
+      .sort({ order: 1 })
+      .limit(1);
 
     return tags[0];
   }
 
   private async createTrainingTags(study: Study, user: string, trainingSet: TrainingSet): Promise<Tag[]> {
-    return await Promise.all(trainingSet.entries.map(async (entry, index) => {
-      return this.tagModel.create({
-        entry,
-        study: study._id,
-        complete: false,
-        order: index,
-        enabled: true,
-        training: true,
-        user
-      });
-    }));
+    return await Promise.all(
+      trainingSet.entries.map(async (entry, index) => {
+        return this.tagModel.create({
+          entry,
+          study: study._id,
+          complete: false,
+          order: index,
+          enabled: true,
+          training: true,
+          user
+        });
+      })
+    );
   }
 
   /**

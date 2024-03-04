@@ -46,7 +46,11 @@ export class TagResolver {
     @TokenContext() user: TokenPayload
   ): Promise<Tag | null> {
     // Determine if the user is considered "trained"
-    const isTrained: boolean = await this.enforcer.enforce(user.user_id, Roles.TRAINED_CONTRIBUTOR, study._id.toString());
+    const isTrained: boolean = await this.enforcer.enforce(
+      user.user_id,
+      Roles.TRAINED_CONTRIBUTOR,
+      study._id.toString()
+    );
 
     return this.tagService.assignTag(study, user.user_id, isTrained);
   }
