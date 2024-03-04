@@ -1,4 +1,4 @@
-import { Switch, Typography } from '@mui/material';
+import { Switch, Typography, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useStudy } from '../../context/Study.context';
 import { Study, StudyPermissionModel } from '../../graphql/graphql';
@@ -115,6 +115,17 @@ const EditTrainedSwitch: React.FC<EditSwitchProps> = (props) => {
   );
 };
 
+interface TagViewButtonProps {
+  permission: StudyPermissionModel;
+}
+
+const TagViewButton: React.FC<TagViewButtonProps> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <Button variant="contained">{t('components.userPermissions.trainingView')}</Button>
+  )
+};
+
 const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
   const { decodedToken } = useAuth();
   const { data, refetch } = useGetStudyPermissionsQuery({
@@ -175,6 +186,16 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
         );
       },
       editable: false,
+      flex: 1
+    },
+    {
+      field: 'traingData',
+      headerName: t('components.userPermissions.trainingView'),
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <TagViewButton permission={params.row} />
+        )
+      },
       flex: 1
     }
   ];
