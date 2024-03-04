@@ -28,6 +28,7 @@ import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
 import { EntryControls } from './pages/studies/EntryControls';
 import { PermissionProvider } from './context/Permission.context';
+import { TagTrainingView } from './pages/studies/TagTrainingView';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -129,6 +130,7 @@ const MyRoutes: FC = () => {
         <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
         <Route path={'/study/entries'} element={<EntryControls />} />
         <Route path={'/study/tags'} element={<TagView />} />
+        <Route path={'/study/training'} element={<TagTrainingView />} />
         <Route path={'/successpage'} element={<SuccessPage />} />
         <Route path={'/dataset/controls'} element={<DatasetControls />} />
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />

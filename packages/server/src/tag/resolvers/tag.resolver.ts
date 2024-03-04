@@ -100,6 +100,19 @@ export class TagResolver {
     return this.tagService.getTags(study);
   }
 
+  @Query(() => [Tag])
+  async getTrainingTags(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user') user: string,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<Tag[]> {
+    if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+
+    return this.tagService.getTrainingTags(study, user);
+  }
+
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {
     return this.entryPipe.transform(tag.entry);

@@ -64,6 +64,14 @@ export class TagService {
     return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
   }
 
+  async getTrainingTags(study: Study, user: string): Promise<Tag[]> {
+    return this.tagModel.find({
+      user,
+      study: study._id,
+      training: true
+    });
+  }
+
   /**
    * Assign the user a tag as part of the training set.
    */

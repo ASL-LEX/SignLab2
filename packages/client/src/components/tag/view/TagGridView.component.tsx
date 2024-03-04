@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
-import { Study, Entry } from '../../../graphql/graphql';
+import { Entry, Study } from '../../../graphql/graphql';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { GetTagsQuery, useGetTagsQuery } from '../../../graphql/tag/tag';
-import { useEffect, useState } from 'react';
+import { GetTagsQuery } from '../../../graphql/tag/tag';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
 import { Checkbox } from '@mui/material';
@@ -16,11 +15,11 @@ import { getVideoCols, videoViewTest } from './VideoGridView.component';
 
 export interface TagGridViewProps {
   study: Study;
+  tags: GetTagsQuery['getTags'];
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
   const { t } = useTranslation();
-  const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
 
   const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
     { tester: freeTextTest, getGridColDefs: getTextCols },
@@ -30,14 +29,6 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ study }) => {
     { tester: aslLexTest, getGridColDefs: getAslLexCols },
     { tester: videoViewTest, getGridColDefs: getVideoCols }
   ];
-
-  const getTagsResults = useGetTagsQuery({ variables: { study: study._id } });
-
-  useEffect(() => {
-    if (getTagsResults.data) {
-      setTags(getTagsResults.data.getTags);
-    }
-  }, [getTagsResults.data]);
 
   const entryColumns: GridColDef[] = [
     {

@@ -360,6 +360,7 @@ export type Query = {
   getRoles: Permission;
   getStudyPermissions: Array<StudyPermissionModel>;
   getTags: Array<Tag>;
+  getTrainingTags: Array<Tag>;
   isEntryEnabled: Scalars['Boolean']['output'];
   lexFindAll: Array<Lexicon>;
   lexiconByKey: LexiconEntry;
@@ -435,6 +436,12 @@ export type QueryGetStudyPermissionsArgs = {
 
 export type QueryGetTagsArgs = {
   study: Scalars['ID']['input'];
+};
+
+
+export type QueryGetTrainingTagsArgs = {
+  study: Scalars['ID']['input'];
+  user: Scalars['String']['input'];
 };
 
 
