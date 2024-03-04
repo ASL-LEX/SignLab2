@@ -15,4 +15,8 @@ export class TrainingSetService {
       entries: entries.map((entry) => entry._id)
     });
   }
+
+  async findByStudy(study: Study): Promise<TrainingSet | null> {
+    return this.trainingSetModel.findOne({ study: study._id });
+  }
 }

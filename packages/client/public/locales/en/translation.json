@@ -85,7 +85,9 @@
     "userPermissions": {
       "studyAdmin": "Study Admin",
       "contributor": "Contributor",
-      "trained": "Trained"
+      "trained": "Trained",
+      "trainingView": "View Training Results",
+      "noTrainingTags": "No Tags to Show"
     },
     "projectUserPermissions": {
       "projectAdmin": "Project Admin",

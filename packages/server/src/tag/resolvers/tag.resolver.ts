@@ -15,6 +15,7 @@ import { TokenContext } from '../../jwt/token.context';
 import { TokenPayload } from '../../jwt/token.dto';
 import { StudyPermissions } from '../../permission/permissions/study';
 import { TagPermissions } from 'src/permission/permissions/tag';
+import { Roles } from 'src/permission/permissions/roles';
 
 // TODO: Add permissioning
 @UseGuards(JwtAuthGuard)
@@ -44,7 +45,14 @@ export class TagResolver {
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @TokenContext() user: TokenPayload
   ): Promise<Tag | null> {
-    return this.tagService.assignTag(study, user.user_id);
+    // Determine if the user is considered "trained"
+    const isTrained: boolean = await this.enforcer.enforce(
+      user.user_id,
+      Roles.TRAINED_CONTRIBUTOR,
+      study._id.toString()
+    );
+
+    return this.tagService.assignTag(study, user.user_id, isTrained);
   }
 
   @Mutation(() => Boolean)
@@ -94,6 +102,19 @@ export class TagResolver {
       throw new UnauthorizedException('User cannot read tags in this study');
     }
     return this.tagService.getTags(study);
+  }
+
+  @Query(() => [Tag])
+  async getTrainingTags(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user') user: string,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<Tag[]> {
+    if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+
+    return this.tagService.getTrainingTags(study, user);
   }
 
   @ResolveField(() => Entry)

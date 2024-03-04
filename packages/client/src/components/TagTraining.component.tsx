@@ -73,8 +73,6 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     props.setTrainingSet(entries);
   }, [trainingSet]);
 
-  // TODO: In the future, the datasets retrieved should only be datasets
-  //       accessible by the current project
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasetsByProject);

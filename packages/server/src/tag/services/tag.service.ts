@@ -8,6 +8,8 @@ import { StudyService } from '../../study/study.service';
 import { MongooseMiddlewareService } from '../../shared/service/mongoose-callback.service';
 import { TagTransformer } from './tag-transformer.service';
 import { TokenPayload } from '../../jwt/token.dto';
+import { TrainingSetService } from './training-set.service';
+import { TrainingSet } from '../models/training-set';
 
 @Injectable()
 export class TagService {
@@ -15,7 +17,8 @@ export class TagService {
     @InjectModel(Tag.name) private readonly tagModel: Model<Tag>,
     private readonly studyService: StudyService,
     middlewareService: MongooseMiddlewareService,
-    private readonly tagTransformService: TagTransformer
+    private readonly tagTransformService: TagTransformer,
+    private readonly trainingSetService: TrainingSetService
   ) {
     // Subscribe to study delete events
     middlewareService.register(Study.name, 'deleteOne', async (study: Study) => {
@@ -48,7 +51,8 @@ export class TagService {
           study: study._id,
           complete: false,
           order,
-          enabled: true
+          enabled: true,
+          training: false
         });
         tags.push(newTag);
       }
@@ -56,12 +60,81 @@ export class TagService {
     return tags;
   }
 
+  async assignTag(study: Study, user: string, isTrained: boolean): Promise<Tag | null> {
+    return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
+  }
+
+  async getTrainingTags(study: Study, user: string): Promise<Tag[]> {
+    return this.tagModel.find({
+      user,
+      study: study._id,
+      training: true
+    });
+  }
+
   /**
+   * Assign the user a tag as part of the training set.
+   */
+  private async assignTrainingTag(study: Study, user: string): Promise<Tag | null> {
+    // First get the training set associated with the study
+    const trainingSet = await this.trainingSetService.findByStudy(study);
+
+    // If the training set is null or the length of entries is 0, then no tag to assign
+    if (!trainingSet || trainingSet.entries.length == 0) {
+      return null;
+    }
+
+    // See if the user has any training tags. If we have reached this point in the code,
+    // and no training tags exist, then they haven't been generated for this user yet.
+    const existingTrainingTag = await this.tagModel.findOne({
+      user,
+      study: study._id,
+      training: true
+    });
+
+    // If there is no existing training tag, generate the training set for the user
+    if (!existingTrainingTag) {
+      await this.createTrainingTags(study, user, trainingSet);
+    }
+
+    // At this point, the next incomplete training tag can be returned
+    const tags = await this.tagModel
+      .find({
+        study: study._id,
+        user,
+        training: true,
+        complete: false
+      })
+      .sort({ order: 1 })
+      .limit(1);
+
+    return tags[0];
+  }
+
+  private async createTrainingTags(study: Study, user: string, trainingSet: TrainingSet): Promise<Tag[]> {
+    return await Promise.all(
+      trainingSet.entries.map(async (entry, index) => {
+        return this.tagModel.create({
+          entry,
+          study: study._id,
+          complete: false,
+          order: index,
+          enabled: true,
+          training: true,
+          user
+        });
+      })
+    );
+  }
+
+  /**
+   * Assign tags based on the full (not training) data set.
+   *
    * Assign the tag to the given user. If the user already has an incomplete
    * tag, return that tag to the user. If there are no more remaining tags,
    * null is returned.
    */
-  async assignTag(study: Study, user: string): Promise<Tag | null> {
+  private async assignTagFull(study: Study, user: string): Promise<Tag | null> {
     // Check for incomplete tags
     const incomplete = await this.getIncomplete(study, user);
     if (incomplete) {

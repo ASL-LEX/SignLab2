@@ -69,6 +69,14 @@ export type GetTagsQueryVariables = Types.Exact<{
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
 
+export type GetTrainingTagsQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+  user: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
+
 
 export const CreateTagsDocument = gql`
     mutation createTags($study: ID!, $entries: [ID!]!) {
@@ -365,3 +373,53 @@ export function useGetTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
 export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
 export type GetTagsQueryResult = Apollo.QueryResult<GetTagsQuery, GetTagsQueryVariables>;
+export const GetTrainingTagsDocument = gql`
+    query getTrainingTags($study: ID!, $user: String!) {
+  getTrainingTags(study: $study, user: $user) {
+    _id
+    entry {
+      _id
+      organization
+      entryID
+      contentType
+      dataset
+      creator
+      dateCreated
+      meta
+      signedUrl
+      signedUrlExpiration
+    }
+    data
+    complete
+  }
+}
+    `;
+
+/**
+ * __useGetTrainingTagsQuery__
+ *
+ * To run a query within a React component, call `useGetTrainingTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrainingTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrainingTagsQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useGetTrainingTagsQuery(baseOptions: Apollo.QueryHookOptions<GetTrainingTagsQuery, GetTrainingTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTrainingTagsQuery, GetTrainingTagsQueryVariables>(GetTrainingTagsDocument, options);
+      }
+export function useGetTrainingTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrainingTagsQuery, GetTrainingTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTrainingTagsQuery, GetTrainingTagsQueryVariables>(GetTrainingTagsDocument, options);
+        }
+export type GetTrainingTagsQueryHookResult = ReturnType<typeof useGetTrainingTagsQuery>;
+export type GetTrainingTagsLazyQueryHookResult = ReturnType<typeof useGetTrainingTagsLazyQuery>;
+export type GetTrainingTagsQueryResult = Apollo.QueryResult<GetTrainingTagsQuery, GetTrainingTagsQueryVariables>;

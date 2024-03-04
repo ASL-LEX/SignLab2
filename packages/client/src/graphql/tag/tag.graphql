@@ -65,3 +65,22 @@ query getTags($study: ID!) {
   }
 }
 
+query getTrainingTags($study: ID!, $user: String!) {
+  getTrainingTags(study: $study, user: $user) {
+    _id
+    entry {
+      _id
+      organization
+      entryID
+      contentType
+      dataset
+      creator
+      dateCreated
+      meta
+      signedUrl
+      signedUrlExpiration
+    }
+    data
+    complete
+  }
+}

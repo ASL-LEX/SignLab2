@@ -27,6 +27,8 @@ import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
 import { EntryControls } from './pages/studies/EntryControls';
+import { PermissionProvider } from './context/Permission.context';
+import { TagTrainingView } from './pages/studies/TagTrainingView';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -90,17 +92,19 @@ const AppInternal: FC = () => {
     <ProjectProvider>
       <StudyProvider>
         <DatasetProvider>
-          <Box>
-            <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-          </Box>
-          <Main open={drawerOpen}>
-            <Box sx={{ display: 'flex' }}>
-              <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
-              <Box sx={{ flexGrow: 1, width: '90%' }}>
-                <MyRoutes />
-              </Box>
+          <PermissionProvider>
+            <Box>
+              <NavBar drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
             </Box>
-          </Main>
+            <Main open={drawerOpen}>
+              <Box sx={{ display: 'flex' }}>
+                <SideBar open={drawerOpen} drawerWidth={drawerWidth} />
+                <Box sx={{ flexGrow: 1, width: '90%' }}>
+                  <MyRoutes />
+                </Box>
+              </Box>
+            </Main>
+          </PermissionProvider>
         </DatasetProvider>
       </StudyProvider>
     </ProjectProvider>
@@ -126,6 +130,7 @@ const MyRoutes: FC = () => {
         <Route path={'/study/permissions'} element={<StudyUserPermissions />} />
         <Route path={'/study/entries'} element={<EntryControls />} />
         <Route path={'/study/tags'} element={<TagView />} />
+        <Route path={'/study/training'} element={<TagTrainingView />} />
         <Route path={'/successpage'} element={<SuccessPage />} />
         <Route path={'/dataset/controls'} element={<DatasetControls />} />
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />

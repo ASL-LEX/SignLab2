@@ -1,4 +1,4 @@
-import { Switch, Typography } from '@mui/material';
+import { Switch, Typography, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useStudy } from '../../context/Study.context';
 import { Study, StudyPermissionModel } from '../../graphql/graphql';
@@ -11,6 +11,7 @@ import {
 } from '../../graphql/permission/permission';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export const StudyUserPermissions: React.FC = () => {
   const { study } = useStudy();
@@ -115,6 +116,31 @@ const EditTrainedSwitch: React.FC<EditSwitchProps> = (props) => {
   );
 };
 
+interface TagViewButtonProps {
+  permission: StudyPermissionModel;
+  study: Study;
+}
+
+const TagViewButton: React.FC<TagViewButtonProps> = (props) => {
+  const { t } = useTranslation();
+  const navigation = useNavigate();
+
+  const onClick = () => {
+    navigation('/study/training', {
+      state: {
+        user: props.permission.user,
+        study: props.study
+      }
+    });
+  };
+
+  return (
+    <Button variant="contained" onClick={onClick}>
+      {t('components.userPermissions.trainingView')}
+    </Button>
+  );
+};
+
 const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
   const { decodedToken } = useAuth();
   const { data, refetch } = useGetStudyPermissionsQuery({
@@ -175,6 +201,14 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
         );
       },
       editable: false,
+      flex: 1
+    },
+    {
+      field: 'traingData',
+      headerName: t('components.userPermissions.trainingView'),
+      renderCell: (params: GridRenderCellParams) => {
+        return <TagViewButton permission={params.row} study={study} />;
+      },
       flex: 1
     }
   ];
