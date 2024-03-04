@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const ContributeLandingInternal: React.FC = () => {
   const navigate = useNavigate();
   const { study } = useStudy();
-  const { tag } = useTag();
+  const { tag, training } = useTag();
   const { t } = useTranslation();
 
   const enterTagging = () => {
@@ -26,7 +26,7 @@ const ContributeLandingInternal: React.FC = () => {
           <Box sx={{ justifyContent: 'center' }}>
             <Stack spacing={3} direction="column" sx={{ maxWidth: 300 }}>
               <Typography variant="h3">
-                {false ? t('components.contribute.studyTraining') : t('components.contribute.studyTagging')}
+                {training ? t('components.contribute.studyTraining') : t('components.contribute.studyTagging')}
               </Typography>
               <Typography variant="body2">
                 {t('common.study')}: {study.name}
