@@ -218,7 +218,7 @@ export class TagService {
   }
 
   async getTags(study: Study): Promise<Tag[]> {
-    return this.tagModel.find({ study: study._id });
+    return this.tagModel.find({ study: study._id, training: false });
   }
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
