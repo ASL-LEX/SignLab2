@@ -34,6 +34,7 @@ export default () => ({
   tag: {
     videoFieldFolder: process.env.TAG_VIDEO_FIELD_FOLDER || 'video-fields',
     videoRecordFileType: 'webm',
-    videoUploadExpiration: process.env.TAG_VIDEO_UPLOAD_EXPIRATION || 15 * 60 * 1000 // 15 minutes
+    videoUploadExpiration: process.env.TAG_VIDEO_UPLOAD_EXPIRATION || 15 * 60 * 1000, // 15 minutes
+    trainingPrefix: process.env.TAG_TRAINING_PREFIX || 'training'
   }
 });

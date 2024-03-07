@@ -146,7 +146,7 @@ export class TagService {
     await this.tagModel.db.transaction(async (): Promise<void> => {
       const searchResult = await this.tagModel.aggregate([
         // Only search on tags that are enabled for the current study
-        { $match: { enabled: true, study: study._id.toString() } },
+        { $match: { enabled: true, study: study._id.toString(), training: false } },
         // Grab tags that are unassigned (user field doesn't exist) or have been completed by the user
         { $match: { $or: [{ user: { $exists: false } }, { user: { $eq: user } }] } },
         // Group by the entrys and expand tags
@@ -188,7 +188,7 @@ export class TagService {
     }
 
     // Handle any transformations
-    const transformed = await this.tagTransformService.transformTagData(data, study, user);
+    const transformed = await this.tagTransformService.transformTagData(tag, data, study, user);
 
     // Save the tag information and mark the tag as complete
     await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data: transformed, complete: true } });
@@ -218,7 +218,7 @@ export class TagService {
   }
 
   async getTags(study: Study): Promise<Tag[]> {
-    return this.tagModel.find({ study: study._id });
+    return this.tagModel.find({ study: study._id, training: false });
   }
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {

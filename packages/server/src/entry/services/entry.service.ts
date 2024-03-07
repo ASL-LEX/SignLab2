@@ -25,14 +25,16 @@ export class EntryService {
     return this.entryModel.findOne({ _id: entryID });
   }
 
-  async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload): Promise<Entry> {
+  async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload, isTraining: boolean): Promise<Entry> {
+    // Make the entry, note that training entries are not associated with a dataset
     return this.entryModel.create({
       ...entryCreate,
       dataset: dataset._id,
       organization: dataset.organization,
       recordedInSignLab: false,
       dateCreated: new Date(),
-      creator: user.user_id
+      creator: user.user_id,
+      isTraining
     });
   }
 
@@ -41,7 +43,7 @@ export class EntryService {
   }
 
   async findForDataset(dataset: Dataset): Promise<Entry[]> {
-    return this.entryModel.find({ dataset: dataset._id.toString() });
+    return this.entryModel.find({ dataset: dataset._id.toString(), isTraining: false });
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {

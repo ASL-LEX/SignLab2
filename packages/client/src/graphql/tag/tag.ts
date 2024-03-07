@@ -67,7 +67,7 @@ export type GetTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
+export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
 
 export type GetTrainingTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
@@ -75,7 +75,7 @@ export type GetTrainingTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
+export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
 
 
 export const CreateTagsDocument = gql`
@@ -333,7 +333,6 @@ export const GetTagsDocument = gql`
       organization
       entryID
       contentType
-      dataset
       creator
       dateCreated
       meta
@@ -382,7 +381,6 @@ export const GetTrainingTagsDocument = gql`
       organization
       entryID
       contentType
-      dataset
       creator
       dateCreated
       meta

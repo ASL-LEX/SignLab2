@@ -94,7 +94,8 @@ export class UploadSessionService {
           meta: entryUpload.metadata
         },
         dataset,
-        user
+        user,
+        false
       );
 
       // Move the entry to the dataset

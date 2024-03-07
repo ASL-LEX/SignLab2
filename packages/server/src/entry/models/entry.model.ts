@@ -51,6 +51,10 @@ export class Entry {
   @Prop({ required: false })
   signedURLExpiration: Date;
 
+  @Prop()
+  @Field()
+  isTraining: boolean;
+
   // TODO: Add creator field
 }
 

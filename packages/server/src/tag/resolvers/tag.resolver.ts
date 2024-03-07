@@ -63,6 +63,7 @@ export class TagResolver {
   ): Promise<boolean> {
     // TODO: Add user context and verify the correct user has completed the tag
     const study = await this.studyPipe.transform(tag.study);
+    tag.data = data;
     await this.tagService.complete(tag, data, study, user);
     return true;
   }
