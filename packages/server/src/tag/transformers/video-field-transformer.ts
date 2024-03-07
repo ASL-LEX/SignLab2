@@ -3,13 +3,14 @@ import { FieldTransformer } from './field-transformer';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { VideoFieldService } from '../services/video-field.service';
 import { TokenPayload } from '../../jwt/token.dto';
+import { Tag } from '../models/tag.model';
 
 @Injectable()
 export class VideoFieldTransformer implements FieldTransformer {
   constructor(private readonly videoFieldService: VideoFieldService) {}
 
   async transformField(
-    data: string[],
+    tag: Tag,
     uischema: UISchemaElement,
     _schema: JsonSchema,
     user: TokenPayload
@@ -19,9 +20,11 @@ export class VideoFieldTransformer implements FieldTransformer {
       throw new BadRequestException('Dataset ID not provided');
     }
 
+    const data: string[] = tag.data;
+
     const videoFields = await Promise.all(
       data.map(async (videoFieldId) => {
-        const entry = await this.videoFieldService.markComplete(videoFieldId, datasetID, user);
+        const entry = await this.videoFieldService.markComplete(videoFieldId, datasetID, user, tag);
         return entry._id;
       })
     );

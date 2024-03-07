@@ -32,7 +32,7 @@ export class Entry {
 
   // TODO: Add GraphQL reference back to dataset object
   @Prop()
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   dataset: string;
 
   // TODO: Add GraphQL reference back to user object

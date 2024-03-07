@@ -11,6 +11,7 @@ import { Entry } from '../../entry/models/entry.model';
 import { EntryService } from '../../entry/services/entry.service';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 import { TokenPayload } from '../../jwt/token.dto';
+import { Dataset } from '../../dataset/dataset.model';
 
 @Injectable()
 export class VideoFieldService {
@@ -19,6 +20,7 @@ export class VideoFieldService {
   private readonly bucketName = this.configService.getOrThrow<string>('gcp.storage.bucket');
   private readonly bucket: Bucket = this.storage.bucket(this.bucketName);
   private readonly expiration = this.configService.getOrThrow<number>('tag.videoUploadExpiration');
+  private readonly trainingPrefix = this.configService.getOrThrow<string>('tag.trainingPrefix');
 
   constructor(
     @InjectModel(VideoField.name) private readonly videoFieldModel: Model<VideoFieldDocument>,
@@ -72,13 +74,14 @@ export class VideoFieldService {
    * Move the video itself to the permanent storage location and create the
    * cooresponding entry.
    */
-  async markComplete(videoFieldID: string, datasetID: string, user: TokenPayload): Promise<Entry> {
+  async markComplete(videoFieldID: string, datasetID: string, user: TokenPayload, tag: Tag): Promise<Entry> {
     const videoField = await this.videoFieldModel.findById(videoFieldID);
     if (!videoField) {
       throw new BadRequestException(`Video field ${videoFieldID} not found`);
     }
 
-    const dataset = await this.datasetPipe.transform(datasetID);
+    // The dataset that the entry would be associated with
+    const dataset: Dataset = await this.datasetPipe.transform(datasetID);
 
     // Make the entry
     const entry = await this.entryService.create(
@@ -88,12 +91,18 @@ export class VideoFieldService {
         meta: {}
       },
       dataset,
-      user
+      user,
+      tag.training
     );
+
+    // Where to move the entry video
+    let newLocation = `${dataset.bucketPrefix}/${entry._id}.webm`;
+    if (tag.training) {
+      newLocation = `${this.trainingPrefix}/${dataset.organization}/${tag.study}/${entry._id}.webm`;
+    }
 
     // Move the video to the permanent location
     const source = this.bucket.file(videoField.bucketLocation);
-    const newLocation = `${dataset.bucketPrefix}/${entry._id}.webm`;
     await source.move(newLocation);
     await this.entryService.setBucketLocation(entry, newLocation);
     entry.bucketLocation = newLocation;
