@@ -32,7 +32,7 @@ export class Entry {
 
   // TODO: Add GraphQL reference back to dataset object
   @Prop()
-  @Field(() => ID, { nullable: true })
+  @Field(() => ID)
   dataset: string;
 
   // TODO: Add GraphQL reference back to user object
@@ -50,6 +50,10 @@ export class Entry {
 
   @Prop({ required: false })
   signedURLExpiration: Date;
+
+  @Prop()
+  @Field()
+  isTraining: boolean;
 
   // TODO: Add creator field
 }
