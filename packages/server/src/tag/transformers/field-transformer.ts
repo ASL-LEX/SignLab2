@@ -8,7 +8,7 @@ import { Tag } from '../models/tag.model';
  * and ensuring that the data meets any additional formatting requirements.
  */
 export interface FieldTransformer {
-  transformField(tag: Tag, uischema: UISchemaElement, schema: JsonSchema, user: TokenPayload): Promise<any>;
+  transformField(tag: Tag, data: any, uischema: UISchemaElement, schema: JsonSchema, user: TokenPayload): Promise<any>;
 }
 
 /**

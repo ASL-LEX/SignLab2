@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Study } from '../../study/study.model';
 import { FieldTransformerFactory } from '../transformers/field-transformer-factory';
 import { TokenPayload } from '../../jwt/token.dto';
+import { Tag } from '../../tag/models/tag.model';
 
 @Injectable()
 export class TagTransformer {
@@ -11,7 +12,7 @@ export class TagTransformer {
    * Transforms the tag data. Takes in the whole tag and produces the modified
    * tag data.
    */
-  async transformTagData(data: any, study: Study, user: TokenPayload): Promise<any> {
+  async transformTagData(tag: Tag, data: any, study: Study, user: TokenPayload): Promise<any> {
     const transformedData: { [property: string]: any } = {};
 
     const schema = study.tagSchema.dataSchema;
@@ -36,7 +37,7 @@ export class TagTransformer {
 
       // Apply the transformation if present, otherwise just return the data
       const transformed = transformer
-        ? await transformer.transformField(data[field], fieldUiSchema, fieldSchema, user)
+        ? await transformer.transformField(tag, data[field], fieldUiSchema, fieldSchema, user)
         : data[field];
       transformedData[field] = transformed;
     }

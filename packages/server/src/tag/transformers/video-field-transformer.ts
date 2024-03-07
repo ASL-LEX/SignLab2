@@ -11,6 +11,7 @@ export class VideoFieldTransformer implements FieldTransformer {
 
   async transformField(
     tag: Tag,
+    data: string[],
     uischema: UISchemaElement,
     _schema: JsonSchema,
     user: TokenPayload
@@ -19,8 +20,6 @@ export class VideoFieldTransformer implements FieldTransformer {
     if (!datasetID) {
       throw new BadRequestException('Dataset ID not provided');
     }
-
-    const data: string[] = tag.data;
 
     const videoFields = await Promise.all(
       data.map(async (videoFieldId) => {

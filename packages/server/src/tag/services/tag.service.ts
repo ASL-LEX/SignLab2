@@ -188,7 +188,7 @@ export class TagService {
     }
 
     // Handle any transformations
-    const transformed = await this.tagTransformService.transformTagData(data, study, user);
+    const transformed = await this.tagTransformService.transformTagData(tag, data, study, user);
 
     // Save the tag information and mark the tag as complete
     await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data: transformed, complete: true } });
