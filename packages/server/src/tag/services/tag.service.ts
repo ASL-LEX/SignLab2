@@ -146,7 +146,7 @@ export class TagService {
     await this.tagModel.db.transaction(async (): Promise<void> => {
       const searchResult = await this.tagModel.aggregate([
         // Only search on tags that are enabled for the current study
-        { $match: { enabled: true, study: study._id.toString() } },
+        { $match: { enabled: true, study: study._id.toString(), training: false } },
         // Grab tags that are unassigned (user field doesn't exist) or have been completed by the user
         { $match: { $or: [{ user: { $exists: false } }, { user: { $eq: user } }] } },
         // Group by the entrys and expand tags
