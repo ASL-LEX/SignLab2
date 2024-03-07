@@ -29,6 +29,7 @@ import { DatasetProvider } from './context/Dataset.context';
 import { EntryControls } from './pages/studies/EntryControls';
 import { PermissionProvider } from './context/Permission.context';
 import { TagTrainingView } from './pages/studies/TagTrainingView';
+import { SnackbarProvider } from './context/Snackbar.context';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -74,8 +75,10 @@ const App: FC = () => {
         <ApolloProvider client={apolloClient}>
           <AuthProvider>
             <ConfirmationProvider>
-              <CssBaseline />
-              <AppInternal />
+              <SnackbarProvider>
+                <CssBaseline />
+                <AppInternal />
+              </SnackbarProvider>
             </ConfirmationProvider>
           </AuthProvider>
         </ApolloProvider>
