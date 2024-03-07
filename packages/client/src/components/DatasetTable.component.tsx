@@ -4,6 +4,7 @@ import { Dataset, Entry } from '../graphql/graphql';
 import { useEntryForDatasetLazyQuery } from '../graphql/entry/entry';
 import { EntryView } from './EntryView.component';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../context/Snackbar.context';
 
 export interface DatasetTableProps {
   dataset: Dataset;
@@ -12,6 +13,7 @@ export interface DatasetTableProps {
 
 export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const defaultColumns: GridColDef[] = [
     {
@@ -41,6 +43,9 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   useEffect(() => {
     if (entryForDatasetResult.data) {
       setEntries(entryForDatasetResult.data.entryForDataset);
+    } else if (entryForDatasetResult.error) {
+      pushSnackbarMessage(t('errors.entryQuery'), 'error');
+      console.error(entryForDatasetResult.error);
     }
   }, [entryForDatasetResult]);
 

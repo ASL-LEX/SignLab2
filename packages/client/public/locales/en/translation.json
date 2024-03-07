@@ -131,6 +131,11 @@
   "errors": {
     "datasetCreate": "Failed to create dataset, please try again or report this issue",
     "uploadSessionCreate": "Could not start the upload process, please try again",
-    "csvUpload": "Could not upload the CSV, please try again"
+    "csvUpload": "Could not upload the CSV, please try again",
+    "entryUpload": "Could not upload entry, please try again",
+    "entryUploadComplete": "Could not complete the upload process, please try again",
+    "entryQuery": "Failed to get entries for the dataset",
+    "studyExists": "Could not check if a study with that name exists",
+    "datasetsForProject": "Failed to get possible datasets"
   }
 }

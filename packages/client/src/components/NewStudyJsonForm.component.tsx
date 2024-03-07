@@ -7,6 +7,7 @@ import { StudyExistsQuery, StudyExistsQueryVariables, StudyExistsDocument } from
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
 import { useApolloClient } from '@apollo/client';
+import { useSnackbar } from '../context/Snackbar.context';
 
 export interface NewStudyFormProps {
   newStudy: PartialStudyCreate | null;
@@ -15,6 +16,7 @@ export interface NewStudyFormProps {
 
 export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const schema = {
     type: 'object',
@@ -108,6 +110,10 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
           params: { keyword: 'uniqueStudyName' }
         }
       ]);
+      props.setNewStudy(null);
+      return;
+    } else if (exists.error) {
+      pushSnackbarMessage(t('errors.studyExists'), 'error');
       props.setNewStudy(null);
       return;
     }

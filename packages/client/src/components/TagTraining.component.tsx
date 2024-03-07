@@ -5,6 +5,9 @@ import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
 import { Switch } from '@mui/material';
 import { useProject } from '../context/Project.context';
+import { getData } from 'ajv/dist/compile/validate';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../context/Snackbar.context';
 
 export interface TagTrainingComponentProps {
   setTrainingSet: Dispatch<SetStateAction<string[]>>;
@@ -17,6 +20,8 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   const [getDatasetsQuery, getDatasetsResults] = useGetDatasetsByProjectLazyQuery();
   const [trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (project) {
@@ -76,8 +81,11 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasetsByProject);
+    } else if (getDatasetsResults.error) {
+      pushSnackbarMessage(t('errors.datasetsForProject'), 'error');
+      console.error(getDatasetsResults.error);
     }
-  }, [getDatasetsResults.data]);
+  }, [getDatasetsResults]);
 
   return (
     <>
