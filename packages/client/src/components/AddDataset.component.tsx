@@ -9,6 +9,7 @@ import { useCreateDatasetMutation, useDatasetExistsLazyQuery } from '../graphql/
 import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import { useSnackbar } from '../context/Snackbar.context';
+import { useTranslation } from 'react-i18next';
 
 interface ShowProps {
   show: boolean;
@@ -56,6 +57,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [data, setData] = useState(initialData);
   const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] = useCreateDatasetMutation();
 
+  const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
@@ -78,7 +80,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     if (createDatasetResults?.createDataset) {
       props.toggleModal(true);
     } else if (createDatasetError) {
-      pushSnackbarMessage('Failed to create dataset, please try again or report this issue', 'error');
+      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
       console.error(createDatasetError);
     }
   }, [createDatasetResults, createDatasetError]);

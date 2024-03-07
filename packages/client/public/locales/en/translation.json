@@ -127,5 +127,10 @@
     "tagView": {
       "originalEntry": "Original Entry"
     }
+  },
+  "errors": {
+    "datasetCreate": "Failed to create dataset, please try again or report this issue",
+    "uploadSessionCreate": "Could not start the upload process, please try again",
+    "csvUpload": "Could not upload the CSV, please try again"
   }
 }
