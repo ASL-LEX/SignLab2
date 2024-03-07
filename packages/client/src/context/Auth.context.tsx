@@ -10,7 +10,7 @@ import styles from './UIComponents/styles.component';
 import LoginComponent from './UIComponents/Login.component';
 import SignUpComponent from './UIComponents/Signup.component';
 import ResetPasswordComponent from './UIComponents/ResetPassword.component';
-import { BrowserRouter as Router, Route, Link, Routes, useLocation } from 'react-router-dom';
+import { Route, Link, Routes, useLocation } from 'react-router-dom';
 import { Select, MenuItem } from '@mui/material';
 
 const firebaseConfig = {
