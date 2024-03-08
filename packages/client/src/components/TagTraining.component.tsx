@@ -5,7 +5,6 @@ import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
 import { Switch } from '@mui/material';
 import { useProject } from '../context/Project.context';
-import { getData } from 'ajv/dist/compile/validate';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../context/Snackbar.context';
 

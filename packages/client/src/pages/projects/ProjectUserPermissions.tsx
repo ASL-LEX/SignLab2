@@ -62,7 +62,6 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
 };
 
 const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
-
   const { data, refetch, error } = useGetProjectPermissionsQuery({
     variables: {
       project: project._id
@@ -79,7 +78,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       setRows(data.getProjectPermissions);
     } else if (error) {
       pushSnackbarMessage(t('errors.projectAdminUpdate'), 'error');
-      console.error(grantProjectPermissionsResults.error);
+      console.error(error);
     }
   }, [data, error]);
 

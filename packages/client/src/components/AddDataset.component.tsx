@@ -55,7 +55,8 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const initialData = {} as { name: string; description: string };
 
   const [data, setData] = useState(initialData);
-  const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] = useCreateDatasetMutation();
+  const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] =
+    useCreateDatasetMutation();
 
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();

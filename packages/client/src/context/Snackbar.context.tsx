@@ -45,8 +45,19 @@ export const SnackbarProvider: FC<SnackbarProviderProps> = ({ children, ...props
       {children}
       <Stack spacing={2} sx={{ maxWidth: 600 }}>
         {messages.map((message) => (
-          <Snackbar key={message.id} open={true} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => handleClose(message.id)}>
-            <Alert variant="filled" severity={message.type} onClose={() => handleClose(message.id)} sx={{ width: '100%' }}>
+          <Snackbar
+            key={message.id}
+            open={true}
+            autoHideDuration={5000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            onClose={() => handleClose(message.id)}
+          >
+            <Alert
+              variant="filled"
+              severity={message.type}
+              onClose={() => handleClose(message.id)}
+              sx={{ width: '100%' }}
+            >
               {message.message}
             </Alert>
           </Snackbar>
