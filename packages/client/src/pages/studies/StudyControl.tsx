@@ -8,6 +8,7 @@ import { useDeleteStudyMutation } from '../../graphql/study/study';
 import { useEffect } from 'react';
 import { useConfirmation } from '../../context/Confirmation.context';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const StudyControl: React.FC = () => {
   const { studies, updateStudies } = useStudy();
@@ -15,6 +16,7 @@ export const StudyControl: React.FC = () => {
   const [deleteStudyMutation, deleteStudyResults] = useDeleteStudyMutation();
   const confirmation = useConfirmation();
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
@@ -32,8 +34,11 @@ export const StudyControl: React.FC = () => {
   useEffect(() => {
     if (deleteStudyResults.called && deleteStudyResults.data) {
       updateStudies();
+    } else if (deleteStudyResults.error) {
+      pushSnackbarMessage(t('errors.studyDelete'), 'error');
+      console.error(deleteStudyResults.error);
     }
-  }, [deleteStudyResults.called, deleteStudyResults.data]);
+  }, [deleteStudyResults.called, deleteStudyResults.data, deleteStudyResults.error]);
 
   const columns: GridColDef[] = [
     {

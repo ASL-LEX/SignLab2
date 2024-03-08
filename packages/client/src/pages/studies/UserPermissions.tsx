@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const StudyUserPermissions: React.FC = () => {
   const { study } = useStudy();

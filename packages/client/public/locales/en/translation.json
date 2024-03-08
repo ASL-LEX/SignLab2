@@ -141,6 +141,9 @@
     "datasetPermissionUpdate": "Could not give project permission",
     "projectCreate": "Could not create the project, please try again",
     "projectDelete": "An issue took place deleting the project",
-    "projectAdminUpdate": "Could not update the user's permssions"
+    "projectAdminUpdate": "Could not update the user's permssions",
+    "studyDelete": "Failed to delete the target study",
+    "studyCreate": "Failed to create the new study",
+    "tagsQuery": "Failed to get tags"
   }
 }

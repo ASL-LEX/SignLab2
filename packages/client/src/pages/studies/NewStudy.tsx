@@ -19,6 +19,7 @@ import {
 } from '../../graphql/tag/tag';
 import { useTranslation } from 'react-i18next';
 import { TagFieldFragmentSchema, TagField } from '../../components/tagbuilder/TagProvider';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const NewStudy: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -37,6 +38,7 @@ export const NewStudy: React.FC = () => {
   const [tagSchemaFragments, setTagSchemaFragments] = useState<(TagFieldFragmentSchema | null)[]>([]);
 
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   // Handles mantaining which step the user is on and the step limit
   useEffect(() => {
@@ -83,7 +85,8 @@ export const NewStudy: React.FC = () => {
       });
 
       if (result.errors || !result.data) {
-        console.error('Failed to create study');
+        pushSnackbarMessage(t('errors.studyCreate'), 'error');
+        console.error(result.errors);
         return;
       }
 
