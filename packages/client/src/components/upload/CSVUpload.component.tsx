@@ -10,6 +10,8 @@ import { useApolloClient } from '@apollo/client';
 import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
+import { useSnackbar } from '../../context/Snackbar.context';
+import { useTranslation } from 'react-i18next';
 
 export interface CSVUploadProps {
   dataset: Dataset | null;
@@ -26,6 +28,8 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({
   setCsvValid
 }) => {
   const apolloClient = useApolloClient();
+  const { pushSnackbarMessage } = useSnackbar();
+  const { t } = useTranslation();
 
   // Implemented with using the apollo client directly instead of the useMutation hook
   // to reduce the need for multiple use effects to handle each step change
@@ -42,7 +46,8 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({
     });
 
     if (!sessionCreation.data?.createUploadSession) {
-      console.error('Failed to create upload session');
+      pushSnackbarMessage(t('errors.uploadSessionCreate'), 'error');
+      console.error(sessionCreation.errors);
       return;
     }
 
@@ -56,7 +61,8 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({
     });
 
     if (!uploadUrlQuery.data?.getCSVUploadURL) {
-      console.error('Failed to get upload url');
+      pushSnackbarMessage(t('errors.csvUpload'), 'error');
+      console.error(uploadUrlQuery.error);
       return;
     }
 
@@ -70,7 +76,8 @@ export const CSVUpload: React.FC<CSVUploadProps> = ({
     });
 
     if (upload.status != 200) {
-      console.error('Failed to upload CSV');
+      pushSnackbarMessage(t('errors.csvUpload'), 'error');
+      console.error(uploadUrlQuery.error);
       return;
     }
 

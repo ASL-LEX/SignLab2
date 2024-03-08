@@ -8,6 +8,8 @@ import { materialRenderers, materialCells } from '@jsonforms/material-renderers'
 import { useCreateDatasetMutation, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
 import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
+import { useSnackbar } from '../context/Snackbar.context';
+import { useTranslation } from 'react-i18next';
 
 interface ShowProps {
   show: boolean;
@@ -53,7 +55,11 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const initialData = {} as { name: string; description: string };
 
   const [data, setData] = useState(initialData);
-  const [createDataset, { data: createDatasetResults, loading }] = useCreateDatasetMutation();
+  const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] =
+    useCreateDatasetMutation();
+
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (datasetExistsResults.data?.datasetExists) {
@@ -74,9 +80,11 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   useEffect(() => {
     if (createDatasetResults?.createDataset) {
       props.toggleModal(true);
+    } else if (createDatasetError) {
+      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
+      console.error(createDatasetError);
     }
-    //TODO handle creation server error with snackbar
-  }, [createDatasetResults]);
+  }, [createDatasetResults, createDatasetError]);
 
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);

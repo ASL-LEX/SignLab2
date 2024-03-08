@@ -8,6 +8,7 @@ import { useDeleteProjectMutation } from '../../graphql/project/project';
 import { useConfirmation } from '../../context/Confirmation.context';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 const ProjectControl: React.FC = () => {
   const { projects, updateProjectList } = useProject();
@@ -15,6 +16,7 @@ const ProjectControl: React.FC = () => {
   const [deleteProjectMutation, deleteProjectResults] = useDeleteProjectMutation();
   const confirmation = useConfirmation();
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
@@ -32,8 +34,11 @@ const ProjectControl: React.FC = () => {
   useEffect(() => {
     if (deleteProjectResults.called && deleteProjectResults.data) {
       updateProjectList();
+    } else if (deleteProjectResults.error) {
+      pushSnackbarMessage(t('errors.projectDelete'), 'error');
+      console.error(deleteProjectResults.error);
     }
-  }, [deleteProjectResults.data, deleteProjectResults.called]);
+  }, [deleteProjectResults.data, deleteProjectResults.called, deleteProjectResults.error]);
 
   const columns: GridColDef[] = [
     {
