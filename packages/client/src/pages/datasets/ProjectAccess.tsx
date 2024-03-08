@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { DatasetProjectPermission, Project } from '../../graphql/graphql';
 import { useGrantProjectDatasetAccessMutation } from '../../graphql/permission/permission';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const ProjectAccess: React.FC = () => {
   const { project } = useProject();
@@ -13,6 +14,7 @@ export const ProjectAccess: React.FC = () => {
   const [projectAccess, setProjectAccess] = useState<DatasetProjectPermission[]>([]);
   const [grantProjectDatasetAccess, grantProjectDatasetAccessResults] = useGrantProjectDatasetAccessMutation();
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   // For querying for the permissions
   useEffect(() => {
@@ -25,6 +27,9 @@ export const ProjectAccess: React.FC = () => {
   useEffect(() => {
     if (datasetProjectPermissionResults.data) {
       setProjectAccess(datasetProjectPermissionResults.data.getDatasetProjectPermissions);
+    } else if (datasetProjectPermissionResults.error) {
+      pushSnackbarMessage(t('errors.datasetPermissionUpdate'), 'error');
+      console.error(datasetProjectPermissionResults.error);
     }
   }, [datasetProjectPermissionResults]);
 

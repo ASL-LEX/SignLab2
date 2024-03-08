@@ -7,6 +7,7 @@ import { useGetDatasetsByProjectQuery } from '../../graphql/dataset/dataset';
 import { useProject } from '../../context/Project.context';
 import ToggleEntryEnabled from '../../components/ToggleEntryEnabled.component';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const EntryControls: React.FC = () => {
   const { project } = useProject();
@@ -17,12 +18,16 @@ export const EntryControls: React.FC = () => {
     }
   });
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (getDatasetsByProjectResults.data) {
       setDatasets(getDatasetsByProjectResults.data.getDatasetsByProject);
+    } else if (getDatasetsByProjectResults.error) {
+      pushSnackbarMessage(t('errors.datasetsForProject'), 'error');
+      console.error(getDatasetsByProjectResults.error);
     }
-  }, [getDatasetsByProjectResults.data]);
+  }, [getDatasetsByProjectResults]);
 
   const additionalColumns: GridColDef[] = [
     {

@@ -6,6 +6,7 @@ import { JsonForms } from '@jsonforms/react';
 import { useCreateProjectMutation, useProjectExistsLazyQuery } from '../../graphql/project/project';
 import { ErrorObject } from 'ajv';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 const initialData = {
   name: '',
@@ -21,6 +22,7 @@ export const NewProject: React.FC = () => {
   const [projectExistsQuery, projectExistsResults] = useProjectExistsLazyQuery();
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const schema = {
     type: 'object',
@@ -84,7 +86,8 @@ export const NewProject: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      //handle server side error here. For now a simple text is displayed
+      pushSnackbarMessage(t('errors.projectCreate'), 'error');
+      console.error(error);
     }
   }, [error]);
 
