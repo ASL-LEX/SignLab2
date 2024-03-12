@@ -10,7 +10,6 @@ import { useSnackbar } from '../../context/Snackbar.context';
 import { useProject } from '../../context/Project.context';
 import { ProjectCreate } from '../../graphql/graphql';
 
-
 export const NewProject: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<ProjectCreate>({} as any);
