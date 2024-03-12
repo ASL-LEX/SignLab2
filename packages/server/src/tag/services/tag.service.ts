@@ -210,7 +210,8 @@ export class TagService {
           study: study._id,
           complete: false,
           order,
-          enabled: enabled
+          enabled: enabled,
+          training: false
         });
       }
     }
