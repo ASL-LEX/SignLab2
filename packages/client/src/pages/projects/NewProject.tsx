@@ -7,15 +7,13 @@ import { useCreateProjectMutation, useProjectExistsLazyQuery } from '../../graph
 import { ErrorObject } from 'ajv';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../../context/Snackbar.context';
+import { useProject } from '../../context/Project.context';
+import { ProjectCreate } from '../../graphql/graphql';
 
-const initialData = {
-  name: '',
-  description: ''
-};
 
 export const NewProject: React.FC = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<ProjectCreate>({} as any);
   const [createProject, { error, data: createProjectResults, loading }] = useCreateProjectMutation({
     variables: { project: data }
   });
@@ -23,6 +21,8 @@ export const NewProject: React.FC = () => {
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
+  const { updateProjectList } = useProject();
+  const [valid, setValid] = useState<boolean>(false);
 
   const schema = {
     type: 'object',
@@ -73,13 +73,16 @@ export const NewProject: React.FC = () => {
           params: { keyword: 'uniqueProjectName' }
         }
       ]);
+      setValid(false);
     } else {
       setAdditionalErrors([]);
+      setValid(true);
     }
   }, [projectExistsResults.data]);
 
   useEffect(() => {
     if (createProjectResults) {
+      updateProjectList();
       navigate('/successpage');
     }
   }, [createProjectResults]);
@@ -88,6 +91,7 @@ export const NewProject: React.FC = () => {
     if (error) {
       pushSnackbarMessage(t('errors.projectCreate'), 'error');
       console.error(error);
+      setValid(false);
     }
   }, [error]);
 
@@ -95,6 +99,8 @@ export const NewProject: React.FC = () => {
     setData(data);
     if (!errors || errors.length === 0) {
       projectExistsQuery({ variables: { name: data.name } });
+    } else {
+      setValid(false);
     }
   };
 
@@ -104,11 +110,6 @@ export const NewProject: React.FC = () => {
 
   return (
     <>
-      {error && (
-        <Typography color={'red'} variant="h6">
-          {t('components.newProject.failMessage')}
-        </Typography>
-      )}
       <JsonForms
         schema={schema}
         uischema={uischema}
@@ -118,7 +119,7 @@ export const NewProject: React.FC = () => {
         onChange={({ data, errors }) => handleChange(data, errors)}
         additionalErrors={additionalErrors}
       />
-      <Button variant="contained" onClick={handleSubmit} disabled={loading || projectExistsResults.data?.projectExists}>
+      <Button variant="contained" onClick={handleSubmit} disabled={loading || !valid}>
         {t('common.submit')}
       </Button>
     </>
