@@ -210,7 +210,8 @@ export class TagService {
           study: study._id,
           complete: false,
           order,
-          enabled: enabled
+          enabled: enabled,
+          training: false
         });
       }
     }
@@ -222,7 +223,21 @@ export class TagService {
   }
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
-    return this.tagModel.findOne({ study: study._id, user, complete: false, enabled: true });
+    const incomplete = await this.tagModel.findOne({ study: study._id, user, complete: false });
+
+    // If no incomplete tag, return null
+    if (!incomplete) {
+      return incomplete;
+    }
+
+    // Make sure the tag is still enabled, otherwise remove the user association and return null
+    if (!incomplete.enabled) {
+      await this.tagModel.updateOne({ _id: incomplete._id }, { $unset: { user: '' } });
+      return null;
+    }
+
+    // Otherwise, there is a tag that the user should complete
+    return incomplete;
   }
 
   private async removeByStudy(study: Study): Promise<void> {
