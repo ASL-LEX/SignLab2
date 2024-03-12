@@ -104,7 +104,8 @@
       "completed": "All steps completed - your new study is created",
       "startOver": "Start Over",
       "formTitle": "Study Information",
-      "tagsDescription": "Number of times each entry needs to be tagged (default 1)"
+      "tagsDescription": "Number of times each entry needs to be tagged (default 1)",
+      "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access"
     },
     "studyControl": {
       "deleteStudy": "Delete Study",
