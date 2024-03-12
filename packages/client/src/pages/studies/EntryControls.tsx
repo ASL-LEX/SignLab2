@@ -15,7 +15,8 @@ export const EntryControls: React.FC = () => {
   const getDatasetsByProjectResults = useGetDatasetsByProjectQuery({
     variables: {
       project: project ? project._id : ''
-    }
+    },
+    fetchPolicy: 'network-only'
   });
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
@@ -46,7 +47,11 @@ export const EntryControls: React.FC = () => {
   return (
     <>
       <Typography variant="h3">{t('menu.entryControl')}</Typography>
-      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      {!getDatasetsByProjectResults.loading && datasets.length == 0 ? (
+        <Typography variant="h4">{t('components.newStudy.noDatasets')}</Typography>
+      ) : (
+        <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      )}
     </>
   );
 };
