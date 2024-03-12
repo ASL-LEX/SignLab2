@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
-import { Switch } from '@mui/material';
+import { Switch, Typography } from '@mui/material';
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../context/Snackbar.context';
@@ -88,7 +88,11 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
 
   return (
     <>
-      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      {!getDatasetsResults.loading && datasets.length == 0 ? (
+        <Typography variant="h4">{t('components.newStudy.noDatasets')}</Typography>
+      ) : (
+        <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      )}
     </>
   );
 };
