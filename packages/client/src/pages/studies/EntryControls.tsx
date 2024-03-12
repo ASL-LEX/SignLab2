@@ -15,7 +15,8 @@ export const EntryControls: React.FC = () => {
   const getDatasetsByProjectResults = useGetDatasetsByProjectQuery({
     variables: {
       project: project ? project._id : ''
-    }
+    },
+    fetchPolicy: 'network-only'
   });
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
