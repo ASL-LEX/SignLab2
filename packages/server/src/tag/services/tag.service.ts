@@ -232,7 +232,7 @@ export class TagService {
 
     // Make sure the tag is still enabled, otherwise remove the user association and return null
     if (!incomplete.enabled) {
-      await this.tagModel.updateOne({ _id: incomplete._id, }, { $unset: { user: '' }});
+      await this.tagModel.updateOne({ _id: incomplete._id }, { $unset: { user: '' } });
       return null;
     }
 
