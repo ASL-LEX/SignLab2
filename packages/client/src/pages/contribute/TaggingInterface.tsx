@@ -45,7 +45,6 @@ const MainView: React.FC<MainViewProps> = (props) => {
   }, [tagData]);
 
   // Tag submission result
-  // TODO: Handle errors
   useEffect(() => {
     if (completeTagResult.data) {
       // Assign a new tag
@@ -54,7 +53,7 @@ const MainView: React.FC<MainViewProps> = (props) => {
       pushSnackbarMessage(t('errors.tagComplete'), 'error');
       console.error(completeTagResult.error);
     }
-  }, [completeTagResult]);
+  }, [completeTagResult.data, completeTagResult.error]);
 
   return (
     <>
