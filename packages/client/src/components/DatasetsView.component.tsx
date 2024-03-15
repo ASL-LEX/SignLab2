@@ -24,7 +24,11 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additional
           </AccordionSummary>
           <AccordionDetails>
             {/* provide new dataset object to allow DatasetTable to refetch entries after entries are updated */}
-            <DatasetTable dataset={{ ...dataset }} additionalColumns={additionalColumns} supportEntryDelete={supportEntryDelete} />
+            <DatasetTable
+              dataset={{ ...dataset }}
+              additionalColumns={additionalColumns}
+              supportEntryDelete={supportEntryDelete}
+            />
           </AccordionDetails>
         </Accordion>
       ))}

@@ -43,9 +43,11 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
       title: t('components.datasetcontrol.deleteEntries'),
       message: `${t('components.datasetControl.deleteMultipleEntries')}:${selectedRows.length}`,
       onConfirm: async () => {
-        await Promise.all(selectedRows.map((id) => {
-          return deleteEntryMutation({ variables: { entry: id.toString( )} });
-        }));
+        await Promise.all(
+          selectedRows.map((id) => {
+            return deleteEntryMutation({ variables: { entry: id.toString() } });
+          })
+        );
         reload();
       },
       onCancel: () => {}
@@ -77,7 +79,11 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
     maxWidth: 120,
     cellClassName: 'delete',
     renderHeader: () => {
-      return <IconButton onClick={() => handleMultiSelectDelete()}><Delete color={'error'}/></IconButton>;
+      return (
+        <IconButton onClick={() => handleMultiSelectDelete()}>
+          <Delete color={'error'} />
+        </IconButton>
+      );
     },
     getActions: (params) => {
       return [
@@ -104,7 +110,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
 
   const reload = () => {
     entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
-  }
+  };
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
   useEffect(() => {
