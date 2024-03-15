@@ -19,6 +19,7 @@ export const getBoolCols: GetGridColDefs = (uischema, schema, property) => {
     {
       field: property,
       headerName: property,
+      valueGetter: (params) => params.row.data ? params.row.data[property] : null,
       renderCell: (params) =>
         params.row.data &&
         params.row.data[property] && (
