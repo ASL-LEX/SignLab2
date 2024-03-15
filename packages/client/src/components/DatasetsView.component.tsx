@@ -7,10 +7,11 @@ import { GridColDef } from '@mui/x-data-grid';
 export interface DatasetsViewProps {
   datasets: Dataset[];
   additionalColumns?: GridColDef[];
+  supportEntryDelete?: boolean;
 }
 
 // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
-export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additionalColumns }) => {
+export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additionalColumns, supportEntryDelete }) => {
   return (
     <>
       {datasets.map((dataset: Dataset) => (
@@ -23,7 +24,11 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additional
           </AccordionSummary>
           <AccordionDetails>
             {/* provide new dataset object to allow DatasetTable to refetch entries after entries are updated */}
-            <DatasetTable dataset={{ ...dataset }} additionalColumns={additionalColumns} />
+            <DatasetTable
+              dataset={{ ...dataset }}
+              additionalColumns={additionalColumns}
+              supportEntryDelete={supportEntryDelete}
+            />
           </AccordionDetails>
         </Accordion>
       ))}

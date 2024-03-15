@@ -6,10 +6,6 @@ import { UploadEntries } from '../../components/UploadEntries.component';
 import { Dataset } from '../../graphql/graphql';
 import { useGetDatasetsLazyQuery } from '../../graphql/dataset/dataset';
 import { DatasetsView } from '../../components/DatasetsView.component';
-import { GridColDef, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import { useConfirmation } from '../../context/Confirmation.context';
-import { useDeleteEntryMutation } from '../../graphql/entry/entry';
 import { useTranslation } from 'react-i18next';
 
 export const DatasetControls: React.FC = () => {
@@ -17,10 +13,7 @@ export const DatasetControls: React.FC = () => {
   const [upload, setUpload] = useState(false);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [getDatasets, getDatasetsResults] = useGetDatasetsLazyQuery();
-  const [deleteEntryMutation] = useDeleteEntryMutation();
   const { t } = useTranslation();
-
-  const confirmation = useConfirmation();
 
   useEffect(() => {
     getDatasets();
@@ -51,44 +44,6 @@ export const DatasetControls: React.FC = () => {
     setUpload((upload) => !upload);
   };
 
-  const handleDelete = async (id: GridRowId) => {
-    // Execute delete mutation
-    confirmation.pushConfirmationRequest({
-      title: t('components.datasetControl.deleteEntry'),
-      message: t('components.datasetControl.deleteDescription'),
-      onConfirm: async () => {
-        const res = await deleteEntryMutation({ variables: { entry: id.toString() } });
-        if (res.errors) {
-          //TODO show error with snackbar
-        } else if (res.data) {
-          // force rerender
-          setDatasets([...datasets]);
-        }
-      },
-      onCancel: () => {}
-    });
-  };
-
-  const additionalColumns: GridColDef[] = [
-    {
-      field: 'delete',
-      type: 'actions',
-      headerName: t('common.delete'),
-      width: 120,
-      maxWidth: 120,
-      cellClassName: 'delete',
-      getActions: (params) => {
-        return [
-          <GridActionsCellItem
-            icon={<DeleteIcon color={'error'} />}
-            label={t('common.delete')}
-            onClick={() => handleDelete(params.id)}
-          />
-        ];
-      }
-    }
-  ];
-
   return (
     <>
       <Typography variant="h3">{t('menu.datasetControl')}</Typography>
@@ -116,7 +71,7 @@ export const DatasetControls: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      <DatasetsView datasets={datasets} supportEntryDelete={true} />
     </>
   );
 };
