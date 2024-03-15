@@ -72,9 +72,11 @@
     },
     "datasetControl": {
       "deleteEntry": "Delete Entry",
-      "deleteDescription": "Are you sure you want to delete this project? Doing so will delete all associated tags",
+      "deleteEntries": "Delete Entries",
+      "deleteDescription": "Are you sure you want to delete this entry? Doing so will delete all cooresponding tags",
       "addDataset": " Add New Dataset",
-      "uploadEntries": " Upload Entries"
+      "uploadEntries": " Upload Entries",
+      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted: "
     },
     "projectAccess": {
       "datasetName": "Dataset Name",

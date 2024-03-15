@@ -21,6 +21,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
   const [deleteEntryMutation] = useDeleteEntryMutation();
   const confirmation = useConfirmation();
+  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
 
   const defaultColumns: GridColDef[] = [
     {
@@ -38,7 +39,16 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   ];
 
   const handleMultiSelectDelete = () => {
-
+    confirmation.pushConfirmationRequest({
+      title: t('components.datasetcontrol.deleteEntries'),
+      message: `${t('components.datasetControl.deleteMultipleEntries')}:${selectedRows.length}`,
+      onConfirm: async () => {
+        await Promise.all(selectedRows.map((id) => {
+          return deleteEntryMutation({ variables: { entry: id.toString( )} });
+        }))
+      },
+      onCancel: () => {}
+    });
   };
 
   const handleDelete = async (id: GridRowId) => {
@@ -115,7 +125,8 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
       }}
       getRowId={(row) => row._id}
       pageSizeOptions={[5, 10, 15]}
-      onRowSelectionModelChange={(ids) => props.onSelectChange(ids)}
+      onRowSelectionModelChange={(ids) => setSelectedRows(ids)}
+      rowSelectionModel={selectedRows}
       checkboxSelection
       disableRowSelectionOnClick
     />
