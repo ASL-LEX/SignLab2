@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridRowId, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowId, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Dataset, Entry } from '../graphql/graphql';
 import { useEntryForDatasetLazyQuery } from '../graphql/entry/entry';
