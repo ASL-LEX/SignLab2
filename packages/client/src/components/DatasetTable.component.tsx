@@ -45,7 +45,8 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
       onConfirm: async () => {
         await Promise.all(selectedRows.map((id) => {
           return deleteEntryMutation({ variables: { entry: id.toString( )} });
-        }))
+        }));
+        reload();
       },
       onCancel: () => {}
     });
@@ -61,7 +62,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
         if (res.errors) {
           //TODO show error with snackbar
         } else if (res.data) {
-          // TODO: Force rerendering
+          reload();
         }
       },
       onCancel: () => {}
@@ -98,8 +99,12 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [entryForDataset, entryForDatasetResult] = useEntryForDatasetLazyQuery();
 
   useEffect(() => {
-    entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
+    reload();
   }, [props.dataset]);
+
+  const reload = () => {
+    entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
+  }
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
   useEffect(() => {

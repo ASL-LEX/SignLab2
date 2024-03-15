@@ -76,7 +76,7 @@
       "deleteDescription": "Are you sure you want to delete this entry? Doing so will delete all cooresponding tags",
       "addDataset": " Add New Dataset",
       "uploadEntries": " Upload Entries",
-      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted: "
+      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted"
     },
     "projectAccess": {
       "datasetName": "Dataset Name",
