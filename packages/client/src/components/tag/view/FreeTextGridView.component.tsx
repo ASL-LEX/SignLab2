@@ -18,6 +18,7 @@ export const getTextCols: GetGridColDefs = (uischema, schema, property) => {
     {
       field: property,
       headerName: property,
+      valueGetter: (params) => params.row.data ? params.row.data[property] : '',
       renderCell: (params) =>
         params.row.data &&
         params.row.data[property] && (
