@@ -5,13 +5,11 @@ import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
 import { Organization } from '../graphql/graphql';
 import { useGetOrganizationsQuery } from '../graphql/organization/organization';
-
-import styles from './UIComponents/styles.component';
-import LoginComponent from './UIComponents/Login.component';
-import SignUpComponent from './UIComponents/Signup.component';
-import ResetPasswordComponent from './UIComponents/ResetPassword.component';
-import { Route, Link, Routes, useLocation } from 'react-router-dom';
-import { Select, MenuItem } from '@mui/material';
+import LoginComponent from '../components/auth/Login.component';
+import SignUpComponent from '../components/auth/Signup.component';
+import ResetPasswordComponent from '../components/auth/ResetPassword.component';
+import { Box, Tabs, Tab, Select, MenuItem, FormControl, Button, Typography, Container } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
@@ -59,7 +57,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
   const [organization, setOrganization] = useState<Organization | null>(null);
-  const [organizationList, setOrganizationList] = useState<Organization[] | null>(null);
+  const [organizationList, setOrganizationList] = useState<Organization[]>([]);
+  const [activeTab, setActiveTab] = useState<'login' | 'signup' | 'reset'>('login');
 
   const getOrganizationResult = useGetOrganizationsQuery();
 
@@ -67,7 +66,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     // TODO: Handle multi-organization login
     if (getOrganizationResult.data && getOrganizationResult.data.getOrganizations.length > 0) {
       setOrganizationList(getOrganizationResult.data.getOrganizations);
-      console.log('Here' + getOrganizationResult);
       setOrganization(getOrganizationResult.data.getOrganizations[0]);
     }
   }, [getOrganizationResult.data]);
@@ -117,53 +115,72 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Handle switch tab
-  const [activeTab, setActiveTab] = useState<string>('login');
-  const handleTabClick = (tab:string) => {
+  const handleTabChange = (_event: React.SyntheticEvent, tab: 'login' | 'signup' | 'reset') => {
     setActiveTab(tab);
+  }; 
+
+  // Handle organization select
+  const handleOrganizationSelect = (event: SelectChangeEvent<string>) => {
+    const selectedOrganization = organizationList.find(org => org.name === event.target.value);
+    setOrganization(selectedOrganization || null);
   };
 
-  const location = useLocation();
-  const isResetPassword = location.pathname === "/reset-password";   // determine if it is reset password page
-
   return (
-    <div style={styles.container}>
-      {!isResetPassword &&
-      (<div style={styles.tabContainer}>
-        <div style={{ ...styles.tab, ...(activeTab === 'login' && styles.activeTab) }} onClick={() => handleTabClick('login')}>Login</div>
-        <div style={{ ...styles.tab, ...(activeTab === 'signup' && styles.activeTab) }} onClick={() => handleTabClick('signup')}>Signup</div>
-      </div>)}
-      
-      {!isResetPassword && (<div className="options">
-        <label style={{display: 'block', textAlign: 'center' as 'center', marginBottom: '5px'}}>Organization</label>
-        <Select style={{ width: '300px', height: '40px', marginBottom: '20px'}}>
-          {organizationList?.map((organization, index) => {
-            return (
-              <MenuItem key={index} value={10}>
-                {organization.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </div>)}
+    <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '400px', width: '100%' }}>
+              <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
+                <Tab label="Login" value="login" />
+                <Tab label="Signup" value="signup" />
+              </Tabs>
+            </Box>
+        </Box>
+        {activeTab !== 'reset' && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, maxWidth: '300px', width: '100%' }}>
+            <Typography variant="h5">
+              Organization
+            </Typography>
+            <FormControl fullWidth>
+              <Select
+                value={organization ? organization.name : ''}
+                onChange={handleOrganizationSelect}
+                sx={{ mb: 2, width: '100%' }} >
+                {organizationList.map((organization, index) => (
+                  <MenuItem key={index} value={organization.name}>
+                    {organization.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
+        )}
       <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
         {!authenticated && organization && (
-          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} isResetPassword={isResetPassword}/>
+          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
         )}
         {authenticated && children}
       </AuthContext.Provider>
 
-    </div>
+      {activeTab !== 'reset' && (
+        <Box sx={{ textAlign: 'center', mt: 1 }}>
+          <Button onClick={(event) => handleTabChange(event, 'reset')} variant="text" sx={{ color: 'blue', textTransform: 'none' }}>Reset Password</Button>
+        </Box>
+      )}
+      </Box>
+    </Container>
   );
 };
 
 interface FirebaseLoginWrapperProps {
   setToken: (token: string) => void;
   organization: Organization;
-  activeTab : string;
-  isResetPassword: boolean;
+  activeTab: 'login' | 'signup' | 'reset';
 }
 
-const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab, isResetPassword }) => {
+const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab }) => {
   firebase.initializeApp(firebaseConfig);
 
   // Handle multi-tenant login
@@ -187,21 +204,16 @@ const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organiz
     });
   }, []);
   
-  // return <div id="firebaseui-auth-container" />;
   return (
-    <>
-      <div>
-        <Routes>
-          <Route path="/" element={activeTab === 'login' ? <LoginComponent onLoginSuccess={setToken} auth={auth} /> : <SignUpComponent auth={auth} />} />
-          <Route path="/reset-password" element={<ResetPasswordComponent auth={auth} />} />
-        </Routes>
-      {!isResetPassword && <Link to="/reset-password" style={{display: 'block', fontSize: '15px', textAlign: 'right' as 'right', margin: '10px'}}>Reset Password</Link>}
-      </div>
-      <hr />
-      <div id="firebaseui-auth-container" />
-    </>
+    <Box>
+      {activeTab === 'login' && <LoginComponent onLoginSuccess={setToken} auth={auth} />}
+      {activeTab === 'signup' && <SignUpComponent auth={auth} />}
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4, mb: 4 }}>
+        {activeTab === 'reset' && <ResetPasswordComponent auth={auth} />}
+      </Box>
+      <Box id="firebaseui-auth-container" style={{ display: activeTab === 'reset' ? 'none' : 'block' }} />
+    </Box>
   );
 };
-  
 
 export const useAuth = () => useContext(AuthContext);
