@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 
 interface ResetPasswordComponentProps {
     auth: firebaseauth.Auth;
@@ -9,16 +9,24 @@ interface ResetPasswordComponentProps {
 // Reset-Password Page Component
 const ResetPasswordComponent: FC<ResetPasswordComponentProps> = ({ auth }) => {
     const [email, setEmail] = useState<string>('');
+    const [openDialog, setOpenDialog] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
 
     // Handle Reset-Password
     const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             await firebaseauth.sendPasswordResetEmail(auth, email);
-            alert('An email for reset password has been sent to your email. Please check and follow the instructions.')
+            setDialogMessage('An email for reset password has been sent to your email. Please check and follow the instructions.');
+            setOpenDialog(true);
         } catch (error) {
-            alert((error as Error).message);
+            setDialogMessage((error as Error).message);
+            setOpenDialog(true);
         }
+    };
+    
+    const handleClose = () => {
+        setOpenDialog(false);
     };
 
     return (
@@ -48,7 +56,13 @@ const ResetPasswordComponent: FC<ResetPasswordComponentProps> = ({ auth }) => {
         <Button type="submit" variant="contained" sx={{ mt: 2, mb: 2, width: '30ch', display: 'flex', justifyContent: 'center' }}>
             Submit
         </Button>
-        </Box>
+        <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>{dialogMessage}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+        </Dialog>
+    </Box>
   );
 };
 

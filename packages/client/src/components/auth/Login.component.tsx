@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 
 
 interface LoginComponentProps {
@@ -12,7 +12,9 @@ interface LoginComponentProps {
 const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+
   // Handle Login
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,11 +23,16 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
       const token = await userCredential.user.getIdToken();
       onLoginSuccess(token);
     } catch (error) {
-      alert((error as Error).message);
+      setDialogMessage((error as Error).message);
+      setOpenDialog(true);
       setPassword('');
     }
   };
 
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+  
   return (
     <Box component="form" onSubmit={handleLogin} sx={{ '& .MuiTextField-root': { m: 1, width: '30ch' }, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
@@ -55,6 +62,13 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
       <Button type="submit" variant="contained" sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}>
         Login
       </Button>
+      
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>{dialogMessage}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 
