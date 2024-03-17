@@ -8,6 +8,7 @@ import { useGetOrganizationsQuery } from '../graphql/organization/organization';
 import LoginComponent from '../components/auth/Login.component';
 import SignUpComponent from '../components/auth/Signup.component';
 import ResetPasswordComponent from '../components/auth/ResetPassword.component';
+import NavigationSidebar from '../components/auth/NavigationSideBar.component';
 import { Box, Tabs, Tab, Select, MenuItem, FormControl, Button, Typography, Container } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 
@@ -125,8 +126,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setOrganization(selectedOrganization || null);
   };
 
-  return (
+  return (          
     <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
+    <NavigationSidebar />
       <Box sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '400px', width: '100%' }}>
