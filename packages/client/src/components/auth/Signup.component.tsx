@@ -19,7 +19,7 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
     e.preventDefault();
     // Check if passwords match
     if (password !== confirmPassword) {
-      setDialogMessage("Passwords do not match");
+      setDialogMessage('Passwords do not match');
       setOpenDialog(true);
       return;
     }
@@ -38,9 +38,18 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   const handleClose = () => {
     setOpenDialog(false);
   };
-  
+
   return (
-    <Box component="form" onSubmit={handleSignUp} sx={{ '& .MuiTextField-root': { m: 1, width: '30ch' }, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      component="form"
+      onSubmit={handleSignUp}
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '30ch' },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
         Enter Username
       </Typography>
@@ -77,7 +86,11 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
         placeholder="Re-enter Password"
         required
       />
-      <Button type="submit" variant="contained" sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}>
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}
+      >
         Sign Up
       </Button>
 
@@ -87,10 +100,8 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
-
     </Box>
   );
-
 };
 
 export default SignUpComponent;

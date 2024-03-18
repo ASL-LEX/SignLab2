@@ -20,8 +20,8 @@ const NavigationSidebar = () => {
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
-          backgroundColor: '#283593',
-        },
+          backgroundColor: '#283593'
+        }
       }}
       variant="permanent"
       anchor="left"
@@ -31,7 +31,7 @@ const NavigationSidebar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '20px',
+          padding: '20px'
         }}
       >
         <Typography variant="h5" sx={{ color: 'white' }}>
@@ -40,11 +40,11 @@ const NavigationSidebar = () => {
       </Box>
       <List
         sx={{
-          height: '100%', 
+          height: '100%',
           '.MuiListItem-root': {
             color: 'white',
-            backgroundColor: '#5c6bc0',
-          },
+            backgroundColor: '#5c6bc0'
+          }
         }}
       >
         <ListItem button key="Navigation" onClick={handleClick}>

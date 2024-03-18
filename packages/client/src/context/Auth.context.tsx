@@ -118,59 +118,76 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   // Handle switch tab
   const handleTabChange = (_event: React.SyntheticEvent, tab: 'login' | 'signup' | 'reset') => {
     setActiveTab(tab);
-  }; 
+  };
 
   // Handle organization select
   const handleOrganizationSelect = (event: SelectChangeEvent<string>) => {
-    const selectedOrganization = organizationList.find(org => org.name === event.target.value);
+    const selectedOrganization = organizationList.find((org) => org.name === event.target.value);
     setOrganization(selectedOrganization || null);
   };
 
-  return (          
-    <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
-    <NavigationSidebar />
+  return (
+    <Container
+      maxWidth="sm"
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}
+    >
+      <NavigationSidebar />
       <Box sx={{ width: '100%' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '400px', width: '100%' }}>
-              <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
-                <Tab label="Login" value="login" />
-                <Tab label="Signup" value="signup" />
-              </Tabs>
-            </Box>
-        </Box>
-        {activeTab !== 'reset' && (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, maxWidth: '300px', width: '100%' }}>
-            <Typography variant="h5">
-              Organization
-            </Typography>
-            <FormControl fullWidth>
-              <Select
-                value={organization ? organization.name : ''}
-                onChange={handleOrganizationSelect}
-                sx={{ mb: 2, width: '100%' }} >
-                {organizationList.map((organization, index) => (
-                  <MenuItem key={index} value={organization.name}>
-                    {organization.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '400px', width: '100%' }}>
+            <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
+              <Tab label="Login" value="login" />
+              <Tab label="Signup" value="signup" />
+            </Tabs>
           </Box>
         </Box>
+        {activeTab !== 'reset' && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 2,
+                maxWidth: '300px',
+                width: '100%'
+              }}
+            >
+              <Typography variant="h5">Organization</Typography>
+              <FormControl fullWidth>
+                <Select
+                  value={organization ? organization.name : ''}
+                  onChange={handleOrganizationSelect}
+                  sx={{ mb: 2, width: '100%' }}
+                >
+                  {organizationList.map((organization, index) => (
+                    <MenuItem key={index} value={organization.name}>
+                      {organization.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
         )}
-      <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
-        {!authenticated && organization && (
-          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
-        )}
-        {authenticated && children}
-      </AuthContext.Provider>
+        <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
+          {!authenticated && organization && (
+            <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
+          )}
+          {authenticated && children}
+        </AuthContext.Provider>
 
-      {activeTab !== 'reset' && (
-        <Box sx={{ textAlign: 'center', mt: 1 }}>
-          <Button onClick={(event) => handleTabChange(event, 'reset')} variant="text" sx={{ color: 'blue', textTransform: 'none' }}>Reset Password</Button>
-        </Box>
-      )}
+        {activeTab !== 'reset' && (
+          <Box sx={{ textAlign: 'center', mt: 1 }}>
+            <Button
+              onClick={(event) => handleTabChange(event, 'reset')}
+              variant="text"
+              sx={{ color: 'blue', textTransform: 'none' }}
+            >
+              Reset Password
+            </Button>
+          </Box>
+        )}
       </Box>
     </Container>
   );
@@ -205,7 +222,7 @@ const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organiz
       signInOptions: [firebaseauth.GoogleAuthProvider.PROVIDER_ID]
     });
   }, []);
-  
+
   return (
     <Box>
       {activeTab === 'login' && <LoginComponent onLoginSuccess={setToken} auth={auth} />}

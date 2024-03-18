@@ -2,7 +2,6 @@ import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
 import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 
-
 interface LoginComponentProps {
   onLoginSuccess: (token: string) => void;
   auth: firebaseauth.Auth;
@@ -32,9 +31,18 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   const handleClose = () => {
     setOpenDialog(false);
   };
-  
+
   return (
-    <Box component="form" onSubmit={handleLogin} sx={{ '& .MuiTextField-root': { m: 1, width: '30ch' }, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      component="form"
+      onSubmit={handleLogin}
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '30ch' },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
         Enter Username
       </Typography>
@@ -47,7 +55,7 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
         placeholder="Email"
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2}}>
+      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
         Enter Password
       </Typography>
       <TextField
@@ -59,10 +67,14 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
         placeholder="Password"
         required
       />
-      <Button type="submit" variant="contained" sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}>
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}
+      >
         Login
       </Button>
-      
+
       <Dialog open={openDialog} onClose={handleClose}>
         <DialogTitle>{dialogMessage}</DialogTitle>
         <DialogActions>
@@ -71,7 +83,6 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
       </Dialog>
     </Box>
   );
-
 };
 
 export default LoginComponent;
