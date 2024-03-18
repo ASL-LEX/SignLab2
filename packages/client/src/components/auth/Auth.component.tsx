@@ -47,58 +47,39 @@ export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticate
   };
 
   return (
-    <Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '400px', width: '100%' }}>
-          <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
-            <Tab label="Login" value="login" />
-            <Tab label="Signup" value="signup" />
-          </Tabs>
-        </Box>
+    <Stack sx={{ justifyContent: 'center', maxWidth: 300 }}>
+      <Box sx={{ borderBottom: 1 }}>
+        <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
+          <Tab label="Login" value="login" />
+          <Tab label="Signup" value="signup" />
+        </Tabs>
       </Box>
-      {activeTab !== 'reset' && (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              mt: 2,
-              maxWidth: '300px',
-              width: '100%'
-            }}
-          >
-            <Typography variant="h5">Organization</Typography>
-            <FormControl fullWidth>
-              <Select
-                value={organization ? organization.name : ''}
-                onChange={handleOrganizationSelect}
-                sx={{ mb: 2, width: '100%' }}
-              >
-                {organizationList.map((organization, index) => (
-                  <MenuItem key={index} value={organization.name}>
-                    {organization.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Box>
-      )}
+      <Typography variant="h5">Organization</Typography>
+      <FormControl fullWidth>
+        <Select
+          value={organization ? organization.name : ''}
+          onChange={handleOrganizationSelect}
+          sx={{ mb: 2, width: '100%' }}
+        >
+          {organizationList.map((organization, index) => (
+            <MenuItem key={index} value={organization.name}>
+              {organization.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
         {organization && (
           <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
         )}
       {activeTab !== 'reset' && (
-        <Box sx={{ textAlign: 'center', mt: 1 }}>
-          <Button
-            onClick={(event) => handleTabChange(event, 'reset')}
-            variant="text"
-            sx={{ color: 'blue', textTransform: 'none' }}
-          >
-            Reset Password
-          </Button>
-        </Box>
-        )}
+        <Button
+          onClick={(event) => handleTabChange(event, 'reset')}
+          variant="text"
+          sx={{ color: 'blue', textTransform: 'none' }}
+        >
+          Reset Password
+        </Button>
+      )}
     </Stack>
   );
 };
@@ -109,7 +90,7 @@ interface FirebaseLoginWrapperProps {
   activeTab: 'login' | 'signup' | 'reset';
 }
 
-const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab }) => {
+const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab }) => {
   firebase.initializeApp(firebaseConfig);
 
   // Handle multi-tenant login

@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
-import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
+import { TextField, Button, Typography, Dialog, DialogTitle, DialogActions, Stack } from '@mui/material';
 
 interface SignUpComponentProps {
   auth: firebaseauth.Auth;
@@ -40,17 +40,11 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   };
 
   return (
-    <Box
+    <Stack
       component="form"
       onSubmit={handleSignUp}
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '30ch' },
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}
     >
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
+      <Typography variant="h5">
         Enter Username
       </Typography>
       <TextField
@@ -62,7 +56,7 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
         placeholder="Email"
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
+      <Typography variant="h5">
         Enter Password
       </Typography>
       <TextField
@@ -74,7 +68,7 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
         placeholder="Password"
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
+      <Typography variant="h5">
         Re-enter Password
       </Typography>
       <TextField
@@ -89,7 +83,6 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
       <Button
         type="submit"
         variant="contained"
-        sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}
       >
         Sign Up
       </Button>
@@ -100,6 +93,6 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Stack>
   );
 };
