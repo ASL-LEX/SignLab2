@@ -43,6 +43,7 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
     <Stack
       component="form"
       onSubmit={handleSignUp}
+      spacing={1}
     >
       <Typography variant="h5">
         Enter Username

@@ -36,8 +36,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }
     <Stack
       component="form"
       onSubmit={handleLogin}
-      sx={{
-      }}
+      spacing={1}
     >
       <Typography variant="h5">
         Enter Username
