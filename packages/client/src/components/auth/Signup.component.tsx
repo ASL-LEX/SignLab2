@@ -7,7 +7,7 @@ interface SignUpComponentProps {
 }
 
 // SignUp Page Component
-const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
+export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -103,5 +103,3 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
     </Box>
   );
 };
-
-export default SignUpComponent;

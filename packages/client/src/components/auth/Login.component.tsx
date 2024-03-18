@@ -8,7 +8,7 @@ interface LoginComponentProps {
 }
 
 // Login Page Component
-const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
+export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -84,5 +84,3 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
     </Box>
   );
 };
-
-export default LoginComponent;

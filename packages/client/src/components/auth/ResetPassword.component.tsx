@@ -7,7 +7,7 @@ interface ResetPasswordComponentProps {
 }
 
 // Reset-Password Page Component
-const ResetPasswordComponent: FC<ResetPasswordComponentProps> = ({ auth }) => {
+export const ResetPasswordComponent: FC<ResetPasswordComponentProps> = ({ auth }) => {
   const [email, setEmail] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
@@ -71,5 +71,3 @@ const ResetPasswordComponent: FC<ResetPasswordComponentProps> = ({ auth }) => {
     </Box>
   );
 };
-
-export default ResetPasswordComponent;
