@@ -47,40 +47,41 @@ export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticate
   };
 
   return (
-    <Stack sx={{ justifyContent: 'center', maxWidth: 300 }}>
-      <Box sx={{ borderBottom: 1 }}>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
-          <Tab label="Login" value="login" />
-          <Tab label="Signup" value="signup" />
-        </Tabs>
-      </Box>
-      <Typography variant="h5">Organization</Typography>
-      <FormControl fullWidth>
-        <Select
-          value={organization ? organization.name : ''}
-          onChange={handleOrganizationSelect}
-          sx={{ mb: 2, width: '100%' }}
-        >
-          {organizationList.map((organization, index) => (
-            <MenuItem key={index} value={organization.name}>
-              {organization.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-        {organization && (
-          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
+    <Box sx={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+      <Stack sx={{ justifyContent: 'center', maxWidth: 350 }}>
+        <Box sx={{ borderBottom: 1 }}>
+          <Tabs value={activeTab} onChange={handleTabChange} aria-label="login signup tabs" variant="fullWidth">
+            <Tab label="Login" value="login" />
+            <Tab label="Signup" value="signup" />
+          </Tabs>
+        </Box>
+        <Typography variant="h5">Organization</Typography>
+        <FormControl fullWidth>
+          <Select
+            value={organization ? organization.name : ''}
+            onChange={handleOrganizationSelect}
+          >
+            {organizationList.map((organization, index) => (
+              <MenuItem key={index} value={organization.name}>
+                {organization.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+          {organization && (
+            <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
+          )}
+        {activeTab !== 'reset' && (
+          <Button
+            onClick={(event) => handleTabChange(event, 'reset')}
+            variant="text"
+            sx={{ color: 'blue', textTransform: 'none' }}
+          >
+            Reset Password
+          </Button>
         )}
-      {activeTab !== 'reset' && (
-        <Button
-          onClick={(event) => handleTabChange(event, 'reset')}
-          variant="text"
-          sx={{ color: 'blue', textTransform: 'none' }}
-        >
-          Reset Password
-        </Button>
-      )}
-    </Stack>
+      </Stack>
+    </Box>
   );
 };
 
@@ -118,9 +119,7 @@ const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ setToken, o
     <Box>
       {activeTab === 'login' && <LoginComponent onLoginSuccess={setToken} auth={auth} />}
       {activeTab === 'signup' && <SignUpComponent auth={auth} />}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4, mb: 4 }}>
-        {activeTab === 'reset' && <ResetPasswordComponent auth={auth} />}
-      </Box>
+      {activeTab === 'reset' && <ResetPasswordComponent auth={auth} />}
       <Box id="firebaseui-auth-container" style={{ display: activeTab === 'reset' ? 'none' : 'block' }} />
     </Box>
   );
