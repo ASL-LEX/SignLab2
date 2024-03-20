@@ -28,6 +28,9 @@ export class VideoField {
   /** Where within the bucket the video is stored */
   @Prop()
   bucketLocation: string;
+
+  @Prop()
+  organization: string;
 }
 
 export type VideoFieldDocument = VideoField & Document;

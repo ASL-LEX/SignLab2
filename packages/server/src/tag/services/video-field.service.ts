@@ -1,24 +1,22 @@
-import { BadRequestException, Injectable, Inject } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { VideoField, VideoFieldDocument } from '../models/video-field.model';
 import { Model } from 'mongoose';
 import { Tag } from '../models/tag.model';
 import { StudyService } from '../../study/study.service';
 import { ConfigService } from '@nestjs/config';
-import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
-import { Storage, Bucket } from '@google-cloud/storage';
 import { Entry } from '../../entry/models/entry.model';
 import { EntryService } from '../../entry/services/entry.service';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 import { TokenPayload } from '../../jwt/token.dto';
 import { Dataset } from '../../dataset/dataset.model';
+import { BucketFactory } from 'src/bucket/bucket-factory.service';
+import { BucketObjectAction } from 'src/bucket/bucket';
 
 @Injectable()
 export class VideoFieldService {
   private readonly bucketPrefix = this.configService.getOrThrow<string>('tag.videoFieldFolder');
   private readonly videoRecordFileType = this.configService.getOrThrow<string>('tag.videoRecordFileType');
-  private readonly bucketName = this.configService.getOrThrow<string>('gcp.storage.bucket');
-  private readonly bucket: Bucket = this.storage.bucket(this.bucketName);
   private readonly expiration = this.configService.getOrThrow<number>('tag.videoUploadExpiration');
   private readonly trainingPrefix = this.configService.getOrThrow<string>('tag.trainingPrefix');
 
@@ -26,9 +24,9 @@ export class VideoFieldService {
     @InjectModel(VideoField.name) private readonly videoFieldModel: Model<VideoFieldDocument>,
     private readonly studyService: StudyService,
     private readonly configService: ConfigService,
-    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
     private readonly entryService: EntryService,
-    private readonly datasetPipe: DatasetPipe
+    private readonly datasetPipe: DatasetPipe,
+    private readonly bucketFactory: BucketFactory
   ) {}
 
   async saveVideoField(tag: Tag, field: string, index: number): Promise<VideoField> {
@@ -56,17 +54,19 @@ export class VideoFieldService {
       tag: tag._id,
       field,
       index,
-      bucketLocation: this.getVideoFieldBucketLocation(tag._id, field, index)
+      bucketLocation: this.getVideoFieldBucketLocation(tag._id, field, index),
+      organization: study.organization
     });
   }
 
   async getUploadURL(videoField: VideoField): Promise<string> {
-    const file = this.bucket.file(this.getVideoFieldBucketLocation(videoField.tag, videoField.field, videoField.index));
-    const [url] = await file.getSignedUrl({
-      action: 'write',
-      expires: Date.now() + this.expiration,
-      contentType: 'video/webm'
-    });
+    const bucket = await this.bucketFactory.getBucket(videoField.organization);
+    if (!bucket) {
+      throw new Error('Could not find bucket for video field');
+    }
+
+    const file = this.getVideoFieldBucketLocation(videoField.tag, videoField.field, videoField.index);
+    const url = await bucket.getSignedUrl(file, BucketObjectAction.WRITE, new Date(Date.now() + this.expiration), 'video/webm');
     return url;
   }
 
@@ -78,6 +78,10 @@ export class VideoFieldService {
     const videoField = await this.videoFieldModel.findById(videoFieldID);
     if (!videoField) {
       throw new BadRequestException(`Video field ${videoFieldID} not found`);
+    }
+    const bucket = await this.bucketFactory.getBucket(videoField.organization);
+    if (!bucket) {
+      throw new Error('Could not find bucket for video field');
     }
 
     // The dataset that the entry would be associated with
@@ -102,9 +106,7 @@ export class VideoFieldService {
     }
 
     // Move the video to the permanent location
-    const source = this.bucket.file(videoField.bucketLocation);
-    await source.move(newLocation);
-    await this.entryService.setBucketLocation(entry, newLocation);
+    await bucket.move(videoField.bucketLocation, newLocation);
     entry.bucketLocation = newLocation;
 
     // Remove the video field

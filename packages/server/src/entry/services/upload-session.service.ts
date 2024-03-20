@@ -39,7 +39,8 @@ export class UploadSessionService {
     // Make the session
     const uploadSession = await this.uploadSessionModel.create({
       dataset: dataset._id,
-      created: new Date()
+      created: new Date(),
+      organization: dataset.organization
     });
 
     // Add in the bucket prefix for the session
