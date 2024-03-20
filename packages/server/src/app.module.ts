@@ -14,6 +14,7 @@ import { SharedModule } from './shared/shared.module';
 import { JwtModule } from './jwt/jwt.module';
 import { PermissionModule } from './permission/permission.module';
 import { UserModule } from './user/user.module';
+import { BucketModule } from './bucket/bucket.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { UserModule } from './user/user.module';
     SharedModule,
     JwtModule,
     PermissionModule,
-    UserModule
+    UserModule,
+    BucketModule
   ]
 })
 export class AppModule {}
