@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BucketInfo, BucketType } from './bucket-info.model';
 import { GcpBucketMaker } from './gcp-bucket';
 import { Bucket } from './bucket';
+import { SECRET_MANAGER_PROVIDER } from 'src/gcp/providers/secret.provider';
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 @Injectable()
 export class BucketFactory {
-  constructor(@InjectModel(BucketInfo.name) private readonly bucketInfoModel: Model<BucketInfo>, private readonly gcpBucketMaker: GcpBucketMaker) {}
+  constructor(
+    @InjectModel(BucketInfo.name) private readonly bucketInfoModel: Model<BucketInfo>,
+    private readonly gcpBucketMaker: GcpBucketMaker,
+    @Inject(SECRET_MANAGER_PROVIDER) private readonly secretClient: SecretManagerServiceClient
+  ) {}
 
   /**
    * Factory method which gets the correct storage bucket inforamtion for the
@@ -19,6 +25,14 @@ export class BucketFactory {
     if (!bucketInfo) {
       return bucketInfo;
     }
+
+    // Get the secret associated with the bucket
+    const [version] = await this.secretClient.accessSecretVersion({ name: bucketInfo.secretName });
+    if (!version) {
+      throw new Error('Could not get credentials for bucket');
+    }
+
+    const credentials = version.payload.data.toString();
 
     switch(bucketInfo.bucketType) {
       case BucketType.GCP:
