@@ -19,6 +19,7 @@ import { DatasetModule } from '../dataset/dataset.module';
 import { TrainingSet, TrainingSetSchema } from './models/training-set';
 import { TrainingSetResolver } from './resolvers/training-set.resolver';
 import { TrainingSetService } from './services/training-set.service';
+import { BucketModule } from 'src/bucket/bucket.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { TrainingSetService } from './services/training-set.service';
     SharedModule,
     PermissionModule,
     GcpModule,
-    DatasetModule
+    DatasetModule,
+    BucketModule
   ],
   providers: [
     TagService,
