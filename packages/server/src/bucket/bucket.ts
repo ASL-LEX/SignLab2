@@ -16,4 +16,13 @@ export interface Bucket {
 
   /** Check if an object exists */
   exists(location: string): Promise<boolean>;
+
+  /** Get the content type for a file */
+  getContentType(location: string): Promise<string | null>;
+
+  /** Get the contents of an object */
+  download(location: string): Promise<Buffer | null>;
+
+  /** Delete many files */
+  deleteFiles(location: string): Promise<void>;
 }

@@ -30,7 +30,14 @@ class GcpBucket implements Bucket {
   constructor(private readonly storageBucket: StorageBucket) {}
 
   async getSignedUrl(location: string, action: BucketObjectAction, expiration: Date, contentType?: string | undefined): Promise<string> {
-      return '';
+    const file = this.storageBucket.file(location);
+
+    const [url] = await file.getSignedUrl({
+      action: this.actionToString(action),
+      expires: expiration,
+      contentType
+    });
+    return url;
   }
 
   async delete(location: string): Promise<void> {
@@ -38,10 +45,38 @@ class GcpBucket implements Bucket {
   }
 
   async move(originalLocation: string, finalLocation: string): Promise<void> {
-      return;
+    const file = this.storageBucket.file(originalLocation);
+    await file.move(finalLocation);
   }
 
   async exists(location: string): Promise<boolean> {
       return true;
+  }
+
+  async getContentType(location: string): Promise<string | null> {
+    const file = this.storageBucket.file(location);
+    return file.metadata.contentType || null;
+  }
+
+  async download(location: string): Promise<Buffer | null> {
+    const file = this.storageBucket.file(location);
+    return (await file.download())[0];
+  }
+
+  async deleteFiles(location: string): Promise<void> {
+   this.storageBucket.deleteFiles({ prefix: location });
+  }
+
+  private actionToString(action: BucketObjectAction): 'read' | 'write' | 'delete' {
+    switch (action) {
+      case BucketObjectAction.READ:
+        return 'read';
+      case BucketObjectAction.WRITE:
+        return 'write';
+      case BucketObjectAction.DELETE:
+        return 'delete';
+      default:
+        throw new Error(`Unsupported action ${action}`);
+    }
   }
 }

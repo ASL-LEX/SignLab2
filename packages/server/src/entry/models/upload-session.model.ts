@@ -32,6 +32,9 @@ export class UploadSession {
 
   @Prop({ required: false, type: String })
   entryPrefix: string | null;
+
+  @Prop()
+  organization: string;
 }
 
 export type UploadSessionDocument = UploadSession & Document;

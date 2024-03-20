@@ -32,11 +32,15 @@ export class BucketFactory {
       throw new Error('Could not get credentials for bucket');
     }
 
-    const credentials = version.payload.data.toString();
+    // Get the payload of the secret
+    const credentials = version.payload?.data?.toString();
+    if (!credentials) {
+      throw new Error('Unable to parse credentials');
+    }
 
     switch(bucketInfo.bucketType) {
       case BucketType.GCP:
-        return this.gcpBucketMaker.getGcpBucket(bucketInfo);
+        return this.gcpBucketMaker.getGcpBucket(bucketInfo, credentials);
       default:
         throw new Error(`Unsupported bucket type ${bucketInfo.bucketType}`);
     }
