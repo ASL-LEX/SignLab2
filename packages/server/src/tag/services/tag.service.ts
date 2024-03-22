@@ -193,6 +193,14 @@ export class TagService {
     // Save the tag information and mark the tag as complete
     await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data: transformed, complete: true } });
   }
+  async removeTag(tag: Tag): Promise<void> {
+    if (!tag) {
+      throw new BadRequestException(`Tag with ID ${tag} not found.`);
+    }
+
+    // Reset the data and mark the tag as incomplete
+    await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { data: null, complete: false, user: '' } });
+  }
 
   async isEntryEnabled(study: Study, entry: Entry) {
     const existingTag = await this.tagModel.findOne({ entry: entry._id, study: study._id });
