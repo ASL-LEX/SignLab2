@@ -10,7 +10,6 @@ interface SignUpComponentProps {
 
 // SignUp Page Component
 export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
-export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -104,7 +103,6 @@ export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
           <Button onClick={handleClose}>{t('Auth.dialogClose')}</Button>
         </DialogActions>
       </Dialog>
-    </Stack>
     </Stack>
   );
 };
