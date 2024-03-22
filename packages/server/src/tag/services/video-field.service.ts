@@ -107,6 +107,7 @@ export class VideoFieldService {
 
     // Move the video to the permanent location
     await bucket.move(videoField.bucketLocation, newLocation);
+    await this.entryService.setBucketLocation(entry, newLocation);
     entry.bucketLocation = newLocation;
 
     // Remove the video field
