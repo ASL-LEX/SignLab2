@@ -11,6 +11,7 @@ interface LoginComponentProps {
 
 // Login Page Component
 export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
+export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -83,6 +84,7 @@ export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }
           <Button onClick={handleClose}>{t('Auth.dialogClose')}</Button>
         </DialogActions>
       </Dialog>
+    </Stack>
     </Stack>
   );
 };
