@@ -82,7 +82,7 @@ export class UploadSessionService {
       const entryURL = `${uploadSession.entryPrefix}/${entryUpload.filename}`;
 
       // Verify the entry is in the bucket
-      if (await bucket.exists(entryURL)) {
+      if (!await bucket.exists(entryURL)) {
         missingEntries.push(`Entry ${entryUpload.filename} not found`);
         continue;
       }
@@ -91,7 +91,7 @@ export class UploadSessionService {
       const entry = await this.entryService.create(
         {
           entryID: entryUpload.entryID,
-          contentType: bucket.getContentType(entryURL)!,
+          contentType: await bucket.getContentType(entryURL),
           meta: entryUpload.metadata
         },
         dataset,

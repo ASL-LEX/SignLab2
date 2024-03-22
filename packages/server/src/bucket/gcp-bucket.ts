@@ -41,7 +41,6 @@ class GcpBucket implements Bucket {
   }
 
   async delete(location: string): Promise<void> {
-      return;
   }
 
   async move(originalLocation: string, finalLocation: string): Promise<void> {
@@ -50,11 +49,13 @@ class GcpBucket implements Bucket {
   }
 
   async exists(location: string): Promise<boolean> {
-      return true;
+    const exists = await this.storageBucket.file(location).exists();
+    return exists[0];
   }
 
   async getContentType(location: string): Promise<string | null> {
     const file = this.storageBucket.file(location);
+    await file.getMetadata();
     return file.metadata.contentType || null;
   }
 
@@ -64,7 +65,7 @@ class GcpBucket implements Bucket {
   }
 
   async deleteFiles(location: string): Promise<void> {
-   this.storageBucket.deleteFiles({ prefix: location });
+    await this.storageBucket.deleteFiles({ prefix: location });
   }
 
   private actionToString(action: BucketObjectAction): 'read' | 'write' | 'delete' {
