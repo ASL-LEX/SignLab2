@@ -1,7 +1,6 @@
 import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
 import jwt_decode from 'jwt-decode';
 import { AuthComponent } from '../components/auth/Auth.component';
-import { AuthComponent } from '../components/auth/Auth.component';
 
 export const AUTH_TOKEN_STR = 'token';
 
