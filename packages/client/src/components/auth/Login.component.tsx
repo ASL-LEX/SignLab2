@@ -1,6 +1,6 @@
 import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
-import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
+import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions, Stack } from '@mui/material';
 
 interface LoginComponentProps {
   onLoginSuccess: (token: string) => void;
@@ -8,7 +8,7 @@ interface LoginComponentProps {
 }
 
 // Login Page Component
-const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
+export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -33,17 +33,12 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
   };
 
   return (
-    <Box
+    <Stack
       component="form"
       onSubmit={handleLogin}
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '30ch' },
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}
+      spacing={1}
     >
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
+      <Typography variant="h5">
         Enter Username
       </Typography>
       <TextField
@@ -55,7 +50,7 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
         placeholder="Email"
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
+      <Typography variant="h5">
         Enter Password
       </Typography>
       <TextField
@@ -70,7 +65,6 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
       <Button
         type="submit"
         variant="contained"
-        sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}
       >
         Login
       </Button>
@@ -81,8 +75,6 @@ const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Stack>
   );
 };
-
-export default LoginComponent;
