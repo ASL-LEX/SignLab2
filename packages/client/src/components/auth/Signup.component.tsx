@@ -1,36 +1,58 @@
 import { useState, FC } from 'react';
 import * as firebaseauth from '@firebase/auth';
-import { TextField, Button, Box, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
+import { TextField, Button, Typography, Dialog, DialogTitle, DialogActions, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { FirebaseError } from '@firebase/util';
 
 interface SignUpComponentProps {
   auth: firebaseauth.Auth;
 }
 
 // SignUp Page Component
-const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
+export const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
+  const { t } = useTranslation();
 
   // Handle Sign Up
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Check if passwords match
     if (password !== confirmPassword) {
-      setDialogMessage('Passwords do not match');
+      setDialogMessage(t('Auth.signup.passwordNotMatch'));
       setOpenDialog(true);
       return;
     }
     try {
       await firebaseauth.createUserWithEmailAndPassword(auth, email, password);
-      setDialogMessage('Sign Up Successfully');
+      setDialogMessage(t('Auth.signup.success'));
       setOpenDialog(true);
       setPassword('');
       setConfirmPassword('');
     } catch (error) {
-      setDialogMessage((error as Error).message);
+      let errorMessage = '';
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = t('Auth.signup.emailAlreadyInUse');
+            break;
+          case 'auth/weak-password':
+            errorMessage = t('Auth.signup.weakPassword');
+            break;
+          case 'auth/invalid-email':
+            errorMessage = t('Auth.signup.invalidEmail');
+            break;
+          default:
+            errorMessage = t('Auth.errorUnexpected');
+            break;
+        }
+      } else {
+        errorMessage = t('Auth.errorUnexpected');
+      }
+      setDialogMessage(errorMessage);
       setOpenDialog(true);
     }
   };
@@ -40,68 +62,47 @@ const SignUpComponent: FC<SignUpComponentProps> = ({ auth }) => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSignUp}
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '30ch' },
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}
-    >
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
-        Enter Username
-      </Typography>
+    <Stack component="form" onSubmit={handleSignUp} spacing={1}>
+      <Typography variant="h5">{t('Auth.enterUsername')}</Typography>
       <TextField
-        label="Email"
+        label={t('Auth.email')}
         type="email"
         variant="outlined"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
+        placeholder={t('Auth.enterUsername')}
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
-        Enter Password
-      </Typography>
+      <Typography variant="h5">{t('Auth.enterPassword')}</Typography>
       <TextField
-        label="Password"
+        label={t('Auth.password')}
         type="password"
         variant="outlined"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder={t('Auth.enterPassword')}
         required
       />
-      <Typography variant="h5" sx={{ mt: -1, mb: -2 }}>
-        Re-enter Password
-      </Typography>
+      <Typography variant="h5">{t('Auth.signup.reEnterPassword')}</Typography>
       <TextField
-        label="Confirm Password"
+        label={t('Auth.password')}
         type="password"
         variant="outlined"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
-        placeholder="Re-enter Password"
+        placeholder={t('Auth.signup.reEnterPassword')}
         required
       />
-      <Button
-        type="submit"
-        variant="contained"
-        sx={{ mt: 1, mb: -5, width: '30ch', display: 'flex', justifyContent: 'center' }}
-      >
-        Sign Up
+      <Button type="submit" variant="contained">
+        {t('Auth.signup.signup')}
       </Button>
 
       <Dialog open={openDialog} onClose={handleClose}>
         <DialogTitle>{dialogMessage}</DialogTitle>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose}>{t('Auth.dialogClose')}</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Stack>
   );
 };
-
-export default SignUpComponent;
