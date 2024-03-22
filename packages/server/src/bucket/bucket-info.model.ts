@@ -2,8 +2,8 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export enum BucketType {
-  GCP,
-  S3
+  GCP = 'GCP',
+  S3 = 'S3'
 }
 
 /**
