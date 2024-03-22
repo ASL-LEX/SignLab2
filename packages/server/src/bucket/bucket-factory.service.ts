@@ -13,9 +13,7 @@ export class BucketFactory {
     @InjectModel(BucketInfo.name) private readonly bucketInfoModel: Model<BucketInfo>,
     private readonly gcpBucketMaker: GcpBucketMaker,
     @Inject(SECRET_MANAGER_PROVIDER) private readonly secretClient: SecretManagerServiceClient
-  ) {
-    // this.bucketInfoModel.create({ bucketName: 'asl-lex', bucketType: BucketType.GCP, secretName: 'projects/294876375307/secrets/bucket-service-account/versions/latest', organization: '659591685de45d852d4202bd' })
-  }
+  ) {}
 
   /**
    * Factory method which gets the correct storage bucket inforamtion for the

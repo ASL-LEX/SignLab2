@@ -41,6 +41,7 @@ class GcpBucket implements Bucket {
   }
 
   async delete(location: string): Promise<void> {
+    await this.deleteFiles(location);
   }
 
   async move(originalLocation: string, finalLocation: string): Promise<void> {
