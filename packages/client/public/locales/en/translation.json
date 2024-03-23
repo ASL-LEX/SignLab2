@@ -72,9 +72,11 @@
     },
     "datasetControl": {
       "deleteEntry": "Delete Entry",
-      "deleteDescription": "Are you sure you want to delete this project? Doing so will delete all associated tags",
+      "deleteEntries": "Delete Entries",
+      "deleteDescription": "Are you sure you want to delete this entry? Doing so will delete all cooresponding tags",
       "addDataset": " Add New Dataset",
-      "uploadEntries": " Upload Entries"
+      "uploadEntries": " Upload Entries",
+      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted"
     },
     "projectAccess": {
       "datasetName": "Dataset Name",
@@ -104,7 +106,8 @@
       "completed": "All steps completed - your new study is created",
       "startOver": "Start Over",
       "formTitle": "Study Information",
-      "tagsDescription": "Number of times each entry needs to be tagged (default 1)"
+      "tagsDescription": "Number of times each entry needs to be tagged (default 1)",
+      "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access"
     },
     "studyControl": {
       "deleteStudy": "Delete Study",
@@ -127,6 +130,24 @@
     "tagView": {
       "originalEntry": "Original Entry"
     }
+  },
+  "errors": {
+    "datasetCreate": "Failed to create dataset, please try again or report this issue",
+    "uploadSessionCreate": "Could not start the upload process, please try again",
+    "csvUpload": "Could not upload the CSV, please try again",
+    "entryUpload": "Could not upload entry, please try again",
+    "entryUploadComplete": "Could not complete the upload process, please try again",
+    "entryQuery": "Failed to get entries for the dataset",
+    "studyExists": "Could not check if a study with that name exists",
+    "datasetsForProject": "Failed to get possible datasets",
+    "tagComplete": "Failed to submit tag, please try again",
+    "datasetPermissionUpdate": "Could not give project permission",
+    "projectCreate": "Could not create the project, please try again",
+    "projectDelete": "An issue took place deleting the project",
+    "projectAdminUpdate": "Could not update the user's permssions",
+    "studyDelete": "Failed to delete the target study",
+    "studyCreate": "Failed to create the new study",
+    "tagsQuery": "Failed to get tags"
   },
   "Auth": {
     "errorUnexpected": "Unknown error. Please contact the administrator",
