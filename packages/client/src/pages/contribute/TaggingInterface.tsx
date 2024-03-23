@@ -7,6 +7,8 @@ import { useCompleteTagMutation } from '../../graphql/tag/tag';
 import { Study } from '../../graphql/graphql';
 import { TagProvider, useTag } from '../../context/Tag.context';
 import { NoTagNotification } from '../../components/contribute/NoTagNotification.component';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const TaggingInterface: React.FC = () => {
   const { study } = useStudy();
@@ -31,6 +33,9 @@ const MainView: React.FC<MainViewProps> = (props) => {
   const [completeTag, completeTagResult] = useCompleteTagMutation();
   const [tagData, setTagData] = useState<any>({});
 
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
+
   // Changes made to the tag data
   useEffect(() => {
     if (tagData && tag) {
@@ -40,13 +45,15 @@ const MainView: React.FC<MainViewProps> = (props) => {
   }, [tagData]);
 
   // Tag submission result
-  // TODO: Handle errors
   useEffect(() => {
     if (completeTagResult.data) {
       // Assign a new tag
       requestTag();
+    } else if (completeTagResult.error) {
+      pushSnackbarMessage(t('errors.tagComplete'), 'error');
+      console.error(completeTagResult.error);
     }
-  }, [completeTagResult.data]);
+  }, [completeTagResult.data, completeTagResult.error]);
 
   return (
     <>

@@ -6,6 +6,8 @@ import { UploadSession, UploadStatus } from '../../graphql/graphql';
 import axios from 'axios';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { StatusMessage } from '../../models/StatusMessage';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export interface EntryUploadProps {
   uploadSession: UploadSession | null;
@@ -23,6 +25,9 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
+
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!uploadSession) {
@@ -47,7 +52,8 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({
       });
 
       if (!uploadUrlQuery.data?.getEntryUploadURL) {
-        console.error('Failed to get upload url');
+        pushSnackbarMessage(t('errors.entryUpload'), 'error');
+        console.error(uploadUrlQuery.errors);
         return;
       }
 
@@ -71,7 +77,8 @@ export const EntryUpload: React.FC<EntryUploadProps> = ({
 
     const completionData = completionResult.data?.completeUploadSession;
     if (!completionData) {
-      console.error('Failed to complete upload session');
+      pushSnackbarMessage(t('errors.entryUploadComplete'), 'error');
+      console.error(completionData.errors);
       return;
     }
 

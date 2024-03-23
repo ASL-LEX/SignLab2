@@ -1,26 +1,27 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { useCreateProjectMutation, useProjectExistsLazyQuery } from '../../graphql/project/project';
 import { ErrorObject } from 'ajv';
 import { useTranslation } from 'react-i18next';
-
-const initialData = {
-  name: '',
-  description: ''
-};
+import { useSnackbar } from '../../context/Snackbar.context';
+import { useProject } from '../../context/Project.context';
+import { ProjectCreate } from '../../graphql/graphql';
 
 export const NewProject: React.FC = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<ProjectCreate>({} as any);
   const [createProject, { error, data: createProjectResults, loading }] = useCreateProjectMutation({
     variables: { project: data }
   });
   const [projectExistsQuery, projectExistsResults] = useProjectExistsLazyQuery();
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
+  const { updateProjectList } = useProject();
+  const [valid, setValid] = useState<boolean>(false);
 
   const schema = {
     type: 'object',
@@ -71,20 +72,25 @@ export const NewProject: React.FC = () => {
           params: { keyword: 'uniqueProjectName' }
         }
       ]);
+      setValid(false);
     } else {
       setAdditionalErrors([]);
+      setValid(true);
     }
   }, [projectExistsResults.data]);
 
   useEffect(() => {
     if (createProjectResults) {
+      updateProjectList();
       navigate('/successpage');
     }
   }, [createProjectResults]);
 
   useEffect(() => {
     if (error) {
-      //handle server side error here. For now a simple text is displayed
+      pushSnackbarMessage(t('errors.projectCreate'), 'error');
+      console.error(error);
+      setValid(false);
     }
   }, [error]);
 
@@ -92,6 +98,8 @@ export const NewProject: React.FC = () => {
     setData(data);
     if (!errors || errors.length === 0) {
       projectExistsQuery({ variables: { name: data.name } });
+    } else {
+      setValid(false);
     }
   };
 
@@ -101,11 +109,6 @@ export const NewProject: React.FC = () => {
 
   return (
     <>
-      {error && (
-        <Typography color={'red'} variant="h6">
-          {t('components.newProject.failMessage')}
-        </Typography>
-      )}
       <JsonForms
         schema={schema}
         uischema={uischema}
@@ -115,7 +118,7 @@ export const NewProject: React.FC = () => {
         onChange={({ data, errors }) => handleChange(data, errors)}
         additionalErrors={additionalErrors}
       />
-      <Button variant="contained" onClick={handleSubmit} disabled={loading || projectExistsResults.data?.projectExists}>
+      <Button variant="contained" onClick={handleSubmit} disabled={loading || !valid}>
         {t('common.submit')}
       </Button>
     </>

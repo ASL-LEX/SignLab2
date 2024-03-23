@@ -34,7 +34,7 @@ export class DatasetPermissionResolver {
     const hasPermission = await this.enforcer.enforce(
       requestingUser.user_id,
       DatasetPermissions.GRANT_ACCESS,
-      dataset._id
+      dataset._id.toString()
     );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage dataset permissions');
@@ -52,7 +52,7 @@ export class DatasetPermissionResolver {
     const hasPermission = await this.enforcer.enforce(
       requestingUser.user_id,
       DatasetPermissions.GRANT_ACCESS,
-      project._id
+      project._id.toString()
     );
     if (!hasPermission) {
       throw new UnauthorizedException('Requesting user does not have permission to manage dataset permissions');

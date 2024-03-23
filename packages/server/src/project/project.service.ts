@@ -7,7 +7,6 @@ import { CASBIN_PROVIDER } from '../permission/casbin.provider';
 import * as casbin from 'casbin';
 import { TokenPayload } from 'src/jwt/token.dto';
 import { ProjectPermissions } from 'src/permission/permissions/project';
-import { Roles } from 'src/permission/permissions/roles';
 
 @Injectable()
 export class ProjectService {
@@ -47,6 +46,7 @@ export class ProjectService {
   }
 
   async findAllForUser(user: TokenPayload, organization: string): Promise<Project[]> {
+    await this.enforcer.loadPolicy();
     const projects = await this.findAll(organization);
     const allowedProjects: Project[] = [];
     for (const project of projects) {

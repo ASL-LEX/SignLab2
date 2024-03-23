@@ -7,6 +7,7 @@ import { useGetDatasetsByProjectQuery } from '../../graphql/dataset/dataset';
 import { useProject } from '../../context/Project.context';
 import ToggleEntryEnabled from '../../components/ToggleEntryEnabled.component';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const EntryControls: React.FC = () => {
   const { project } = useProject();
@@ -14,15 +15,20 @@ export const EntryControls: React.FC = () => {
   const getDatasetsByProjectResults = useGetDatasetsByProjectQuery({
     variables: {
       project: project ? project._id : ''
-    }
+    },
+    fetchPolicy: 'network-only'
   });
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (getDatasetsByProjectResults.data) {
       setDatasets(getDatasetsByProjectResults.data.getDatasetsByProject);
+    } else if (getDatasetsByProjectResults.error) {
+      pushSnackbarMessage(t('errors.datasetsForProject'), 'error');
+      console.error(getDatasetsByProjectResults.error);
     }
-  }, [getDatasetsByProjectResults.data]);
+  }, [getDatasetsByProjectResults]);
 
   const additionalColumns: GridColDef[] = [
     {
@@ -41,7 +47,11 @@ export const EntryControls: React.FC = () => {
   return (
     <>
       <Typography variant="h3">{t('menu.entryControl')}</Typography>
-      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      {!getDatasetsByProjectResults.loading && datasets.length == 0 ? (
+        <Typography variant="h4">{t('components.newStudy.noDatasets')}</Typography>
+      ) : (
+        <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      )}
     </>
   );
 };

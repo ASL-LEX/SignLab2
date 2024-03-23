@@ -7,6 +7,7 @@ import { useGetProjectPermissionsQuery } from '../../graphql/permission/permissi
 import { DecodedToken, useAuth } from '../../context/Auth.context';
 import { useGrantProjectPermissionsMutation } from '../../graphql/permission/permission';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../../context/Snackbar.context';
 
 export const ProjectUserPermissions: React.FC = () => {
   const { project } = useProject();
@@ -29,6 +30,8 @@ interface EditAdminSwitchProps {
 
 const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
   const [grantProjectPermissions, grantProjectPermissionsResults] = useGrantProjectPermissionsMutation();
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     grantProjectPermissions({
@@ -43,6 +46,9 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
   useEffect(() => {
     if (grantProjectPermissionsResults.data) {
       props.refetch();
+    } else if (grantProjectPermissionsResults.error) {
+      pushSnackbarMessage(t('errors.projectAdminUpdate'), 'error');
+      console.error(grantProjectPermissionsResults.error);
     }
   }, [grantProjectPermissionsResults]);
 
@@ -56,7 +62,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
 };
 
 const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
-  const { data, refetch } = useGetProjectPermissionsQuery({
+  const { data, refetch, error } = useGetProjectPermissionsQuery({
     variables: {
       project: project._id
     }
@@ -65,12 +71,16 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
   const [rows, setRows] = useState<ProjectPermissionModel[]>([]);
   const { decodedToken } = useAuth();
   const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (data?.getProjectPermissions) {
       setRows(data.getProjectPermissions);
+    } else if (error) {
+      pushSnackbarMessage(t('errors.projectAdminUpdate'), 'error');
+      console.error(error);
     }
-  }, [data]);
+  }, [data, error]);
 
   const columns: GridColDef[] = [
     /* For now, only email is populated, this will change in the future

@@ -3,8 +3,10 @@ import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
-import { Switch } from '@mui/material';
+import { Switch, Typography } from '@mui/material';
 import { useProject } from '../context/Project.context';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../context/Snackbar.context';
 
 export interface TagTrainingComponentProps {
   setTrainingSet: Dispatch<SetStateAction<string[]>>;
@@ -17,6 +19,8 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   const [getDatasetsQuery, getDatasetsResults] = useGetDatasetsByProjectLazyQuery();
   const [trainingSet, setTrainingSet] = useState<string[]>([]);
   const [taggingSet, setTaggingSet] = useState<string[]>([]);
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   useEffect(() => {
     if (project) {
@@ -76,12 +80,19 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
   useEffect(() => {
     if (getDatasetsResults.data) {
       setDatasets(getDatasetsResults.data.getDatasetsByProject);
+    } else if (getDatasetsResults.error) {
+      pushSnackbarMessage(t('errors.datasetsForProject'), 'error');
+      console.error(getDatasetsResults.error);
     }
-  }, [getDatasetsResults.data]);
+  }, [getDatasetsResults]);
 
   return (
     <>
-      <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      {!getDatasetsResults.loading && datasets.length == 0 ? (
+        <Typography variant="h4">{t('components.newStudy.noDatasets')}</Typography>
+      ) : (
+        <DatasetsView datasets={datasets} additionalColumns={additionalColumns} />
+      )}
     </>
   );
 };
