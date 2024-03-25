@@ -10,6 +10,7 @@ import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.s
 import { SharedModule } from '../shared/shared.module';
 import { JwtModule } from '../jwt/jwt.module';
 import { PermissionModule } from '../permission/permission.module';
+import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { PermissionModule } from '../permission/permission.module';
     ProjectModule,
     SharedModule,
     JwtModule,
-    forwardRef(() => PermissionModule)
+    forwardRef(() => PermissionModule),
+    OrganizationModule
   ],
   providers: [StudyService, StudyResolver, StudyPipe, StudyCreatePipe],
   exports: [StudyService, StudyPipe]

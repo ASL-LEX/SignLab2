@@ -4,21 +4,19 @@ import { Entry } from '../models/entry.model';
 import { Model } from 'mongoose';
 import { EntryCreate } from '../dtos/create.dto';
 import { Dataset } from '../../dataset/dataset.model';
-import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
-import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from '../../jwt/token.dto';
+import { BucketFactory } from 'src/bucket/bucket-factory.service';
+import { BucketObjectAction } from 'src/bucket/bucket';
 
 @Injectable()
 export class EntryService {
-  private readonly bucketName = this.configService.getOrThrow<string>('gcp.storage.bucket');
-  private readonly bucket: Bucket = this.storage.bucket(this.bucketName);
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
 
   constructor(
     @InjectModel(Entry.name) private readonly entryModel: Model<Entry>,
-    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly bucketFactory: BucketFactory
   ) {}
 
   async find(entryID: string): Promise<Entry | null> {
@@ -56,12 +54,11 @@ export class EntryService {
   }
 
   async getSignedUrl(entry: Entry): Promise<string> {
-    const file = this.bucket.file(entry.bucketLocation);
-    const [url] = await file.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + this.expiration
-    });
-    return url;
+    const bucket = await this.bucketFactory.getBucket(entry.organization);
+    if (!bucket) {
+      throw new Error('Missing bucket for entry');
+    }
+    return bucket.getSignedUrl(entry.bucketLocation, BucketObjectAction.READ, new Date(Date.now() + this.expiration));
   }
 
   /**
