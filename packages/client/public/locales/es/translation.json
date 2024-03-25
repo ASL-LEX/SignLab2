@@ -29,5 +29,35 @@
     "languageSelector": {
       "selectLanguage": "Seleccione el idioma"
     }
+  },
+  "Auth": {
+    "errorUnexpected": "Error desconocido. Por favor, contacta con el administrador",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "enterUsername": "Ingresa tu nombre de usuario",
+    "enterPassword": "Ingresa tu contraseña",
+    "dialogClose": "Cerrar",
+    "submit": "Enviar",
+    "organization": "Organización",
+    "login": {
+      "wrongPassword": "Contraseña incorrecta",
+      "userNotFound": "El usuario no existe. Por favor, regístrate primero",
+      "login": "Iniciar sesión"
+    },
+    "signup": {
+      "emailAlreadyInUse": "Este correo electrónico ya está en uso. Por favor, inicia sesión directamente",
+      "weakPassword": "La contraseña es demasiado débil. Utilice una contraseña más segura",
+      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
+      "passwordNotMatch": "Las contraseñas ingresadas no coinciden",
+      "success": "Registro exitoso. Por favor, inicia sesión",
+      "reEnterPassword": "Reingresa la contraseña",
+      "signup": "Registrarse"
+    },
+    "resetPassword": {
+      "userNotFound": "No se encontró ningún usuario con esta dirección de correo electrónico",
+      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
+      "confirmDialog": "Se ha enviado un correo electrónico para restablecer tu contraseña. Por favor, revisa tu correo y sigue las instrucciones",
+      "resetPassword": "Restablecer la contraseña"
+    }
   }
 }
