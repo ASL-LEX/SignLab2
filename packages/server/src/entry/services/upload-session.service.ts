@@ -82,7 +82,7 @@ export class UploadSessionService {
       const entryURL = `${uploadSession.entryPrefix}/${entryUpload.filename}`;
 
       // Verify the entry is in the bucket
-      if (!await bucket.exists(entryURL)) {
+      if (!(await bucket.exists(entryURL))) {
         missingEntries.push(`Entry ${entryUpload.filename} not found`);
         continue;
       }
@@ -135,7 +135,12 @@ export class UploadSessionService {
     }
 
     // Make the URL
-    const url = await bucket.getSignedUrl(csvURL, BucketObjectAction.WRITE, new Date(Date.now() + 2 * 60 * 1000), 'text/csv');
+    const url = await bucket.getSignedUrl(
+      csvURL,
+      BucketObjectAction.WRITE,
+      new Date(Date.now() + 2 * 60 * 1000),
+      'text/csv'
+    );
 
     // Add the url to the upload session to signify the upload is ready
     await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL, entryPrefix } });
@@ -154,7 +159,12 @@ export class UploadSessionService {
 
     const entryURL = `${uploadSession.entryPrefix}/${filename}`;
 
-    const url = await bucket.getSignedUrl(entryURL, BucketObjectAction.WRITE, new Date(Date.now() + 2 * 60 * 1000), filetype);
+    const url = await bucket.getSignedUrl(
+      entryURL,
+      BucketObjectAction.WRITE,
+      new Date(Date.now() + 2 * 60 * 1000),
+      filetype
+    );
     return url;
   }
 
@@ -213,7 +223,7 @@ export class UploadSessionService {
       // Delete the in progress entry uploads
       await this.entryUploadService.deleteForSession(existing);
       // Remove cooresponding upload files
-      await bucket.deleteFiles(`${this.uploadPrefix}/${existing.bucketPrefix}`)
+      await bucket.deleteFiles(`${this.uploadPrefix}/${existing.bucketPrefix}`);
       // Remove the upload session itself
       await this.uploadSessionModel.deleteOne({ _id: existing._id }).exec();
     }

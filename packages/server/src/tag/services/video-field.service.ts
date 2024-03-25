@@ -66,7 +66,12 @@ export class VideoFieldService {
     }
 
     const file = this.getVideoFieldBucketLocation(videoField.tag, videoField.field, videoField.index);
-    const url = await bucket.getSignedUrl(file, BucketObjectAction.WRITE, new Date(Date.now() + this.expiration), 'video/webm');
+    const url = await bucket.getSignedUrl(
+      file,
+      BucketObjectAction.WRITE,
+      new Date(Date.now() + this.expiration),
+      'video/webm'
+    );
     return url;
   }
 

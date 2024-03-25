@@ -11,7 +11,7 @@ export class GcpBucketMaker {
     let key: any = null;
     try {
       key = JSON.parse(credentials);
-    } catch(e) {
+    } catch (e) {
       throw new Error('Failed to parse credentails');
     }
 
@@ -29,7 +29,12 @@ export class GcpBucketMaker {
 class GcpBucket implements Bucket {
   constructor(private readonly storageBucket: StorageBucket) {}
 
-  async getSignedUrl(location: string, action: BucketObjectAction, expiration: Date, contentType?: string | undefined): Promise<string> {
+  async getSignedUrl(
+    location: string,
+    action: BucketObjectAction,
+    expiration: Date,
+    contentType?: string | undefined
+  ): Promise<string> {
     const file = this.storageBucket.file(location);
 
     const [url] = await file.getSignedUrl({

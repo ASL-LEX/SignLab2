@@ -38,7 +38,7 @@ export class BucketFactory {
       throw new Error('Unable to parse credentials');
     }
 
-    switch(bucketInfo.bucketType) {
+    switch (bucketInfo.bucketType) {
       case BucketType.GCP:
         return this.gcpBucketMaker.getGcpBucket(bucketInfo, credentials);
       default:
