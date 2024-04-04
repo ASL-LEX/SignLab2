@@ -1,6 +1,6 @@
 import { ControlProps, rankWith, RankedTester } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
-import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent, Checkbox, ListItemText } from '@mui/material';
+import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent, Checkbox, ListItemText, InputLabel } from '@mui/material';
 import { useState } from 'react';
 
 const ProjectListSelect: React.FC<ControlProps> = (props) => {
@@ -18,11 +18,13 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
 
   return (
     <>
+      <InputLabel>{props.label}</InputLabel>
       <Select
         multiple
-        input={<OutlinedInput label={props.description} />}
+        input={<OutlinedInput label={props.label} />}
         value={projectIds}
         onChange={handleChange}
+        fullWidth
         renderValue={(selected) =>(
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {selected.map((value) => (

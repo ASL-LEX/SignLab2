@@ -30,6 +30,8 @@ const schema = {
       description: 'Please enter new dataset description'
     },
     projects: {
+      description: 'Select project that will have access to the dataset',
+      label: 'Project Access',
       type: 'array',
       items: {
         type: 'string'
