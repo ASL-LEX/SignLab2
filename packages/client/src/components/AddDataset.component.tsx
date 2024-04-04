@@ -10,6 +10,8 @@ import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import { useSnackbar } from '../context/Snackbar.context';
 import { useTranslation } from 'react-i18next';
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
+import ProjectListSelect, { projectListTester } from './ProjectListSelect.component';
 
 interface ShowProps {
   show: boolean;
@@ -26,6 +28,12 @@ const schema = {
     description: {
       type: 'string',
       description: 'Please enter new dataset description'
+    },
+    projects: {
+      type: 'array',
+      items: {
+        type: 'string'
+      }
     }
   },
   required: ['name', 'description']
@@ -43,6 +51,14 @@ const uischema = {
       type: 'Control',
       label: 'Description',
       scope: '#/properties/description'
+    },
+    {
+      type: 'Control',
+      label: 'Projects with Access',
+      scope: '#/properties/projects',
+      options: {
+        customType: 'projectList'
+      }
     }
   ]
 };
@@ -100,6 +116,11 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     createDataset({ variables: { dataset: data } });
   };
 
+  const renderers: JsonFormsRendererRegistryEntry[] = [
+    ...materialRenderers,
+    { tester: projectListTester, renderer: ProjectListSelect }
+  ];
+
   return (
     <div>
       <Dialog open={props.show} onClose={props.toggleModal}>
@@ -109,7 +130,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
             schema={schema}
             uischema={uischema}
             data={data}
-            renderers={materialRenderers}
+            renderers={renderers}
             cells={materialCells}
             onChange={({ data, errors }) => handleChange(data, errors)}
             additionalErrors={additionalErrors}
