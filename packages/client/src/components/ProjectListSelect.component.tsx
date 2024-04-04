@@ -1,6 +1,6 @@
 import { ControlProps, rankWith, RankedTester } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
-import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent } from '@mui/material';
+import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent, Checkbox, ListItemText } from '@mui/material';
 import { useState } from 'react';
 
 const ProjectListSelect: React.FC<ControlProps> = (props) => {
@@ -32,7 +32,10 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
         )}
       >
         {names.map(name => (
-          <MenuItem key={name} value={name}>{name}</MenuItem>
+          <MenuItem key={name} value={name}>
+            <Checkbox checked={projectIds.indexOf(name) > -1} />
+            <ListItemText primary={name} />
+          </MenuItem>
         ))}
       </Select>
     </>
