@@ -5,13 +5,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
-import { useCreateDatasetMutation, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
+import { CreateDatasetDocument, CreateDatasetMutation, CreateDatasetMutationVariables, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
 import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import { useSnackbar } from '../context/Snackbar.context';
 import { useTranslation } from 'react-i18next';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import ProjectListSelect, { projectListTester } from './ProjectListSelect.component';
+import { useApolloClient } from '@apollo/client';
 
 interface ShowProps {
   show: boolean;
@@ -73,11 +74,11 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const initialData = {} as { name: string; description: string };
 
   const [data, setData] = useState(initialData);
-  const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] =
-    useCreateDatasetMutation();
 
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
+
+  const client = useApolloClient();
 
   useEffect(() => {
     if (datasetExistsResults.data?.datasetExists) {
@@ -95,15 +96,6 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     }
   }, [datasetExistsResults.data]);
 
-  useEffect(() => {
-    if (createDatasetResults?.createDataset) {
-      props.toggleModal(true);
-    } else if (createDatasetError) {
-      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
-      console.error(createDatasetError);
-    }
-  }, [createDatasetResults, createDatasetError]);
-
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
     if (!errors || errors.length === 0) {
@@ -114,8 +106,23 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     }
   };
 
-  const onCreate = () => {
-    createDataset({ variables: { dataset: data } });
+  const onCreate = async () => {
+    const datasetCreateResult = await client.mutate<CreateDatasetMutation, CreateDatasetMutationVariables>({
+      mutation: CreateDatasetDocument,
+      variables: { dataset: { name: data.name, description: data.description } }
+    });
+
+    // If the dataset failed to be created, stop
+    if (datasetCreateResult.errors) {
+      console.error(datasetCreateResult.errors);
+      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
+      return;
+    }
+
+    // Now grant each project selected access to the dataset
+
+    // Finally toggle the model
+    props.toggleModal(true);
   };
 
   const renderers: JsonFormsRendererRegistryEntry[] = [
@@ -144,7 +151,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
           </Button>
           <Button
             variant="contained"
-            disabled={loading || error || datasetExistsResults.data?.datasetExists}
+            disabled={error || datasetExistsResults.data?.datasetExists}
             onClick={onCreate}
             type="submit"
           >
