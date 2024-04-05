@@ -59,7 +59,11 @@ export class DatasetResolver {
       throw new BadRequestException(`Dataset with the name ${dataset.name} already exists`);
     }
 
-    return this.datasetService.create(organization._id, dataset);
+    const newDataset = await this.datasetService.create(organization._id, dataset);
+
+    await this.enforcer.loadPolicy();
+
+    return newDataset;
   }
 
   @Mutation(() => Boolean)

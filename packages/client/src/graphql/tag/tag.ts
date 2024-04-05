@@ -43,7 +43,7 @@ export type AssignTagMutationVariables = Types.Exact<{
 }>;
 
 
-export type AssignTagMutation = { __typename?: 'Mutation', assignTag?: { __typename?: 'Tag', _id: string, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } } | null };
+export type AssignTagMutation = { __typename?: 'Mutation', assignTag?: { __typename?: 'Tag', _id: string, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } } | null };
 
 export type CompleteTagMutationVariables = Types.Exact<{
   tag: Types.Scalars['ID']['input'];
@@ -67,7 +67,7 @@ export type GetTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
+export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } }> };
 
 export type GetTrainingTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
@@ -75,7 +75,7 @@ export type GetTrainingTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } }> };
+export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } }> };
 
 
 export const CreateTagsDocument = gql`
@@ -226,6 +226,7 @@ export const AssignTagDocument = gql`
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
   }
 }
@@ -338,6 +339,7 @@ export const GetTagsDocument = gql`
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
     data
     complete
@@ -386,6 +388,7 @@ export const GetTrainingTagsDocument = gql`
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
     data
     complete
