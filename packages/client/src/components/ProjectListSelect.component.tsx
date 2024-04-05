@@ -16,7 +16,9 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
 
   const handleChange = (event: SelectChangeEvent<typeof selectedProjects>) => {
-    setSelectedProjects(event.target.value as Project[]);
+    const newProjects = event.target.value as Project[];
+    setSelectedProjects(newProjects);
+    props.handleChange(props.path, newProjects.map(project => project._id));
   };
 
   useEffect(() => {

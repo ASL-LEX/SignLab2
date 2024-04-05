@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import ProjectListSelect, { projectListTester } from './ProjectListSelect.component';
 import { useApolloClient } from '@apollo/client';
+import { GrantProjectDatasetAccessDocument, GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables } from '../graphql/permission/permission';
+import { useDataset } from '../context/Dataset.context';
 
 interface ShowProps {
   show: boolean;
@@ -70,8 +72,9 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [error, setError] = useState(true);
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const [datasetExistsQuery, datasetExistsResults] = useDatasetExistsLazyQuery();
+  const { refetch: refetchDatasets } = useDataset();
 
-  const initialData = {} as { name: string; description: string };
+  const initialData = {} as { name: string; description: string, projects: string[] };
 
   const [data, setData] = useState(initialData);
 
@@ -113,13 +116,22 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     });
 
     // If the dataset failed to be created, stop
-    if (datasetCreateResult.errors) {
+    if (datasetCreateResult.errors || !datasetCreateResult.data) {
       console.error(datasetCreateResult.errors);
       pushSnackbarMessage(t('errors.datasetCreate'), 'error');
       return;
     }
 
+    refetchDatasets();
+
     // Now grant each project selected access to the dataset
+    const datasetID = datasetCreateResult.data.createDataset._id;
+    for (const projectID of data.projects) {
+      await client.mutate<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>({
+        mutation: GrantProjectDatasetAccessDocument,
+        variables: { project: projectID, dataset: datasetID, hasAccess: true }
+      });
+    }
 
     // Finally toggle the model
     props.toggleModal(true);

@@ -29,7 +29,7 @@ export type CreateDatasetMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateDatasetMutation = { __typename?: 'Mutation', createDataset: { __typename?: 'Dataset', name: string, description: string } };
+export type CreateDatasetMutation = { __typename?: 'Mutation', createDataset: { __typename?: 'Dataset', _id: string, name: string, description: string } };
 
 
 export const GetDatasetsDocument = gql`
@@ -141,6 +141,7 @@ export type GetDatasetsByProjectQueryResult = Apollo.QueryResult<GetDatasetsByPr
 export const CreateDatasetDocument = gql`
     mutation createDataset($dataset: DatasetCreate!) {
   createDataset(dataset: $dataset) {
+    _id
     name
     description
   }

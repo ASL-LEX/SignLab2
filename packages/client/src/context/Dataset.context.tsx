@@ -4,6 +4,7 @@ import { useGetDatasetsQuery } from '../graphql/dataset/dataset';
 
 export interface DatasetContextProps {
   datasets: Dataset[];
+  refetch: () => void;
 }
 
 const DatasetContext = createContext({} as DatasetContextProps);
@@ -14,8 +15,11 @@ export interface DatasetProviderProps {
 
 export const DatasetProvider: FC<DatasetProviderProps> = ({ children }) => {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-
   const getDatasetsResults = useGetDatasetsQuery();
+
+  const refetch = () => {
+    getDatasetsResults.refetch();
+  };
 
   useEffect(() => {
     if (getDatasetsResults.data) {
@@ -23,7 +27,7 @@ export const DatasetProvider: FC<DatasetProviderProps> = ({ children }) => {
     }
   }, [getDatasetsResults]);
 
-  return <DatasetContext.Provider value={{ datasets }}>{children}</DatasetContext.Provider>;
+  return <DatasetContext.Provider value={{ datasets, refetch }}>{children}</DatasetContext.Provider>;
 };
 
 export const useDataset = () => useContext(DatasetContext);

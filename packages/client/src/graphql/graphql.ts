@@ -44,6 +44,7 @@ export type Entry = {
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
+  isTraining: Scalars['Boolean']['output'];
   meta?: Maybe<Scalars['JSON']['output']>;
   organization: Scalars['ID']['output'];
   signedUrl: Scalars['String']['output'];
