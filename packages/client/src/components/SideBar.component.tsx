@@ -59,10 +59,10 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       name: t('menu.datasets'),
       action: () => {},
       icon: <Dataset />,
-      visible: (p) => p!.projectAdmin,
+      visible: (p) => p!.owner,
       permission,
       subItems: [
-        { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.projectAdmin },
+        { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
         { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
       ]
     },

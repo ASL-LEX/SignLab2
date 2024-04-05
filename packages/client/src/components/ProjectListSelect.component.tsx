@@ -1,20 +1,31 @@
 import { ControlProps, rankWith, RankedTester } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent, Checkbox, ListItemText, InputLabel } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Project } from '../graphql/graphql';
+import { useGetProjectsQuery } from '../graphql/project/project';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from '../context/Snackbar.context';
 
 const ProjectListSelect: React.FC<ControlProps> = (props) => {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [projectIds, setProjectIds] = useState<string[]>([]);
+  const getProjects = useGetProjectsQuery();
 
-  const names = [
-    'First',
-    'Second',
-    'Third'
-  ];
+  const { t } = useTranslation();
+  const { pushSnackbarMessage } = useSnackbar();
 
   const handleChange = (event: SelectChangeEvent<typeof projectIds>) => {
     setProjectIds(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
   };
+
+  useEffect(() => {
+    if (getProjects.data) {
+      setProjects(getProjects.data.getProjects);
+    } else if (getProjects.error) {
+      pushSnackbarMessage(t('errors.projectQuery'), 'error');
+    }
+  }, [getProjects.data, getProjects.error]);
 
   return (
     <>
@@ -33,10 +44,10 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
           </Box>
         )}
       >
-        {names.map(name => (
-          <MenuItem key={name} value={name}>
-            <Checkbox checked={projectIds.indexOf(name) > -1} />
-            <ListItemText primary={name} />
+        {projects.map(project => (
+          <MenuItem key={project._id} value={project.name}>
+            <Checkbox checked={projectIds.indexOf(project._id) > -1} />
+            <ListItemText primary={project.name} />
           </MenuItem>
         ))}
       </Select>
