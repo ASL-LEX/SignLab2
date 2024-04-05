@@ -5,7 +5,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
-import { CreateDatasetDocument, CreateDatasetMutation, CreateDatasetMutationVariables, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
+import {
+  CreateDatasetDocument,
+  CreateDatasetMutation,
+  CreateDatasetMutationVariables,
+  useDatasetExistsLazyQuery
+} from '../graphql/dataset/dataset';
 import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import { useSnackbar } from '../context/Snackbar.context';
@@ -13,7 +18,11 @@ import { useTranslation } from 'react-i18next';
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import ProjectListSelect, { projectListTester } from './ProjectListSelect.component';
 import { useApolloClient } from '@apollo/client';
-import { GrantProjectDatasetAccessDocument, GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables } from '../graphql/permission/permission';
+import {
+  GrantProjectDatasetAccessDocument,
+  GrantProjectDatasetAccessMutation,
+  GrantProjectDatasetAccessMutationVariables
+} from '../graphql/permission/permission';
 import { useDataset } from '../context/Dataset.context';
 
 interface ShowProps {
@@ -74,7 +83,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [datasetExistsQuery, datasetExistsResults] = useDatasetExistsLazyQuery();
   const { refetch: refetchDatasets } = useDataset();
 
-  const initialData = {} as { name: string; description: string, projects: string[] };
+  const initialData = {} as { name: string; description: string; projects: string[] };
 
   const [data, setData] = useState(initialData);
 

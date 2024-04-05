@@ -1,6 +1,16 @@
 import { ControlProps, rankWith, RankedTester } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
-import { OutlinedInput, Select, Box, Chip, MenuItem, SelectChangeEvent, Checkbox, ListItemText, InputLabel } from '@mui/material';
+import {
+  OutlinedInput,
+  Select,
+  Box,
+  Chip,
+  MenuItem,
+  SelectChangeEvent,
+  Checkbox,
+  ListItemText,
+  InputLabel
+} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Project } from '../graphql/graphql';
 import { useGetProjectsQuery } from '../graphql/project/project';
@@ -18,7 +28,10 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
   const handleChange = (event: SelectChangeEvent<typeof selectedProjects>) => {
     const newProjects = event.target.value as Project[];
     setSelectedProjects(newProjects);
-    props.handleChange(props.path, newProjects.map(project => project._id));
+    props.handleChange(
+      props.path,
+      newProjects.map((project) => project._id)
+    );
   };
 
   useEffect(() => {
@@ -38,7 +51,7 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
         value={selectedProjects}
         onChange={handleChange}
         fullWidth
-        renderValue={(selected) =>(
+        renderValue={(selected) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {selected.map((value) => (
               <Chip key={value._id} label={value.name} />
@@ -46,7 +59,7 @@ const ProjectListSelect: React.FC<ControlProps> = (props) => {
           </Box>
         )}
       >
-        {projects.map(project => (
+        {projects.map((project) => (
           <MenuItem key={project._id} value={project as any}>
             <Checkbox checked={selectedProjects.indexOf(project) > -1} />
             <ListItemText primary={project.name} />
