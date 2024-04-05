@@ -10,14 +10,14 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 }>;
 
 
-export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number }> };
+export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> };
 
 export type EntryFromIdQueryVariables = Types.Exact<{
   entry: Types.Scalars['ID']['input'];
 }>;
 
 
-export type EntryFromIdQuery = { __typename?: 'Query', entryFromID: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number } };
+export type EntryFromIdQuery = { __typename?: 'Query', entryFromID: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } };
 
 export type DeleteEntryMutationVariables = Types.Exact<{
   entry: Types.Scalars['ID']['input'];
@@ -40,6 +40,7 @@ export const EntryForDatasetDocument = gql`
     meta
     signedUrl
     signedUrlExpiration
+    isTraining
   }
 }
     `;
@@ -84,6 +85,7 @@ export const EntryFromIdDocument = gql`
     meta
     signedUrl
     signedUrlExpiration
+    isTraining
   }
 }
     `;
