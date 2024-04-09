@@ -30,6 +30,13 @@ export type SetEntryEnabledMutationVariables = Types.Exact<{
 
 export type SetEntryEnabledMutation = { __typename?: 'Mutation', setEntryEnabled: boolean };
 
+export type RemoveTagMutationVariables = Types.Exact<{
+  tag: Types.Scalars['ID']['input'];
+}>;
+
+
+export type RemoveTagMutation = { __typename?: 'Mutation', removeTag: boolean };
+
 export type IsEntryEnabledQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
   entry: Types.Scalars['ID']['input'];
@@ -177,6 +184,37 @@ export function useSetEntryEnabledMutation(baseOptions?: Apollo.MutationHookOpti
 export type SetEntryEnabledMutationHookResult = ReturnType<typeof useSetEntryEnabledMutation>;
 export type SetEntryEnabledMutationResult = Apollo.MutationResult<SetEntryEnabledMutation>;
 export type SetEntryEnabledMutationOptions = Apollo.BaseMutationOptions<SetEntryEnabledMutation, SetEntryEnabledMutationVariables>;
+export const RemoveTagDocument = gql`
+    mutation removeTag($tag: ID!) {
+  removeTag(tag: $tag)
+}
+    `;
+export type RemoveTagMutationFn = Apollo.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
+
+/**
+ * __useRemoveTagMutation__
+ *
+ * To run a mutation, you first call `useRemoveTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTagMutation, { data, loading, error }] = useRemoveTagMutation({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useRemoveTagMutation(baseOptions?: Apollo.MutationHookOptions<RemoveTagMutation, RemoveTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveTagMutation, RemoveTagMutationVariables>(RemoveTagDocument, options);
+      }
+export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation>;
+export type RemoveTagMutationResult = Apollo.MutationResult<RemoveTagMutation>;
+export type RemoveTagMutationOptions = Apollo.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
 export const IsEntryEnabledDocument = gql`
     query isEntryEnabled($study: ID!, $entry: ID!) {
   isEntryEnabled(study: $study, entry: $entry)

@@ -44,6 +44,7 @@ export type Entry = {
   dataset: Scalars['ID']['output'];
   dateCreated: Scalars['DateTime']['output'];
   entryID: Scalars['String']['output'];
+  isTraining: Scalars['Boolean']['output'];
   meta?: Maybe<Scalars['JSON']['output']>;
   organization: Scalars['ID']['output'];
   signedUrl: Scalars['String']['output'];
@@ -127,6 +128,7 @@ export type Mutation = {
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
   lexiconCreate: Lexicon;
+  removeTag: Scalars['Boolean']['output'];
   saveVideoField: VideoField;
   setEntryEnabled: Scalars['Boolean']['output'];
   signLabCreateProject: Project;
@@ -272,6 +274,11 @@ export type MutationLexiconClearEntriesArgs = {
 
 export type MutationLexiconCreateArgs = {
   lexicon: LexiconCreate;
+};
+
+
+export type MutationRemoveTagArgs = {
+  tag: Scalars['ID']['input'];
 };
 
 

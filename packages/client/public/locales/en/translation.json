@@ -24,7 +24,8 @@
     "complete": "complete",
     "video": "video",
     "key": "key",
-    "primary": "primay"
+    "primary": "primay",
+    "redo": "Redo"
   },
   "languages": {
     "en": "English",
