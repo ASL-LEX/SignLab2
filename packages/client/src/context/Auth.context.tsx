@@ -1,36 +1,7 @@
 import { createContext, FC, useContext, useEffect, useState, ReactNode } from 'react';
 import jwt_decode from 'jwt-decode';
-import * as firebaseui from 'firebaseui';
-import * as firebase from '@firebase/app';
-import * as firebaseauth from '@firebase/auth';
-import { Organization } from '../graphql/graphql';
-import { useGetOrganizationsQuery } from '../graphql/organization/organization';
-import { signInWithPopup } from 'firebase/auth';
-import { MenuItem, Select } from '@mui/material';
-import { any } from 'prop-types';
+import { AuthComponent } from '../components/auth/Auth.component';
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_AUTH_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN
-};
-
-// // Switch to TENANT_ID1.
-//  const authID=firebaseauth.GithubAuthProvider.PROVIDER_ID;
-// //  = 'TENANT_ID1';
-
-// // Sign-in with popup.
-// signInWithPopup(authID, provider)
-//   .then((userCredential) => {
-//     // User is signed in.
-//     const user = userCredential.user;
-//     // user.tenantId is set to 'TENANT_ID1'.
-//     // Provider data available from the result.user.getIdToken()
-//     // or from result.user.providerData
-//   })
-//   .catch((error) => {
-//     // Handle / display error.
-//     // ...
-//   });
 export const AUTH_TOKEN_STR = 'token';
 
 export interface DecodedToken {
@@ -71,19 +42,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
   const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
-  const [organization, setOrganization] = useState<Organization | null>(null);
-  const [organizationList, setOrganizationList] = useState<Organization[] | null>(null);
-
-  const getOrganizationResult = useGetOrganizationsQuery();
-
-  useEffect(() => {
-    // TODO: Handle multi-organization login
-    if (getOrganizationResult.data && getOrganizationResult.data.getOrganizations.length > 0) {
-      setOrganizationList(getOrganizationResult.data.getOrganizations);
-      console.log('Here' + getOrganizationResult);
-      setOrganization(getOrganizationResult.data.getOrganizations[0]);
-    }
-  }, [getOrganizationResult.data]);
 
   const handleUnauthenticated = () => {
     // Clear the token and authenticated state
@@ -130,63 +88,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <div>
-      <div className="options">
-        <Select>
-          {organizationList?.map((organization, index) => {
-            return (
-              <MenuItem key={index} value={10}>
-                {organization.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </div>
-      <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>
-        {!authenticated && organization && (
-          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} />
-        )}
-        {authenticated && children}
-      </AuthContext.Provider>
-    </div>
+    <>
+      {authenticated ? (
+        <AuthContext.Provider value={{ token, authenticated, decodedToken, logout }}>{children}</AuthContext.Provider>
+      ) : (
+        <AuthComponent handleAuthenticated={handleAuthenticated} />
+      )}
+    </>
   );
-};
-
-interface FirebaseLoginWrapperProps {
-  setToken: (token: string) => void;
-  organization: Organization;
-}
-
-const FirebaseLoginWrapper: FC<FirebaseLoginWrapperProps> = ({ setToken, organization }) => {
-  firebase.initializeApp(firebaseConfig);
-
-  // Handle multi-tenant login
-  const auth = firebaseauth.getAuth();
-  auth.tenantId = organization.tenantID;
-
-  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
-
-  const signInSuccess = async (authResult: any) => {
-    setToken(await authResult.user.getIdToken());
-  };
-
-  useEffect(() => {
-    ui.start('#firebaseui-auth-container', {
-      callbacks: {
-        signInSuccessWithAuthResult: (authResult, _redirectUrl) => {
-          signInSuccess(authResult);
-          return true;
-        }
-      },
-      signInOptions: [
-        firebaseauth.GoogleAuthProvider.PROVIDER_ID,
-        firebaseauth.GithubAuthProvider.PROVIDER_ID,
-        firebaseauth.EmailAuthProvider.PROVIDER_ID
-      ]
-    });
-  }, []);
-
-  return <div id="firebaseui-auth-container" />;
 };
 
 export const useAuth = () => useContext(AuthContext);
