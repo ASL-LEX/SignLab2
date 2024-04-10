@@ -147,7 +147,8 @@
     "projectAdminUpdate": "Could not update the user's permssions",
     "studyDelete": "Failed to delete the target study",
     "studyCreate": "Failed to create the new study",
-    "tagsQuery": "Failed to get tags"
+    "tagsQuery": "Failed to get tags",
+    "projectQuery": "Failed to find projects"
   },
   "Auth": {
     "errorUnexpected": "Unknown error. Please contact the administrator",

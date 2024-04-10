@@ -23,8 +23,8 @@ export class StudyService {
     });
   }
 
-  async create(study: StudyCreate): Promise<Study> {
-    const newStudy = await this.studyModel.create(study);
+  async create(study: StudyCreate, organization: string): Promise<Study> {
+    const newStudy = await this.studyModel.create({ ...study, organization });
 
     // Make the study - project relation in the enforcer model
     await this.enforcer.addNamedGroupingPolicy('g2', study.project, newStudy._id.toString());

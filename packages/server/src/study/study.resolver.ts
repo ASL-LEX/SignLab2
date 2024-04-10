@@ -13,8 +13,11 @@ import * as casbin from 'casbin';
 import { StudyPermissions } from '../permission/permissions/study';
 import { TokenContext } from '../jwt/token.context';
 import { TokenPayload } from '../jwt/token.dto';
+import { OrganizationContext } from '../organization/organization.context';
+import { OrganizationGuard } from '../organization/organization.guard';
+import { Organization } from '../organization/organization.model';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => Study)
 export class StudyResolver {
   constructor(
@@ -25,13 +28,14 @@ export class StudyResolver {
   @Mutation(() => Study)
   async createStudy(
     @Args('study', { type: () => StudyCreate }, StudyCreatePipe) study: StudyCreate,
-    @TokenContext() user: TokenPayload
+    @TokenContext() user: TokenPayload,
+    @OrganizationContext() organization: Organization
   ): Promise<Study> {
     if (!(await this.enforcer.enforce(user.user_id, StudyPermissions.CREATE, study.project))) {
       throw new UnauthorizedException('User cannot create studies on this project');
     }
 
-    return this.studyService.create(study);
+    return this.studyService.create(study, organization._id);
   }
 
   @Query(() => Boolean)

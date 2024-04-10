@@ -5,11 +5,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
-import { useCreateDatasetMutation, useDatasetExistsLazyQuery } from '../graphql/dataset/dataset';
+import {
+  CreateDatasetDocument,
+  CreateDatasetMutation,
+  CreateDatasetMutationVariables,
+  useDatasetExistsLazyQuery
+} from '../graphql/dataset/dataset';
 import { Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import { useSnackbar } from '../context/Snackbar.context';
 import { useTranslation } from 'react-i18next';
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
+import ProjectListSelect, { projectListTester } from './ProjectListSelect.component';
+import { useApolloClient } from '@apollo/client';
+import {
+  GrantProjectDatasetAccessDocument,
+  GrantProjectDatasetAccessMutation,
+  GrantProjectDatasetAccessMutationVariables
+} from '../graphql/permission/permission';
+import { useDataset } from '../context/Dataset.context';
 
 interface ShowProps {
   show: boolean;
@@ -26,6 +40,14 @@ const schema = {
     description: {
       type: 'string',
       description: 'Please enter new dataset description'
+    },
+    projects: {
+      description: 'Select project that will have access to the dataset',
+      label: 'Project Access',
+      type: 'array',
+      items: {
+        type: 'string'
+      }
     }
   },
   required: ['name', 'description']
@@ -43,6 +65,14 @@ const uischema = {
       type: 'Control',
       label: 'Description',
       scope: '#/properties/description'
+    },
+    {
+      type: 'Control',
+      label: 'Projects with Access',
+      scope: '#/properties/projects',
+      options: {
+        customType: 'projectList'
+      }
     }
   ]
 };
@@ -51,15 +81,16 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
   const [error, setError] = useState(true);
   const [additionalErrors, setAdditionalErrors] = useState<ErrorObject[]>([]);
   const [datasetExistsQuery, datasetExistsResults] = useDatasetExistsLazyQuery();
+  const { refetch: refetchDatasets } = useDataset();
 
-  const initialData = {} as { name: string; description: string };
+  const initialData = {} as { name: string; description: string; projects: string[] };
 
   const [data, setData] = useState(initialData);
-  const [createDataset, { data: createDatasetResults, loading, error: createDatasetError }] =
-    useCreateDatasetMutation();
 
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
+
+  const client = useApolloClient();
 
   useEffect(() => {
     if (datasetExistsResults.data?.datasetExists) {
@@ -77,15 +108,6 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     }
   }, [datasetExistsResults.data]);
 
-  useEffect(() => {
-    if (createDatasetResults?.createDataset) {
-      props.toggleModal(true);
-    } else if (createDatasetError) {
-      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
-      console.error(createDatasetError);
-    }
-  }, [createDatasetResults, createDatasetError]);
-
   const handleChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
     if (!errors || errors.length === 0) {
@@ -96,9 +118,38 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
     }
   };
 
-  const onCreate = () => {
-    createDataset({ variables: { dataset: data } });
+  const onCreate = async () => {
+    const datasetCreateResult = await client.mutate<CreateDatasetMutation, CreateDatasetMutationVariables>({
+      mutation: CreateDatasetDocument,
+      variables: { dataset: { name: data.name, description: data.description } }
+    });
+
+    // If the dataset failed to be created, stop
+    if (datasetCreateResult.errors || !datasetCreateResult.data) {
+      console.error(datasetCreateResult.errors);
+      pushSnackbarMessage(t('errors.datasetCreate'), 'error');
+      return;
+    }
+
+    refetchDatasets();
+
+    // Now grant each project selected access to the dataset
+    const datasetID = datasetCreateResult.data.createDataset._id;
+    for (const projectID of data.projects) {
+      await client.mutate<GrantProjectDatasetAccessMutation, GrantProjectDatasetAccessMutationVariables>({
+        mutation: GrantProjectDatasetAccessDocument,
+        variables: { project: projectID, dataset: datasetID, hasAccess: true }
+      });
+    }
+
+    // Finally toggle the model
+    props.toggleModal(true);
   };
+
+  const renderers: JsonFormsRendererRegistryEntry[] = [
+    ...materialRenderers,
+    { tester: projectListTester, renderer: ProjectListSelect }
+  ];
 
   return (
     <div>
@@ -109,7 +160,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
             schema={schema}
             uischema={uischema}
             data={data}
-            renderers={materialRenderers}
+            renderers={renderers}
             cells={materialCells}
             onChange={({ data, errors }) => handleChange(data, errors)}
             additionalErrors={additionalErrors}
@@ -121,7 +172,7 @@ export const AddDataset: React.FC<ShowProps> = (props: ShowProps) => {
           </Button>
           <Button
             variant="contained"
-            disabled={loading || error || datasetExistsResults.data?.datasetExists}
+            disabled={error || datasetExistsResults.data?.datasetExists}
             onClick={onCreate}
             type="submit"
           >

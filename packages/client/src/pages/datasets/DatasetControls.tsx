@@ -4,26 +4,41 @@ import { AddDataset } from '../../components/AddDataset.component';
 import { useEffect, useState } from 'react';
 import { UploadEntries } from '../../components/UploadEntries.component';
 import { Dataset } from '../../graphql/graphql';
-import { useGetDatasetsLazyQuery } from '../../graphql/dataset/dataset';
+import { useGetDatasetsByProjectLazyQuery, useGetDatasetsLazyQuery } from '../../graphql/dataset/dataset';
 import { DatasetsView } from '../../components/DatasetsView.component';
 import { useTranslation } from 'react-i18next';
+import { usePermission } from '../../context/Permission.context';
+import { useProject } from '../../context/Project.context';
 
 export const DatasetControls: React.FC = () => {
   const [add, setAdd] = useState(false);
   const [upload, setUpload] = useState(false);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const [getDatasets, getDatasetsResults] = useGetDatasetsLazyQuery();
+  const [getAllDatasets, getAllDatasetsResults] = useGetDatasetsLazyQuery();
+  const [getProjectDatasets, getProjectDatasetsResults] = useGetDatasetsByProjectLazyQuery();
+  const { project } = useProject();
   const { t } = useTranslation();
+  const { permission } = usePermission();
 
-  useEffect(() => {
-    getDatasets();
-  }, []);
-
-  useEffect(() => {
-    if (getDatasetsResults.data) {
-      setDatasets(getDatasetsResults.data.getDatasets);
+  const fetchDatasets = () => {
+    if (permission?.owner) {
+      getAllDatasets({ fetchPolicy: 'network-only' });
+    } else if (permission?.projectAdmin && project) {
+      getProjectDatasets({ variables: { project: project._id } });
     }
-  }, [getDatasetsResults.data]);
+  };
+
+  useEffect(() => {
+    fetchDatasets();
+  }, [permission]);
+
+  useEffect(() => {
+    if (getAllDatasetsResults.data) {
+      setDatasets(getAllDatasetsResults.data.getDatasets);
+    } else if (getProjectDatasetsResults.data) {
+      setDatasets(getProjectDatasetsResults.data.getDatasetsByProject);
+    }
+  }, [getAllDatasetsResults.data, getProjectDatasetsResults.data]);
 
   const handleClick = (type: string) => {
     if (type === 'add') {
@@ -36,7 +51,7 @@ export const DatasetControls: React.FC = () => {
   const toggleAdd = (newDatasetCreated: boolean) => {
     setAdd((add) => !add);
     if (newDatasetCreated) {
-      getDatasets({ fetchPolicy: 'network-only' });
+      fetchDatasets();
     }
   };
 

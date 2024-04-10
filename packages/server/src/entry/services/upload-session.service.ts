@@ -1,10 +1,8 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UploadSession } from '../models/upload-session.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Dataset } from '../../dataset/dataset.model';
-import { GCP_STORAGE_PROVIDER } from '../../gcp/providers/storage.provider';
-import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { CsvValidationService } from './csv-validation.service';
 import { DatasetService } from '../../dataset/dataset.service';
@@ -12,23 +10,23 @@ import { EntryUploadService } from '../services/entry-upload.service';
 import { UploadStatus, UploadResult } from '../dtos/upload-result.dto';
 import { EntryService } from './entry.service';
 import { TokenPayload } from '../../jwt/token.dto';
+import { BucketFactory } from 'src/bucket/bucket-factory.service';
+import { BucketObjectAction } from 'src/bucket/bucket';
 
 @Injectable()
 export class UploadSessionService {
-  private readonly uploadBucket = this.configService.getOrThrow<string>('gcp.storage.bucket');
   private readonly uploadPrefix = this.configService.getOrThrow<string>('upload.prefix');
   private readonly csvFileName = this.configService.getOrThrow<string>('upload.csvFileName');
   private readonly entryFolder = this.configService.getOrThrow<string>('upload.entryFolder');
-  private readonly bucket: Bucket = this.storage.bucket(this.uploadBucket);
 
   constructor(
     @InjectModel(UploadSession.name) private readonly uploadSessionModel: Model<UploadSession>,
-    @Inject(GCP_STORAGE_PROVIDER) private readonly storage: Storage,
     private readonly configService: ConfigService,
     private readonly csvValidation: CsvValidationService,
     private readonly datasetService: DatasetService,
     private readonly entryUploadService: EntryUploadService,
-    private readonly entryService: EntryService
+    private readonly entryService: EntryService,
+    private readonly bucketFactory: BucketFactory
   ) {}
 
   async find(id: string): Promise<UploadSession | null> {
@@ -41,7 +39,8 @@ export class UploadSessionService {
     // Make the session
     const uploadSession = await this.uploadSessionModel.create({
       dataset: dataset._id,
-      created: new Date()
+      created: new Date(),
+      organization: dataset.organization
     });
 
     // Add in the bucket prefix for the session
@@ -73,15 +72,17 @@ export class UploadSessionService {
 
     const missingEntries: string[] = [];
 
+    const bucket = await this.bucketFactory.getBucket(uploadSession.organization);
+    if (!bucket) {
+      throw new Error('Could not find bucket for organization');
+    }
+
     // Go over each entry and move it to the dataset
     for (const entryUpload of entryUploads) {
       const entryURL = `${uploadSession.entryPrefix}/${entryUpload.filename}`;
 
-      const entryFile = this.bucket.file(entryURL);
-
       // Verify the entry is in the bucket
-      const exists = await entryFile.exists();
-      if (!exists[0]) {
+      if (!(await bucket.exists(entryURL))) {
         missingEntries.push(`Entry ${entryUpload.filename} not found`);
         continue;
       }
@@ -90,7 +91,7 @@ export class UploadSessionService {
       const entry = await this.entryService.create(
         {
           entryID: entryUpload.entryID,
-          contentType: entryFile.metadata.contentType,
+          contentType: await bucket.getContentType(entryURL),
           meta: entryUpload.metadata
         },
         dataset,
@@ -102,7 +103,7 @@ export class UploadSessionService {
       const fileExtension = entryUpload.filename.split('.').pop();
       const filename = `${entry._id}.${fileExtension}`;
       const newName = `${dataset.bucketPrefix}/${filename}`;
-      await entryFile.move(newName);
+      await bucket.move(entryURL, newName);
 
       // Add the bucket URL to the entry
       await this.entryService.setBucketLocation(entry, newName);
@@ -128,12 +129,18 @@ export class UploadSessionService {
   async getCSVUploadURL(uploadSession: UploadSession): Promise<string> {
     const csvURL = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.csvFileName}`;
     const entryPrefix = `${this.uploadPrefix}/${uploadSession.bucketPrefix}/${this.entryFolder}`;
+    const bucket = await this.bucketFactory.getBucket(uploadSession.organization);
+    if (!bucket) {
+      throw new Error('Bucket not found for organization');
+    }
 
-    const [url] = await this.bucket.file(csvURL).getSignedUrl({
-      action: 'write',
-      expires: Date.now() + 2 * 60 * 1000, // 2 minutes
-      contentType: 'text/csv'
-    });
+    // Make the URL
+    const url = await bucket.getSignedUrl(
+      csvURL,
+      BucketObjectAction.WRITE,
+      new Date(Date.now() + 2 * 60 * 1000),
+      'text/csv'
+    );
 
     // Add the url to the upload session to signify the upload is ready
     await this.uploadSessionModel.updateOne({ _id: uploadSession._id }, { $set: { csvURL, entryPrefix } });
@@ -145,15 +152,19 @@ export class UploadSessionService {
     if (!uploadSession.entryPrefix) {
       throw new BadRequestException('CSV must be uploaded before entries');
     }
+    const bucket = await this.bucketFactory.getBucket(uploadSession.organization);
+    if (!bucket) {
+      throw new Error('Bucket not found for organization');
+    }
 
     const entryURL = `${uploadSession.entryPrefix}/${filename}`;
 
-    const [url] = await this.bucket.file(entryURL).getSignedUrl({
-      action: 'write',
-      expires: Date.now() + 2 * 60 * 1000, // 2 minutes
-      contentType: filetype
-    });
-
+    const url = await bucket.getSignedUrl(
+      entryURL,
+      BucketObjectAction.WRITE,
+      new Date(Date.now() + 2 * 60 * 1000),
+      filetype
+    );
     return url;
   }
 
@@ -162,14 +173,21 @@ export class UploadSessionService {
     if (!uploadSession.csvURL) {
       throw new BadRequestException('CSV URL not found');
     }
-    const exists = await this.bucket.file(uploadSession.csvURL).exists();
+    const bucket = await this.bucketFactory.getBucket(uploadSession.organization);
+    if (!bucket) {
+      throw new Error('Bucket not found for organization');
+    }
+
+    const exists = await bucket.exists(uploadSession.csvURL);
     if (!exists) {
       throw new BadRequestException('CSV not found');
     }
 
     // Download the CSV to /tmp location
-    const csvFile = this.bucket.file(uploadSession.csvURL);
-    const csvFileContents = await csvFile.download();
+    const csvFileContents = await bucket.download(uploadSession.csvURL);
+    if (!csvFileContents) {
+      throw new Error('Failed to read file');
+    }
 
     // Get the cooresponding dataset
     const dataset = await this.datasetService.findById(uploadSession.dataset);
@@ -178,7 +196,7 @@ export class UploadSessionService {
     }
 
     // Validate the CSV contents against the target dataset
-    const csvValidationResults = await this.csvValidation.validate(csvFileContents[0], dataset, uploadSession);
+    const csvValidationResults = await this.csvValidation.validate(csvFileContents, dataset, uploadSession);
 
     if (!csvValidationResults.success) {
       // TODO: Add object type return here
@@ -197,11 +215,15 @@ export class UploadSessionService {
   // TODO: Provide user information
   private async deleteOldSession(dataset: Dataset): Promise<void> {
     const existing = await this.uploadSessionModel.findOne({ dataset: dataset._id }).exec();
+    const bucket = await this.bucketFactory.getBucket(dataset.organization);
+    if (!bucket) {
+      throw new Error('Bucket not found for organization');
+    }
     if (existing) {
       // Delete the in progress entry uploads
       await this.entryUploadService.deleteForSession(existing);
       // Remove cooresponding upload files
-      await this.bucket.deleteFiles({ prefix: `${this.uploadPrefix}/${existing.bucketPrefix}` });
+      await bucket.deleteFiles(`${this.uploadPrefix}/${existing.bucketPrefix}`);
       // Remove the upload session itself
       await this.uploadSessionModel.deleteOne({ _id: existing._id }).exec();
     }

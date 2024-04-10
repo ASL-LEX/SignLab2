@@ -18,6 +18,7 @@ import { JwtModule } from '../jwt/jwt.module';
 import { MongooseMiddlewareService } from '../shared/service/mongoose-callback.service';
 import { SharedModule } from '../shared/shared.module';
 import { OrganizationModule } from '../organization/organization.module';
+import { BucketModule } from 'src/bucket/bucket.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { OrganizationModule } from '../organization/organization.module';
     GcpModule,
     PermissionModule,
     JwtModule,
-    OrganizationModule
+    OrganizationModule,
+    BucketModule
   ],
   providers: [
     EntryResolver,

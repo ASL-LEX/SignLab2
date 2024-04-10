@@ -30,6 +30,7 @@ mutation assignTag($study: ID!) {
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
   }
 }
@@ -58,6 +59,7 @@ query getTags($study: ID!) {
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
     data
     complete
@@ -77,6 +79,7 @@ query getTrainingTags($study: ID!, $user: String!) {
       meta
       signedUrl
       signedUrlExpiration
+      isTraining
     }
     data
     complete

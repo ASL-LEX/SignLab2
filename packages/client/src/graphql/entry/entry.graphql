@@ -10,6 +10,7 @@ query entryForDataset($dataset: ID!) {
     meta
     signedUrl
     signedUrlExpiration
+    isTraining
   }
 }
 
@@ -25,6 +26,7 @@ query entryFromID($entry: ID!) {
     meta
     signedUrl
     signedUrlExpiration
+    isTraining
   }
 }
 
