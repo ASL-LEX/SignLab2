@@ -16,9 +16,10 @@ import { getVideoCols, videoViewTest } from './VideoGridView.component';
 export interface TagGridViewProps {
   study: Study;
   tags: GetTagsQuery['getTags'];
+  refetchTags: () => void;
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags }) => {
   const { t } = useTranslation();
 
   const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
@@ -72,10 +73,11 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
     })
     .flat();
 
-  const [removeTag] = useRemoveTagMutation();
+  const [removeTag] = useRemoveTagMutation({
+    onCompleted: () => refetchTags()
+  });
 
   const handleRedo = (row: any) => {
-    console.log(`Redoing tag for tag ID: ${row._id}`);
     removeTag({ variables: { tag: row._id } });
   };
 
@@ -95,7 +97,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
       )
     }
   ];
-
+  
   return (
     <DataGrid
       getRowHeight={() => 'auto'}

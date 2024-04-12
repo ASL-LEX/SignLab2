@@ -148,6 +148,37 @@
     "projectAdminUpdate": "Could not update the user's permssions",
     "studyDelete": "Failed to delete the target study",
     "studyCreate": "Failed to create the new study",
-    "tagsQuery": "Failed to get tags"
+    "tagsQuery": "Failed to get tags",
+    "projectQuery": "Failed to find projects"
+  },
+  "Auth": {
+    "errorUnexpected": "Unknown error. Please contact the administrator",
+    "email": "Email",
+    "password": "Password",
+    "enterUsername": "Enter Username",
+    "enterPassword": "Enter Password",
+    "dialogClose": "Close",
+    "submit": "Submit",
+    "organization": "Organization",
+    "login": {
+      "wrongPassword": "Wrong Password",
+      "userNotFound": "Username does not exist. Please sign up first",
+      "login": "Login"
+    },
+    "signup": {
+      "emailAlreadyInUse": "This email has already used. Please login directly",
+      "weakPassword": "The password is too weak. Please use a stronger password",
+      "invalidEmail": "The email address is invalid. Please re-enter",
+      "passwordNotMatch": "The passwords entered twice do not match",
+      "success": "Sign Up Successfully. Please login",
+      "reEnterPassword": "Re-enter Password",
+      "signup": "Sign Up"
+    },
+    "resetPassword": {
+      "userNotFound": "No user found with this email address",
+      "invalidEmail": "The email address is invalid. Please re-enter",
+      "confirmDialog": "An email for reset password has been sent to your email. Please check and follow the instructions",
+      "resetPassword": "Reset Password"
+    }
   }
 }
