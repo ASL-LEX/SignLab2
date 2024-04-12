@@ -97,7 +97,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       )
     }
   ];
-  
+
   return (
     <DataGrid
       getRowHeight={() => 'auto'}
