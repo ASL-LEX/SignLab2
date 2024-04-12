@@ -26,12 +26,16 @@ export const TagTrainingView: React.FC = () => {
     }
   }, [trainingTags]);
 
+  const refetchTags = () => {
+    trainingTags.refetch();
+  };
+
   return (
     <>
       {!tags || tags.length === 0 ? (
         <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography>
       ) : (
-        <TagGridView tags={tags} study={study} />
+        <TagGridView tags={tags} study={study} refetchTags={refetchTags} />
       )}
     </>
   );

@@ -26,14 +26,14 @@ export const TagView: React.FC = () => {
     setTags(getTagResult.data.getTags);
   }, [getTagResult]);
 
-  const refetch = () => {
+  const refetchTags = () => {
     getTagResult.refetch();
   };
 
   return (
     <Container sx={{ position: 'center', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
       <Typography variant="h3"> {t('menu.viewTags')}</Typography>
-      {study && <TagGridView study={study} tags={tags} refetchTags={refetch} />}
+      {study && <TagGridView study={study} tags={tags} refetchTags={refetchTags} />}
     </Container>
   );
 };
