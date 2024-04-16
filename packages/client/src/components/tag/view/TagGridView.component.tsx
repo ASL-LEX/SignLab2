@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Entry, Study } from '../../../graphql/graphql';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { GetTagsQuery, useRemoveTagMutation } from '../../../graphql/tag/tag';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
@@ -104,6 +104,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       rows={tags}
       columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
+      slots={{ toolbar: GridToolbar }}
     />
   );
 };

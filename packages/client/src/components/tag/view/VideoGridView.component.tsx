@@ -53,7 +53,7 @@ export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
     columns.push({
       field: `${property}-video-${i + 1}`,
       headerName: `${property}: ${i18next.t('common.video')} ${i + 1}`,
-      width: 300,
+      width: 350,
       renderCell: (params) =>
         params.row.data &&
         params.row.data[property] && (

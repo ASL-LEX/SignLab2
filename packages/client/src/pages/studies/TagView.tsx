@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useStudy } from '../../context/Study.context';
 import { TagGridView } from '../../components/tag/view/TagGridView.component';
@@ -31,9 +31,9 @@ export const TagView: React.FC = () => {
   };
 
   return (
-    <Container sx={{ position: 'center', display: 'flex', flexDirection: 'column', justifyContext: 'space-between' }}>
+    <>
       <Typography variant="h3"> {t('menu.viewTags')}</Typography>
       {study && <TagGridView study={study} tags={tags} refetchTags={refetchTags} />}
-    </Container>
+    </>
   );
 };
