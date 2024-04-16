@@ -3,10 +3,10 @@ import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Entry, Study } from '../../../graphql/graphql';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { GetTagsQuery } from '../../../graphql/tag/tag';
+import { GetTagsQuery, useRemoveTagMutation } from '../../../graphql/tag/tag';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
 import { EntryView } from '../../EntryView.component';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Button } from '@mui/material';
 import { getNumericCols, numericTest } from './NumericGridView.component';
 import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
@@ -16,9 +16,10 @@ import { getVideoCols, videoViewTest } from './VideoGridView.component';
 export interface TagGridViewProps {
   study: Study;
   tags: GetTagsQuery['getTags'];
+  refetchTags: () => void;
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags }) => {
   const { t } = useTranslation();
 
   const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
@@ -72,11 +73,36 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study }) => {
     })
     .flat();
 
+  const [removeTag] = useRemoveTagMutation({
+    onCompleted: () => refetchTags()
+  });
+
+  const handleRedo = (row: any) => {
+    removeTag({ variables: { tag: row._id } });
+  };
+
+  const tagRedoColumns: GridColDef[] = [
+    {
+      field: 'redo',
+      headerName: t('common.redo'),
+      renderCell: (params: GridRenderCellParams) => (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleRedo(params.row)}
+          disabled={!params.row.complete}
+        >
+          {t('common.redo')}
+        </Button>
+      )
+    }
+  ];
+
   return (
     <DataGrid
       getRowHeight={() => 'auto'}
       rows={tags}
-      columns={entryColumns.concat(tagMetaColumns).concat(dataColunms)}
+      columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
     />
   );

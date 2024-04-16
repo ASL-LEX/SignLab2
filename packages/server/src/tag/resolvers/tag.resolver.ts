@@ -69,6 +69,20 @@ export class TagResolver {
   }
 
   @Mutation(() => Boolean)
+  async removeTag(
+    @Args('tag', { type: () => ID }, TagPipe) tag: Tag,
+    @TokenContext() user: TokenPayload
+  ): Promise<boolean> {
+    const study = await this.studyPipe.transform(tag.study);
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.DELETE, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot delete tags in this study');
+    }
+
+    await this.tagService.removeTag(tag);
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async setEntryEnabled(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,

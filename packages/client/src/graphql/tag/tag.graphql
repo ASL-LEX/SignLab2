@@ -12,6 +12,10 @@ mutation setEntryEnabled($study: ID!, $entry: ID!, $enabled: Boolean!) {
   setEntryEnabled(study: $study, entry: $entry, enabled: $enabled)
 }
 
+mutation removeTag($tag: ID!) {
+  removeTag(tag: $tag)
+}
+
 query isEntryEnabled($study: ID!, $entry: ID!) {
   isEntryEnabled(study: $study, entry: $entry)
 }
