@@ -18,10 +18,10 @@ export const getSliderCols: GetGridColDefs = (uischema, schema, property) => {
     {
       field: property,
       headerName: property,
+      valueGetter: (params) => params.row.data && params.row.data[property],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <SliderGridView data={params.row.data[property]} schema={schema} uischema={uischema} />
+        params.value && (
+          <SliderGridView data={params.row.value} schema={schema} uischema={uischema} />
         )
     }
   ];

@@ -12,6 +12,7 @@ import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
 import { getVideoCols, videoViewTest } from './VideoGridView.component';
+import { Download } from '@mui/icons-material';
 
 export interface TagGridViewProps {
   study: Study;
@@ -118,3 +119,13 @@ const TagToolbar: React.FC = () => {
     </GridToolbarContainer>
   )
 };
+
+/*
+const CustomExport: React.FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Button startIcon={<Download />}> {t('components.tagView.export')} </Button>
+  )
+};
+*/

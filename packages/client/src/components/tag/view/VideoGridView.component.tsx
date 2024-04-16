@@ -54,10 +54,10 @@ export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
       field: `${property}-video-${i + 1}`,
       headerName: `${property}: ${i18next.t('common.video')} ${i + 1}`,
       width: 350,
+      valueGetter: (params) => params.row.data && params.row.data[property][i],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <VideoGridView data={params.row.data[property][i]} schema={schema} uischema={uischema} />
+        params.value && (
+          <VideoGridView data={params.value} schema={schema} uischema={uischema} />
         )
     });
   }

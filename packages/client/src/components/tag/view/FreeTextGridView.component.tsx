@@ -18,11 +18,8 @@ export const getTextCols: GetGridColDefs = (uischema, schema, property) => {
     {
       field: property,
       headerName: property,
-      renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <FreeTextGridView data={params.row.data[property]} schema={schema} uischema={uischema} />
-        )
+      valueGetter: (params) => params.row.data && params.row.data[property],
+      renderCell: (params) => params.value && <FreeTextGridView data={params.value} schema={schema} uischema={uischema} />
     }
   ];
 };

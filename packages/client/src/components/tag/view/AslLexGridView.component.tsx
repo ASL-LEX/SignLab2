@@ -70,28 +70,28 @@ export const getAslLexCols: GetGridColDefs = (uischema, schema, property) => {
       field: `${property}-video`,
       headerName: `${property}: ${i18next.t('common.video')}`,
       width: 300,
+      valueGetter: (params) => params.row.data && params.row.data[property],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <AslLexGridViewVideo data={params.row.data[property]} schema={schema} uischema={uischema} />
+        params.value && (
+          <AslLexGridViewVideo data={params.value} schema={schema} uischema={uischema} />
         )
     },
     {
       field: `${property}-key`,
       headerName: `${property}: ${i18next.t('common.key')}`,
+      valueGetter: (params) => params.row.data && params.row.data[property],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <AslLexGridViewKey data={params.row.data[property]} schema={schema} uischema={uischema} />
+        params.value && (
+          <AslLexGridViewKey data={params.value} schema={schema} uischema={uischema} />
         )
     },
     {
       field: `${property}-primary`,
       headerName: `${property}: ${i18next.t('common.primary')}`,
+      valueGetter: (params) => params.row.data && params.row.data[property],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
-          <AslLexGridViewPrimary data={params.row.data[property]} schema={schema} uischema={uischema} />
+        params.value && (
+          <AslLexGridViewPrimary data={params.value} schema={schema} uischema={uischema} />
         )
     }
   ];

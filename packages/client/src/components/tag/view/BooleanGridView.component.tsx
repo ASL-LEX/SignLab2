@@ -19,9 +19,9 @@ export const getBoolCols: GetGridColDefs = (uischema, schema, property) => {
     {
       field: property,
       headerName: property,
+      valueGetter: (params) => params.row.data && params.row.data[property],
       renderCell: (params) =>
-        params.row.data &&
-        params.row.data[property] && (
+        params.value && (
           <BooleanGridView data={params.row.data[property]} schema={schema} uischema={uischema} />
         )
     }

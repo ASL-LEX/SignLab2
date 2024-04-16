@@ -129,7 +129,8 @@
       "redirectToOrg": "Redirect to Organization Login"
     },
     "tagView": {
-      "originalEntry": "Original Entry"
+      "originalEntry": "Original Entry",
+      "export": "Export"
     }
   },
   "errors": {
