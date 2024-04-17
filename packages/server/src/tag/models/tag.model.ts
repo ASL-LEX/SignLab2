@@ -32,7 +32,7 @@ export class Tag {
     nullable: true,
     description: 'The data stored in the tag, not populated until a contributor has tagged'
   })
-  data?: any;
+  data?: TagField[];
 
   @Prop()
   @Field({ description: 'Way to rank tags based on order to be tagged' })

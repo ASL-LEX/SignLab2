@@ -24,6 +24,7 @@ import { BooleanFieldTransformer } from './transformers/boolean-transformer';
 import { FreeTextFieldTransformer } from './transformers/free-text.transformer';
 import { NumericFieldTransformer } from './transformers/numeric-transformer';
 import { SliderFieldTransformer } from './transformers/slider-transformer';
+import { TagFieldResolver } from './resolvers/tag-field.resolver';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { SliderFieldTransformer } from './transformers/slider-transformer';
   providers: [
     TagService,
     TagResolver,
+    TagFieldResolver,
     TagPipe,
     VideoFieldService,
     VideoFieldResolver,

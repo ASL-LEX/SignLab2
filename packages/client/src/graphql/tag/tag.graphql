@@ -65,7 +65,28 @@ query getTags($study: ID!) {
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+
+        ... on BooleanField {
+          value
+        }
+
+        ... on FreeTextField {
+          value
+        }
+
+        ... on NumericField {
+          value
+        }
+
+        ... on SliderField {
+          value
+        }
+      }
+    }
     complete
   }
 }

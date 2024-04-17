@@ -48,6 +48,8 @@ export class TagField {
    */
   @Prop({ required: true, type: mongoose.Schema.Types.Mixed })
   data: any;
+
+  /* Not shown is a resolve field for the representation of the data */
 }
 
 export const TagFieldSchema = SchemaFactory.createForClass(TagField);
