@@ -556,7 +556,7 @@ export type Tag = {
 
 export type TagField = {
   __typename?: 'TagField';
-  field: TagFieldUnion;
+  field?: Maybe<TagFieldUnion>;
   name: Scalars['String']['output'];
   type: TagFieldType;
 };

@@ -66,12 +66,31 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
   useEffect(() => {
 
     // This logic justs pulls out the fields from an array into an object
-    setGridData(tags.map(tag => {
+    /*
+    const newGridData = tags.map(tag => {
       return {
         ...tag,
         data:  tag.data ? Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties).map((property: string) => tag.data!.find(row => row.name == property)) : null
       }
-    }))
+    });
+    */
+
+    const newGridData: (GridData | null)[] = [];
+
+    for (const tag of tags) {
+      const properties = {} as any;
+
+      for (const property of Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties)) {
+        properties[property] = tag.data!.find(row => row.name === property);
+      }
+
+      newGridData.push({
+        ...tag,
+        data: properties,
+      })
+    }
+
+    setGridData(newGridData);
   }, [tags]);
 
   const entryColumns: GridColDef[] = [
