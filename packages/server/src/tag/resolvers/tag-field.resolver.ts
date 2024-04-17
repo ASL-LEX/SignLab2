@@ -10,17 +10,20 @@ import { SliderField } from '../models/slider-field.model';
 @UseGuards(JwtAuthGuard)
 @Resolver(() => TagField)
 export class TagFieldResolver {
-  @ResolveField(() => TagFieldUnion)
-  async field(@Parent() tagField: TagField): Promise<typeof TagFieldUnion> {
+  @ResolveField(() => TagFieldUnion, { nullable: true })
+  async field(@Parent() tagField: TagField): Promise<typeof TagFieldUnion | null> {
+    if (!tagField.data) {
+      return null;
+    }
     switch(tagField.type) {
       case TagFieldType.BOOLEAN:
-        return { value: tagField.data } as BooleanField;
+        return new BooleanField(tagField.data);
       case TagFieldType.FREE_TEXT:
-        return { value: tagField.data } as FreeTextField;
+        return new FreeTextField(tagField.data);
       case TagFieldType.NUMERIC:
-        return { value: tagField.data } as NumericField;
+        return new NumericField(tagField.data);
       case TagFieldType.SLIDER:
-        return { value: tagField.data } as SliderField;
+        return new SliderField(tagField.data);
       default:
         throw new Error(`Unsupported tag field type: ${tagField.type}`);
     }

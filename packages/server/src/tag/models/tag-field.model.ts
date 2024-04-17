@@ -46,7 +46,7 @@ export class TagField {
    * object or be the value itself. A factory method exists for converting
    * the data into the field the user is querying for
    */
-  @Prop({ required: true, type: mongoose.Schema.Types.Mixed })
+  @Prop({ required: false, type: mongoose.Schema.Types.Mixed })
   data: any;
 
   /* Not shown is a resolve field for the representation of the data */

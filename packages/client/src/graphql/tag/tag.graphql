@@ -69,6 +69,8 @@ query getTags($study: ID!) {
       type
       name
       field {
+        __typename
+
 
         ... on BooleanField {
           boolValue: value
@@ -110,6 +112,7 @@ query getTrainingTags($study: ID!, $user: String!) {
       type
       name
       field {
+        __typename
 
         ... on BooleanField {
           boolValue: value

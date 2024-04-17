@@ -4,4 +4,8 @@ import { ObjectType, Field } from '@nestjs/graphql';
 export class SliderField {
   @Field()
   value: number;
+
+  constructor(value: number) {
+    this.value = value;
+  }
 }
