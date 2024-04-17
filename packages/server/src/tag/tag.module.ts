@@ -20,6 +20,10 @@ import { TrainingSet, TrainingSetSchema } from './models/training-set';
 import { TrainingSetResolver } from './resolvers/training-set.resolver';
 import { TrainingSetService } from './services/training-set.service';
 import { BucketModule } from 'src/bucket/bucket.module';
+import { BooleanFieldTransformer } from './transformers/boolean-transformer';
+import { FreeTextFieldTransformer } from './transformers/free-text.transformer';
+import { NumericFieldTransformer } from './transformers/numeric-transformer';
+import { SliderFieldTransformer } from './transformers/slider-transformer';
 
 @Module({
   imports: [
@@ -46,7 +50,11 @@ import { BucketModule } from 'src/bucket/bucket.module';
     FieldTransformerFactory,
     VideoFieldTransformer,
     TrainingSetResolver,
-    TrainingSetService
+    TrainingSetService,
+    BooleanFieldTransformer,
+    FreeTextFieldTransformer,
+    NumericFieldTransformer,
+    SliderFieldTransformer
   ]
 })
 export class TagModule {}

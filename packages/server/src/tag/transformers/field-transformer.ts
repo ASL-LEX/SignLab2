@@ -1,5 +1,6 @@
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { TokenPayload } from '../../jwt/token.dto';
+import { TagField } from '../models/tag-field.model';
 import { Tag } from '../models/tag.model';
 
 /**
@@ -8,7 +9,7 @@ import { Tag } from '../models/tag.model';
  * and ensuring that the data meets any additional formatting requirements.
  */
 export interface FieldTransformer {
-  transformField(tag: Tag, data: any, uischema: UISchemaElement, schema: JsonSchema, user: TokenPayload): Promise<any>;
+  transformField(tag: Tag, data: any, uischema: UISchemaElement, schema: JsonSchema, user: TokenPayload, property: string): Promise<TagField>;
 }
 
 /**

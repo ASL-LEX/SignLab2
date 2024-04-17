@@ -1,9 +1,9 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Field, ObjectType } from '@nestjs/graphql';
-import JSON from 'graphql-type-json';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 import { Study } from '../../study/study.model';
 import { Entry } from '../../entry/models/entry.model';
+import { TagFieldSchema, TagField } from './tag-field.model';
 
 @Schema()
 @ObjectType()
@@ -27,10 +27,10 @@ export class Tag {
   @Field({ nullable: true, description: 'The user assigned to the tag ' })
   user?: string;
 
-  @Prop({ requried: false, type: mongoose.Schema.Types.Mixed })
-  @Field(() => JSON, {
+  @Prop({ requried: false, type: [TagFieldSchema] })
+  @Field(() => [TagField], {
     nullable: true,
-    description: 'The data stored in the tag, not populated until a colaborator has tagged'
+    description: 'The data stored in the tag, not populated until a contributor has tagged'
   })
   data?: any;
 

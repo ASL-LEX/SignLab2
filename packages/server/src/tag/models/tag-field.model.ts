@@ -37,9 +37,14 @@ export class TagField {
   @Field(() => TagFieldType)
   type: TagFieldType;
 
+  @Prop({ required: true })
+  @Field()
+  name: string;
+
   /**
    * Holds the data itself, this can be an ID referencing a more complex
-   * object or be the value itself
+   * object or be the value itself. A factory method exists for converting
+   * the data into the field the user is querying for
    */
   @Prop({ required: true, type: mongoose.Schema.Types.Mixed })
   data: any;

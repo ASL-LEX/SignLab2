@@ -4,6 +4,7 @@ import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { VideoFieldService } from '../services/video-field.service';
 import { TokenPayload } from '../../jwt/token.dto';
 import { Tag } from '../models/tag.model';
+import { TagField, TagFieldType } from '../models/tag-field.model';
 
 @Injectable()
 export class VideoFieldTransformer implements FieldTransformer {
@@ -14,8 +15,9 @@ export class VideoFieldTransformer implements FieldTransformer {
     data: string[],
     uischema: UISchemaElement,
     _schema: JsonSchema,
-    user: TokenPayload
-  ): Promise<any> {
+    user: TokenPayload,
+    property: string
+  ): Promise<TagField> {
     const datasetID = uischema.options?.dataset;
     if (!datasetID) {
       throw new BadRequestException('Dataset ID not provided');
@@ -28,7 +30,11 @@ export class VideoFieldTransformer implements FieldTransformer {
       })
     );
 
-    return videoFields;
+    return {
+      name: property,
+      data: JSON.stringify(videoFields),
+      type: TagFieldType.VIDEO_RECORD
+    }
   }
 }
 
