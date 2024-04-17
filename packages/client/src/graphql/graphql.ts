@@ -18,6 +18,11 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type BooleanField = {
+  __typename?: 'BooleanField';
+  value: Scalars['Boolean']['output'];
+};
+
 export type Dataset = {
   __typename?: 'Dataset';
   _id: Scalars['ID']['output'];
@@ -50,6 +55,11 @@ export type Entry = {
   signedUrl: Scalars['String']['output'];
   /** Get the number of milliseconds the signed URL is valid for. */
   signedUrlExpiration: Scalars['Float']['output'];
+};
+
+export type FreeTextField = {
+  __typename?: 'FreeTextField';
+  value: Scalars['String']['output'];
 };
 
 /** Represents an entier lexicon */
@@ -300,6 +310,11 @@ export type MutationSignLabCreateProjectArgs = {
   project: ProjectCreate;
 };
 
+export type NumericField = {
+  __typename?: 'NumericField';
+  value: Scalars['Float']['output'];
+};
+
 export type Organization = {
   __typename?: 'Organization';
   _id: Scalars['ID']['output'];
@@ -485,6 +500,11 @@ export type QueryValidateCsvArgs = {
   session: Scalars['ID']['input'];
 };
 
+export type SliderField = {
+  __typename?: 'SliderField';
+  value: Scalars['Float']['output'];
+};
+
 export type Study = {
   __typename?: 'Study';
   _id: Scalars['ID']['output'];
@@ -520,8 +540,8 @@ export type Tag = {
   __typename?: 'Tag';
   _id: Scalars['String']['output'];
   complete: Scalars['Boolean']['output'];
-  /** The data stored in the tag, not populated until a colaborator has tagged */
-  data?: Maybe<Scalars['JSON']['output']>;
+  /** The data stored in the tag, not populated until a contributor has tagged */
+  data?: Maybe<Array<TagField>>;
   /** If the tag is enabled as part of the study, way to disable certain tags */
   enabled: Scalars['Boolean']['output'];
   entry: Entry;
@@ -533,6 +553,26 @@ export type Tag = {
   /** The user assigned to the tag  */
   user?: Maybe<Scalars['String']['output']>;
 };
+
+export type TagField = {
+  __typename?: 'TagField';
+  field: TagFieldUnion;
+  name: Scalars['String']['output'];
+  type: TagFieldType;
+};
+
+export enum TagFieldType {
+  AslLex = 'ASL_LEX',
+  Autocomplete = 'AUTOCOMPLETE',
+  Boolean = 'BOOLEAN',
+  Embedded = 'EMBEDDED',
+  FreeText = 'FREE_TEXT',
+  Numeric = 'NUMERIC',
+  Slider = 'SLIDER',
+  VideoRecord = 'VIDEO_RECORD'
+}
+
+export type TagFieldUnion = BooleanField | FreeTextField | NumericField | SliderField | VideoField;
 
 export type TagSchema = {
   __typename?: 'TagSchema';

@@ -71,19 +71,19 @@ query getTags($study: ID!) {
       field {
 
         ... on BooleanField {
-          value
+          boolValue: value
         }
 
         ... on FreeTextField {
-          value
+          textValue: value
         }
 
         ... on NumericField {
-          value
+          numericValue: value
         }
 
         ... on SliderField {
-          value
+          sliderValue: value
         }
       }
     }
@@ -106,7 +106,29 @@ query getTrainingTags($study: ID!, $user: String!) {
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+
+        ... on BooleanField {
+          boolValue: value
+        }
+
+        ... on FreeTextField {
+          textValue: value
+        }
+
+        ... on NumericField {
+          numericValue: value
+        }
+
+        ... on SliderField {
+          sliderValue: value
+        }
+      }
+    }
+
     complete
   }
 }
