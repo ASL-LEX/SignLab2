@@ -2,13 +2,13 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Document } from 'mongoose';
 
-@Schema()
-@ObjectType()
 /**
  * Represents a single video field in a study. This is used for temporarily
  * storing the recording video data before the tag is submitted and the video
  * is turned into an Entry.
  */
+@Schema()
+@ObjectType()
 export class VideoField {
   @Field()
   _id: string;
