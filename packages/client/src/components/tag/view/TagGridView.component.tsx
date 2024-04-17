@@ -13,6 +13,7 @@ import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
 import { getVideoCols, videoViewTest } from './VideoGridView.component';
 import { Download } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 export interface TagGridViewProps {
   study: Study;
@@ -20,8 +21,38 @@ export interface TagGridViewProps {
   refetchTags: () => void;
 }
 
+/**
+ * The GridData represents how to get the tag into the grid view. The data type
+ * itself matches the tag query except the data field is represented as key value
+ * fields instead of a list of fields.
+ *
+ * So
+ *
+ * {
+ *    data: [
+ *      { name: "property name a", ...fields }
+ *    ]
+ * }
+ *
+ * Becomes
+ *
+ * {
+ *   data: {
+ *    "property name 1": {
+ *      name: "property name 1",
+ *      ...fields
+ *    }
+ *   }
+ * }
+ */
+interface GridData extends Omit<GetTagsQuery['getTags'][0], 'data'> {
+  data: { [property: string]: any } | null;
+}
+
 export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags }) => {
   const { t } = useTranslation();
+
+  const [gridData, setGridData] = useState<(GridData | null)[]>([]);
 
   const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
     { tester: freeTextTest, getGridColDefs: getTextCols },
@@ -31,6 +62,17 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
     { tester: aslLexTest, getGridColDefs: getAslLexCols },
     { tester: videoViewTest, getGridColDefs: getVideoCols }
   ];
+
+  useEffect(() => {
+
+    // This logic justs pulls out the fields from an array into an object
+    setGridData(tags.map(tag => {
+      return {
+        ...tag,
+        data:  tag.data ? Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties).map((property: string) => tag.data!.find(row => row.name == property)) : null
+      }
+    }))
+  }, [tags]);
 
   const entryColumns: GridColDef[] = [
     {
@@ -102,7 +144,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
   return (
     <DataGrid
       getRowHeight={() => 'auto'}
-      rows={tags}
+      rows={gridData}
       columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
       slots={{ toolbar: TagToolbar }}
