@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FieldTransformer } from './field-transformer';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
-import { VideoFieldService } from '../services/video-field.service';
+import { VideoFieldIntermediateService } from '../services/video-field-inter.service';
 import { TokenPayload } from '../../jwt/token.dto';
 import { Tag } from '../models/tag.model';
 import { TagField, TagFieldType } from '../models/tag-field.model';
 
 @Injectable()
 export class VideoFieldTransformer implements FieldTransformer {
-  constructor(private readonly videoFieldService: VideoFieldService) {}
+  constructor(private readonly videoFieldService: VideoFieldIntermediateService) {}
 
   async transformField(
     tag: Tag,

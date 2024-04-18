@@ -8,9 +8,9 @@ import { EntryModule } from '../entry/entry.module';
 import { TagPipe } from './pipes/tag.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { PermissionModule } from '../permission/permission.module';
-import { VideoField, VideoFieldSchema } from './models/video-field.model';
-import { VideoFieldService } from './services/video-field.service';
-import { VideoFieldResolver } from './resolvers/video-field.resolver';
+import { VideoFieldIntermediate, VideoFieldIntermediateSchema } from './models/video-field-inter.model';
+import { VideoFieldIntermediateService } from './services/video-field-inter.service';
+import { VideoFieldIntermediateResolver } from './resolvers/video-field-inter.resolver';
 import { GcpModule } from '../gcp/gcp.module';
 import { TagTransformer } from './services/tag-transformer.service';
 import { FieldTransformerFactory } from './transformers/field-transformer-factory';
@@ -25,12 +25,13 @@ import { FreeTextFieldTransformer } from './transformers/free-text.transformer';
 import { NumericFieldTransformer } from './transformers/numeric-transformer';
 import { SliderFieldTransformer } from './transformers/slider-transformer';
 import { TagFieldResolver } from './resolvers/tag-field.resolver';
+import { TagFieldService } from './services/tag-field.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Tag.name, schema: TagSchema },
-      { name: VideoField.name, schema: VideoFieldSchema },
+      { name: VideoFieldIntermediate.name, schema: VideoFieldIntermediateSchema },
       { name: TrainingSet.name, schema: TrainingSetSchema }
     ]),
     StudyModule,
@@ -46,8 +47,8 @@ import { TagFieldResolver } from './resolvers/tag-field.resolver';
     TagResolver,
     TagFieldResolver,
     TagPipe,
-    VideoFieldService,
-    VideoFieldResolver,
+    VideoFieldIntermediateService,
+    VideoFieldIntermediateResolver,
     TagTransformer,
     FieldTransformerFactory,
     VideoFieldTransformer,
@@ -56,7 +57,8 @@ import { TagFieldResolver } from './resolvers/tag-field.resolver';
     BooleanFieldTransformer,
     FreeTextFieldTransformer,
     NumericFieldTransformer,
-    SliderFieldTransformer
+    SliderFieldTransformer,
+    TagFieldService
   ]
 })
 export class TagModule {}

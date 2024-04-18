@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { VideoField, VideoFieldDocument } from '../models/video-field.model';
+import { VideoFieldIntermediate, VideoFieldIntermediateDocument } from '../models/video-field-inter.model';
 import { Model } from 'mongoose';
 import { Tag } from '../models/tag.model';
 import { StudyService } from '../../study/study.service';
@@ -14,14 +14,14 @@ import { BucketFactory } from 'src/bucket/bucket-factory.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
 
 @Injectable()
-export class VideoFieldService {
+export class VideoFieldIntermediateService {
   private readonly bucketPrefix = this.configService.getOrThrow<string>('tag.videoFieldFolder');
   private readonly videoRecordFileType = this.configService.getOrThrow<string>('tag.videoRecordFileType');
   private readonly expiration = this.configService.getOrThrow<number>('tag.videoUploadExpiration');
   private readonly trainingPrefix = this.configService.getOrThrow<string>('tag.trainingPrefix');
 
   constructor(
-    @InjectModel(VideoField.name) private readonly videoFieldModel: Model<VideoFieldDocument>,
+    @InjectModel(VideoFieldIntermediate.name) private readonly videoFieldModel: Model<VideoFieldIntermediateDocument>,
     private readonly studyService: StudyService,
     private readonly configService: ConfigService,
     private readonly entryService: EntryService,
@@ -29,7 +29,7 @@ export class VideoFieldService {
     private readonly bucketFactory: BucketFactory
   ) {}
 
-  async saveVideoField(tag: Tag, field: string, index: number): Promise<VideoField> {
+  async saveVideoField(tag: Tag, field: string, index: number): Promise<VideoFieldIntermediate> {
     // First do a correctness check to make sure the field shows up in the tag
     // TODO: Can do a correctness check on the index and using the UI schema as well
     const study = await this.studyService.findById(tag.study);
@@ -59,7 +59,7 @@ export class VideoFieldService {
     });
   }
 
-  async getUploadURL(videoField: VideoField): Promise<string> {
+  async getUploadURL(videoField: VideoFieldIntermediate): Promise<string> {
     const bucket = await this.bucketFactory.getBucket(videoField.organization);
     if (!bucket) {
       throw new Error('Could not find bucket for video field');
@@ -126,7 +126,7 @@ export class VideoFieldService {
     return `${this.bucketPrefix}/${tagID}/${field}/${index}.${this.videoRecordFileType}`;
   }
 
-  private async getVideoField(tag: Tag, field: string, index: number): Promise<VideoField | null> {
+  private async getVideoField(tag: Tag, field: string, index: number): Promise<VideoFieldIntermediate | null> {
     return this.videoFieldModel.findOne({ tag: tag._id, field, index }).exec();
   }
 }
