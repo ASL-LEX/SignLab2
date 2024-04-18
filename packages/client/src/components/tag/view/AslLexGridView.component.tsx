@@ -1,6 +1,4 @@
 import { TagColumnViewProps, TagViewTest, NOT_APPLICABLE, GetGridColDefs } from '../../../types/TagColumnView';
-import { useLexiconByKeyQuery } from '../../../graphql/lex';
-import { useEffect, useState } from 'react';
 import { VideoEntryView } from '../../VideoView.component';
 import i18next from 'i18next';
 
@@ -28,18 +26,7 @@ const AslLexGridViewKey: React.FC<TagColumnViewProps> = ({ data }) => {
 };
 
 const AslLexGridViewPrimary: React.FC<TagColumnViewProps> = ({ data }) => {
-  const [primary, setPrimary] = useState<string | null>(null);
-
-  const lexiconByKeyResult = useLexiconByKeyQuery({
-    variables: { lexicon: import.meta.env.VITE_ASL_LEXICON_ID, key: data }
-  });
-
-  useEffect(() => {
-    if (lexiconByKeyResult.data) {
-      setPrimary(lexiconByKeyResult.data.lexiconByKey.primary);
-    }
-  }, [lexiconByKeyResult]);
-
+  const primary = data as string;
   return primary || '';
 };
 

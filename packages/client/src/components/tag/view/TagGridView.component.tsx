@@ -19,7 +19,6 @@ import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
 import { getVideoCols, videoViewTest } from './VideoGridView.component';
-import { Download } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 export interface TagGridViewProps {
