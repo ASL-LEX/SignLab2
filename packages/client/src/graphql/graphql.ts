@@ -139,7 +139,7 @@ export type Mutation = {
   lexiconClearEntries: Scalars['Boolean']['output'];
   lexiconCreate: Lexicon;
   removeTag: Scalars['Boolean']['output'];
-  saveVideoField: VideoField;
+  saveVideoField: VideoFieldIntermediate;
   setEntryEnabled: Scalars['Boolean']['output'];
   signLabCreateProject: Project;
 };
@@ -615,6 +615,11 @@ export type User = {
 
 export type VideoField = {
   __typename?: 'VideoField';
+  entries: Array<Entry>;
+};
+
+export type VideoFieldIntermediate = {
+  __typename?: 'VideoFieldIntermediate';
   _id: Scalars['String']['output'];
   uploadURL: Scalars['String']['output'];
 };

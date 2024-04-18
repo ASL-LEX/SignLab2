@@ -67,14 +67,14 @@ export type SaveVideoFieldMutationVariables = Types.Exact<{
 }>;
 
 
-export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: { __typename?: 'VideoField', _id: string, uploadURL: string } };
+export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: { __typename?: 'VideoFieldIntermediate', _id: string, uploadURL: string } };
 
 export type GetTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
 }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField' } | null }> | null }> };
+export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField', entries: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> } | null }> | null }> };
 
 export type GetTrainingTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
@@ -384,6 +384,20 @@ export const GetTagsDocument = gql`
       name
       field {
         __typename
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
         ... on BooleanField {
           boolValue: value
         }

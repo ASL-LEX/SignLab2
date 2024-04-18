@@ -1,20 +1,11 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { TagColumnViewProps, TagViewTest, NOT_APPLICABLE, GetGridColDefs } from '../../../types/TagColumnView';
 import i18next from 'i18next';
-import { useEntryFromIdQuery } from '../../../graphql/entry/entry';
-import { Entry } from '../../../graphql/graphql';
-import { useEffect, useState } from 'react';
 import { VideoEntryView } from '../../VideoView.component';
+import { Entry } from '../../../graphql/graphql';
 
 const VideoGridView: React.FC<TagColumnViewProps> = ({ data }) => {
-  const [entry, setEntry] = useState<Entry | null>(null);
-  const entryFromIdResult = useEntryFromIdQuery({ variables: { entry: data } });
-
-  useEffect(() => {
-    if (entryFromIdResult.data) {
-      setEntry(entryFromIdResult.data.entryFromID);
-    }
-  }, [entryFromIdResult]);
+  const entry = data as Entry;
 
   return (
     <>
@@ -54,7 +45,7 @@ export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
       field: `${property}-video-${i + 1}`,
       headerName: `${property}: ${i18next.t('common.video')} ${i + 1}`,
       width: 350,
-      valueGetter: (params) => params.row.data && params.row.data[property][i],
+      valueGetter: (params) => params.row.data[property]?.field?.entries[i],
       renderCell: (params) =>
         params.value && (
           <VideoGridView data={params.value} schema={schema} uischema={uischema} />

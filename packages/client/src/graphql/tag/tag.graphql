@@ -71,6 +71,21 @@ query getTags($study: ID!) {
       field {
         __typename
 
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+
 
         ... on BooleanField {
           boolValue: value

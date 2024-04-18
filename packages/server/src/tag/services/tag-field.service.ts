@@ -30,7 +30,7 @@ export class TagFieldService {
       case TagFieldType.SLIDER:
         return new SliderField(tagField.data);
       case TagFieldType.VIDEO_RECORD:
-        return this.getVideoField(tagField.data);
+        return this.getVideoField(tagField);
       default:
         throw new Error(`Unsupported tag field type: ${tagField.type}`);
     }
