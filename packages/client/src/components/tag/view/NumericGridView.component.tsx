@@ -20,9 +20,7 @@ export const getNumericCols: GetGridColDefs = (uischema, schema, property) => {
       headerName: property,
       valueGetter: (params) => params.row.data[property]?.field?.numericValue,
       renderCell: (params) =>
-        params.value && (
-          <NumericGridView data={params.value} schema={schema} uischema={uischema} />
-        )
+        params.value && <NumericGridView data={params.value} schema={schema} uischema={uischema} />
     }
   ];
 };

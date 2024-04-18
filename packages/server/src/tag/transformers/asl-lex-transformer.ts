@@ -19,7 +19,7 @@ export class AslLexFieldTransformer implements FieldTransformer {
       name: property,
       data,
       type: TagFieldType.ASL_LEX
-    }
+    };
   }
 }
 

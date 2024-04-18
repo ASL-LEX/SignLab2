@@ -1,6 +1,5 @@
 import { Field, ObjectType, Directive } from '@nestjs/graphql';
 
-
 @ObjectType()
 @Directive('@key(fields: "key, lexicon")')
 @Directive('@extends')

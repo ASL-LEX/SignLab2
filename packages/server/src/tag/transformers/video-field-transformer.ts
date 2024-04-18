@@ -34,7 +34,7 @@ export class VideoFieldTransformer implements FieldTransformer {
       name: property,
       data: JSON.stringify(videoFields),
       type: TagFieldType.VIDEO_RECORD
-    }
+    };
   }
 }
 

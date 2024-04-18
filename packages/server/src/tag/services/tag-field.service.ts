@@ -10,7 +10,6 @@ import { Entry } from 'src/entry/models/entry.model';
 import { AslLexField, LexiconEntry } from '../models/asl-lex-field.model';
 import { ConfigService } from '@nestjs/config';
 
-
 /**
  * Handles turning the rawdata fields into TagFields
  */
@@ -24,7 +23,7 @@ export class TagFieldService {
     if (!tagField.data) {
       return null;
     }
-    switch(tagField.type) {
+    switch (tagField.type) {
       case TagFieldType.ASL_LEX:
         return this.getAslLexField(tagField);
       case TagFieldType.BOOLEAN:
@@ -44,14 +43,14 @@ export class TagFieldService {
 
   private async getVideoField(tagField: TagField): Promise<VideoField> {
     const data: string[] = JSON.parse(tagField.data);
-    const entryIDs = data.filter((data) => data != null)
+    const entryIDs = data.filter((data) => data != null);
     const entries: (Entry | null)[] = [];
 
     for (const entryID of entryIDs) {
       entries.push(await this.entryService.find(entryID));
     }
 
-    const filtered: Entry[] = entries.filter(entry => entry != null) as Entry[];
+    const filtered: Entry[] = entries.filter((entry) => entry != null) as Entry[];
 
     return new VideoField(filtered);
   }

@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Entry, Study } from '../../../graphql/graphql';
-import { GridColDef, GridRenderCellParams, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarFilterButton
+} from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { GetTagsQuery, useRemoveTagMutation } from '../../../graphql/tag/tag';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
@@ -71,13 +78,13 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       const properties = {} as any;
 
       for (const property of Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties)) {
-        properties[property] = tag.data!.find(row => row.name === property);
+        properties[property] = tag.data!.find((row) => row.name === property);
       }
 
       newGridData.push({
         ...tag,
-        data: properties,
-      })
+        data: properties
+      });
     }
 
     setGridData(newGridData);
@@ -168,7 +175,7 @@ const TagToolbar: React.FC = () => {
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
     </GridToolbarContainer>
-  )
+  );
 };
 
 /*

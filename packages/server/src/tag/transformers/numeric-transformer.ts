@@ -19,7 +19,7 @@ export class NumericFieldTransformer implements FieldTransformer {
       name: property,
       data,
       type: TagFieldType.NUMERIC
-    }
+    };
   }
 }
 

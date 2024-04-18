@@ -19,7 +19,7 @@ export class BooleanFieldTransformer implements FieldTransformer {
       name: property,
       data,
       type: TagFieldType.BOOLEAN
-    }
+    };
   }
 }
 

@@ -19,7 +19,7 @@ export class SliderFieldTransformer implements FieldTransformer {
       name: property,
       data,
       type: TagFieldType.SLIDER
-    }
+    };
   }
 }
 

@@ -19,7 +19,7 @@ export class FreeTextFieldTransformer implements FieldTransformer {
       name: property,
       data,
       type: TagFieldType.FREE_TEXT
-    }
+    };
   }
 }
 
