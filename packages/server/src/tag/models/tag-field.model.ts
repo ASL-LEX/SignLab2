@@ -6,6 +6,7 @@ import { FreeTextField } from './free-text-field.model';
 import { BooleanField } from './boolean-field.model';
 import { NumericField } from './numeric-field.model';
 import { SliderField } from './slider-field.model';
+import { AslLexField } from './asl-lex-field.model';
 
 export enum TagFieldType {
   ASL_LEX = 'ASL_LEX',
@@ -24,7 +25,7 @@ registerEnumType(TagFieldType, {
 
 export const TagFieldUnion = createUnionType({
   name: 'TagFieldUnion',
-  types: () => [BooleanField, FreeTextField, NumericField, SliderField, VideoField] as const
+  types: () => [AslLexField, BooleanField, FreeTextField, NumericField, SliderField, VideoField] as const
 });
 
 @Schema()

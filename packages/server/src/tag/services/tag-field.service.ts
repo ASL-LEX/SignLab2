@@ -7,6 +7,8 @@ import { SliderField } from '../models/slider-field.model';
 import { EntryService } from '../../entry/services/entry.service';
 import { VideoField } from '../models/video-field.model';
 import { Entry } from 'src/entry/models/entry.model';
+import { AslLexField, LexiconEntry } from '../models/asl-lex-field.model';
+import { ConfigService } from '@nestjs/config';
 
 
 /**
@@ -14,13 +16,17 @@ import { Entry } from 'src/entry/models/entry.model';
  */
 @Injectable()
 export class TagFieldService {
-  constructor(private readonly entryService: EntryService) {}
+  private readonly aslLexID = this.configService.getOrThrow<string>('lexicon.aslLexID');
+
+  constructor(private readonly entryService: EntryService, private readonly configService: ConfigService) {}
 
   async produceField(tagField: TagField): Promise<typeof TagFieldUnion | null> {
     if (!tagField.data) {
       return null;
     }
     switch(tagField.type) {
+      case TagFieldType.ASL_LEX:
+        return this.getAslLexField(tagField);
       case TagFieldType.BOOLEAN:
         return new BooleanField(tagField.data);
       case TagFieldType.FREE_TEXT:
@@ -48,5 +54,11 @@ export class TagFieldService {
     const filtered: Entry[] = entries.filter(entry => entry != null) as Entry[];
 
     return new VideoField(filtered);
+  }
+
+  private async getAslLexField(tagField: TagField): Promise<AslLexField> {
+    const key = tagField.data as string;
+    const lexicon = this.aslLexID;
+    return new AslLexField(new LexiconEntry(key, lexicon));
   }
 }

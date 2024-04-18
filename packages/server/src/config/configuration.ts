@@ -36,5 +36,8 @@ export default () => ({
     videoRecordFileType: 'webm',
     videoUploadExpiration: process.env.TAG_VIDEO_UPLOAD_EXPIRATION || 15 * 60 * 1000, // 15 minutes
     trainingPrefix: process.env.TAG_TRAINING_PREFIX || 'training'
+  },
+  lexicon: {
+    aslLexID: process.env.ASL_LEX_LEXICON_ID || '64e4e63ecade2ec090d6765e'
   }
 });
