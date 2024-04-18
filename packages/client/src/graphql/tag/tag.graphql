@@ -71,6 +71,17 @@ query getTags($study: ID!) {
       field {
         __typename
 
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+
         ... on VideoField {
           entries {
             _id
@@ -85,7 +96,6 @@ query getTags($study: ID!) {
             isTraining
           }
         }
-
 
         ... on BooleanField {
           boolValue: value

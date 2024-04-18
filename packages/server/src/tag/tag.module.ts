@@ -26,6 +26,7 @@ import { NumericFieldTransformer } from './transformers/numeric-transformer';
 import { SliderFieldTransformer } from './transformers/slider-transformer';
 import { TagFieldResolver } from './resolvers/tag-field.resolver';
 import { TagFieldService } from './services/tag-field.service';
+import { AslLexFieldTransformer } from './transformers/asl-lex-transformer';
 
 @Module({
   imports: [
@@ -58,7 +59,8 @@ import { TagFieldService } from './services/tag-field.service';
     FreeTextFieldTransformer,
     NumericFieldTransformer,
     SliderFieldTransformer,
-    TagFieldService
+    TagFieldService,
+    AslLexFieldTransformer
   ]
 })
 export class TagModule {}

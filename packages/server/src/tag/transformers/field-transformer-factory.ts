@@ -6,12 +6,14 @@ import { VideoFieldTransformer, VideoFieldTransformerTest } from './video-field-
 import { NumericFieldTransformerTest, NumericFieldTransformer } from './numeric-transformer';
 import { FreeTextFieldTransformer, FreeTextFieldTransformerTest } from './free-text.transformer';
 import { SliderFieldTransformerTest, SliderFieldTransformer } from './slider-transformer';
+import { AslLexFieldTransformer, AslLexFieldTransformerTest } from './asl-lex-transformer';
 
 type FieldTransformerOptions = { tester: FieldTransformerTest; transformer: FieldTransformer };
 
 @Injectable()
 export class FieldTransformerFactory {
   private readonly transformers: FieldTransformerOptions[] = [
+    { tester: AslLexFieldTransformerTest, transformer: this.aslLexFieldTransformer },
     { tester: BooleanFieldTransformerTest, transformer: this.booleanFieldTransformer },
     { tester: FreeTextFieldTransformerTest, transformer: this.freeTextFieldTransformer },
     { tester: NumericFieldTransformerTest, transformer: this.numericFieldTransformer },
@@ -20,6 +22,7 @@ export class FieldTransformerFactory {
   ];
 
   constructor(
+    private readonly aslLexFieldTransformer: AslLexFieldTransformer,
     private readonly booleanFieldTransformer: BooleanFieldTransformer,
     private readonly freeTextFieldTransformer: FreeTextFieldTransformer,
     private readonly numericFieldTransformer: NumericFieldTransformer,

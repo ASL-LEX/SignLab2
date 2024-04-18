@@ -18,6 +18,11 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type AslLexField = {
+  __typename?: 'AslLexField';
+  lexiconEntry: LexiconEntry;
+};
+
 export type BooleanField = {
   __typename?: 'BooleanField';
   value: Scalars['Boolean']['output'];
@@ -572,7 +577,7 @@ export enum TagFieldType {
   VideoRecord = 'VIDEO_RECORD'
 }
 
-export type TagFieldUnion = BooleanField | FreeTextField | NumericField | SliderField | VideoField;
+export type TagFieldUnion = AslLexField | BooleanField | FreeTextField | NumericField | SliderField | VideoField;
 
 export type TagSchema = {
   __typename?: 'TagSchema';
