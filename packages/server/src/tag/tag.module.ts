@@ -27,13 +27,17 @@ import { SliderFieldTransformer } from './transformers/slider-transformer';
 import { TagFieldResolver } from './resolvers/tag-field.resolver';
 import { TagFieldService } from './services/tag-field.service';
 import { AslLexFieldTransformer } from './transformers/asl-lex-transformer';
+import { VideoField, VideoFieldSchema } from './models/video-field.model';
+import { VideoFieldService } from './services/video-field.service';
+import { VideoFieldResolver } from './resolvers/video-field.resolver';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Tag.name, schema: TagSchema },
       { name: VideoFieldIntermediate.name, schema: VideoFieldIntermediateSchema },
-      { name: TrainingSet.name, schema: TrainingSetSchema }
+      { name: TrainingSet.name, schema: TrainingSetSchema },
+      { name: VideoField.name, schema: VideoFieldSchema }
     ]),
     StudyModule,
     EntryModule,
@@ -60,7 +64,9 @@ import { AslLexFieldTransformer } from './transformers/asl-lex-transformer';
     NumericFieldTransformer,
     SliderFieldTransformer,
     TagFieldService,
-    AslLexFieldTransformer
+    AslLexFieldTransformer,
+    VideoFieldService,
+    VideoFieldResolver
   ]
 })
 export class TagModule {}

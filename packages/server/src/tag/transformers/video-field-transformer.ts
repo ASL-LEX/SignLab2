@@ -5,10 +5,14 @@ import { VideoFieldIntermediateService } from '../services/video-field-inter.ser
 import { TokenPayload } from '../../jwt/token.dto';
 import { Tag } from '../models/tag.model';
 import { TagField, TagFieldType } from '../models/tag-field.model';
+import { VideoFieldService } from '../services/video-field.service';
 
 @Injectable()
 export class VideoFieldTransformer implements FieldTransformer {
-  constructor(private readonly videoFieldService: VideoFieldIntermediateService) {}
+  constructor(
+    private readonly videoFieldIntermediateService: VideoFieldIntermediateService,
+    private readonly vidoeFieldService: VideoFieldService
+  ) {}
 
   async transformField(
     tag: Tag,
@@ -23,16 +27,19 @@ export class VideoFieldTransformer implements FieldTransformer {
       throw new BadRequestException('Dataset ID not provided');
     }
 
-    const videoFields = await Promise.all(
+    // Mark the intermediate video fields as complete
+    const entries = await Promise.all(
       data.map(async (videoFieldId) => {
-        const entry = await this.videoFieldService.markComplete(videoFieldId, datasetID, user, tag);
-        return entry._id;
+        return this.videoFieldIntermediateService.markComplete(videoFieldId, datasetID, user, tag);
       })
     );
 
+    // Create the complete video field
+    const videoField = await this.vidoeFieldService.create(entries);
+
     return {
       name: property,
-      data: JSON.stringify(videoFields),
+      data: videoField._id,
       type: TagFieldType.VIDEO_RECORD
     };
   }

@@ -4,11 +4,10 @@ import { BooleanField } from '../models/boolean-field.model';
 import { FreeTextField } from '../models/free-text-field.model';
 import { NumericField } from '../models/numeric-field.model';
 import { SliderField } from '../models/slider-field.model';
-import { EntryService } from '../../entry/services/entry.service';
 import { VideoField } from '../models/video-field.model';
-import { Entry } from 'src/entry/models/entry.model';
 import { AslLexField, LexiconEntry } from '../models/asl-lex-field.model';
 import { ConfigService } from '@nestjs/config';
+import { VideoFieldService } from './video-field.service';
 
 /**
  * Handles turning the rawdata fields into TagFields
@@ -17,7 +16,10 @@ import { ConfigService } from '@nestjs/config';
 export class TagFieldService {
   private readonly aslLexID = this.configService.getOrThrow<string>('lexicon.aslLexID');
 
-  constructor(private readonly entryService: EntryService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly videoFieldService: VideoFieldService
+  ) {}
 
   async produceField(tagField: TagField): Promise<typeof TagFieldUnion | null> {
     if (!tagField.data) {
@@ -41,18 +43,16 @@ export class TagFieldService {
     }
   }
 
-  private async getVideoField(tagField: TagField): Promise<VideoField> {
-    const data: string[] = JSON.parse(tagField.data);
-    const entryIDs = data.filter((data) => data != null);
-    const entries: (Entry | null)[] = [];
-
-    for (const entryID of entryIDs) {
-      entries.push(await this.entryService.find(entryID));
+  private async getVideoField(tagField: TagField): Promise<VideoField | null> {
+    // The GraphQL union is resolved based on the class name, so a concrete object
+    // needs to be made from the document result
+    const videoFieldRaw = await this.videoFieldService.find(tagField.data);
+    if (!videoFieldRaw) {
+      return null;
     }
+    const videoField = new VideoField((videoFieldRaw as any).toObject());
 
-    const filtered: Entry[] = entries.filter((entry) => entry != null) as Entry[];
-
-    return new VideoField(filtered);
+    return videoField;
   }
 
   private async getAslLexField(tagField: TagField): Promise<AslLexField> {
