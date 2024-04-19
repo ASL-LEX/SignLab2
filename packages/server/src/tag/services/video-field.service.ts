@@ -9,7 +9,7 @@ export class VideoFieldService {
   constructor(@InjectModel(VideoField.name) private readonly videoFieldModel: Model<VideoFieldDocument>) {}
 
   async create(entries: Entry[]): Promise<VideoField> {
-    const entryIDs = entries.map(entry => entry._id);
+    const entryIDs = entries.map((entry) => entry._id);
 
     return this.videoFieldModel.create({
       entries: entryIDs

@@ -16,10 +16,7 @@ import { VideoFieldService } from './video-field.service';
 export class TagFieldService {
   private readonly aslLexID = this.configService.getOrThrow<string>('lexicon.aslLexID');
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly videoFieldService: VideoFieldService
-  ) {}
+  constructor(private readonly configService: ConfigService, private readonly videoFieldService: VideoFieldService) {}
 
   async produceField(tagField: TagField): Promise<typeof TagFieldUnion | null> {
     if (!tagField.data) {

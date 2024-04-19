@@ -176,13 +176,3 @@ const TagToolbar: React.FC = () => {
     </GridToolbarContainer>
   );
 };
-
-/*
-const CustomExport: React.FC = () => {
-  const { t } = useTranslation();
-
-  return (
-    <Button startIcon={<Download />}> {t('components.tagView.export')} </Button>
-  )
-};
-*/

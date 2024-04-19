@@ -9,12 +9,14 @@ export class VideoFieldResolver {
 
   @ResolveField(() => [Entry])
   async entries(@Parent() videoField: VideoField): Promise<Entry[]> {
-    return Promise.all(videoField.entries.map(async (id) => {
-      const entry = await this.entryService.find(id);
-      if (!entry) {
-        throw new Error(`Invalid entry id: ${id}`);
-      }
-      return entry;
-    }));
+    return Promise.all(
+      videoField.entries.map(async (id) => {
+        const entry = await this.entryService.find(id);
+        if (!entry) {
+          throw new Error(`Invalid entry id: ${id}`);
+        }
+        return entry;
+      })
+    );
   }
 }
