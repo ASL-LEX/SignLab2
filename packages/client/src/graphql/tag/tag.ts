@@ -82,7 +82,7 @@ export type GetTrainingTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'AslLexField' } | { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField' } | null }> | null }> };
+export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'AslLexField', lexiconEntry: { __typename?: 'LexiconEntry', key: string, primary: string, video: string, lexicon: string, associates: Array<string>, fields: any } } | { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField', entries: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> } | null }> | null }> };
 
 
 export const CreateTagsDocument = gql`
@@ -475,6 +475,30 @@ export const GetTrainingTagsDocument = gql`
       name
       field {
         __typename
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
         ... on BooleanField {
           boolValue: value
         }

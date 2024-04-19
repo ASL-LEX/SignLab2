@@ -139,6 +139,32 @@ query getTrainingTags($study: ID!, $user: String!) {
       field {
         __typename
 
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+
         ... on BooleanField {
           boolValue: value
         }
@@ -156,7 +182,6 @@ query getTrainingTags($study: ID!, $user: String!) {
         }
       }
     }
-
     complete
   }
 }
