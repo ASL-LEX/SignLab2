@@ -67,14 +67,14 @@ export type SaveVideoFieldMutationVariables = Types.Exact<{
 }>;
 
 
-export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: { __typename?: 'VideoField', _id: string, uploadURL: string } };
+export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: { __typename?: 'VideoFieldIntermediate', _id: string, uploadURL: string } };
 
 export type GetTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
 }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } }> };
+export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'AslLexField', lexiconEntry: { __typename?: 'LexiconEntry', key: string, primary: string, video: string, lexicon: string, associates: Array<string>, fields: any } } | { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField', entries: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> } | null }> | null }> };
 
 export type GetTrainingTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
@@ -82,7 +82,7 @@ export type GetTrainingTagsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, data?: any | null, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean } }> };
+export type GetTrainingTagsQuery = { __typename?: 'Query', getTrainingTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'AslLexField', lexiconEntry: { __typename?: 'LexiconEntry', key: string, primary: string, video: string, lexicon: string, associates: Array<string>, fields: any } } | { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField', entries: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> } | null }> | null }> };
 
 
 export const CreateTagsDocument = gql`
@@ -379,7 +379,49 @@ export const GetTagsDocument = gql`
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+        __typename
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+        ... on BooleanField {
+          boolValue: value
+        }
+        ... on FreeTextField {
+          textValue: value
+        }
+        ... on NumericField {
+          numericValue: value
+        }
+        ... on SliderField {
+          sliderValue: value
+        }
+      }
+    }
     complete
   }
 }
@@ -428,7 +470,49 @@ export const GetTrainingTagsDocument = gql`
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+        __typename
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+        ... on BooleanField {
+          boolValue: value
+        }
+        ... on FreeTextField {
+          textValue: value
+        }
+        ... on NumericField {
+          numericValue: value
+        }
+        ... on SliderField {
+          sliderValue: value
+        }
+      }
+    }
     complete
   }
 }

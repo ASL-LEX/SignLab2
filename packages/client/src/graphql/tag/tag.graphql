@@ -65,7 +65,55 @@ query getTags($study: ID!) {
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+        __typename
+
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+
+        ... on BooleanField {
+          boolValue: value
+        }
+
+        ... on FreeTextField {
+          textValue: value
+        }
+
+        ... on NumericField {
+          numericValue: value
+        }
+
+        ... on SliderField {
+          sliderValue: value
+        }
+      }
+    }
     complete
   }
 }
@@ -85,7 +133,55 @@ query getTrainingTags($study: ID!, $user: String!) {
       signedUrlExpiration
       isTraining
     }
-    data
+    data {
+      type
+      name
+      field {
+        __typename
+
+        ... on AslLexField {
+          lexiconEntry {
+            key
+            primary
+            video
+            lexicon
+            associates
+            fields
+          }
+        }
+
+        ... on VideoField {
+          entries {
+            _id
+            organization
+            entryID
+            contentType
+            creator
+            dateCreated
+            meta
+            signedUrl
+            signedUrlExpiration
+            isTraining
+          }
+        }
+
+        ... on BooleanField {
+          boolValue: value
+        }
+
+        ... on FreeTextField {
+          textValue: value
+        }
+
+        ... on NumericField {
+          numericValue: value
+        }
+
+        ... on SliderField {
+          sliderValue: value
+        }
+      }
+    }
     complete
   }
 }

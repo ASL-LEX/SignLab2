@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Entry, Study } from '../../../graphql/graphql';
-import { GridColDef, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarFilterButton
+} from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { GetTagsQuery, useRemoveTagMutation } from '../../../graphql/tag/tag';
 import { freeTextTest, getTextCols } from './FreeTextGridView.component';
@@ -12,6 +19,7 @@ import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
 import { getVideoCols, videoViewTest } from './VideoGridView.component';
+import { useEffect, useState } from 'react';
 
 export interface TagGridViewProps {
   study: Study;
@@ -19,8 +27,38 @@ export interface TagGridViewProps {
   refetchTags: () => void;
 }
 
+/**
+ * The GridData represents how to get the tag into the grid view. The data type
+ * itself matches the tag query except the data field is represented as key value
+ * fields instead of a list of fields.
+ *
+ * So
+ *
+ * {
+ *    data: [
+ *      { name: "property name a", ...fields }
+ *    ]
+ * }
+ *
+ * Becomes
+ *
+ * {
+ *   data: {
+ *    "property name 1": {
+ *      name: "property name 1",
+ *      ...fields
+ *    }
+ *   }
+ * }
+ */
+interface GridData extends Omit<GetTagsQuery['getTags'][0], 'data'> {
+  data: { [property: string]: any } | null;
+}
+
 export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags }) => {
   const { t } = useTranslation();
+
+  const [gridData, setGridData] = useState<(GridData | null)[]>([]);
 
   const tagColumnViews: { tester: TagViewTest; getGridColDefs: GetGridColDefs }[] = [
     { tester: freeTextTest, getGridColDefs: getTextCols },
@@ -31,11 +69,31 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
     { tester: videoViewTest, getGridColDefs: getVideoCols }
   ];
 
+  useEffect(() => {
+    const newGridData: (GridData | null)[] = [];
+
+    // This logic justs pulls out the fields from an array into an object
+    for (const tag of tags) {
+      const properties = {} as any;
+
+      for (const property of Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties)) {
+        properties[property] = tag.data!.find((row) => row.name === property);
+      }
+
+      newGridData.push({
+        ...tag,
+        data: properties
+      });
+    }
+
+    setGridData(newGridData);
+  }, [tags]);
+
   const entryColumns: GridColDef[] = [
     {
       field: 'entryView',
       headerName: t('components.tagView.originalEntry'),
-      width: 300,
+      width: 350,
       renderCell: (params: GridRenderCellParams) => <EntryView entry={params.row.entry as Entry} width={300} />
     }
   ];
@@ -101,10 +159,20 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
   return (
     <DataGrid
       getRowHeight={() => 'auto'}
-      rows={tags}
+      rows={gridData}
       columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
-      slots={{ toolbar: GridToolbar }}
+      slots={{ toolbar: TagToolbar }}
     />
+  );
+};
+
+const TagToolbar: React.FC = () => {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarExport />
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+    </GridToolbarContainer>
   );
 };

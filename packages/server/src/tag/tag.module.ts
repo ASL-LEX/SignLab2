@@ -8,9 +8,9 @@ import { EntryModule } from '../entry/entry.module';
 import { TagPipe } from './pipes/tag.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { PermissionModule } from '../permission/permission.module';
-import { VideoField, VideoFieldSchema } from './models/video-field.model';
-import { VideoFieldService } from './services/video-field.service';
-import { VideoFieldResolver } from './resolvers/video-field.resolver';
+import { VideoFieldIntermediate, VideoFieldIntermediateSchema } from './models/video-field-inter.model';
+import { VideoFieldIntermediateService } from './services/video-field-inter.service';
+import { VideoFieldIntermediateResolver } from './resolvers/video-field-inter.resolver';
 import { GcpModule } from '../gcp/gcp.module';
 import { TagTransformer } from './services/tag-transformer.service';
 import { FieldTransformerFactory } from './transformers/field-transformer-factory';
@@ -20,13 +20,24 @@ import { TrainingSet, TrainingSetSchema } from './models/training-set';
 import { TrainingSetResolver } from './resolvers/training-set.resolver';
 import { TrainingSetService } from './services/training-set.service';
 import { BucketModule } from 'src/bucket/bucket.module';
+import { BooleanFieldTransformer } from './transformers/boolean-transformer';
+import { FreeTextFieldTransformer } from './transformers/free-text.transformer';
+import { NumericFieldTransformer } from './transformers/numeric-transformer';
+import { SliderFieldTransformer } from './transformers/slider-transformer';
+import { TagFieldResolver } from './resolvers/tag-field.resolver';
+import { TagFieldService } from './services/tag-field.service';
+import { AslLexFieldTransformer } from './transformers/asl-lex-transformer';
+import { VideoField, VideoFieldSchema } from './models/video-field.model';
+import { VideoFieldService } from './services/video-field.service';
+import { VideoFieldResolver } from './resolvers/video-field.resolver';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Tag.name, schema: TagSchema },
-      { name: VideoField.name, schema: VideoFieldSchema },
-      { name: TrainingSet.name, schema: TrainingSetSchema }
+      { name: VideoFieldIntermediate.name, schema: VideoFieldIntermediateSchema },
+      { name: TrainingSet.name, schema: TrainingSetSchema },
+      { name: VideoField.name, schema: VideoFieldSchema }
     ]),
     StudyModule,
     EntryModule,
@@ -39,14 +50,23 @@ import { BucketModule } from 'src/bucket/bucket.module';
   providers: [
     TagService,
     TagResolver,
+    TagFieldResolver,
     TagPipe,
-    VideoFieldService,
-    VideoFieldResolver,
+    VideoFieldIntermediateService,
+    VideoFieldIntermediateResolver,
     TagTransformer,
     FieldTransformerFactory,
     VideoFieldTransformer,
     TrainingSetResolver,
-    TrainingSetService
+    TrainingSetService,
+    BooleanFieldTransformer,
+    FreeTextFieldTransformer,
+    NumericFieldTransformer,
+    SliderFieldTransformer,
+    TagFieldService,
+    AslLexFieldTransformer,
+    VideoFieldService,
+    VideoFieldResolver
   ]
 })
 export class TagModule {}
