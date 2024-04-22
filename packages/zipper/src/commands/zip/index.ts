@@ -1,4 +1,6 @@
-import { Args, Command, Flags } from '@oclif/core';
+import { Command, Flags } from '@oclif/core';
+import AdmZip from 'adm-zip';
+import { readFile } from 'fs/promises';
 
 export default class ZipHander extends Command {
   static args = {};
@@ -10,11 +12,17 @@ export default class ZipHander extends Command {
     output_zip: Flags.file({ exists: false, required: true, description: 'Location to output the ZIP' }),
     notification_webhook: Flags.url({ required: true, description: 'Webhook to call once the ZIP is complete' }),
     webhook_payload: Flags.file({ exists: true, required: true, description: 'Path to JSON representing payload to send with webhook' }),
-    from: Flags.string({ char: 'f', description: 'Who is saying hello', required: true })
   };
 
   async run(): Promise<void> {
-    const { args, flags } = await this.parse(ZipHander);
-    this.log(`hello`);
+    const { flags } = await this.parse(ZipHander);
+
+    // Open a ZIP
+    const zip = new AdmZip(flags.output_zip);
+
+    // Load in the target entries
+    const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'));
+    console.log(entries);
+
   }
 }
