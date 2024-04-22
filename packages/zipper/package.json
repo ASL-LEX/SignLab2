@@ -1,0 +1,15 @@
+{
+    "name": "jobs",
+    "version": "0.0.1",
+    "description": "Cloud Run job to produce a ZIP",
+    "main": "index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "build": "tsc"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "author": "Google LLC",
+    "license": "Apache-2.0"
+}
