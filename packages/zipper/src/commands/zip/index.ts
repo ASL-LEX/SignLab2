@@ -24,7 +24,7 @@ export default class ZipHander extends Command {
     const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'))['entries'];
 
     // Load the webhook payload (before taking too long with zipping)
-    const payload = await readFile(flags.webhook_payload, 'utf8');
+    // const payload = await readFile(flags.webhook_payload, 'utf8');
 
     // Add the enties to the zip
     for(const entry of entries) {
@@ -35,9 +35,11 @@ export default class ZipHander extends Command {
     await zip.writeZipPromise(flags.output_zip);
 
     // Post to the webhook to notify of completion
+    /*
     await fetch(flags.notification_webhook, {
       method: 'POST',
       body: payload
     });
+    */
   }
 }
