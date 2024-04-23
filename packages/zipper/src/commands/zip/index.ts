@@ -18,11 +18,17 @@ export default class ZipHander extends Command {
     const { flags } = await this.parse(ZipHander);
 
     // Open a ZIP
-    const zip = new AdmZip(flags.output_zip);
+    const zip = new AdmZip();
 
     // Load in the target entries
-    const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'));
-    console.log(entries);
+    const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'))['entries'];
 
+    // Add the enties to the zip
+    for(const entry of entries) {
+      zip.addLocalFile(entry, 'entries/');
+    }
+
+    // Save the zip
+    await zip.writeZipPromise(flags.output_zip);
   }
 }

@@ -1,5 +1,6 @@
 **/.DS_Store
 *-debug.log
+run.sh
 *-error.log
 /.idea
 /.nyc_output
