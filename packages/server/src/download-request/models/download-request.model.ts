@@ -1,7 +1,14 @@
+import { registerEnumType } from '@nestjs/graphql';
+
 export enum DownloadStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   READY = 'READY'
 }
+
+registerEnumType(DownloadStatus, {
+  name: 'DownloadStatus'
+});
+
 
 /**
  * Standard representation of a download request. Different download
