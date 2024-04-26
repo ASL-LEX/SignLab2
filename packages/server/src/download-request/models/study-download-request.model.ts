@@ -27,6 +27,9 @@ export class StudyDownloadRequest implements DownloadRequest {
 
   @Prop({ required: false })
   entryJSONLocation?: string;
+
+  @Prop({ required: false })
+  webhookPayloadLocation?: string;
 }
 
 export type StudyDownloadRequestDocument = Document & StudyDownloadRequest;

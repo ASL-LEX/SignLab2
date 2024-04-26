@@ -28,6 +28,9 @@ export class DatasetDownloadRequest implements DownloadRequest {
 
   @Prop({ required: false })
   entryJSONLocation?: string;
+
+  @Prop({ required: false })
+  webhookPayloadLocation?: string;
 }
 
 export type DatasetDownloadRequestDocument = Document & DatasetDownloadRequest;

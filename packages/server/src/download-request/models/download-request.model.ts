@@ -26,4 +26,6 @@ export interface DownloadRequest {
   bucketLocation?: string;
 
   entryJSONLocation?: string;
+
+  webhookPayloadLocation?: string;
 }

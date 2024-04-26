@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { GcpModule } from 'src/gcp/gcp.module';
 import { BucketModule } from '../bucket/bucket.module';
 import { DatasetModule } from '../dataset/dataset.module';
 import { EntryModule } from '../entry/entry.module';
@@ -20,7 +21,8 @@ import { DownloadRequestService } from './services/download-request.service';
     OrganizationModule,
     DatasetModule,
     EntryModule,
-    BucketModule
+    BucketModule,
+    GcpModule
   ],
   providers: [
     DatasetDownloadRequestResolver,

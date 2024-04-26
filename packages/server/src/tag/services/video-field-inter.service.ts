@@ -26,7 +26,7 @@ export class VideoFieldIntermediateService {
     private readonly configService: ConfigService,
     private readonly entryService: EntryService,
     private readonly datasetPipe: DatasetPipe,
-    private readonly bucketFactory: BucketFactory
+    private readonly bucketFactory: BucketFactory,
   ) {}
 
   async saveVideoField(tag: Tag, field: string, index: number): Promise<VideoFieldIntermediate> {

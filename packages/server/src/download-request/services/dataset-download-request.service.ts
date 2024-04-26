@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { JobsClient } from '@google-cloud/run';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { JOB_PROVIDER } from 'src/gcp/providers/job.provider';
 import { BucketFactory } from '../../bucket/bucket-factory.service';
 import { EntryService } from '../../entry/services/entry.service';
 import { Organization } from '../../organization/organization.model';
@@ -11,12 +14,16 @@ import { DownloadRequestService } from './download-request.service';
 
 @Injectable()
 export class DatasetDownloadService {
+  private readonly zipJobName: string = this.configService.getOrThrow<string>('downloads.jobName');
+
   constructor(
     @InjectModel(DatasetDownloadRequest.name)
     private readonly downloadRequestModel: Model<DatasetDownloadRequest>,
     private readonly downloadService: DownloadRequestService,
     private readonly entryService: EntryService,
-    private readonly bucketFactory: BucketFactory
+    private readonly bucketFactory: BucketFactory,
+    @Inject(JOB_PROVIDER) private readonly jobsClient: JobsClient,
+    private readonly configService: ConfigService
   ) {}
 
   async createDownloadRequest(downloadRequest: CreateDatasetDownloadRequest, organization: Organization): Promise<DatasetDownloadRequest> {
@@ -32,6 +39,7 @@ export class DatasetDownloadService {
     // Get the location to store the ZIPed entries
     const zipLocation = `${bucketLocation}/entries.zip`;
     const entryJSONLocation = `${bucketLocation}/entries.json`;
+    const webhookPayloadLocation = `${bucketLocation}/webhook.json`;
 
     await this.downloadRequestModel.updateOne(
       { _id: request._id },
@@ -39,7 +47,8 @@ export class DatasetDownloadService {
         $set: {
           bucketLocation: bucketLocation,
           entryZIPLocation: zipLocation,
-          entryJSONLocation: entryJSONLocation
+          entryJSONLocation: entryJSONLocation,
+          webhookPayloadLocation: webhookPayloadLocation
         }
       }
     );
@@ -54,17 +63,44 @@ export class DatasetDownloadService {
   private async startZipJob(downloadRequest: DatasetDownloadRequest): Promise<void> {
     // First, get the entries that need to be zipped
     const entries = await this.entryService.findForDataset(downloadRequest.dataset);
-    const entryIDs = entries.map((entry) => entry._id);
+    const entryLocations = entries.map((entry) => `/buckets/asl-lex/${entry.bucketLocation}`);
 
     // Make the content of the entry request file
-    const entryContent: string = JSON.stringify({ entries: entryIDs });
+    const entryContent: string = JSON.stringify({ entries: entryLocations });
 
-    // Upload the file to the download request location
+    // Get the bucket for uploading supporting files
     const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
     if (!bucket) {
       throw Error(`Bucket not found for organization ${downloadRequest.organization}`);
     }
 
+    // Write in the entries file
     await bucket.writeText(downloadRequest.entryJSONLocation!, entryContent);
+
+    // Upload the webhook payload
+    await bucket.writeText(downloadRequest.webhookPayloadLocation!, JSON.stringify({
+      "code": "1234",
+      "downloadRequest": "12"
+    }));
+
+
+    // Trigger the cloud run job
+    // TODO: Different mounting points for different organizations
+    console.log(downloadRequest);
+    await this.jobsClient.runJob({
+      name: 'projects/signlab-dev-417814/locations/us-east1/jobs/asl-zipper',
+      overrides: {
+        containerOverrides: [
+          {
+            args: [
+              `--target_entries=/buckets/asl-lex/${downloadRequest.entryJSONLocation!}`,
+              `--output_zip=/buckets/asl-lex/${downloadRequest.entryZIPLocation!}`,
+              `--notification_webhook=http://localhost:3000`,
+              `--webhook_payload=/buckets/asl-lex/${downloadRequest.webhookPayloadLocation!}`
+            ]
+          }
+        ]
+      }
+    });
   }
 }
