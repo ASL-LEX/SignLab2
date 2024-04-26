@@ -63,7 +63,7 @@ export class DatasetDownloadService {
   private async startZipJob(downloadRequest: DatasetDownloadRequest): Promise<void> {
     // First, get the entries that need to be zipped
     const entries = await this.entryService.findForDataset(downloadRequest.dataset);
-    const entryLocations = entries.map((entry) => `/buckets/asl-lex/${entry.bucketLocation}`);
+    const entryLocations = entries.map((entry) => `/buckets/${downloadRequest.organization}/${entry.bucketLocation}`);
 
     // Make the content of the entry request file
     const entryContent: string = JSON.stringify({ entries: entryLocations });
@@ -86,17 +86,16 @@ export class DatasetDownloadService {
 
     // Trigger the cloud run job
     // TODO: Different mounting points for different organizations
-    console.log(downloadRequest);
     await this.jobsClient.runJob({
-      name: 'projects/signlab-dev-417814/locations/us-east1/jobs/asl-zipper',
+      name: this.zipJobName,
       overrides: {
         containerOverrides: [
           {
             args: [
-              `--target_entries=/buckets/asl-lex/${downloadRequest.entryJSONLocation!}`,
-              `--output_zip=/buckets/asl-lex/${downloadRequest.entryZIPLocation!}`,
+              `--target_entries=/buckets/${downloadRequest.organization}/${downloadRequest.entryJSONLocation!}`,
+              `--output_zip=/buckets/${downloadRequest.organization}/${downloadRequest.entryZIPLocation!}`,
               `--notification_webhook=http://localhost:3000`,
-              `--webhook_payload=/buckets/asl-lex/${downloadRequest.webhookPayloadLocation!}`
+              `--webhook_payload=/buckets/${downloadRequest.organization}/${downloadRequest.webhookPayloadLocation!}`
             ]
           }
         ]

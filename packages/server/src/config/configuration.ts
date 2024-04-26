@@ -42,6 +42,6 @@ export default () => ({
   },
   downloads: {
     bucketPrefix: 'downloads',
-    jobName: 'asl-zipper'
+    jobName: process.env.ZIP_JOB_NAME
   }
 });
