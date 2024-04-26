@@ -40,8 +40,16 @@ export class EntryService {
     await this.entryModel.deleteOne({ _id: entry._id });
   }
 
-  async findForDataset(dataset: Dataset): Promise<Entry[]> {
-    return this.entryModel.find({ dataset: dataset._id.toString(), isTraining: false });
+  async findForDataset(dataset: Dataset | string): Promise<Entry[]> {
+    let id: string = '';
+
+    if (typeof dataset === 'string') {
+      id = dataset;
+    } else {
+      id = dataset._id.toString();
+    }
+
+    return this.entryModel.find({ dataset: id, isTraining: false });
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {

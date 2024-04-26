@@ -2,6 +2,7 @@ import { Bucket, BucketObjectAction } from './bucket';
 import { BucketInfo } from './bucket-info.model';
 import { Injectable } from '@nestjs/common';
 import { Storage, Bucket as StorageBucket } from '@google-cloud/storage';
+import { PassThrough } from 'stream';
 
 /** Wrapper maker for the bucket so that dependencies can be injected */
 @Injectable()
@@ -72,6 +73,11 @@ class GcpBucket implements Bucket {
 
   async deleteFiles(location: string): Promise<void> {
     await this.storageBucket.deleteFiles({ prefix: location });
+  }
+
+  async writeText(location: string, content: string): Promise<void> {
+    // Create the file reference
+    await this.storageBucket.file(location).save(content);
   }
 
   private actionToString(action: BucketObjectAction): 'read' | 'write' | 'delete' {

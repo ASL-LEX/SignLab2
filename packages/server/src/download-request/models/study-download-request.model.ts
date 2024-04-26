@@ -21,6 +21,12 @@ export class StudyDownloadRequest implements DownloadRequest {
 
   @Prop({ required: true })
   entryZIPLocation: string;
+
+  @Prop({ required: false })
+  bucketLocation?: string;
+
+  @Prop({ required: false })
+  entryJSONLocation?: string;
 }
 
 export type StudyDownloadRequestDocument = Document & StudyDownloadRequest;

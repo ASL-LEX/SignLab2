@@ -25,4 +25,7 @@ export interface Bucket {
 
   /** Delete many files */
   deleteFiles(location: string): Promise<void>;
+
+  /** Write text content into the bucket */
+  writeText(location: string, content: string): Promise<void>;
 }

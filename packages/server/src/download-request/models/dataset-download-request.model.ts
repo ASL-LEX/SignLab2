@@ -20,8 +20,14 @@ export class DatasetDownloadRequest implements DownloadRequest {
   @Prop({ required: true })
   dataset: string;
 
-  @Prop({ required: true })
-  entryZIPLocation: string;
+  @Prop({ required: false })
+  entryZIPLocation?: string;
+
+  @Prop({ required: false })
+  bucketLocation?: string;
+
+  @Prop({ required: false })
+  entryJSONLocation?: string;
 }
 
 export type DatasetDownloadRequestDocument = Document & DatasetDownloadRequest;

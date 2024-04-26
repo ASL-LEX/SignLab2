@@ -21,5 +21,9 @@ export interface DownloadRequest {
 
   status: DownloadStatus;
 
-  entryZIPLocation: string;
+  entryZIPLocation?: string;
+
+  bucketLocation?: string;
+
+  entryJSONLocation?: string;
 }
