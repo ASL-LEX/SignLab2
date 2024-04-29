@@ -1,9 +1,9 @@
 import { useGetDatasetsQuery, useGetDatasetDownloadsLazyQuery } from '../../graphql/dataset/dataset';
 import { useEffect, useState } from 'react';
 import { Dataset, DatasetDownloadRequest, DownloadStatus } from '../../graphql/graphql';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Check, DownloadDone, HourglassTop } from '@mui/icons-material';
+import { Download, DownloadDone, HourglassTop } from '@mui/icons-material';
 
 
 export const DatasetDownloads: React.FC = () => {
@@ -55,6 +55,12 @@ export const DatasetDownloads: React.FC = () => {
       width: 200,
       headerName: 'Status',
       renderCell: (params) => params.value && <StatusView status={params.value} />
+    },
+    {
+      field: 'entryZip',
+      width: 200,
+      headerName: 'Entry Download',
+      renderCell: (params) => params.value && <IconButton href={params.value}><Download /></IconButton>
     }
   ];
 
@@ -63,11 +69,12 @@ export const DatasetDownloads: React.FC = () => {
       <FormControl>
         <InputLabel>Dataset Select</InputLabel>
         <Select
-          value={selectedDataset}
+          value={selectedDataset || ''}
           onChange={(event) => setSelectedDataset(event.target.value as Dataset)}
+          sx={{ minWidth: 300 }}
         >
           {datasets.map(dataset =>
-            <MenuItem value={dataset as any}>{dataset.name}</MenuItem>
+            <MenuItem value={dataset as any} key={dataset._id}>{dataset.name}</MenuItem>
           )}
         </Select>
       </FormControl>
