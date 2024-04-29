@@ -18,4 +18,3 @@ export const jobClientProvider: Provider<JobsClient> = {
   },
   inject: [ConfigService]
 };
-

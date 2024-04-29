@@ -29,7 +29,10 @@ export class DatasetDownloadService {
     private readonly configService: ConfigService
   ) {}
 
-  async createDownloadRequest(downloadRequest: CreateDatasetDownloadRequest, organization: Organization): Promise<DatasetDownloadRequest> {
+  async createDownloadRequest(
+    downloadRequest: CreateDatasetDownloadRequest,
+    organization: Organization
+  ): Promise<DatasetDownloadRequest> {
     let request = await this.downloadRequestModel.create({
       ...downloadRequest,
       date: new Date(),
@@ -74,7 +77,11 @@ export class DatasetDownloadService {
     if (!bucket) {
       throw new Error(`Missing bucket for organization ${downloadRequest.organization}`);
     }
-    return bucket.getSignedUrl(downloadRequest.entryZIPLocation!, BucketObjectAction.READ, new Date(Date.now() + this.expiration));
+    return bucket.getSignedUrl(
+      downloadRequest.entryZIPLocation!,
+      BucketObjectAction.READ,
+      new Date(Date.now() + this.expiration)
+    );
   }
 
   private async startZipJob(downloadRequest: DatasetDownloadRequest): Promise<void> {
@@ -96,10 +103,13 @@ export class DatasetDownloadService {
 
     // Upload the webhook payload
     // TODO: Update webhook
-    await bucket.writeText(downloadRequest.webhookPayloadLocation!, JSON.stringify({
-      "code": "1234",
-      "downloadRequest": "12"
-    }));
+    await bucket.writeText(
+      downloadRequest.webhookPayloadLocation!,
+      JSON.stringify({
+        code: '1234',
+        downloadRequest: '12'
+      })
+    );
 
     // Trigger the cloud run job
     await this.jobsClient.runJob({

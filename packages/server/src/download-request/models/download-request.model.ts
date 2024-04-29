@@ -9,7 +9,6 @@ registerEnumType(DownloadStatus, {
   name: 'DownloadStatus'
 });
 
-
 /**
  * Standard representation of a download request. Different download
  * request types may track additional fields

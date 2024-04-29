@@ -8,10 +8,18 @@ export default class ZipHander extends Command {
   static description = 'Untility for zipping entries';
 
   static flags = {
-    target_entries: Flags.file({ exists: true, required: true, description: 'JSON file containing the list of entries to ZIP' }),
+    target_entries: Flags.file({
+      exists: true,
+      required: true,
+      description: 'JSON file containing the list of entries to ZIP'
+    }),
     output_zip: Flags.file({ exists: false, required: true, description: 'Location to output the ZIP' }),
     notification_webhook: Flags.url({ required: true, description: 'Webhook to call once the ZIP is complete' }),
-    webhook_payload: Flags.file({ exists: true, required: true, description: 'Path to JSON representing payload to send with webhook' }),
+    webhook_payload: Flags.file({
+      exists: true,
+      required: true,
+      description: 'Path to JSON representing payload to send with webhook'
+    })
   };
 
   async run(): Promise<void> {
@@ -27,7 +35,7 @@ export default class ZipHander extends Command {
     // const payload = await readFile(flags.webhook_payload, 'utf8');
 
     // Add the enties to the zip
-    for(const entry of entries) {
+    for (const entry of entries) {
       zip.addLocalFile(entry, 'entries/');
     }
 

@@ -6,7 +6,6 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Download, DownloadDone, HourglassTop } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-
 export const DatasetDownloads: React.FC = () => {
   const getDatasetResult = useGetDatasetsQuery();
   const [getDownloadsQuery, getDownloadsResults] = useGetDatasetDownloadsLazyQuery();
@@ -64,7 +63,12 @@ export const DatasetDownloads: React.FC = () => {
       field: 'entryZip',
       width: 200,
       headerName: t('components.datasetDownload.entryDownload'),
-      renderCell: (params) => params.value && <IconButton href={params.value}><Download /></IconButton>
+      renderCell: (params) =>
+        params.value && (
+          <IconButton href={params.value}>
+            <Download />
+          </IconButton>
+        )
     }
   ];
 
@@ -77,18 +81,14 @@ export const DatasetDownloads: React.FC = () => {
           onChange={(event) => setSelectedDataset(event.target.value as Dataset)}
           sx={{ minWidth: 300 }}
         >
-          {datasets.map(dataset =>
-            <MenuItem value={dataset as any} key={dataset._id}>{dataset.name}</MenuItem>
-          )}
+          {datasets.map((dataset) => (
+            <MenuItem value={dataset as any} key={dataset._id}>
+              {dataset.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
-      {selectedDataset && (
-        <DataGrid
-          rows={downloadRequest}
-          columns={datasetColumns}
-          getRowId={(row) => row._id}
-        />
-      )}
+      {selectedDataset && <DataGrid rows={downloadRequest} columns={datasetColumns} getRowId={(row) => row._id} />}
     </>
   );
 };
@@ -98,10 +98,10 @@ interface StatusViewProps {
 }
 
 const StatusView: React.FC<StatusViewProps> = ({ status }) => {
-  switch(status) {
+  switch (status) {
     case DownloadStatus.Ready:
-      return <DownloadDone />
+      return <DownloadDone />;
     case DownloadStatus.InProgress:
-      return <HourglassTop />
+      return <HourglassTop />;
   }
 };

@@ -17,7 +17,6 @@ export interface DatasetsViewProps {
 
 // TODO: Implement lazy loading on accordion open to prevent loading all datasets at once
 export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additionalColumns, supportEntryDelete }) => {
-
   const confirmation = useConfirmation();
   const { t } = useTranslation();
   const [createDownloadMutation, createDownloadResults] = useCreateDatasetDownloadMutation();
@@ -36,7 +35,7 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additional
               dataset: dataset._id
             }
           }
-        })
+        });
       },
       onCancel: () => {}
     });
@@ -59,7 +58,9 @@ export const DatasetsView: React.FC<DatasetsViewProps> = ({ datasets, additional
             <Stack direction="row" spacing={6}>
               <Typography>{dataset.name}</Typography>
               <Typography>{dataset.description}</Typography>
-              <IconButton onClick={() => handleDatasetDownloadRequest(dataset)}><Download /></IconButton>
+              <IconButton onClick={() => handleDatasetDownloadRequest(dataset)}>
+                <Download />
+              </IconButton>
             </Stack>
           </AccordionSummary>
           <AccordionDetails>

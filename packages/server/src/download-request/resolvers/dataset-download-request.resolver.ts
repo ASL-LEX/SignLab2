@@ -11,12 +11,13 @@ import { CreateDatasetDownloadPipe } from '../pipes/dataset-download-request-cre
 import { Dataset } from '../../dataset/dataset.model';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 
-
 @UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => DatasetDownloadRequest)
 export class DatasetDownloadRequestResolver {
-
-  constructor(private readonly datasetDownloadService: DatasetDownloadService, private readonly datasetPipe: DatasetPipe) {}
+  constructor(
+    private readonly datasetDownloadService: DatasetDownloadService,
+    private readonly datasetPipe: DatasetPipe
+  ) {}
 
   @Mutation(() => DatasetDownloadRequest)
   async createDatasetDownload(

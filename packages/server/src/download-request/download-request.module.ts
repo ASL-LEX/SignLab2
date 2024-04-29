@@ -24,11 +24,6 @@ import { DownloadRequestService } from './services/download-request.service';
     BucketModule,
     GcpModule
   ],
-  providers: [
-    DatasetDownloadRequestResolver,
-    DatasetDownloadService,
-    DownloadRequestService,
-    CreateDatasetDownloadPipe
-  ]
+  providers: [DatasetDownloadRequestResolver, DatasetDownloadService, DownloadRequestService, CreateDatasetDownloadPipe]
 })
 export class DownloadRequestModule {}
