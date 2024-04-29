@@ -32,3 +32,11 @@ mutation createDatasetDownload($downloadRequest: CreateDatasetDownloadRequest!) 
     status
   }
 }
+
+query getDatasetDownloads($dataset: ID!) {
+  getDatasetDownloads(dataset: ID!) {
+    date,
+    status,
+    entryZip
+  }
+}
