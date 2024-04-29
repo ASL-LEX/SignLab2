@@ -4,6 +4,7 @@ import { Dataset, DatasetDownloadRequest, DownloadStatus } from '../../graphql/g
 import { FormControl, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Download, DownloadDone, HourglassTop } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 
 export const DatasetDownloads: React.FC = () => {
@@ -16,6 +17,8 @@ export const DatasetDownloads: React.FC = () => {
 
   // The cooresponding download requests
   const [downloadRequest, setDownloadRequests] = useState<DatasetDownloadRequest[]>([]);
+
+  const { t } = useTranslation();
 
   // Listen for changes in the get dataset result
   useEffect(() => {
@@ -41,25 +44,26 @@ export const DatasetDownloads: React.FC = () => {
   const datasetColumns: GridColDef[] = [
     {
       field: 'datasetName',
-      headerName: 'Dataset',
+      headerName: t('common.dataset'),
       width: 200,
       valueGetter: (params) => params.row.dataset.name
     },
     {
       field: 'date',
       width: 200,
-      headerName: 'Request Date',
+      headerName: t('components.datasetDownload.requestDate'),
+      valueGetter: (params) => t('common.dateFormat', { date: Date.parse(params.row.date) })
     },
     {
       field: 'status',
       width: 200,
-      headerName: 'Status',
+      headerName: t('common.status'),
       renderCell: (params) => params.value && <StatusView status={params.value} />
     },
     {
       field: 'entryZip',
       width: 200,
-      headerName: 'Entry Download',
+      headerName: t('components.datasetDownload.entryDownload'),
       renderCell: (params) => params.value && <IconButton href={params.value}><Download /></IconButton>
     }
   ];

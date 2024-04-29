@@ -25,7 +25,10 @@
     "video": "video",
     "key": "key",
     "primary": "primay",
-    "redo": "Redo"
+    "redo": "Redo",
+    "dataset": "Dataset",
+    "status": "Status",
+    "dateFormat": "{{date,  datetime}}"
   },
   "languages": {
     "en": "English",
@@ -83,6 +86,10 @@
       "downloadDescription": "Would you like to download this dataset? All entries will be downloaded. Once complete, the downloaded results will be available in the download center",
       "downloadStartedSuccess": "Download has started, go to download center to get artifacts when complete",
       "downloadFailed": "Could not download dataset, please reach out to administrator"
+    },
+    "datasetDownload": {
+      "requestDate": "Request Date",
+      "entryDownload": "Entry Download"
     },
     "projectAccess": {
       "datasetName": "Dataset Name",
