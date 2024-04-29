@@ -155,9 +155,7 @@ export class TagResolver {
   }
 
   @Query(() => [Tag])
-  async getCatchTrials(
-    @Args('study', { type: () => ID }, StudyPipe) study: Study
-  ): Promise<Tag[]> {
+  async getCatchTrials(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<Tag[]> {
     return this.tagService.getCatchTrials(study);
   }
 }

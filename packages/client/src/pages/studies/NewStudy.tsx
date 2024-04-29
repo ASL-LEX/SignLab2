@@ -18,7 +18,7 @@ import {
   CreateTrainingSetMutation,
   CreateTrainingSetMutationVariables,
   CreateCatchTrialsMutation,
-  CreateCatchTrialsMutationVariables,
+  CreateCatchTrialsMutationVariables
 } from '../../graphql/tag/tag';
 import { useTranslation } from 'react-i18next';
 import { TagFieldFragmentSchema, TagField } from '../../components/tagbuilder/TagProvider';
@@ -95,8 +95,8 @@ export const NewStudy: React.FC = () => {
       }
 
       // Filter taggingSet to remove IDs that are also in catchTrialSet
-      const filteredTaggingSet = taggingSet.filter(id => !catchTrialSet.includes(id));
-      
+      const filteredTaggingSet = taggingSet.filter((id) => !catchTrialSet.includes(id));
+
       // Create the corresponding tags
       await apolloClient.mutate<CreateTagsMutation, CreateTagsMutationVariables>({
         mutation: CreateTagsDocument,
@@ -151,7 +151,13 @@ export const NewStudy: React.FC = () => {
           />
         );
       case 2:
-        return <TagTrainingComponent setTaggingSet={setTaggingSet} setTrainingSet={setTrainingSet} setCatchTrialSet={setCatchTrialSet}/>;
+        return (
+          <TagTrainingComponent
+            setTaggingSet={setTaggingSet}
+            setTrainingSet={setTrainingSet}
+            setCatchTrialSet={setCatchTrialSet}
+          />
+        );
       default:
         return null;
     }

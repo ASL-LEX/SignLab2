@@ -77,7 +77,7 @@ export class TagService {
     }
     return tags;
   }
-  
+
   async assignTag(study: Study, user: string, isTrained: boolean): Promise<Tag | null> {
     return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
   }
@@ -278,9 +278,11 @@ export class TagService {
   }
 
   async getCatchTrials(study: Study): Promise<Tag[]> {
-    return this.tagModel.find({
-      study: study._id,
-      isCatchTrial: true
-    }).exec();
+    return this.tagModel
+      .find({
+        study: study._id,
+        isCatchTrial: true
+      })
+      .exec();
   }
 }

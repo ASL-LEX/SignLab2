@@ -79,7 +79,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
             setCatchTrialSet([...catchTrialSet, entry._id]);
           }}
           remove={(entry) => {
-            setCatchTrialSet(catchTrialSet.filter(entryID => entryID !== entry._id));
+            setCatchTrialSet(catchTrialSet.filter((entryID) => entryID !== entry._id));
           }}
           entry={params.row}
         />
@@ -102,7 +102,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     if (props.setCatchTrialSet) {
       props.setCatchTrialSet(entries);
     }
-  }, [catchTrialSet]);  
+  }, [catchTrialSet]);
 
   useEffect(() => {
     if (getDatasetsResults.data) {
