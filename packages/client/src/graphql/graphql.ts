@@ -28,6 +28,10 @@ export type BooleanField = {
   value: Scalars['Boolean']['output'];
 };
 
+export type CreateDatasetDownloadRequest = {
+  dataset: Scalars['ID']['input'];
+};
+
 export type Dataset = {
   __typename?: 'Dataset';
   _id: Scalars['ID']['output'];
@@ -40,11 +44,25 @@ export type DatasetCreate = {
   name: Scalars['String']['input'];
 };
 
+export type DatasetDownloadRequest = {
+  __typename?: 'DatasetDownloadRequest';
+  _id: Scalars['String']['output'];
+  dataset: Dataset;
+  date: Scalars['DateTime']['output'];
+  entryZip: Scalars['String']['output'];
+  status: DownloadStatus;
+};
+
 export type DatasetProjectPermission = {
   __typename?: 'DatasetProjectPermission';
   dataset: Dataset;
   projectHasAccess: Scalars['Boolean']['output'];
 };
+
+export enum DownloadStatus {
+  InProgress = 'IN_PROGRESS',
+  Ready = 'READY'
+}
 
 export type Entry = {
   __typename?: 'Entry';
@@ -125,6 +143,7 @@ export type Mutation = {
   completeTag: Scalars['Boolean']['output'];
   completeUploadSession: UploadResult;
   createDataset: Dataset;
+  createDatasetDownload: DatasetDownloadRequest;
   createOrganization: Organization;
   createStudy: Study;
   createTags: Array<Tag>;
@@ -192,6 +211,11 @@ export type MutationCompleteUploadSessionArgs = {
 
 export type MutationCreateDatasetArgs = {
   dataset: DatasetCreate;
+};
+
+
+export type MutationCreateDatasetDownloadArgs = {
+  downloadRequest: CreateDatasetDownloadRequest;
 };
 
 
@@ -377,6 +401,7 @@ export type Query = {
   findStudies: Array<Study>;
   /** Get the presigned URL for where to upload the CSV against */
   getCSVUploadURL: Scalars['String']['output'];
+  getDatasetDownloads: Array<DatasetDownloadRequest>;
   getDatasetProjectPermissions: Array<DatasetProjectPermission>;
   getDatasets: Array<Dataset>;
   getDatasetsByProject: Array<Dataset>;
@@ -425,6 +450,11 @@ export type QueryFindStudiesArgs = {
 
 export type QueryGetCsvUploadUrlArgs = {
   session: Scalars['ID']['input'];
+};
+
+
+export type QueryGetDatasetDownloadsArgs = {
+  dataset: Scalars['ID']['input'];
 };
 
 

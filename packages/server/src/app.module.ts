@@ -15,6 +15,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { PermissionModule } from './permission/permission.module';
 import { UserModule } from './user/user.module';
 import { BucketModule } from './bucket/bucket.module';
+import { DownloadRequestModule } from './download-request/download-request.module';
 
 @Module({
   imports: [
@@ -46,7 +47,8 @@ import { BucketModule } from './bucket/bucket.module';
     JwtModule,
     PermissionModule,
     UserModule,
-    BucketModule
+    BucketModule,
+    DownloadRequestModule
   ]
 })
 export class AppModule {}
