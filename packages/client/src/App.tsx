@@ -30,6 +30,7 @@ import { EntryControls } from './pages/studies/EntryControls';
 import { PermissionProvider } from './context/Permission.context';
 import { TagTrainingView } from './pages/studies/TagTrainingView';
 import { SnackbarProvider } from './context/Snackbar.context';
+import { DownloadCenter } from './pages/DownloadCenter';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -139,6 +140,7 @@ const MyRoutes: FC = () => {
         <Route path={'/dataset/projectaccess'} element={<ProjectAccess />} />
         <Route path={'/contribute/landing'} element={<ContributeLanding />} />
         <Route path={'/contribute/tagging'} element={<TaggingInterface />} />
+        <Route path={'/downloads'} element={<DownloadCenter />} />
       </Route>
     </Routes>
   );

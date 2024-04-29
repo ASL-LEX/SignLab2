@@ -51,7 +51,8 @@
     "projectAccess": "Project Access",
     "contribute": "Contribute",
     "tagInStudy": "Tag in Study",
-    "logout": "Logout"
+    "logout": "Logout",
+    "downloadCenter": "Download Center"
   },
   "components": {
     "environment": {

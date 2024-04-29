@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState } from 'react';
 import { Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, School, Dataset, Work, Logout, GroupWork, Download } from '@mui/icons-material';
 import { useAuth } from '../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
 import { Environment } from './Environment.component';
@@ -65,6 +65,12 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
         { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
         { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
       ]
+    },
+    {
+      name: t('menu.downloadCenter'),
+      action: () => navigate('/downloads'),
+      visible: (p) => p!.owner,
+      icon: <Download />
     },
     {
       name: t('menu.contribute'),
