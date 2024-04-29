@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { CreateDatasetDownloadRequest } from '../dtos/dataset-download-request-create.dto';
 import { DatasetDownloadRequest } from '../models/dataset-download-request.model';
 import { DatasetDownloadService } from '../services/dataset-download-request.service';
@@ -31,5 +31,10 @@ export class DatasetDownloadRequestResolver {
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset
   ): Promise<DatasetDownloadRequest[]> {
     return this.datasetDownloadService.getDatasetDownloadRequests(dataset);
+  }
+
+  @ResolveField(() => String)
+  async entryZip(@Parent() downloadRequest: DatasetDownloadRequest): Promise<string> {
+    return this.datasetDownloadService.getEntryZipURL(downloadRequest);
   }
 }
