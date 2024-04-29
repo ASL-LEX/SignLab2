@@ -52,7 +52,7 @@
     "contribute": "Contribute",
     "tagInStudy": "Tag in Study",
     "logout": "Logout",
-    "downloadCenter": "Download Center"
+    "datasetDownloads": "Dataset Downloads"
   },
   "components": {
     "environment": {

@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Dataset } from 'src/dataset/dataset.model';
 import { JOB_PROVIDER } from 'src/gcp/providers/job.provider';
 import { BucketFactory } from '../../bucket/bucket-factory.service';
 import { EntryService } from '../../entry/services/entry.service';
@@ -58,6 +59,12 @@ export class DatasetDownloadService {
     await this.startZipJob(request);
 
     return request;
+  }
+
+  async getDatasetDownloadRequests(dataset: Dataset): Promise<DatasetDownloadRequest[]> {
+    return this.downloadRequestModel.find({
+      dataset: dataset._id
+    });
   }
 
   private async startZipJob(downloadRequest: DatasetDownloadRequest): Promise<void> {

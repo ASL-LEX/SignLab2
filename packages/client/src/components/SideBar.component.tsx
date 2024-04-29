@@ -63,14 +63,9 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       permission,
       subItems: [
         { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
-        { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
+        { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner },
+        { name: t('menu.datasetDownloads'), action: () => navigate('/dataset/downloads'), visible: (p) => p!.owner }
       ]
-    },
-    {
-      name: t('menu.downloadCenter'),
-      action: () => navigate('/downloads'),
-      visible: (p) => p!.owner,
-      icon: <Download />
     },
     {
       name: t('menu.contribute'),
