@@ -6,6 +6,9 @@ import { ObjectType, Field } from '@nestjs/graphql';
 @Schema()
 @ObjectType()
 export class DatasetDownloadRequest implements DownloadRequest {
+  @Field()
+  _id: string;
+
   @Prop({ required: true })
   organization: string;
 

@@ -16,7 +16,7 @@ import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 @Resolver(() => DatasetDownloadRequest)
 export class DatasetDownloadRequestResolver {
 
-  constructor(private readonly datasetDownloadService: DatasetDownloadService) {}
+  constructor(private readonly datasetDownloadService: DatasetDownloadService, private readonly datasetPipe: DatasetPipe) {}
 
   @Mutation(() => DatasetDownloadRequest)
   async createDatasetDownload(
@@ -36,5 +36,10 @@ export class DatasetDownloadRequestResolver {
   @ResolveField(() => String)
   async entryZip(@Parent() downloadRequest: DatasetDownloadRequest): Promise<string> {
     return this.datasetDownloadService.getEntryZipURL(downloadRequest);
+  }
+
+  @ResolveField(() => Dataset)
+  async dataset(@Parent() downloadRequest: DatasetDownloadRequest): Promise<Dataset> {
+    return this.datasetPipe.transform(downloadRequest.dataset);
   }
 }

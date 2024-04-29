@@ -38,6 +38,13 @@ export type CreateDatasetDownloadMutationVariables = Types.Exact<{
 
 export type CreateDatasetDownloadMutation = { __typename?: 'Mutation', createDatasetDownload: { __typename?: 'DatasetDownloadRequest', date: any, status: Types.DownloadStatus } };
 
+export type GetDatasetDownloadsQueryVariables = Types.Exact<{
+  dataset: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetDatasetDownloadsQuery = { __typename?: 'Query', getDatasetDownloads: Array<{ __typename?: 'DatasetDownloadRequest', _id: string, date: any, status: Types.DownloadStatus, entryZip: string, dataset: { __typename?: 'Dataset', _id: string, name: string, description: string } }> };
+
 
 export const GetDatasetsDocument = gql`
     query getDatasets {
@@ -214,3 +221,46 @@ export function useCreateDatasetDownloadMutation(baseOptions?: Apollo.MutationHo
 export type CreateDatasetDownloadMutationHookResult = ReturnType<typeof useCreateDatasetDownloadMutation>;
 export type CreateDatasetDownloadMutationResult = Apollo.MutationResult<CreateDatasetDownloadMutation>;
 export type CreateDatasetDownloadMutationOptions = Apollo.BaseMutationOptions<CreateDatasetDownloadMutation, CreateDatasetDownloadMutationVariables>;
+export const GetDatasetDownloadsDocument = gql`
+    query getDatasetDownloads($dataset: ID!) {
+  getDatasetDownloads(dataset: $dataset) {
+    _id
+    date
+    status
+    entryZip
+    dataset {
+      _id
+      name
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDatasetDownloadsQuery__
+ *
+ * To run a query within a React component, call `useGetDatasetDownloadsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDatasetDownloadsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDatasetDownloadsQuery({
+ *   variables: {
+ *      dataset: // value for 'dataset'
+ *   },
+ * });
+ */
+export function useGetDatasetDownloadsQuery(baseOptions: Apollo.QueryHookOptions<GetDatasetDownloadsQuery, GetDatasetDownloadsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDatasetDownloadsQuery, GetDatasetDownloadsQueryVariables>(GetDatasetDownloadsDocument, options);
+      }
+export function useGetDatasetDownloadsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDatasetDownloadsQuery, GetDatasetDownloadsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDatasetDownloadsQuery, GetDatasetDownloadsQueryVariables>(GetDatasetDownloadsDocument, options);
+        }
+export type GetDatasetDownloadsQueryHookResult = ReturnType<typeof useGetDatasetDownloadsQuery>;
+export type GetDatasetDownloadsLazyQueryHookResult = ReturnType<typeof useGetDatasetDownloadsLazyQuery>;
+export type GetDatasetDownloadsQueryResult = Apollo.QueryResult<GetDatasetDownloadsQuery, GetDatasetDownloadsQueryVariables>;
