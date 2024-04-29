@@ -78,14 +78,13 @@ export class DatasetDownloadService {
     await bucket.writeText(downloadRequest.entryJSONLocation!, entryContent);
 
     // Upload the webhook payload
+    // TODO: Update webhook
     await bucket.writeText(downloadRequest.webhookPayloadLocation!, JSON.stringify({
       "code": "1234",
       "downloadRequest": "12"
     }));
 
-
     // Trigger the cloud run job
-    // TODO: Different mounting points for different organizations
     await this.jobsClient.runJob({
       name: this.zipJobName,
       overrides: {

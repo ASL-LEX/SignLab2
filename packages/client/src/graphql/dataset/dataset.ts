@@ -31,6 +31,13 @@ export type CreateDatasetMutationVariables = Types.Exact<{
 
 export type CreateDatasetMutation = { __typename?: 'Mutation', createDataset: { __typename?: 'Dataset', _id: string, name: string, description: string } };
 
+export type CreateDatasetDownloadMutationVariables = Types.Exact<{
+  downloadRequest: Types.CreateDatasetDownloadRequest;
+}>;
+
+
+export type CreateDatasetDownloadMutation = { __typename?: 'Mutation', createDatasetDownload: { __typename?: 'DatasetDownloadRequest', date: any, status: Types.DownloadStatus } };
+
 
 export const GetDatasetsDocument = gql`
     query getDatasets {
@@ -173,3 +180,37 @@ export function useCreateDatasetMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateDatasetMutationHookResult = ReturnType<typeof useCreateDatasetMutation>;
 export type CreateDatasetMutationResult = Apollo.MutationResult<CreateDatasetMutation>;
 export type CreateDatasetMutationOptions = Apollo.BaseMutationOptions<CreateDatasetMutation, CreateDatasetMutationVariables>;
+export const CreateDatasetDownloadDocument = gql`
+    mutation createDatasetDownload($downloadRequest: CreateDatasetDownloadRequest!) {
+  createDatasetDownload(downloadRequest: $downloadRequest) {
+    date
+    status
+  }
+}
+    `;
+export type CreateDatasetDownloadMutationFn = Apollo.MutationFunction<CreateDatasetDownloadMutation, CreateDatasetDownloadMutationVariables>;
+
+/**
+ * __useCreateDatasetDownloadMutation__
+ *
+ * To run a mutation, you first call `useCreateDatasetDownloadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDatasetDownloadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDatasetDownloadMutation, { data, loading, error }] = useCreateDatasetDownloadMutation({
+ *   variables: {
+ *      downloadRequest: // value for 'downloadRequest'
+ *   },
+ * });
+ */
+export function useCreateDatasetDownloadMutation(baseOptions?: Apollo.MutationHookOptions<CreateDatasetDownloadMutation, CreateDatasetDownloadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDatasetDownloadMutation, CreateDatasetDownloadMutationVariables>(CreateDatasetDownloadDocument, options);
+      }
+export type CreateDatasetDownloadMutationHookResult = ReturnType<typeof useCreateDatasetDownloadMutation>;
+export type CreateDatasetDownloadMutationResult = Apollo.MutationResult<CreateDatasetDownloadMutation>;
+export type CreateDatasetDownloadMutationOptions = Apollo.BaseMutationOptions<CreateDatasetDownloadMutation, CreateDatasetDownloadMutationVariables>;

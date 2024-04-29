@@ -77,7 +77,11 @@
       "deleteDescription": "Are you sure you want to delete this entry? Doing so will delete all cooresponding tags",
       "addDataset": " Add New Dataset",
       "uploadEntries": " Upload Entries",
-      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted"
+      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted",
+      "downloadTitle": "Dataset Download Request",
+      "downloadDescription": "Would you like to download this dataset? All entries will be downloaded. Once complete, the downloaded results will be available in the download center",
+      "downloadStartedSuccess": "Download has started, go to download center to get artifacts when complete",
+      "downloadFailed": "Could not download dataset, please reach out to administrator"
     },
     "projectAccess": {
       "datasetName": "Dataset Name",

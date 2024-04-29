@@ -25,3 +25,10 @@ mutation createDataset($dataset: DatasetCreate!) {
     description
   }
 }
+
+mutation createDatasetDownload($downloadRequest: CreateDatasetDownloadRequest!) {
+  createDatasetDownload(downloadRequest: $downloadRequest) {
+    date,
+    status
+  }
+}
