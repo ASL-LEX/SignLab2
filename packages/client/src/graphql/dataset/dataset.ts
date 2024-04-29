@@ -36,7 +36,7 @@ export type CreateDatasetDownloadMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateDatasetDownloadMutation = { __typename?: 'Mutation', createDatasetDownload: { __typename?: 'DatasetDownloadRequest', date: any, status: Types.DownloadStatus } };
+export type CreateDatasetDownloadMutation = { __typename?: 'Mutation', createDatasetDownload: { __typename?: 'DatasetDownloadRequest', _id: string, date: any, status: Types.DownloadStatus, dataset: { __typename?: 'Dataset', _id: string, name: string, description: string } } };
 
 export type GetDatasetDownloadsQueryVariables = Types.Exact<{
   dataset: Types.Scalars['ID']['input'];
@@ -190,8 +190,14 @@ export type CreateDatasetMutationOptions = Apollo.BaseMutationOptions<CreateData
 export const CreateDatasetDownloadDocument = gql`
     mutation createDatasetDownload($downloadRequest: CreateDatasetDownloadRequest!) {
   createDatasetDownload(downloadRequest: $downloadRequest) {
+    _id
     date
     status
+    dataset {
+      _id
+      name
+      description
+    }
   }
 }
     `;

@@ -28,8 +28,14 @@ mutation createDataset($dataset: DatasetCreate!) {
 
 mutation createDatasetDownload($downloadRequest: CreateDatasetDownloadRequest!) {
   createDatasetDownload(downloadRequest: $downloadRequest) {
+    _id,
     date,
-    status
+    status,
+    dataset {
+      _id,
+      name,
+      description
+    }
   }
 }
 

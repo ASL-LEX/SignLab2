@@ -29,7 +29,6 @@ export type BooleanField = {
 };
 
 export type CreateDatasetDownloadRequest = {
-  _id: Scalars['String']['input'];
   dataset: Scalars['ID']['input'];
 };
 
