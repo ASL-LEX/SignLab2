@@ -20,7 +20,7 @@ export class StudyDownloadRequest implements DownloadRequest {
   tagCSVLocation?: string;
 
   @Prop({ required: true })
-  entryZIPLocation: string;
+  entryZIPLocation?: string;
 
   @Prop({ required: false })
   bucketLocation?: string;
