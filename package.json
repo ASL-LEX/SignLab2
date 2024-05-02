@@ -6,11 +6,15 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "prettier": "npm run prettier --workspaces --if-present",
-    "prettier:fix": "npm run prettier:fix --workspaces --if-present"
+    "prettier:fix": "npm run prettier:fix --workspaces --if-present",
+    "test": "jest"
   },
   "workspaces": [
     "packages/*"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "ts-jest": "^29.1.2"
+  }
 }
