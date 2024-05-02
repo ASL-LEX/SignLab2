@@ -26,7 +26,7 @@ export class StudyDownloadRequest implements DownloadRequest {
   @Prop({ requied: false })
   tagCSVLocation?: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   entryZIPLocation?: string;
 
   @Prop({ required: false })

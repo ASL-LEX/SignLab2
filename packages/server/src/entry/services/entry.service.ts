@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from '../../jwt/token.dto';
 import { BucketFactory } from 'src/bucket/bucket-factory.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
+import { Study } from 'src/study/study.model';
 
 @Injectable()
 export class EntryService {
@@ -68,6 +69,20 @@ export class EntryService {
       throw new Error('Missing bucket for entry');
     }
     return bucket.getSignedUrl(entry.bucketLocation, BucketObjectAction.READ, new Date(Date.now() + this.expiration));
+  }
+
+  /** Get all entries recorded as part of the given study */
+  async getEntriesForStudy(study: Study | string): Promise<Entry[]> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+
+    return await this.entryModel.find({
+      'signlabRecording.study': studyID
+    });
   }
 
   /**
