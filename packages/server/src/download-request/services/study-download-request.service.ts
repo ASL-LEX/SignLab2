@@ -47,6 +47,7 @@ export class StudyDownloadService {
     const zipLocation = `${bucketLocation}/entries.zip`;
     const entryJSONLocation = `${bucketLocation}/entries.json`;
     const webhookPayloadLocation = `${bucketLocation}/webhook.json`;
+    const tagCSVLocation = `${bucketLocation}/tag.csv`;
 
     await this.downloadRequestModel.updateOne(
       { _id: request._id },
@@ -55,7 +56,8 @@ export class StudyDownloadService {
           bucketLocation: bucketLocation,
           entryZIPLocation: zipLocation,
           entryJSONLocation: entryJSONLocation,
-          webhookPayloadLocation: webhookPayloadLocation
+          webhookPayloadLocation: webhookPayloadLocation,
+          tagCSVLocation: tagCSVLocation
         }
       }
     );
@@ -88,8 +90,8 @@ export class StudyDownloadService {
   private async generateCSV(downloadRequest: StudyDownloadRequest): Promise<void> {
     const tags = await this.tagService.getCompleteTags(downloadRequest.study);
 
+    // Turn the tag fields into their "CSV-friendly" format
     const converted: any[] = [];
-
     for (const tag of tags) {
       const tagFields: any = {};
 
@@ -111,12 +113,23 @@ export class StudyDownloadService {
       converted.push(tagFields);
     }
 
-    console.log(converted);
+    // Convert the data into a CSV
+    const dataString = this.convertToCSV(converted);
 
-    // Convert the tag fields into a list of objects
-    // const tagData = JSON.stringify(tags);
-    // console.log(tagData);
+    // Store the CSV in the expected location in the bucket
+    const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
+    if (!bucket) {
+      throw new Error(`No bucket found for organization ${downloadRequest.organization}`);
+    }
+    await bucket.writeText(downloadRequest.tagCSVLocation!, dataString);
+  }
 
+  private convertToCSV(arr: any[]): string {
+    const array = [Object.keys(arr[0])].concat(arr)
+
+    return array.map(it => {
+      return Object.values(it).toString()
+    }).join('\n')
   }
 
   private async startZipJob(downloadRequest: StudyDownloadRequest): Promise<void> {
