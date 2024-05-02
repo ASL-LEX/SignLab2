@@ -11,6 +11,9 @@ import { BucketFactory } from '../../bucket/bucket-factory.service';
 import { JOB_PROVIDER } from 'src/gcp/providers/job.provider';
 import { JobsClient } from '@google-cloud/run';
 import { ConfigService } from '@nestjs/config';
+import { TagService } from '../../tag/services/tag.service';
+import { TagFieldType } from '../../tag/models/tag-field.model';
+import { VideoFieldService } from '../../tag/services/video-field.service';
 
 @Injectable()
 export class StudyDownloadService {
@@ -24,7 +27,9 @@ export class StudyDownloadService {
     private readonly bucketFactory: BucketFactory,
     @Inject(JOB_PROVIDER)
     private readonly jobsClient: JobsClient,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly tagService: TagService,
+    private readonly videoFieldService: VideoFieldService
   ) {}
 
 
@@ -56,9 +61,47 @@ export class StudyDownloadService {
     );
     request = (await this.downloadRequestModel.findById(request._id))!;
 
-    await this.startZipJob(request);
+    // await this.startZipJob(request);
+    await this.generateCSV(request);
 
     return request;
+  }
+
+  /**
+   * Handles generating the CSV for the tag data
+   */
+  private async generateCSV(downloadRequest: StudyDownloadRequest): Promise<void> {
+    const tags = await this.tagService.getCompleteTags(downloadRequest.study);
+
+    const converted: any[] = [];
+
+    for (const tag of tags) {
+      const tagFields: any = {};
+
+      for (const field of tag.data!) {
+
+        // For video fields, each entry is represented by the filename
+        if (field.type == TagFieldType.VIDEO_RECORD) {
+          const videoField = (await this.videoFieldService.find(field.data))!;
+          for (let index = 0; index < videoField.entries.length; index++) {
+            const entryID = videoField.entries[index];
+            const entry = (await this.entryService.find(entryID))!;
+            tagFields[`${field.name}-${index}`] = entry.bucketLocation.split('/').pop();
+          }
+        } else {
+          tagFields[`${field.name}`] = field.data;
+        }
+
+      }
+      converted.push(tagFields);
+    }
+
+    console.log(converted);
+
+    // Convert the tag fields into a list of objects
+    // const tagData = JSON.stringify(tags);
+    // console.log(tagData);
+
   }
 
   private async startZipJob(downloadRequest: StudyDownloadRequest): Promise<void> {

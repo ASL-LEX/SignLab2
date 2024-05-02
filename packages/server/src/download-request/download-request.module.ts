@@ -15,6 +15,7 @@ import { CreateStudyDownloadPipe } from './pipes/study-download-request-create.p
 import { StudyModule } from 'src/study/study.module';
 import { StudyDownloadRequestResolver } from './resolvers/study-download-request.resolver';
 import { StudyDownloadService } from './services/study-download-request.service';
+import { TagModule } from '../tag/tag.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { StudyDownloadService } from './services/study-download-request.service'
     BucketModule,
     GcpModule,
     StudyModule,
+    TagModule
   ],
   providers: [
     DatasetDownloadRequestResolver,

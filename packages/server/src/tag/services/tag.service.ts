@@ -229,8 +229,24 @@ export class TagService {
     return true;
   }
 
-  async getTags(study: Study): Promise<Tag[]> {
-    return this.tagModel.find({ study: study._id, training: false });
+  async getTags(study: Study | string): Promise<Tag[]> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+    return this.tagModel.find({ study: studyID, training: false });
+  }
+
+  async getCompleteTags(study: Study | string): Promise<Tag[]> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+    return this.tagModel.find({ study: studyID, training: false, complete: true });
   }
 
   private async getIncomplete(study: Study, user: string): Promise<Tag | null> {
