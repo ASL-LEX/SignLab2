@@ -68,7 +68,22 @@ export class StudyDownloadService {
   }
 
   /**
-   * Handles generating the CSV for the tag data
+   * Handles generating the CSV for the tag data. This approach is a sub-optimal one.
+   *
+   * The overall need is to convert the tag information into a flat CSV format where
+   * any external information (like videos that are downloaded as a zip) can be associated
+   * with the data.
+   *
+   * For example, video fields need to be linked to the videos that are downloaded,
+   * therefore the video fields show up as multiple columns, one for each video recorded.
+   *
+   * This approach is sub-optimal for a number of reasons
+   * 1. The code should be isolated into different handlers that each know how to make
+   *    the CSV representation for that field.
+   * 2. Expansion of video fields can be time consuming. This may need to be a process
+   *    that runs in the background.
+   * 3. ASL-LEX fields are not expanded. Currently only the ID of the field will be
+   *    stored
    */
   private async generateCSV(downloadRequest: StudyDownloadRequest): Promise<void> {
     const tags = await this.tagService.getCompleteTags(downloadRequest.study);
