@@ -39,6 +39,21 @@ query studyExists($name: String!, $project: ID!) {
 query getStudyDownloads($study: ID!) {
   getStudyDownloads(study: $study) {
     date,
-    status
+    status,
+    entryZip,
+    tagCSV,
+    taggedEntries,
+    study {
+      _id
+      name
+      description
+      instructions
+      project
+      tagsPerEntry
+      tagSchema {
+        dataSchema
+        uiSchema
+      }
+    }
   }
 }

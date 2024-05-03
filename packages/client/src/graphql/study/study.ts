@@ -39,7 +39,7 @@ export type GetStudyDownloadsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', date: any, status: string }> };
+export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', date: any, status: string, entryZip: string, tagCSV: string, taggedEntries: string, study: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } }> };
 
 
 export const FindStudiesDocument = gql`
@@ -198,6 +198,21 @@ export const GetStudyDownloadsDocument = gql`
   getStudyDownloads(study: $study) {
     date
     status
+    entryZip
+    tagCSV
+    taggedEntries
+    study {
+      _id
+      name
+      description
+      instructions
+      project
+      tagsPerEntry
+      tagSchema {
+        dataSchema
+        uiSchema
+      }
+    }
   }
 }
     `;

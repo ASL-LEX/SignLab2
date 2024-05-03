@@ -588,6 +588,9 @@ export type StudyDownloadRequest = {
   date: Scalars['DateTime']['output'];
   entryZip: Scalars['String']['output'];
   status: Scalars['String']['output'];
+  study: Study;
+  tagCSV: Scalars['String']['output'];
+  taggedEntries: Scalars['String']['output'];
 };
 
 export type StudyPermissionModel = {

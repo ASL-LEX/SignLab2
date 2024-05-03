@@ -157,12 +157,24 @@ export class StudyDownloadService {
   }
 
   async getEntryZipUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.getSignedURL(downloadRequest, downloadRequest.entryZIPLocation!);
+  }
+
+  async getTagCSVUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.getSignedURL(downloadRequest, downloadRequest.tagCSVLocation!);
+  }
+
+  async getTaggedEntriesUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.getSignedURL(downloadRequest, downloadRequest.taggedEntriesZipLocation!);
+  }
+
+  private async getSignedURL(downloadRequest: StudyDownloadRequest, location: string): Promise<string> {
     const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
     if (!bucket) {
       throw new Error(`Bucket not found for organization ${downloadRequest.organization}`);
     }
     return bucket.getSignedUrl(
-      downloadRequest.entryZIPLocation!,
+      location,
       BucketObjectAction.READ,
       new Date(Date.now() + this.expiration)
     )

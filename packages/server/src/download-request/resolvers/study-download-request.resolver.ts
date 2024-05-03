@@ -14,7 +14,7 @@ import { Study } from '../../study/study.model';
 @UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => StudyDownloadRequest)
 export class StudyDownloadRequestResolver {
-  constructor(private readonly studyDownloadService: StudyDownloadService) {}
+  constructor(private readonly studyDownloadService: StudyDownloadService, private readonly studyPipe: StudyPipe) {}
 
   @Mutation(() => StudyDownloadRequest)
   async createStudyDownload(
@@ -34,5 +34,20 @@ export class StudyDownloadRequestResolver {
   @ResolveField(() => String)
   async entryZip(@Parent() downloadRequest: StudyDownloadRequest): Promise<string> {
     return this.studyDownloadService.getEntryZipUrl(downloadRequest);
+  }
+
+  @ResolveField(() => Study)
+  async study(@Parent() downloadRequest: StudyDownloadRequest): Promise<Study> {
+    return this.studyPipe.transform(downloadRequest.study);
+  }
+
+  @ResolveField(() => String)
+  async tagCSV(@Parent() downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.studyDownloadService.getTagCSVUrl(downloadRequest);
+  }
+
+  @ResolveField(() => String)
+  async taggedEntries(@Parent() downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.studyDownloadService.getTaggedEntriesUrl(downloadRequest);
   }
 }
