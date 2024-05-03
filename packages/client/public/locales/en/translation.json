@@ -144,6 +144,10 @@
     "tagView": {
       "originalEntry": "Original Entry",
       "export": "Export"
+    },
+    "studyDownload": {
+      "csv": "Tag CSV",
+      "taggedEntries": "Entries Tagged"
     }
   },
   "errors": {

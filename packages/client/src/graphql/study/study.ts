@@ -39,7 +39,7 @@ export type GetStudyDownloadsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', date: any, status: string, entryZip: string, tagCSV: string, taggedEntries: string, study: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } }> };
+export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', _id: string, date: any, status: string, entryZip: string, tagCSV: string, taggedEntries: string, study: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } }> };
 
 
 export const FindStudiesDocument = gql`
@@ -196,6 +196,7 @@ export type StudyExistsQueryResult = Apollo.QueryResult<StudyExistsQuery, StudyE
 export const GetStudyDownloadsDocument = gql`
     query getStudyDownloads($study: ID!) {
   getStudyDownloads(study: $study) {
+    _id
     date
     status
     entryZip

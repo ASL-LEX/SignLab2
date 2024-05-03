@@ -38,6 +38,7 @@ query studyExists($name: String!, $project: ID!) {
 
 query getStudyDownloads($study: ID!) {
   getStudyDownloads(study: $study) {
+    _id,
     date,
     status,
     entryZip,
