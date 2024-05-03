@@ -62,7 +62,7 @@ export class DownloadRequestService {
     const entryLocations = request.entries.map((entry) => `${mountPoint}/${entry.bucketLocation}`);
 
     // Convert the list to a string for saving
-    const entryContent: string = JSON.stringify(entryLocations);
+    const entryContent: string = JSON.stringify({ 'entries': entryLocations });
 
     // Now upload the generated JSON file with the entry locations into the bucket
     await request.bucket.writeText(request.entryJSONLocation, entryContent);
