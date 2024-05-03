@@ -86,7 +86,11 @@ export const StudyControl: React.FC = () => {
       field: 'download',
       headerName: t('common.download'),
       width: 200,
-      renderCell: (params) => <IconButton onClick={() => handleDownloadRequest(params.row)}><Download /></IconButton>
+      renderCell: (params) => (
+        <IconButton onClick={() => handleDownloadRequest(params.row)}>
+          <Download />
+        </IconButton>
+      )
     },
     {
       field: 'delete',

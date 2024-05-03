@@ -25,9 +25,7 @@ export class StudyDownloadRequestResolver {
   }
 
   @Query(() => [StudyDownloadRequest])
-  async getStudyDownloads(
-    @Args('study', { type: () => ID }, StudyPipe) study: Study
-  ): Promise<StudyDownloadRequest[]> {
+  async getStudyDownloads(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<StudyDownloadRequest[]> {
     return this.studyDownloadService.getStudyDownloads(study);
   }
 

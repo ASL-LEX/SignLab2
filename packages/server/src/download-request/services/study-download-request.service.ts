@@ -20,7 +20,6 @@ import { Study } from 'src/study/study.model';
 export class StudyDownloadService {
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
 
-
   constructor(
     @InjectModel(StudyDownloadRequest.name)
     private readonly downloadRequestModel: Model<StudyDownloadRequest>,
@@ -29,11 +28,13 @@ export class StudyDownloadService {
     private readonly bucketFactory: BucketFactory,
     private readonly configService: ConfigService,
     private readonly tagService: TagService,
-    private readonly videoFieldService: VideoFieldService,
+    private readonly videoFieldService: VideoFieldService
   ) {}
 
-
-  async createDownloadRequest(downloadRequest: CreateStudyDownloadRequest, organization: Organization): Promise<StudyDownloadRequest> {
+  async createDownloadRequest(
+    downloadRequest: CreateStudyDownloadRequest,
+    organization: Organization
+  ): Promise<StudyDownloadRequest> {
     let request = await this.downloadRequestModel.create({
       ...downloadRequest,
       date: new Date(),
@@ -131,7 +132,6 @@ export class StudyDownloadService {
       tagFields['prompt'] = (await this.entryService.find(tag.entry))!.bucketLocation.split('/').pop();
 
       for (const field of tag.data!) {
-
         // For video fields, each entry is represented by the filename
         if (field.type == TagFieldType.VIDEO_RECORD) {
           const videoField = (await this.videoFieldService.find(field.data))!;
@@ -143,7 +143,6 @@ export class StudyDownloadService {
         } else {
           tagFields[`${field.name}`] = field.data;
         }
-
       }
       converted.push(tagFields);
     }
@@ -176,24 +175,21 @@ export class StudyDownloadService {
     if (!bucket) {
       throw new Error(`Bucket not found for organization ${downloadRequest.organization}`);
     }
-    return bucket.getSignedUrl(
-      location,
-      BucketObjectAction.READ,
-      new Date(Date.now() + this.expiration)
-    )
+    return bucket.getSignedUrl(location, BucketObjectAction.READ, new Date(Date.now() + this.expiration));
   }
 
   /**
    * TODO: Improve the CSV process, need a better method to determine the headers and handle default values
    */
   private convertToCSV(arr: any[]): string {
-    const array = [Object.keys(arr[0])].concat(arr)
+    const array = [Object.keys(arr[0])].concat(arr);
 
-    return array.map(it => {
-      return Object.values(it).toString()
-    }).join('\n')
+    return array
+      .map((it) => {
+        return Object.values(it).toString();
+      })
+      .join('\n');
   }
-
 
   /**
    * Get the entries taged as part of the study
@@ -207,12 +203,14 @@ export class StudyDownloadService {
     entryIDs = Array.from(new Set(entryIDs));
 
     // Get all the entries
-    return Promise.all(entryIDs.map(async (id) => {
-      const entry = await this.entryService.find(id);
-      if (!entry) {
-        throw new Error(`Invalid id for entry: ${id}`);
-      }
-      return entry;
-    }));
+    return Promise.all(
+      entryIDs.map(async (id) => {
+        const entry = await this.entryService.find(id);
+        if (!entry) {
+          throw new Error(`Invalid id for entry: ${id}`);
+        }
+        return entry;
+      })
+    );
   }
 }

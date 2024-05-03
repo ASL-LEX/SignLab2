@@ -97,7 +97,7 @@ export class VideoFieldIntermediateService {
       {
         entryID: 'TODO: Generate entry ID',
         contentType: 'video/webm',
-        meta: {},
+        meta: {}
       },
       dataset,
       user,

@@ -87,13 +87,7 @@ export const StudyDownloads: React.FC = () => {
     }
   ];
 
-  return (
-    <DataGrid
-      rows={studyDownloadRequests}
-      columns={columns}
-      getRowId={(row) => row._id}
-    />
-  );
+  return <DataGrid rows={studyDownloadRequests} columns={columns} getRowId={(row) => row._id} />;
 };
 
 interface StatusViewProps {

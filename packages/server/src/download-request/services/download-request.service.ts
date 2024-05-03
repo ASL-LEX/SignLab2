@@ -5,7 +5,6 @@ import { Bucket } from '../../bucket/bucket';
 import { JOB_PROVIDER } from '../../gcp/providers/job.provider';
 import { JobsClient } from '@google-cloud/run';
 
-
 export interface ZipJobRequest {
   /** Where to put the entry JSON file in the bucket */
   entryJSONLocation: string;
@@ -62,7 +61,7 @@ export class DownloadRequestService {
     const entryLocations = request.entries.map((entry) => `${mountPoint}/${entry.bucketLocation}`);
 
     // Convert the list to a string for saving
-    const entryContent: string = JSON.stringify({ 'entries': entryLocations });
+    const entryContent: string = JSON.stringify({ entries: entryLocations });
 
     // Now upload the generated JSON file with the entry locations into the bucket
     await request.bucket.writeText(request.entryJSONLocation, entryContent);

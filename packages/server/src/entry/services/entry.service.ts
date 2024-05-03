@@ -24,7 +24,13 @@ export class EntryService {
     return this.entryModel.findOne({ _id: entryID });
   }
 
-  async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload, isTraining: boolean, signLabRecorded?: SignLabRecorded): Promise<Entry> {
+  async create(
+    entryCreate: EntryCreate,
+    dataset: Dataset,
+    user: TokenPayload,
+    isTraining: boolean,
+    signLabRecorded?: SignLabRecorded
+  ): Promise<Entry> {
     // Make the entry, note that training entries are not associated with a dataset
     return this.entryModel.create({
       ...entryCreate,
