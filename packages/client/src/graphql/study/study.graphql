@@ -58,3 +58,11 @@ query getStudyDownloads($study: ID!) {
     }
   }
 }
+
+mutation createStudyDownload($downloadRequest: CreateStudyDownloadRequest!) {
+  createStudyDownload(downloadRequest: $downloadRequest) {
+    _id,
+    status,
+    date
+  }
+}

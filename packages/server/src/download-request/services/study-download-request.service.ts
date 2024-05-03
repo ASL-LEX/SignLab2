@@ -127,6 +127,9 @@ export class StudyDownloadService {
     for (const tag of tags) {
       const tagFields: any = {};
 
+      // Add basic meta-fields
+      tagFields['prompt'] = (await this.entryService.find(tag.entry))!.bucketLocation.split('/').pop();
+
       for (const field of tag.data!) {
 
         // For video fields, each entry is represented by the filename

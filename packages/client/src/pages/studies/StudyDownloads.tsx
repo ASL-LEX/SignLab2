@@ -30,7 +30,6 @@ export const StudyDownloads: React.FC = () => {
   useEffect(() => {
     if (getDownloadsResults.data) {
       setStudyDownloadRequest(getDownloadsResults.data.getStudyDownloads);
-      console.log()
     }
   }, [getDownloadsResults.data]);
 

@@ -41,6 +41,13 @@ export type GetStudyDownloadsQueryVariables = Types.Exact<{
 
 export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', _id: string, date: any, status: string, entryZip: string, tagCSV: string, taggedEntries: string, study: { __typename?: 'Study', _id: string, name: string, description: string, instructions: string, project: string, tagsPerEntry: number, tagSchema: { __typename?: 'TagSchema', dataSchema: any, uiSchema: any } } }> };
 
+export type CreateStudyDownloadMutationVariables = Types.Exact<{
+  downloadRequest: Types.CreateStudyDownloadRequest;
+}>;
+
+
+export type CreateStudyDownloadMutation = { __typename?: 'Mutation', createStudyDownload: { __typename?: 'StudyDownloadRequest', _id: string, status: string, date: any } };
+
 
 export const FindStudiesDocument = gql`
     query findStudies($project: ID!) {
@@ -245,3 +252,38 @@ export function useGetStudyDownloadsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetStudyDownloadsQueryHookResult = ReturnType<typeof useGetStudyDownloadsQuery>;
 export type GetStudyDownloadsLazyQueryHookResult = ReturnType<typeof useGetStudyDownloadsLazyQuery>;
 export type GetStudyDownloadsQueryResult = Apollo.QueryResult<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>;
+export const CreateStudyDownloadDocument = gql`
+    mutation createStudyDownload($downloadRequest: CreateStudyDownloadRequest!) {
+  createStudyDownload(downloadRequest: $downloadRequest) {
+    _id
+    status
+    date
+  }
+}
+    `;
+export type CreateStudyDownloadMutationFn = Apollo.MutationFunction<CreateStudyDownloadMutation, CreateStudyDownloadMutationVariables>;
+
+/**
+ * __useCreateStudyDownloadMutation__
+ *
+ * To run a mutation, you first call `useCreateStudyDownloadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStudyDownloadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStudyDownloadMutation, { data, loading, error }] = useCreateStudyDownloadMutation({
+ *   variables: {
+ *      downloadRequest: // value for 'downloadRequest'
+ *   },
+ * });
+ */
+export function useCreateStudyDownloadMutation(baseOptions?: Apollo.MutationHookOptions<CreateStudyDownloadMutation, CreateStudyDownloadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStudyDownloadMutation, CreateStudyDownloadMutationVariables>(CreateStudyDownloadDocument, options);
+      }
+export type CreateStudyDownloadMutationHookResult = ReturnType<typeof useCreateStudyDownloadMutation>;
+export type CreateStudyDownloadMutationResult = Apollo.MutationResult<CreateStudyDownloadMutation>;
+export type CreateStudyDownloadMutationOptions = Apollo.BaseMutationOptions<CreateStudyDownloadMutation, CreateStudyDownloadMutationVariables>;
