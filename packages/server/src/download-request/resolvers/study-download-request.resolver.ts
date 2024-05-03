@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
 import { OrganizationGuard } from '../../organization/organization.guard';
 import { UseGuards } from '@nestjs/common';
@@ -20,5 +20,10 @@ export class StudyDownloadRequestResolver {
     @OrganizationContext() organization: Organization
   ): Promise<StudyDownloadRequest> {
     return this.studyDownloadService.createDownloadRequest(downloadRequest, organization);
+  }
+
+  @ResolveField(() => String)
+  async entryZip(@Parent() downloadRequest: StudyDownloadRequest): Promise<string> {
+    return this.studyDownloadService.getEntryZipUrl(downloadRequest);
   }
 }

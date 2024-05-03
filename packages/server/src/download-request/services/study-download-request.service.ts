@@ -14,10 +14,13 @@ import { ConfigService } from '@nestjs/config';
 import { TagService } from '../../tag/services/tag.service';
 import { TagFieldType } from '../../tag/models/tag-field.model';
 import { VideoFieldService } from '../../tag/services/video-field.service';
+import { BucketObjectAction } from 'src/bucket/bucket';
 
 @Injectable()
 export class StudyDownloadService {
   private readonly zipJobName: string = this.configService.getOrThrow<string>('downloads.jobName');
+  private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
+
 
   constructor(
     @InjectModel(StudyDownloadRequest.name)
@@ -63,7 +66,7 @@ export class StudyDownloadService {
     );
     request = (await this.downloadRequestModel.findById(request._id))!;
 
-    // await this.startZipJob(request);
+    await this.startZipJob(request);
     await this.generateCSV(request);
 
     return request;
@@ -122,6 +125,18 @@ export class StudyDownloadService {
       throw new Error(`No bucket found for organization ${downloadRequest.organization}`);
     }
     await bucket.writeText(downloadRequest.tagCSVLocation!, dataString);
+  }
+
+  async getEntryZipUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
+    const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
+    if (!bucket) {
+      throw new Error(`Bucket not found for organization ${downloadRequest.organization}`);
+    }
+    return bucket.getSignedUrl(
+      downloadRequest.entryZIPLocation!,
+      BucketObjectAction.READ,
+      new Date(Date.now() + this.expiration)
+    )
   }
 
   private convertToCSV(arr: any[]): string {
