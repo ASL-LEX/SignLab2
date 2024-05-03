@@ -23,20 +23,37 @@ export class StudyDownloadRequest implements DownloadRequest {
   @Prop({ required: true })
   study: string;
 
+  /** Location in a bucket where the tag data as a CSV should be stored */
   @Prop({ requied: false })
   tagCSVLocation?: string;
 
+  /** Location in a bucket where any entries recorded as part of a study will be */
   @Prop({ required: false })
   entryZIPLocation?: string;
 
+  /** The prefix for all bucket locations */
   @Prop({ required: false })
   bucketLocation?: string;
 
+  /** Where the JSON list of entries recorded as part of the study will be */
   @Prop({ required: false })
   entryJSONLocation?: string;
 
+  /** Webhook payload to be called when the zipping of entries recorded in the study is complete */
   @Prop({ required: false })
   webhookPayloadLocation?: string;
+
+  /** Location in a bucket where the entries tagged will be stored */
+  @Prop({ required: false })
+  taggedEntriesZipLocation?: string;
+
+  /** Location in a bucket where the JSON list of entries tagged as part of the study will be */
+  @Prop({ required: false })
+  taggedEntriesJSONLocation?: string;
+
+  /** Webhook payload to be used when the zipping of tagged entries is complete */
+  @Prop({ required: false })
+  taggedEntryWebhookPayloadLocation?: string;
 }
 
 export type StudyDownloadRequestDocument = Document & StudyDownloadRequest;

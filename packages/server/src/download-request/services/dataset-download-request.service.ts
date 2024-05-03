@@ -58,14 +58,14 @@ export class DatasetDownloadService {
 
     // Start the process of zipping the entries
     await this.downloadService.startZipJob({
-      entryJSONLocation: downloadRequest.entryJSONLocation!,
-      entryZIPLocation: downloadRequest.entryZIPLocation!,
-      webhookPayloadLocation: downloadRequest.webhookPayloadLocation!,
+      entryJSONLocation: request.entryJSONLocation!,
+      entryZIPLocation: request.entryZIPLocation!,
+      webhookPayloadLocation: request.webhookPayloadLocation!,
       webhookPayload: JSON.stringify({ test: 'hello' }),
       webhook: 'http://localhost:3000/',
-      entries: await this.entryService.findForDataset(downloadRequest.dataset),
-      bucket: (await this.bucketFactory.getBucket(downloadRequest.organization))!,
-      organization: downloadRequest.organization
+      entries: await this.entryService.findForDataset(request.dataset),
+      bucket: (await this.bucketFactory.getBucket(request.organization))!,
+      organization: request.organization
     });
 
     return request;
