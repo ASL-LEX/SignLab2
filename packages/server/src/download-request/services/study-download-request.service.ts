@@ -14,6 +14,7 @@ import { TagFieldType } from '../../tag/models/tag-field.model';
 import { VideoFieldService } from '../../tag/services/video-field.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
 import { Entry } from 'src/entry/models/entry.model';
+import { Study } from 'src/study/study.model';
 
 @Injectable()
 export class StudyDownloadService {
@@ -94,6 +95,10 @@ export class StudyDownloadService {
     });
 
     return request;
+  }
+
+  async getStudyDownloads(study: Study): Promise<StudyDownloadRequest[]> {
+    return this.downloadRequestModel.find({ study: study._id });
   }
 
   /**

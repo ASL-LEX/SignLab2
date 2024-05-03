@@ -55,7 +55,8 @@
     "contribute": "Contribute",
     "tagInStudy": "Tag in Study",
     "logout": "Logout",
-    "datasetDownloads": "Dataset Downloads"
+    "datasetDownloads": "Dataset Downloads",
+    "studyDownloads": "Study Downloads"
   },
   "components": {
     "environment": {

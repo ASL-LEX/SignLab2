@@ -34,6 +34,13 @@ export type StudyExistsQueryVariables = Types.Exact<{
 
 export type StudyExistsQuery = { __typename?: 'Query', studyExists: boolean };
 
+export type GetStudyDownloadsQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+}>;
+
+
+export type GetStudyDownloadsQuery = { __typename?: 'Query', getStudyDownloads: Array<{ __typename?: 'StudyDownloadRequest', date: any, status: string }> };
+
 
 export const FindStudiesDocument = gql`
     query findStudies($project: ID!) {
@@ -186,3 +193,39 @@ export function useStudyExistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type StudyExistsQueryHookResult = ReturnType<typeof useStudyExistsQuery>;
 export type StudyExistsLazyQueryHookResult = ReturnType<typeof useStudyExistsLazyQuery>;
 export type StudyExistsQueryResult = Apollo.QueryResult<StudyExistsQuery, StudyExistsQueryVariables>;
+export const GetStudyDownloadsDocument = gql`
+    query getStudyDownloads($study: ID!) {
+  getStudyDownloads(study: $study) {
+    date
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetStudyDownloadsQuery__
+ *
+ * To run a query within a React component, call `useGetStudyDownloadsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStudyDownloadsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStudyDownloadsQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *   },
+ * });
+ */
+export function useGetStudyDownloadsQuery(baseOptions: Apollo.QueryHookOptions<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>(GetStudyDownloadsDocument, options);
+      }
+export function useGetStudyDownloadsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>(GetStudyDownloadsDocument, options);
+        }
+export type GetStudyDownloadsQueryHookResult = ReturnType<typeof useGetStudyDownloadsQuery>;
+export type GetStudyDownloadsLazyQueryHookResult = ReturnType<typeof useGetStudyDownloadsLazyQuery>;
+export type GetStudyDownloadsQueryResult = Apollo.QueryResult<GetStudyDownloadsQuery, GetStudyDownloadsQueryVariables>;
