@@ -11,6 +11,11 @@ import { CreateDatasetDownloadPipe } from './pipes/dataset-download-request-crea
 import { DatasetDownloadRequestResolver } from './resolvers/dataset-download-request.resolver';
 import { DatasetDownloadService } from './services/dataset-download-request.service';
 import { DownloadRequestService } from './services/download-request.service';
+import { CreateStudyDownloadPipe } from './pipes/study-download-request-create.pipe';
+import { StudyModule } from 'src/study/study.module';
+import { StudyDownloadRequestResolver } from './resolvers/study-download-request.resolver';
+import { StudyDownloadService } from './services/study-download-request.service';
+import { TagModule } from '../tag/tag.module';
 
 @Module({
   imports: [
@@ -22,8 +27,18 @@ import { DownloadRequestService } from './services/download-request.service';
     DatasetModule,
     EntryModule,
     BucketModule,
-    GcpModule
+    GcpModule,
+    StudyModule,
+    TagModule
   ],
-  providers: [DatasetDownloadRequestResolver, DatasetDownloadService, DownloadRequestService, CreateDatasetDownloadPipe]
+  providers: [
+    DatasetDownloadRequestResolver,
+    DatasetDownloadService,
+    DownloadRequestService,
+    CreateDatasetDownloadPipe,
+    CreateStudyDownloadPipe,
+    StudyDownloadRequestResolver,
+    StudyDownloadService
+  ]
 })
 export class DownloadRequestModule {}

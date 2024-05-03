@@ -28,7 +28,8 @@
     "redo": "Redo",
     "dataset": "Dataset",
     "status": "Status",
-    "dateFormat": "{{date,  datetime}}"
+    "dateFormat": "{{date,  datetime}}",
+    "download": "Download"
   },
   "languages": {
     "en": "English",
@@ -55,7 +56,8 @@
     "contribute": "Contribute",
     "tagInStudy": "Tag in Study",
     "logout": "Logout",
-    "datasetDownloads": "Dataset Downloads"
+    "datasetDownloads": "Dataset Downloads",
+    "studyDownloads": "Study Downloads"
   },
   "components": {
     "environment": {
@@ -143,6 +145,14 @@
     "tagView": {
       "originalEntry": "Original Entry",
       "export": "Export"
+    },
+    "studyDownload": {
+      "csv": "Tag CSV",
+      "taggedEntries": "Entries Tagged",
+      "downloadStartedSuccess": "Download has started, the download will be available under the study download page",
+      "downloadFailed": "Could not download study data, please reach out to your administrator",
+      "downloadTitle": "Study Download Request",
+      "downloadDescription": "Would you like to download this study? The tag data, any recorded videos, and the original entries will be download, this may take a while, downloads will appear in the study download page when complete"
     }
   },
   "errors": {

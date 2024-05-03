@@ -35,3 +35,34 @@ mutation createStudy($study: StudyCreate!) {
 query studyExists($name: String!, $project: ID!) {
   studyExists(name: $name, project: $project)
 }
+
+query getStudyDownloads($study: ID!) {
+  getStudyDownloads(study: $study) {
+    _id,
+    date,
+    status,
+    entryZip,
+    tagCSV,
+    taggedEntries,
+    study {
+      _id
+      name
+      description
+      instructions
+      project
+      tagsPerEntry
+      tagSchema {
+        dataSchema
+        uiSchema
+      }
+    }
+  }
+}
+
+mutation createStudyDownload($downloadRequest: CreateStudyDownloadRequest!) {
+  createStudyDownload(downloadRequest: $downloadRequest) {
+    _id,
+    status,
+    date
+  }
+}

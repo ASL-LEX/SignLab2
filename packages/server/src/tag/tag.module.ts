@@ -67,6 +67,7 @@ import { VideoFieldResolver } from './resolvers/video-field.resolver';
     AslLexFieldTransformer,
     VideoFieldService,
     VideoFieldResolver
-  ]
+  ],
+  exports: [TagService, VideoFieldService]
 })
 export class TagModule {}

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Entry } from '../models/entry.model';
+import { Entry, SignLabRecorded } from '../models/entry.model';
 import { Model } from 'mongoose';
 import { EntryCreate } from '../dtos/create.dto';
 import { Dataset } from '../../dataset/dataset.model';
@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from '../../jwt/token.dto';
 import { BucketFactory } from 'src/bucket/bucket-factory.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
+import { Study } from 'src/study/study.model';
 
 @Injectable()
 export class EntryService {
@@ -23,16 +24,23 @@ export class EntryService {
     return this.entryModel.findOne({ _id: entryID });
   }
 
-  async create(entryCreate: EntryCreate, dataset: Dataset, user: TokenPayload, isTraining: boolean): Promise<Entry> {
+  async create(
+    entryCreate: EntryCreate,
+    dataset: Dataset,
+    user: TokenPayload,
+    isTraining: boolean,
+    signLabRecorded?: SignLabRecorded
+  ): Promise<Entry> {
     // Make the entry, note that training entries are not associated with a dataset
     return this.entryModel.create({
       ...entryCreate,
       dataset: dataset._id,
       organization: dataset.organization,
-      recordedInSignLab: false,
+      recordedInSignLab: !!signLabRecorded,
       dateCreated: new Date(),
       creator: user.user_id,
-      isTraining
+      isTraining,
+      signlabRecording: signLabRecorded
     });
   }
 
@@ -67,6 +75,20 @@ export class EntryService {
       throw new Error('Missing bucket for entry');
     }
     return bucket.getSignedUrl(entry.bucketLocation, BucketObjectAction.READ, new Date(Date.now() + this.expiration));
+  }
+
+  /** Get all entries recorded as part of the given study */
+  async getEntriesForStudy(study: Study | string): Promise<Entry[]> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+
+    return await this.entryModel.find({
+      'signlabRecording.study': studyID
+    });
   }
 
   /**
