@@ -66,8 +66,11 @@ export class StudyDownloadService {
     );
     request = (await this.downloadRequestModel.findById(request._id))!;
 
+    // Download the entries that were generated as part of this study
     await this.startZipJob(request);
+    // Download the tag data as a CSV
     await this.generateCSV(request);
+    // Download the entries that were tagged in this study
 
     return request;
   }
