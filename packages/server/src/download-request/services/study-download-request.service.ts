@@ -39,7 +39,9 @@ export class StudyDownloadService {
       ...downloadRequest,
       date: new Date(),
       status: DownloadStatus.IN_PROGRESS,
-      organization: organization._id
+      organization: organization._id,
+      entryZipComplete: false,
+      taggedEntryZipComplete: false
     });
 
     const bucketLocation = `${this.downloadService.getPrefix()}/${request._id}`;
@@ -104,6 +106,10 @@ export class StudyDownloadService {
 
   async find(id: string): Promise<StudyDownloadRequest | null> {
     return this.downloadRequestModel.findById(id);
+  }
+
+  async markStudyFieldComplete(downloadRequest: StudyDownloadRequest): Promise<void> {
+
   }
 
   /**

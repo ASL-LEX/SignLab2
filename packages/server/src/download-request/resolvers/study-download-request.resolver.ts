@@ -31,7 +31,7 @@ export class StudyDownloadRequestResolver {
 
   @Mutation(() => Boolean)
   async markStudyFieldComplete(@Args('downloadRequest', { type: () => ID }) downloadRequest: StudyDownloadRequest): Promise<boolean> {
-
+    await this.studyDownloadService.markStudyFieldComplete(downloadRequest);
     return true;
   }
 
