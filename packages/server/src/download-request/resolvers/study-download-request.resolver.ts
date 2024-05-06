@@ -36,7 +36,6 @@ export class StudyDownloadRequestResolver {
     @Args('studyField', { type: () => StudyDownloadField }) studyField: StudyDownloadField,
     @Args('code') verificationCode: string
   ): Promise<boolean> {
-
     if (downloadRequest.verificationCode !== verificationCode) {
       throw new UnauthorizedException('Invalid verification code');
     }

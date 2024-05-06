@@ -17,6 +17,7 @@ import { StudyDownloadRequestResolver } from './resolvers/study-download-request
 import { StudyDownloadService } from './services/study-download-request.service';
 import { TagModule } from '../tag/tag.module';
 import { StudyDownloadRequestPipe } from './pipes/study-download-request.pipe';
+import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pipe';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { StudyDownloadRequestPipe } from './pipes/study-download-request.pipe';
     CreateStudyDownloadPipe,
     StudyDownloadRequestResolver,
     StudyDownloadService,
-    StudyDownloadRequestPipe
+    StudyDownloadRequestPipe,
+    DatasetDownloadRequestPipe
   ]
 })
 export class DownloadRequestModule {}

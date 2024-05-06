@@ -8,9 +8,10 @@ import { BucketFactory } from '../../bucket/bucket-factory.service';
 import { EntryService } from '../../entry/services/entry.service';
 import { Organization } from '../../organization/organization.model';
 import { CreateDatasetDownloadRequest } from '../dtos/dataset-download-request-create.dto';
-import { DatasetDownloadRequest } from '../models/dataset-download-request.model';
+import { DatasetDownloadField, DatasetDownloadRequest } from '../models/dataset-download-request.model';
 import { DownloadRequest, DownloadStatus } from '../models/download-request.model';
 import { DownloadRequestService } from './download-request.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class DatasetDownloadService {
@@ -33,7 +34,9 @@ export class DatasetDownloadService {
       ...downloadRequest,
       date: new Date(),
       status: DownloadStatus.IN_PROGRESS,
-      organization: organization._id
+      organization: organization._id,
+      entryZipComplete: false,
+      verificationCode: randomUUID()
     });
 
     const bucketLocation = `${this.downloadService.getPrefix()}/${request._id}`;
@@ -87,5 +90,22 @@ export class DatasetDownloadService {
       BucketObjectAction.READ,
       new Date(Date.now() + this.expiration)
     );
+  }
+
+  async find(id: string): Promise<DatasetDownloadRequest | null> {
+    return this.downloadRequestModel.findById({ _id: id });
+  }
+
+  async markFieldComplete(downloadRequest: DatasetDownloadRequest, field: DatasetDownloadField): Promise<void> {
+    switch(field) {
+      case DatasetDownloadField.ENTRY_ZIP:
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true }});
+        break;
+      default:
+        throw new Error(`Unknown dataset download field ${field}`);
+    }
+
+    // With only one field supported, can mark the download as complete
+    await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { status: DownloadStatus.READY }});
   }
 }
