@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, ResolveField, Parent, ID, Query } from '@nestjs/graphql';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
 import { OrganizationGuard } from '../../organization/organization.guard';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { StudyDownloadField, StudyDownloadRequest } from '../models/study-download-request.model';
 import { StudyDownloadService } from '../services/study-download-request.service';
 import { CreateStudyDownloadPipe } from '../pipes/study-download-request-create.pipe';
@@ -33,8 +33,14 @@ export class StudyDownloadRequestResolver {
   @Mutation(() => Boolean)
   async markStudyFieldComplete(
     @Args('downloadRequest', { type: () => ID }, StudyDownloadRequestPipe) downloadRequest: StudyDownloadRequest,
-    @Args('studyField', { type: () => StudyDownloadField }) studyField: StudyDownloadField
+    @Args('studyField', { type: () => StudyDownloadField }) studyField: StudyDownloadField,
+    @Args('code') verificationCode: string
   ): Promise<boolean> {
+
+    if (downloadRequest.verificationCode !== verificationCode) {
+      throw new UnauthorizedException('Invalid verification code');
+    }
+
     await this.studyDownloadService.markStudyFieldComplete(downloadRequest, studyField);
     return true;
   }

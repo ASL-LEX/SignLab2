@@ -15,6 +15,7 @@ import { VideoFieldService } from '../../tag/services/video-field.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
 import { Entry } from 'src/entry/models/entry.model';
 import { Study } from 'src/study/study.model';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class StudyDownloadService {
@@ -41,7 +42,8 @@ export class StudyDownloadService {
       status: DownloadStatus.IN_PROGRESS,
       organization: organization._id,
       entryZipComplete: false,
-      taggedEntryZipComplete: false
+      taggedEntryZipComplete: false,
+      verificationCode: randomUUID()
     });
 
     const bucketLocation = `${this.downloadService.getPrefix()}/${request._id}`;

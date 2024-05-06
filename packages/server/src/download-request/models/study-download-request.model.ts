@@ -69,6 +69,9 @@ export class StudyDownloadRequest implements DownloadRequest {
 
   @Prop({ required: true })
   taggedEntryZipComplete: boolean;
+
+  @Prop({ required: true })
+  verificationCode: string;
 }
 
 export type StudyDownloadRequestDocument = Document & StudyDownloadRequest;
