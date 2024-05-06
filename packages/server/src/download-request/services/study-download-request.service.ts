@@ -115,21 +115,22 @@ export class StudyDownloadService {
     // Mark the field as complete
     switch(studyField) {
       case StudyDownloadField.ENTRY_ZIP:
-        this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true }});
+        console.log('here');
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true }});
         break;
       case StudyDownloadField.TAGGED_ENTRIES_ZIP:
-        this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { taggedEntryZipComplete: true }});
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { taggedEntryZipComplete: true }});
         break;
       default:
         throw new Error(`Unknown field ${studyField}`);
     }
 
-    const request = (await this.downloadRequestModel.findById(downloadRequest._id))!;
+    const request = (await this.downloadRequestModel.findOne({ _id: downloadRequest._id }))!;
 
     // Check if all components are complete
     if (request.taggedEntryZipComplete && request.entryZipComplete) {
       // Mark as complete
-      this.downloadRequestModel.updateOne({ _id: request._id }, { $set: { status: DownloadStatus.READY }});
+      await this.downloadRequestModel.updateOne({ _id: request._id }, { $set: { status: DownloadStatus.READY }});
     }
   }
 

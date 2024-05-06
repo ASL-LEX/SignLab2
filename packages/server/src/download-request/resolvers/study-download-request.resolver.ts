@@ -10,6 +10,7 @@ import { OrganizationContext } from '../../organization/organization.context';
 import { Organization } from '../../organization/organization.model';
 import { StudyPipe } from '../../study/pipes/study.pipe';
 import { Study } from '../../study/study.model';
+import { StudyDownloadRequestPipe } from '../pipes/study-download-request.pipe';
 
 @UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => StudyDownloadRequest)
@@ -31,7 +32,7 @@ export class StudyDownloadRequestResolver {
 
   @Mutation(() => Boolean)
   async markStudyFieldComplete(
-    @Args('downloadRequest', { type: () => ID }) downloadRequest: StudyDownloadRequest,
+    @Args('downloadRequest', { type: () => ID }, StudyDownloadRequestPipe) downloadRequest: StudyDownloadRequest,
     @Args('studyField', { type: () => StudyDownloadField }) studyField: StudyDownloadField
   ): Promise<boolean> {
     await this.studyDownloadService.markStudyFieldComplete(downloadRequest, studyField);
