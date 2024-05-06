@@ -102,6 +102,10 @@ export class StudyDownloadService {
     return this.downloadRequestModel.find({ study: study._id });
   }
 
+  async find(id: string): Promise<StudyDownloadRequest | null> {
+    return this.downloadRequestModel.findById(id);
+  }
+
   /**
    * Handles generating the CSV for the tag data. This approach is a sub-optimal one.
    *

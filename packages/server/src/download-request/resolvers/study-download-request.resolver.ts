@@ -29,6 +29,12 @@ export class StudyDownloadRequestResolver {
     return this.studyDownloadService.getStudyDownloads(study);
   }
 
+  @Mutation(() => Boolean)
+  async markStudyFieldComplete(@Args('downloadRequest', { type: () => ID }) downloadRequest: StudyDownloadRequest): Promise<boolean> {
+
+    return true;
+  }
+
   @ResolveField(() => String)
   async entryZip(@Parent() downloadRequest: StudyDownloadRequest): Promise<string> {
     return this.studyDownloadService.getEntryZipUrl(downloadRequest);
