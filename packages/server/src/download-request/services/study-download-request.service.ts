@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StudyDownloadRequest } from '../models/study-download-request.model';
+import { StudyDownloadField, StudyDownloadRequest } from '../models/study-download-request.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateStudyDownloadRequest } from '../dtos/study-download-request-create.dto';
@@ -15,6 +15,7 @@ import { VideoFieldService } from '../../tag/services/video-field.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
 import { Entry } from 'src/entry/models/entry.model';
 import { Study } from 'src/study/study.model';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class StudyDownloadService {
@@ -39,7 +40,10 @@ export class StudyDownloadService {
       ...downloadRequest,
       date: new Date(),
       status: DownloadStatus.IN_PROGRESS,
-      organization: organization._id
+      organization: organization._id,
+      entryZipComplete: false,
+      taggedEntryZipComplete: false,
+      verificationCode: randomUUID()
     });
 
     const bucketLocation = `${this.downloadService.getPrefix()}/${request._id}`;
@@ -100,6 +104,39 @@ export class StudyDownloadService {
 
   async getStudyDownloads(study: Study): Promise<StudyDownloadRequest[]> {
     return this.downloadRequestModel.find({ study: study._id });
+  }
+
+  async find(id: string): Promise<StudyDownloadRequest | null> {
+    return this.downloadRequestModel.findById(id);
+  }
+
+  /**
+   * Handles flagging when a field is complete and then updating the status when all fields are complete
+   */
+  async markStudyFieldComplete(downloadRequest: StudyDownloadRequest, studyField: StudyDownloadField): Promise<void> {
+    // Mark the field as complete
+    switch (studyField) {
+      case StudyDownloadField.ENTRY_ZIP:
+        console.log('here');
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true } });
+        break;
+      case StudyDownloadField.TAGGED_ENTRIES_ZIP:
+        await this.downloadRequestModel.updateOne(
+          { _id: downloadRequest._id },
+          { $set: { taggedEntryZipComplete: true } }
+        );
+        break;
+      default:
+        throw new Error(`Unknown field ${studyField}`);
+    }
+
+    const request = (await this.downloadRequestModel.findOne({ _id: downloadRequest._id }))!;
+
+    // Check if all components are complete
+    if (request.taggedEntryZipComplete && request.entryZipComplete) {
+      // Mark as complete
+      await this.downloadRequestModel.updateOne({ _id: request._id }, { $set: { status: DownloadStatus.READY } });
+    }
   }
 
   /**

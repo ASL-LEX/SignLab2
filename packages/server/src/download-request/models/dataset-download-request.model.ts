@@ -1,7 +1,15 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { DownloadStatus, DownloadRequest } from './download-request.model';
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+
+export enum DatasetDownloadField {
+  ENTRY_ZIP = 'ENTRY_ZIP'
+}
+
+registerEnumType(DatasetDownloadField, {
+  name: 'DatasetDownloadField'
+});
 
 @Schema()
 @ObjectType()
@@ -34,6 +42,12 @@ export class DatasetDownloadRequest implements DownloadRequest {
 
   @Prop({ required: false })
   webhookPayloadLocation?: string;
+
+  @Prop({ required: true })
+  entryZipComplete: boolean;
+
+  @Prop({ required: true })
+  verificationCode: string;
 }
 
 export type DatasetDownloadRequestDocument = Document & DatasetDownloadRequest;

@@ -1,7 +1,16 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { DownloadRequest, DownloadStatus } from './download-request.model';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+
+export enum StudyDownloadField {
+  ENTRY_ZIP = 'ENTRY_ZIP',
+  TAGGED_ENTRIES_ZIP = 'TAGGED_ENTRIES_ZIP'
+}
+
+registerEnumType(StudyDownloadField, {
+  name: 'StudyDownloadField'
+});
 
 @Schema()
 @ObjectType()
@@ -54,6 +63,15 @@ export class StudyDownloadRequest implements DownloadRequest {
   /** Webhook payload to be used when the zipping of tagged entries is complete */
   @Prop({ required: false })
   taggedEntryWebhookPayloadLocation?: string;
+
+  @Prop({ required: true })
+  entryZipComplete: boolean;
+
+  @Prop({ required: true })
+  taggedEntryZipComplete: boolean;
+
+  @Prop({ required: true })
+  verificationCode: string;
 }
 
 export type StudyDownloadRequestDocument = Document & StudyDownloadRequest;
