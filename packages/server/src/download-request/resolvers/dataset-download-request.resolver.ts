@@ -41,7 +41,6 @@ export class DatasetDownloadRequestResolver {
     @Args('datasetField', { type: () => DatasetDownloadField }) datasetField: DatasetDownloadField,
     @Args('code') verificationCode: string
   ): Promise<boolean> {
-
     if (verificationCode !== downloadRequest.verificationCode) {
       throw new UnauthorizedException(`Invalid verification code`);
     }

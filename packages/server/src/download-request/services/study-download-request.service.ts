@@ -115,13 +115,16 @@ export class StudyDownloadService {
    */
   async markStudyFieldComplete(downloadRequest: StudyDownloadRequest, studyField: StudyDownloadField): Promise<void> {
     // Mark the field as complete
-    switch(studyField) {
+    switch (studyField) {
       case StudyDownloadField.ENTRY_ZIP:
         console.log('here');
-        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true }});
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true } });
         break;
       case StudyDownloadField.TAGGED_ENTRIES_ZIP:
-        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { taggedEntryZipComplete: true }});
+        await this.downloadRequestModel.updateOne(
+          { _id: downloadRequest._id },
+          { $set: { taggedEntryZipComplete: true } }
+        );
         break;
       default:
         throw new Error(`Unknown field ${studyField}`);
@@ -132,7 +135,7 @@ export class StudyDownloadService {
     // Check if all components are complete
     if (request.taggedEntryZipComplete && request.entryZipComplete) {
       // Mark as complete
-      await this.downloadRequestModel.updateOne({ _id: request._id }, { $set: { status: DownloadStatus.READY }});
+      await this.downloadRequestModel.updateOne({ _id: request._id }, { $set: { status: DownloadStatus.READY } });
     }
   }
 

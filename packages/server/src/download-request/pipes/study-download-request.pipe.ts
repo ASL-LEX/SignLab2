@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 import { StudyDownloadRequest } from '../models/study-download-request.model';
 import { StudyDownloadService } from '../services/study-download-request.service';
 
-
 @Injectable()
 export class StudyDownloadRequestPipe implements PipeTransform<string, Promise<StudyDownloadRequest>> {
   constructor(private readonly downloadService: StudyDownloadService) {}

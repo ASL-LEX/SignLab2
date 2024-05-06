@@ -11,7 +11,6 @@ registerEnumType(DatasetDownloadField, {
   name: 'DatasetDownloadField'
 });
 
-
 @Schema()
 @ObjectType()
 export class DatasetDownloadRequest implements DownloadRequest {

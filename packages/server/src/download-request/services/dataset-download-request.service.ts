@@ -97,15 +97,15 @@ export class DatasetDownloadService {
   }
 
   async markFieldComplete(downloadRequest: DatasetDownloadRequest, field: DatasetDownloadField): Promise<void> {
-    switch(field) {
+    switch (field) {
       case DatasetDownloadField.ENTRY_ZIP:
-        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true }});
+        await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { entryZipComplete: true } });
         break;
       default:
         throw new Error(`Unknown dataset download field ${field}`);
     }
 
     // With only one field supported, can mark the download as complete
-    await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { status: DownloadStatus.READY }});
+    await this.downloadRequestModel.updateOne({ _id: downloadRequest._id }, { $set: { status: DownloadStatus.READY } });
   }
 }
