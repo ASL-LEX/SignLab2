@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args, ResolveField, Parent, ID, Query } from '@nest
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
 import { OrganizationGuard } from '../../organization/organization.guard';
 import { UseGuards } from '@nestjs/common';
-import { StudyDownloadRequest } from '../models/study-download-request.model';
+import { StudyDownloadField, StudyDownloadRequest } from '../models/study-download-request.model';
 import { StudyDownloadService } from '../services/study-download-request.service';
 import { CreateStudyDownloadPipe } from '../pipes/study-download-request-create.pipe';
 import { CreateStudyDownloadRequest } from '../dtos/study-download-request-create.dto';
@@ -30,8 +30,11 @@ export class StudyDownloadRequestResolver {
   }
 
   @Mutation(() => Boolean)
-  async markStudyFieldComplete(@Args('downloadRequest', { type: () => ID }) downloadRequest: StudyDownloadRequest): Promise<boolean> {
-    await this.studyDownloadService.markStudyFieldComplete(downloadRequest);
+  async markStudyFieldComplete(
+    @Args('downloadRequest', { type: () => ID }) downloadRequest: StudyDownloadRequest,
+    @Args('studyField', { type: () => StudyDownloadField }) studyField: StudyDownloadField
+  ): Promise<boolean> {
+    await this.studyDownloadService.markStudyFieldComplete(downloadRequest, studyField);
     return true;
   }
 
