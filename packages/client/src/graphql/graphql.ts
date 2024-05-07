@@ -475,7 +475,7 @@ export type QueryGetCsvUploadUrlArgs = {
 
 export type QueryGetCatchTrialsArgs = {
   study: Scalars['ID']['input'];
-
+}
 
 export type QueryGetDatasetDownloadsArgs = {
   dataset: Scalars['ID']['input'];
