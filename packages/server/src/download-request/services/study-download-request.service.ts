@@ -20,6 +20,14 @@ import { randomUUID } from 'crypto';
 @Injectable()
 export class StudyDownloadService {
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
+  private readonly gatewayEndpoint = this.configService.getOrThrow<string>('endpoints.gateway');
+
+  /** The mutation to execute for marking a field as complete */
+  private readonly markCompleteMutation = `
+    mutation markStudyFieldComplete($downloadRequest: ID!, $studyField: StudyDownloadField!, $code: String!) {
+      markStudyFieldComplete(downloadRequest: $downloadRequest, studyField: $studyField, code: $code)
+    }
+  `;
 
   constructor(
     @InjectModel(StudyDownloadRequest.name)
@@ -79,8 +87,15 @@ export class StudyDownloadService {
       entryJSONLocation: request.entryJSONLocation!,
       entryZIPLocation: request.entryZIPLocation!,
       webhookPayloadLocation: request.webhookPayloadLocation!,
-      webhookPayload: JSON.stringify({ test: 'hello' }),
-      webhook: 'http://localhost:3000',
+      webhookPayload: JSON.stringify({
+        query: this.markCompleteMutation,
+        variables: {
+          downloadRequest: request._id,
+          studyField: StudyDownloadField.ENTRY_ZIP.toString(),
+          code: request.verificationCode
+        }
+      }),
+      webhook: this.gatewayEndpoint,
       entries: await this.entryService.getEntriesForStudy(request.study),
       bucket: (await this.bucketFactory.getBucket(request.organization))!,
       organization: request.organization
@@ -92,8 +107,15 @@ export class StudyDownloadService {
       entryJSONLocation: request.taggedEntriesJSONLocation!,
       entryZIPLocation: request.taggedEntriesZipLocation!,
       webhookPayloadLocation: request.taggedEntryWebhookPayloadLocation!,
-      webhookPayload: JSON.stringify({ test: 'hello' }),
-      webhook: 'http://localhost:3000',
+      webhookPayload: JSON.stringify({
+        query: this.markCompleteMutation,
+        variables: {
+          downloadRequest: request._id,
+          studyField: StudyDownloadField.TAGGED_ENTRIES_ZIP.toString(),
+          code: request.verificationCode
+        }
+      }),
+      webhook: this.gatewayEndpoint,
       entries: await this.getLabeledEntries(request),
       bucket: (await this.bucketFactory.getBucket(request.organization))!,
       organization: request.organization

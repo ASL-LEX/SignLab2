@@ -16,6 +16,14 @@ import { randomUUID } from 'crypto';
 @Injectable()
 export class DatasetDownloadService {
   private readonly expiration = this.configService.getOrThrow<number>('entry.signedURLExpiration');
+  private readonly gatewayEndpoint = this.configService.getOrThrow<string>('endpoints.gateway');
+
+  /** The mutation to execute for marking a field as complete */
+  private readonly markCompleteMutation = `
+    mutation markDatasetFieldComplete($downloadRequest: ID!, $datasetField: DatasetDownloadField!, $code: String!) {
+      markDatasetFieldComplete(downloadRequest: $downloadRequest, datasetField: $datasetField, code: $code)
+    }
+  `;
 
   constructor(
     @InjectModel(DatasetDownloadRequest.name)
@@ -64,8 +72,15 @@ export class DatasetDownloadService {
       entryJSONLocation: request.entryJSONLocation!,
       entryZIPLocation: request.entryZIPLocation!,
       webhookPayloadLocation: request.webhookPayloadLocation!,
-      webhookPayload: JSON.stringify({ test: 'hello' }),
-      webhook: 'http://localhost:3000/',
+      webhookPayload: JSON.stringify({
+        query: this.markCompleteMutation,
+        variables: {
+          downloadRequest: request._id,
+          datasetField: DatasetDownloadField.ENTRY_ZIP.toString(),
+          code: request.verificationCode
+        }
+      }),
+      webhook: this.gatewayEndpoint,
       entries: await this.entryService.findForDataset(request.dataset),
       bucket: (await this.bucketFactory.getBucket(request.organization))!,
       organization: request.organization

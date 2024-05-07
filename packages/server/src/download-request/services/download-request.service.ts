@@ -78,7 +78,7 @@ export class DownloadRequestService {
             args: [
               `--target_entries=${mountPoint}/${request.entryJSONLocation}`,
               `--output_zip=${mountPoint}/${request.entryZIPLocation}`,
-              `--notification_webhook=http://localhost:3000`,
+              `--notification_webhook=${request.webhook}`,
               `--webhook_payload=${mountPoint}/${request.webhookPayloadLocation}`
             ]
           }
