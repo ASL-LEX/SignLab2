@@ -15,7 +15,7 @@ The Signlab can isolate different research organizations, their projects, and th
 # How to Run the project
 To start the application, you need to run different commands in separate terminal windows. This is because the application consists of multiple parts (server, gateway, client), each requiring its own terminal session.
 
-You need to install MongoDB, Node.js and corresponding denpendancies first. Then you need to get the environment variables and credential setup from the client.
+You need to install MongoDB, Node.js and corresponding denpendancies first. Then you need to get the environment variables and credential setup from the client(SAIL).
 
 ## Server and Gateway:
 - Open two terminal windows.
@@ -34,7 +34,7 @@ You need to install MongoDB, Node.js and corresponding denpendancies first. Then
 By running these commands in separate terminal windows, you can effectively start all parts of the application and develop or test them simultaneously. Ensure that all parts are running smoothly to have the full application functionality available during development.
 
 # Current Known Issues
-The Catch trials feature (Currently in open Pull Request) has not been a complete implementation of catch trials yet, it stay as a PR for now for future improvement.
+The Catch trials feature (Currently in open Pull Request) has not been a complete implementation of catch trials yet, it stay as a PR for now for future improvement. Future improvement and expectations should discuss further with the client(SAIL) to specify.
 
 # Deployment
 Video Demo link: https://drive.google.com/file/d/1PyQTgFd47gEXw9En6BAXY-jn7BOZ4DoH/view?usp=drive_link
