@@ -9,6 +9,8 @@ import { TrainingSetService } from './training-set.service';
 import { Tag } from '../models/tag.model';
 import { Study } from '../../study/study.model';
 import { Entry } from '../../entry/models/entry.model';
+import { BadRequestException } from '@nestjs/common';
+import { TagFieldSchema, TagField } from '../models/tag-field.model';
 
 describe('TagService', () => {
   let tagService: TagService;
@@ -46,69 +48,108 @@ describe('TagService', () => {
     }).compile();
     tagService = module.get<TagService>(TagService);
   });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('createCatchTrials', () => {
-    it('should create catch trial tags for each entry', async () => {
-      // Mock data
-      const study: Study = {
-        _id: 'studyId',
-        name: 'Study Name',
-        organization: 'Organization Name',
-        description: 'Study Description',
-        instructions: 'Study Instructions',
-        tagSchema: { dataSchema: {}, uiSchema: {} as Layout }, // Cast uiSchema as Layout
-        project: 'projectId',
-        tagsPerEntry: 2
-      };
-      const entries: Entry[] = [
-        {
-          _id: 'entry1Id',
-          organization: 'Organization ID',
-          entryID: 'entryID1',
-          bucketLocation: 'Bucket Location 1',
-          contentType: 'Content Type 1',
-          recordedInSignLab: true,
-          dataset: 'Dataset ID',
-          creator: 'Creator ID',
-          dateCreated: new Date(),
-          meta: {},
-          signedURLExpiration: new Date(),
-          isTraining: true
-        },
-        {
-          _id: 'entry2Id',
-          organization: 'Organization ID',
-          entryID: 'entryID2',
-          bucketLocation: 'Bucket Location 2',
-          contentType: 'Content Type 2',
-          recordedInSignLab: true,
-          dataset: 'Dataset ID',
-          creator: 'Creator ID',
-          dateCreated: new Date(),
-          meta: {},
-          signedURLExpiration: new Date(),
-          isTraining: false
-        }
-      ];
-      // Mock tagModel.create to return a dummy tag
+  describe('removeTag', () => {
+    it('should remove a tag successfully', async () => {
+      enum TagFieldType {
+        ASL_LEX = 'ASL_LEX',
+        AUTOCOMPLETE = 'AUTOCOMPLETE',
+        BOOLEAN = 'BOOLEAN',
+        EMBEDDED = 'EMBEDDED',
+        FREE_TEXT = 'FREE_TEXT',
+        NUMERIC = 'NUMERIC',
+        SLIDER = 'SLIDER',
+        VIDEO_RECORD = 'VIDEO_RECORD'
+      }
+      const mockTagField = {
+        type: TagFieldType.FREE_TEXT,
+        name: '123',
+        data: 'dog'
+      }
       const mockTag = {
         _id: 'tagId',
         entry: 'entryId',
         study: 'studyId',
         isCatchTrial: true,
-        complete: false,
+        complete: true,
         order: 0,
         enabled: true,
-        training: false
+        training: false,
+        data: [mockTagField],
+        user: 'spark'
       };
+      // console.log(mockTag);
+      await tagService.removeTag(mockTag);
+      expect(mockTagModel.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: mockTag._id },
+        { $set: { complete: false }, $unset: { data: '', user: '' } }
+      );  // expect to implement correct operations
+    });
+  
+  describe('createCatchTrials', () => {
+    // Mock data
+    const study: Study = {
+      _id: 'studyId',
+      name: 'Study Name',
+      organization: 'Organization Name',
+      description: 'Study Description',
+      instructions: 'Study Instructions',
+      tagSchema: { dataSchema: {}, uiSchema: {} as Layout }, // Cast uiSchema as Layout
+      project: 'projectId',
+      tagsPerEntry: 2
+    };
+
+    const entries: Entry[] = [
+      {
+        _id: 'entry1Id',
+        organization: 'Organization ID',
+        entryID: 'entryID1',
+        bucketLocation: 'Bucket Location 1',
+        contentType: 'Content Type 1',
+        recordedInSignLab: true,
+        dataset: 'Dataset ID',
+        creator: 'Creator ID',
+        dateCreated: new Date(),
+        meta: {},
+        signedURLExpiration: new Date(),
+        isTraining: true
+      },
+      {
+        _id: 'entry2Id',
+        organization: 'Organization ID',
+        entryID: 'entryID2',
+        bucketLocation: 'Bucket Location 2',
+        contentType: 'Content Type 2',
+        recordedInSignLab: true,
+        dataset: 'Dataset ID',
+        creator: 'Creator ID',
+        dateCreated: new Date(),
+        meta: {},
+        signedURLExpiration: new Date(),
+        isTraining: false
+      }
+    ];
+    // Mock tagModel.create to return a dummy tag
+    const mockTag = {
+      _id: 'tagId',
+      entry: 'entryId',
+      study: 'studyId',
+      isCatchTrial: true,
+      complete: false,
+      order: 0,
+      enabled: true,
+      training: false
+    };            
+    it('should create catch trial tags for each entry', async () => {
       // Mock the tagModel.create method to return the dummy tag
       mockTagModel.create.mockResolvedValue(mockTag);
       // Call the method
       const result = await tagService.createCatchTrials(study, entries);
-      console.log(result);
+      // console.log(result);
       // Assertions
       expect(mockTagModel.create).toHaveBeenCalledTimes(2); // Expect create to be called for each entry
       expect(mockTagModel.create).toHaveBeenCalledWith(
