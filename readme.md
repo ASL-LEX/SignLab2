@@ -15,7 +15,7 @@ The Signlab can isolate different research organizations, their projects, and th
 # How to Run the project
 To start the application, you need to run different commands in separate terminal windows. This is because the application consists of multiple parts (server, gateway, client), each requiring its own terminal session.
 
-You need to install MongoDB, Node.js and corresponding denpendancies first.
+You need to install MongoDB, Node.js and corresponding denpendancies first. Then you need to get the environment variables and credential setup from the client.
 
 ## Server and Gateway:
 - Open two terminal windows.
