@@ -12,7 +12,6 @@ import { Dataset } from '../../dataset/dataset.model';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 import { DatasetDownloadRequestPipe } from '../pipes/dataset-download-request.pipe';
 
-@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => DatasetDownloadRequest)
 export class DatasetDownloadRequestResolver {
   constructor(
@@ -21,6 +20,7 @@ export class DatasetDownloadRequestResolver {
   ) {}
 
   @Mutation(() => DatasetDownloadRequest)
+  @UseGuards(JwtAuthGuard, OrganizationGuard)
   async createDatasetDownload(
     @Args('downloadRequest', CreateDatasetDownloadPipe) downloadRequest: CreateDatasetDownloadRequest,
     @OrganizationContext() organization: Organization
@@ -29,6 +29,7 @@ export class DatasetDownloadRequestResolver {
   }
 
   @Query(() => [DatasetDownloadRequest])
+  @UseGuards(JwtAuthGuard, OrganizationGuard)
   async getDatasetDownloads(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset
   ): Promise<DatasetDownloadRequest[]> {
