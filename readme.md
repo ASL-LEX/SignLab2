@@ -5,6 +5,8 @@ The Signlab can isolate different research organizations, their projects, and th
 
 ## Technical Architecture
 
+![technical architecture](https://github.com/ASL-LEX/SignLab2/assets/144057115/c09013b4-9930-484e-ac23-df80aa36bd52)
+
 ## How to Run the project
 To start the application, you need to run different commands in separate terminal windows. This is because the application consists of multiple parts (server, gateway, client), each requiring its own terminal session.
 
