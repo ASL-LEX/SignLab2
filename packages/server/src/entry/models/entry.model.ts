@@ -5,6 +5,28 @@ import JSON from 'graphql-type-json';
 
 @Schema()
 @ObjectType()
+export class SignLabRecorded {
+  /** The tag the recording is associated with */
+  @Prop({ required: true })
+  tag: string;
+
+  /** The name of the field within the tag */
+  @Prop({ requied: true })
+  @Field()
+  fieldName: string;
+
+  /** The study the entry was recorded as part of */
+  @Prop()
+  study: string;
+
+  @Prop({ required: true })
+  videoNumber: number;
+}
+
+export const SignLabRecordedSchema = SchemaFactory.createForClass(SignLabRecorded);
+
+@Schema()
+@ObjectType()
 export class Entry {
   @Field()
   _id: string;
@@ -28,7 +50,9 @@ export class Entry {
   @Prop({ required: true })
   recordedInSignLab: boolean;
 
-  // TODO: Add info on in-SignLab recording
+  @Prop({ type: SignLabRecorded })
+  @Field(() => SignLabRecorded, { nullable: true })
+  signlabRecording?: SignLabRecorded;
 
   // TODO: Add GraphQL reference back to dataset object
   @Prop()

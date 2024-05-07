@@ -28,6 +28,14 @@ export type BooleanField = {
   value: Scalars['Boolean']['output'];
 };
 
+export type CreateDatasetDownloadRequest = {
+  dataset: Scalars['ID']['input'];
+};
+
+export type CreateStudyDownloadRequest = {
+  study: Scalars['ID']['input'];
+};
+
 export type Dataset = {
   __typename?: 'Dataset';
   _id: Scalars['ID']['output'];
@@ -40,11 +48,25 @@ export type DatasetCreate = {
   name: Scalars['String']['input'];
 };
 
+export type DatasetDownloadRequest = {
+  __typename?: 'DatasetDownloadRequest';
+  _id: Scalars['String']['output'];
+  dataset: Dataset;
+  date: Scalars['DateTime']['output'];
+  entryZip: Scalars['String']['output'];
+  status: DownloadStatus;
+};
+
 export type DatasetProjectPermission = {
   __typename?: 'DatasetProjectPermission';
   dataset: Dataset;
   projectHasAccess: Scalars['Boolean']['output'];
 };
+
+export enum DownloadStatus {
+  InProgress = 'IN_PROGRESS',
+  Ready = 'READY'
+}
 
 export type Entry = {
   __typename?: 'Entry';
@@ -60,6 +82,7 @@ export type Entry = {
   signedUrl: Scalars['String']['output'];
   /** Get the number of milliseconds the signed URL is valid for. */
   signedUrlExpiration: Scalars['Float']['output'];
+  signlabRecording?: Maybe<SignLabRecorded>;
 };
 
 export type FreeTextField = {
@@ -126,8 +149,10 @@ export type Mutation = {
   completeUploadSession: UploadResult;
   createCatchTrials: Array<Tag>;
   createDataset: Dataset;
+  createDatasetDownload: DatasetDownloadRequest;
   createOrganization: Organization;
   createStudy: Study;
+  createStudyDownload: StudyDownloadRequest;
   createTags: Array<Tag>;
   createTrainingSet: Scalars['Boolean']['output'];
   createUploadSession: UploadSession;
@@ -202,6 +227,11 @@ export type MutationCreateDatasetArgs = {
 };
 
 
+export type MutationCreateDatasetDownloadArgs = {
+  downloadRequest: CreateDatasetDownloadRequest;
+};
+
+
 export type MutationCreateOrganizationArgs = {
   organization: OrganizationCreate;
 };
@@ -209,6 +239,11 @@ export type MutationCreateOrganizationArgs = {
 
 export type MutationCreateStudyArgs = {
   study: StudyCreate;
+};
+
+
+export type MutationCreateStudyDownloadArgs = {
+  downloadRequest: CreateStudyDownloadRequest;
 };
 
 
@@ -385,6 +420,7 @@ export type Query = {
   /** Get the presigned URL for where to upload the CSV against */
   getCSVUploadURL: Scalars['String']['output'];
   getCatchTrials: Array<Tag>;
+  getDatasetDownloads: Array<DatasetDownloadRequest>;
   getDatasetProjectPermissions: Array<DatasetProjectPermission>;
   getDatasets: Array<Dataset>;
   getDatasetsByProject: Array<Dataset>;
@@ -393,6 +429,7 @@ export type Query = {
   getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
   getRoles: Permission;
+  getStudyDownloads: Array<StudyDownloadRequest>;
   getStudyPermissions: Array<StudyPermissionModel>;
   getTags: Array<Tag>;
   getTrainingTags: Array<Tag>;
@@ -438,6 +475,10 @@ export type QueryGetCsvUploadUrlArgs = {
 
 export type QueryGetCatchTrialsArgs = {
   study: Scalars['ID']['input'];
+
+
+export type QueryGetDatasetDownloadsArgs = {
+  dataset: Scalars['ID']['input'];
 };
 
 
@@ -466,6 +507,11 @@ export type QueryGetProjectPermissionsArgs = {
 export type QueryGetRolesArgs = {
   project?: InputMaybe<Scalars['ID']['input']>;
   study?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryGetStudyDownloadsArgs = {
+  study: Scalars['ID']['input'];
 };
 
 
@@ -518,6 +564,11 @@ export type QueryValidateCsvArgs = {
   session: Scalars['ID']['input'];
 };
 
+export type SignLabRecorded = {
+  __typename?: 'SignLabRecorded';
+  fieldName: Scalars['String']['output'];
+};
+
 export type SliderField = {
   __typename?: 'SliderField';
   value: Scalars['Float']['output'];
@@ -541,6 +592,17 @@ export type StudyCreate = {
   project: Scalars['ID']['input'];
   tagSchema: TagSchemaInput;
   tagsPerEntry: Scalars['Float']['input'];
+};
+
+export type StudyDownloadRequest = {
+  __typename?: 'StudyDownloadRequest';
+  _id: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
+  entryZip: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  study: Study;
+  tagCSV: Scalars['String']['output'];
+  taggedEntries: Scalars['String']['output'];
 };
 
 export type StudyPermissionModel = {

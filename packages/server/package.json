@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@apollo/subgraph": "^2.4.12",
+    "@google-cloud/run": "^1.2.0",
     "@google-cloud/secret-manager": "^5.2.0",
     "@google-cloud/storage": "^7.7.0",
     "@jsonforms/core": "^3.2.1",

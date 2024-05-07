@@ -52,7 +52,8 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
           visible: (p) => p!.studyAdmin
         },
         { name: t('menu.entryControl'), action: () => navigate('/study/entries'), visible: (p) => p!.studyAdmin },
-        { name: t('menu.viewTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin }
+        { name: t('menu.viewTags'), action: () => navigate('/study/tags'), visible: (p) => p!.studyAdmin },
+        { name: t('menu.studyDownloads'), action: () => navigate('/study/downloads'), visible: (p) => p!.studyAdmin }
       ]
     },
     {
@@ -63,7 +64,8 @@ export const SideBar: FC<SideBarProps> = ({ open, drawerWidth }) => {
       permission,
       subItems: [
         { name: t('menu.datasetControl'), action: () => navigate('/dataset/controls'), visible: (p) => p!.owner },
-        { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner }
+        { name: t('menu.projectAccess'), action: () => navigate('/dataset/projectaccess'), visible: (p) => p!.owner },
+        { name: t('menu.datasetDownloads'), action: () => navigate('/dataset/downloads'), visible: (p) => p!.owner }
       ]
     },
     {

@@ -101,7 +101,13 @@ export class VideoFieldIntermediateService {
       },
       dataset,
       user,
-      tag.training
+      tag.training,
+      {
+        study: tag.study,
+        tag: tag._id,
+        fieldName: videoField.field,
+        videoNumber: videoField.index
+      }
     );
 
     // Where to move the entry video

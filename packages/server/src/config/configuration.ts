@@ -39,5 +39,9 @@ export default () => ({
   },
   lexicon: {
     aslLexID: process.env.ASL_LEX_LEXICON_ID || '64e4e63ecade2ec090d6765e'
+  },
+  downloads: {
+    bucketPrefix: 'downloads',
+    jobName: process.env.ZIP_JOB_NAME
   }
 });

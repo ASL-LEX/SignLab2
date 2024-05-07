@@ -1,14 +1,15 @@
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, IconButton } from '@mui/material';
 import { useStudy } from '../../context/Study.context';
 import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid-pro';
 import { Study } from '../../graphql/graphql';
-import { useDeleteStudyMutation } from '../../graphql/study/study';
+import { useCreateStudyDownloadMutation, useDeleteStudyMutation } from '../../graphql/study/study';
 import { useEffect } from 'react';
 import { useConfirmation } from '../../context/Confirmation.context';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../../context/Snackbar.context';
+import { Download } from '@mui/icons-material';
 
 export const StudyControl: React.FC = () => {
   const { studies, updateStudies } = useStudy();
@@ -17,6 +18,8 @@ export const StudyControl: React.FC = () => {
   const confirmation = useConfirmation();
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
+
+  const [createDownloadMutation, createDownloadResults] = useCreateStudyDownloadMutation();
 
   const handleDelete = async (id: GridRowId) => {
     // Execute delete mutation
@@ -40,6 +43,32 @@ export const StudyControl: React.FC = () => {
     }
   }, [deleteStudyResults.called, deleteStudyResults.data, deleteStudyResults.error]);
 
+  const handleDownloadRequest = (study: Study) => {
+    confirmation.pushConfirmationRequest({
+      title: t('components.studyDownload.downloadTitle'),
+      message: t('components.studyDownload.downloadDescription'),
+      onConfirm: () => {
+        createDownloadMutation({
+          variables: {
+            downloadRequest: {
+              study: study._id
+            }
+          }
+        });
+      },
+      onCancel: () => {}
+    });
+  };
+
+  // Share the results with the user
+  useEffect(() => {
+    if (createDownloadResults.data) {
+      pushSnackbarMessage(t('components.studyDownload.downloadStartedSuccess'), 'success');
+    } else if (createDownloadResults.error) {
+      pushSnackbarMessage(t('components.studyDownload.downloadFailed'), 'error');
+    }
+  }, [createDownloadResults.data, createDownloadResults.error]);
+
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -52,6 +81,16 @@ export const StudyControl: React.FC = () => {
       headerName: t('common.description'),
       width: 500,
       editable: false
+    },
+    {
+      field: 'download',
+      headerName: t('common.download'),
+      width: 200,
+      renderCell: (params) => (
+        <IconButton onClick={() => handleDownloadRequest(params.row)}>
+          <Download />
+        </IconButton>
+      )
     },
     {
       field: 'delete',

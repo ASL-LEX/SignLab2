@@ -41,6 +41,11 @@ export class StudyService {
     return !!study;
   }
 
+  async existsById(id: string): Promise<boolean> {
+    const study = await this.studyModel.findOne({ _id: id });
+    return !!study;
+  }
+
   async findById(id: string): Promise<Study | null> {
     return this.studyModel.findById(id);
   }
