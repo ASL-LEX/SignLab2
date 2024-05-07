@@ -26,9 +26,8 @@ To start the application, you need to run different commands in separate termina
 
 By running these commands in separate terminal windows, you can effectively start all parts of the application and develop or test them simultaneously. Ensure that all parts are running smoothly to have the full application functionality available during development.
 
-## Current Known Issues (in detail)-
-Working on merging Catch trials feature(Currently in open Pull Request).
-https://github.com/ASL-LEX/SignLab2/pulls
+## Current Known Issues
+The Catch trials feature (Currently in open Pull Request) has not been a complete implementation of catch trials yet, it stay as a PR for now for future improvement.
 
 ## Deployment
 Video Demo link: https://drive.google.com/file/d/1PyQTgFd47gEXw9En6BAXY-jn7BOZ4DoH/view?usp=drive_link
