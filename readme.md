@@ -4,6 +4,11 @@ SignLab is the web application built for tagging videos and still images with us
 The Signlab can isolate different research organizations, their projects, and their studies, which enables many users to leverage SignLab at the same time.
 
 # Technical Architecture
+**Client (Browser)**: The client side is built using a React application. 
+
+**Server (Node.js)**: The server utilizes Node.js. Within Node.js, the system employs Express to handle server-side logic. Additionally, the server uses a GraphQL server, which allows clients to request exactly the data they need, making it efficient particularly for complex systems with lots of data.  
+
+**Database**: The system uses MongoDB as database for its high performance, high availability, and easy scalability.
 
 ![technical architecture](https://github.com/ASL-LEX/SignLab2/assets/144057115/c09013b4-9930-484e-ac23-df80aa36bd52)
 
