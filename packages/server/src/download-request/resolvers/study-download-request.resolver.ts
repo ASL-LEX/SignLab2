@@ -12,12 +12,12 @@ import { StudyPipe } from '../../study/pipes/study.pipe';
 import { Study } from '../../study/study.model';
 import { StudyDownloadRequestPipe } from '../pipes/study-download-request.pipe';
 
-@UseGuards(JwtAuthGuard, OrganizationGuard)
 @Resolver(() => StudyDownloadRequest)
 export class StudyDownloadRequestResolver {
   constructor(private readonly studyDownloadService: StudyDownloadService, private readonly studyPipe: StudyPipe) {}
 
   @Mutation(() => StudyDownloadRequest)
+  @UseGuards(JwtAuthGuard, OrganizationGuard)
   async createStudyDownload(
     @Args('downloadRequest', CreateStudyDownloadPipe) downloadRequest: CreateStudyDownloadRequest,
     @OrganizationContext() organization: Organization
@@ -26,6 +26,7 @@ export class StudyDownloadRequestResolver {
   }
 
   @Query(() => [StudyDownloadRequest])
+  @UseGuards(JwtAuthGuard, OrganizationGuard)
   async getStudyDownloads(@Args('study', { type: () => ID }, StudyPipe) study: Study): Promise<StudyDownloadRequest[]> {
     return this.studyDownloadService.getStudyDownloads(study);
   }

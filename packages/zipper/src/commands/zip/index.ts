@@ -51,6 +51,7 @@ export default class ZipHander extends Command {
       body: payload
     });
 
+    // Check to make sure the request went through successfully
     if (result.status != 200) {
       console.error(await result.text());
       throw new Error('Failed to call webhook');

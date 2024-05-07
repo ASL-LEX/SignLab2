@@ -43,5 +43,8 @@ export default () => ({
   downloads: {
     bucketPrefix: 'downloads',
     jobName: process.env.ZIP_JOB_NAME
+  },
+  endpoints: {
+    gateway: process.env.GATEWAY_ENDPOINT || 'http://localhost:3002/graphql'
   }
 });
