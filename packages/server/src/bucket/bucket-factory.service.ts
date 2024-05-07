@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { BucketInfo, BucketType } from './bucket-info.model';
 import { GcpBucketMaker } from './gcp-bucket';
 import { Bucket } from './bucket';
-import { SECRET_MANAGER_PROVIDER } from 'src/gcp/providers/secret.provider';
+import { SECRET_MANAGER_PROVIDER } from '../gcp/providers/secret.provider';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 @Injectable()

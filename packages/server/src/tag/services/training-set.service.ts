@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MongooseMiddlewareService } from 'src/shared/service/mongoose-callback.service';
+import { MongooseMiddlewareService } from '../../shared/service/mongoose-callback.service';
 import { Entry } from '../../entry/models/entry.model';
 import { Study } from '../../study/study.model';
 import { TrainingSet } from '../models/training-set';

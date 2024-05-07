@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Entry } from 'src/entry/models/entry.model';
+import { Entry } from '../../entry/models/entry.model';
 import { VideoField, VideoFieldDocument } from '../models/video-field.model';
 
 @Injectable()

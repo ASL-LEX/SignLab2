@@ -6,8 +6,8 @@ import { EntryCreate } from '../dtos/create.dto';
 import { Dataset } from '../../dataset/dataset.model';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from '../../jwt/token.dto';
-import { BucketFactory } from 'src/bucket/bucket-factory.service';
-import { BucketObjectAction } from 'src/bucket/bucket';
+import { BucketFactory } from '../../bucket/bucket-factory.service';
+import { BucketObjectAction } from '../../bucket/bucket';
 
 @Injectable()
 export class EntryService {

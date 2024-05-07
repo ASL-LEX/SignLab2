@@ -10,8 +10,8 @@ import { EntryService } from '../../entry/services/entry.service';
 import { DatasetPipe } from '../../dataset/pipes/dataset.pipe';
 import { TokenPayload } from '../../jwt/token.dto';
 import { Dataset } from '../../dataset/dataset.model';
-import { BucketFactory } from 'src/bucket/bucket-factory.service';
-import { BucketObjectAction } from 'src/bucket/bucket';
+import { BucketFactory } from '../../bucket/bucket-factory.service';
+import { BucketObjectAction } from '../../bucket/bucket';
 
 @Injectable()
 export class VideoFieldIntermediateService {

@@ -1,30 +1,55 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagService } from './tag.service';
 import { getModelToken } from '@nestjs/mongoose';
+import { Layout } from '@jsonforms/core'; 
+import { StudyService } from '../../study/study.service';
+import { MongooseMiddlewareService } from '../../shared/service/mongoose-callback.service';
+import { TagTransformer } from './tag-transformer.service';
+import { TrainingSetService } from './training-set.service';
+import { Tag } from '../models/tag.model';
 import { Study } from '../../study/study.model';
-import { Layout } from '@jsonforms/core'; // Import Layout interface
-import { JsonSchema } from '@jsonforms/core'; // Import JsonSchema interface
 import { Entry } from '../../entry/models/entry.model';
+
 describe('TagService', () => {
   let tagService: TagService;
-  const tagModelMock = {
-    create: jest.fn()
-  };
+  const mockTagModel = { create: jest.fn(), findOne: jest.fn(), find: jest.fn(), deleteMany: jest.fn(), updateOne: jest.fn(), findOneAndUpdate: jest.fn() };
+  const mockStudyService = { validateData: jest.fn() };
+  const mockMongooseMiddlewareService = { register: jest.fn() };
+  const mockTagTransformer = { transformTagData: jest.fn() };
+  const mockTrainingSetService = { findByStudy: jest.fn() };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TagService,
         {
-          provide: getModelToken('Tag'), // Use the string name 'Tag' instead of Tag.name
-          useValue: tagModelMock
+          provide: getModelToken(Tag.name),
+          useValue: mockTagModel
+        },
+        {
+          provide: StudyService,
+          useValue: mockStudyService
+        },
+        {
+          provide: MongooseMiddlewareService,
+          useValue: mockMongooseMiddlewareService
+        },
+        {
+          provide: TagTransformer,
+          useValue: mockTagTransformer
+        },
+        {
+          provide: TrainingSetService,
+          useValue: mockTrainingSetService
         }
-      ]
+      ],
     }).compile();
     tagService = module.get<TagService>(TagService);
   });
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   describe('createCatchTrials', () => {
     it('should create catch trial tags for each entry', async () => {
       // Mock data
@@ -80,22 +105,29 @@ describe('TagService', () => {
         training: false
       };
       // Mock the tagModel.create method to return the dummy tag
-      tagModelMock.create.mockResolvedValue(mockTag);
+      mockTagModel.create.mockResolvedValue(mockTag);
       // Call the method
       const result = await tagService.createCatchTrials(study, entries);
+      console.log(result);
       // Assertions
-      expect(tagModelMock.create).toHaveBeenCalledTimes(2); // Expect create to be called for each entry
-      expect(tagModelMock.create).toHaveBeenCalledWith(
+      expect(mockTagModel.create).toHaveBeenCalledTimes(2); // Expect create to be called for each entry
+      expect(mockTagModel.create).toHaveBeenCalledWith(
         expect.objectContaining({
           study: study._id,
           isCatchTrial: true,
           complete: false,
-          order: 0, // Or assert any other properties you expect
+          order: 0,
           enabled: true,
           training: false
         })
       );
       expect(result).toHaveLength(2); // Expect the correct number of tags to be returned
+      expect(result).toEqual( // Expect the the tags are Catch Trial tags
+        expect.arrayContaining([
+          expect.objectContaining({ isCatchTrial: true }),
+          expect.objectContaining({ isCatchTrial: true })
+        ])
+      );
     });
   });
 });
