@@ -95,3 +95,5 @@ jobs:
           env_vars: |-
             MONGO_URI=${{ secrets.STAGING_MONGO_URI }}
             CASBIN_MONGO_URI=${{ secrets.STAGING_CASBIN_MONGO_URI }}
+            ZIP_JOB_NAME=${{ secrets.GCP_ZIP_JOB_STAGING }}
+            GATEWAY_ENDPOINT=${{ secrets.STAGING_GRAPHQL_ENDPOINT }}
