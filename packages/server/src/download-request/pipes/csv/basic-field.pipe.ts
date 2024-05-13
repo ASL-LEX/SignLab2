@@ -8,7 +8,7 @@ import { CsvFieldTest } from '../../types/csv-field';
 @Injectable()
 export class BasicCsvTransformer implements PipeTransform<any, Promise<string>> {
   async transform(value: any): Promise<string> {
-    return value.toString();
+    return value ? value.toString() : '';
   }
 }
 
