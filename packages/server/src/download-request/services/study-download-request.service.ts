@@ -276,13 +276,12 @@ export class StudyDownloadService {
         }
         return entry.bucketLocation.split('/').pop() || '';
       }
-    })
+    });
 
     // Go through all the properties in the data schema
     const propertyNames = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties);
 
-
-    for(const propertyName of propertyNames) {
+    for (const propertyName of propertyNames) {
       // Get the data schema and the ui schema
       const dataSchema = study.tagSchema.dataSchema.properties![propertyName];
       const uiSchema = study.tagSchema.uiSchema.elements.find(
@@ -323,7 +322,6 @@ export class StudyDownloadService {
             }
           });
         }
-
       } else if (basicCsvTest(uiSchema, dataSchema)) {
         csvFields.push({
           header: propertyName,
