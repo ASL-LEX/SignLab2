@@ -18,6 +18,8 @@ import { StudyDownloadService } from './services/study-download-request.service'
 import { TagModule } from '../tag/tag.module';
 import { StudyDownloadRequestPipe } from './pipes/study-download-request.pipe';
 import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pipe';
+import { BasicCsvTransformer } from './pipes/csv/basic-field.pipe';
+import { VideoCsvTransformer } from './pipes/csv/video-field.pipe';
 
 @Module({
   imports: [
@@ -42,7 +44,9 @@ import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pip
     StudyDownloadRequestResolver,
     StudyDownloadService,
     StudyDownloadRequestPipe,
-    DatasetDownloadRequestPipe
+    DatasetDownloadRequestPipe,
+    BasicCsvTransformer,
+    VideoCsvTransformer
   ]
 })
 export class DownloadRequestModule {}
