@@ -1,4 +1,5 @@
-import { PipeTransform } from '@nestjs/common';
+import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+import { Tag } from '../../tag/models/tag.model';
 
 /**
  * Represents a column within a CSV. Keep track both of the header as well as how
@@ -6,5 +7,7 @@ import { PipeTransform } from '@nestjs/common';
  */
 export interface CsvField {
   header: string;
-  convertField: PipeTransform<any, Promise<string>>;
+  convertField: (value: Tag) => Promise<string>;
 }
+
+export type CsvFieldTest = (uischema: UISchemaElement, schema: JsonSchema) => boolean;

@@ -1,4 +1,5 @@
 import { PipeTransform, Injectable } from '@nestjs/common';
+import { CsvFieldTest } from '../../types/csv-field';
 
 /**
  * Handles "transforming" CSV fields where the data itself is already
@@ -10,3 +11,7 @@ export class BasicCsvTransformer implements PipeTransform<any, Promise<string>> 
     return value.toString();
   }
 }
+
+export const basicCsvTest: CsvFieldTest = (_uischema, _schema) => {
+  return true;
+};

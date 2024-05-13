@@ -13,9 +13,13 @@ import { TagService } from '../../tag/services/tag.service';
 import { TagFieldType } from '../../tag/models/tag-field.model';
 import { VideoFieldService } from '../../tag/services/video-field.service';
 import { BucketObjectAction } from 'src/bucket/bucket';
-import { Entry } from 'src/entry/models/entry.model';
-import { Study } from 'src/study/study.model';
+import { Entry } from '../../entry/models/entry.model';
+import { Study } from '../../study/study.model';
 import { randomUUID } from 'crypto';
+import { CsvField } from '../types/csv-field';
+import { videoCsvTest, VideoCsvTransformer } from '../pipes/csv/video-field.pipe';
+import { basicCsvTest, BasicCsvTransformer } from '../pipes/csv/basic-field.pipe';
+import { StudyService } from '../../study/study.service';
 
 @Injectable()
 export class StudyDownloadService {
@@ -37,7 +41,10 @@ export class StudyDownloadService {
     private readonly bucketFactory: BucketFactory,
     private readonly configService: ConfigService,
     private readonly tagService: TagService,
-    private readonly videoFieldService: VideoFieldService
+    private readonly videoFieldService: VideoFieldService,
+    private readonly basicCsvTransformer: BasicCsvTransformer,
+    private readonly videoCsvTransformer: VideoCsvTransformer,
+    private readonly studyService: StudyService
   ) {}
 
   async createDownloadRequest(
@@ -181,6 +188,10 @@ export class StudyDownloadService {
    */
   private async generateCSV(downloadRequest: StudyDownloadRequest): Promise<void> {
     const tags = await this.tagService.getCompleteTags(downloadRequest.study);
+    const study = await this.studyService.findById(downloadRequest.study);
+    if (!study) {
+      throw new Error(`Study with id ${downloadRequest.study} not found`);
+    }
 
     // Turn the tag fields into their "CSV-friendly" format
     const converted: any[] = [];
@@ -207,7 +218,14 @@ export class StudyDownloadService {
     }
 
     // Convert the data into a CSV
-    const dataString = this.convertToCSV(converted);
+    const csvFields = await this.getFieldTransformers(study);
+    const headers = csvFields.map((csvField) => csvField.header).join(',');
+
+    const body = tags.map((tag) => {
+      return csvFields.map((csvField) => csvField.convertField(tag)).join(',');
+    }).join('\n');
+
+    const dataString = headers + '\n' + body;
 
     // Store the CSV in the expected location in the bucket
     const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
@@ -271,5 +289,72 @@ export class StudyDownloadService {
         return entry;
       })
     );
+  }
+
+  /** Get the list of CSV tranformers that can convert the tag data */
+  private async getFieldTransformers(study: Study): Promise<CsvField[]> {
+    // Go through all the properties in the data schema
+    const propertyNames = Object.getOwnPropertyNames(study.tagSchema.dataSchema);
+
+    const csvFields: CsvField[] = [];
+
+    for(const propertyName of propertyNames) {
+      // Get the data schema and the ui schema
+      const dataSchema = study.tagSchema.dataSchema.properties![propertyName];
+      const uiSchema = study.tagSchema.uiSchema.elements.find(
+        (element: any) => element.scope === `#/properties/${propertyName}`
+      );
+      if (!dataSchema || !uiSchema) {
+        throw new Error(`Could not find schema for property ${propertyName}`);
+      }
+
+      // Now determine the proper way to represent the given field
+      if (videoCsvTest(uiSchema, dataSchema)) {
+        const minVideos = uiSchema.options!.minimumRequired!;
+
+        let maxVideos = uiSchema.options!.maximumRequired;
+        if (!maxVideos) {
+          maxVideos = minVideos;
+        }
+
+        for (let i = 0; i < maxVideos; i++) {
+          csvFields.push({
+            header: `${propertyName}-video-${i + 1}`,
+            convertField: async (tag) => {
+              // Get the corresponding tag field
+              const tagField = tag.data?.find((field) => field.name == propertyName);
+              if (!tagField) {
+                throw new Error(`Tag field ${propertyName} not found`);
+              }
+
+              // Get the video field
+              const videoField = await this.videoFieldService.find(tagField.data);
+              if (!videoField) {
+                throw new Error(`Could not find video field ${tagField.data}`);
+              }
+
+              // Transform the video field at the given index into a CSV friendly format
+              return this.videoCsvTransformer.transform(videoField.entries[i]);
+            }
+          });
+        }
+
+      } else if (basicCsvTest(uiSchema, dataSchema)) {
+        csvFields.push({
+          header: propertyName,
+          convertField: (tag) => {
+            const tagField = tag.data?.find((field) => field.name == propertyName);
+            if (!tagField) {
+              throw new Error(`Tag field ${propertyName} not found`);
+            }
+            return this.basicCsvTransformer.transform(tagField.data);
+          }
+        });
+      } else {
+        throw new Error(`Cannot convert property ${propertyName} into a CSV format`);
+      }
+    }
+
+    return csvFields;
   }
 }

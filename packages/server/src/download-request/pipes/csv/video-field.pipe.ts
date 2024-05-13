@@ -1,4 +1,5 @@
 import { PipeTransform, Injectable } from '@nestjs/common';
+import { CsvFieldTest } from '../../types/csv-field';
 import { EntryService } from '../../../entry/services/entry.service';
 
 /**
@@ -24,3 +25,10 @@ export class VideoCsvTransformer implements PipeTransform<any, Promise<string>> 
     return entry.bucketLocation.split('/').pop() || '';
   }
 }
+
+export const videoCsvTest: CsvFieldTest = (uischema, _schema) => {
+  if (uischema.options && uischema.options.customType && uischema.options.customType === 'video') {
+    return true;
+  }
+  return false;
+};
