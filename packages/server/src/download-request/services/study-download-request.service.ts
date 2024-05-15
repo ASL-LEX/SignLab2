@@ -90,7 +90,6 @@ export class StudyDownloadService {
     request = (await this.downloadRequestModel.findById(request._id))!;
 
     // Download the entries that were generated as part of this study
-    /*
     await this.downloadService.startZipJob({
       entryJSONLocation: request.entryJSONLocation!,
       entryZIPLocation: request.entryZIPLocation!,
@@ -108,11 +107,9 @@ export class StudyDownloadService {
       bucket: (await this.bucketFactory.getBucket(request.organization))!,
       organization: request.organization
     });
-    */
     // Download the tag data as a CSV
     await this.generateCSV(request);
     // Download the entries that were tagged in this study
-    /*
     await this.downloadService.startZipJob({
       entryJSONLocation: request.taggedEntriesJSONLocation!,
       entryZIPLocation: request.taggedEntriesZipLocation!,
@@ -129,7 +126,7 @@ export class StudyDownloadService {
       entries: await this.getLabeledEntries(request),
       bucket: (await this.bucketFactory.getBucket(request.organization))!,
       organization: request.organization
-    }); */
+    });
 
     return request;
   }
