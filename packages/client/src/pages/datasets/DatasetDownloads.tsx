@@ -64,7 +64,8 @@ export const DatasetDownloads: React.FC = () => {
       width: 200,
       headerName: t('components.datasetDownload.entryDownload'),
       renderCell: (params) =>
-        params.value && (params.row.status == DownloadStatus.Ready) && (
+        params.value &&
+        params.row.status == DownloadStatus.Ready && (
           <IconButton href={params.value}>
             <Download />
           </IconButton>
