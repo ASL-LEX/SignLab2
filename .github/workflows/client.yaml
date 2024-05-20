@@ -86,8 +86,6 @@ jobs:
 
       - name: Capture Environment Variables
         run: |
-          echo VITE_AUTH_LOGIN_URL=${{ secrets.STAGING_AUTH_URL }} > .env
-          echo VITE_AUTH_PROJECT_ID=${{ secrets.STAGING_AUTH_PROJECT_ID }} >> .env
           echo VITE_GRAPHQL_ENDPOINT=${{ secrets.STAGING_GRAPHQL_ENDPOINT }} >> .env
           echo VITE_ASL_LEXICON_ID=${{ secrets.STAGING_ASL_LEXICON_ID }} >> .env
           echo VITE_NAME=${{ secrets.STAGING_ASL_LEX_NAME }} >> .env
@@ -142,8 +140,6 @@ jobs:
 
       - name: Capture Environment Variables
         run: |
-          echo VITE_AUTH_LOGIN_URL=${{ secrets.PROD_EU_AUTH_URL }} > .env
-          echo VITE_AUTH_PROJECT_ID=${{ secrets.PROD_EU_AUTH_PROJECT_ID }} >> .env
           echo VITE_GRAPHQL_ENDPOINT=${{ secrets.PROD_EU_GRAPHQL_ENDPOINT }} >> .env
           echo VITE_ASL_LEXICON_ID=${{ secrets.PROD_EU_ASL_LEXICON_ID }} >> .env
           echo VITE_NAME=${{ secrets.PROD_EU_ASL_LEX_NAME }} >> .env
