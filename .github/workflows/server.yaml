@@ -98,7 +98,7 @@ jobs:
             ZIP_JOB_NAME=${{ secrets.GCP_ZIP_JOB_STAGING }}
             GATEWAY_ENDPOINT=${{ secrets.STAGING_GRAPHQL_ENDPOINT }}
 
-  staging-deploy:
+  eu-prod-deploy:
     runs-on: ubuntu-latest
     name: Deploy to Staging
     needs: [lint, build]
@@ -124,7 +124,6 @@ jobs:
           project_id: ${{ secrets.GCP_PROD_EU_PROJECT_ID }}
           workload_identity_provider: ${{ secrets.GCP_PROD_EU_ID_PROVIDER }}
           service_account: ${{ secrets.PROD_EU_GCP_SERVICE_ACCOUNT }}
-
 
       - name: Deploy to Staging
         uses: 'google-github-actions/deploy-appengine@v2'
