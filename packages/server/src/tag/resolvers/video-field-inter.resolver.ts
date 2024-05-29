@@ -8,8 +8,8 @@ import { TokenPayload } from '../../jwt/token.dto';
 import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CASBIN_PROVIDER } from '../../permission/casbin.provider';
 import * as casbin from 'casbin';
-import { TagPermissions } from '../../permission/permissions/tag';
 import { JwtAuthGuard } from '../../jwt/jwt.guard';
+import { Roles } from 'src/permission/permissions/roles';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => VideoFieldIntermediate)
@@ -28,7 +28,7 @@ export class VideoFieldIntermediateResolver {
     @TokenContext() user: TokenPayload
   ): Promise<VideoFieldIntermediate> {
     // Make sure the user first has permission to create video fields for this tag
-    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.CREATE, tag.study.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, Roles.CONTRIBUTOR, tag.study.toString()))) {
       throw new UnauthorizedException('User does not have permission to create video fields for this tag');
     }
 
@@ -46,7 +46,7 @@ export class VideoFieldIntermediateResolver {
     if (!tag) {
       throw new Error(`Tag ${videoField.tag} not found`);
     }
-    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.CREATE, tag.study.toString()))) {
+    if (!(await this.enforcer.enforce(user.user_id, Roles.CONTRIBUTOR, tag.study.toString()))) {
       throw new UnauthorizedException('User does not have permission to create video fields for this tag');
     }
 
