@@ -261,19 +261,24 @@ export class StudyDownloadService {
 
   /** Get the list of CSV tranformers that can convert the tag data */
   private async getFieldTransformers(study: Study): Promise<CsvField[]> {
-    const csvFields: CsvField[] = [];
-
-    // Add the meta data converts
-    csvFields.push({
-      header: 'prompt',
-      convertField: async (tag) => {
-        const entry = await this.entryService.find(tag.entry);
-        if (!entry) {
-          throw new Error(`Entry with id ${tag.entry} not found`);
+    const csvFields: CsvField[] = [
+      {
+        header: 'prompt',
+        convertField: async (tag) => {
+          const entry = await this.entryService.find(tag.entry);
+          if (!entry) {
+            throw new Error(`Entry with id ${tag.entry} not found`);
+          }
+          return entry.bucketLocation.split('/').pop() || '';
         }
-        return entry.bucketLocation.split('/').pop() || '';
+      },
+      {
+        header: 'user',
+        convertField: async (tag) => {
+          return tag.user || '';
+        }
       }
-    });
+    ];
 
     // Go through all the properties in the data schema
     const propertyNames = Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties);
