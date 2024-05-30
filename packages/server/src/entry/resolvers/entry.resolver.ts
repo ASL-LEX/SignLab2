@@ -30,7 +30,7 @@ export class EntryResolver {
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
     @TokenContext() user: TokenPayload
   ): Promise<Entry[]> {
-    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -46,7 +46,7 @@ export class EntryResolver {
     if (!dataset) {
       throw new Error('Dataset not found for entry');
     }
-    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id))) {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
@@ -55,10 +55,6 @@ export class EntryResolver {
 
   @ResolveField(() => String)
   async signedUrl(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<string> {
-    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, entry.dataset))) {
-      throw new UnauthorizedException('User cannot read entries on this dataset');
-    }
-
     return this.entryService.getSignedUrl(entry);
   }
 
@@ -66,10 +62,6 @@ export class EntryResolver {
   //       if the request to `signedUrl` is made.
   @ResolveField(() => Number, { description: 'Get the number of milliseconds the signed URL is valid for.' })
   async signedUrlExpiration(@Parent() entry: Entry, @TokenContext() user: TokenPayload): Promise<number> {
-    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, entry.dataset))) {
-      throw new UnauthorizedException('User cannot read entries on this dataset');
-    }
-
     return this.entryService.getSignedUrlExpiration(entry);
   }
 
