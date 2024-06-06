@@ -36,7 +36,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     }
     // If un-checked, remove all entries for the given dataset
     else {
-      setTrainingSet(trainingSet.filter((id => !ids.has(id))));
+      setTrainingSet(trainingSet.filter((id) => !ids.has(id)));
     }
   };
 
@@ -48,7 +48,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     }
     // If un-checked, remove all entries for the given dataset
     else {
-      setTaggingSet(taggingSet.filter((id => !ids.has(id))));
+      setTaggingSet(taggingSet.filter((id) => !ids.has(id)));
     }
   };
 
@@ -61,10 +61,10 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       valueGetter: (params) => !!trainingSet.find((id) => params.row._id == id),
       renderHeader: (_params: GridColumnHeaderParams) => {
         const grid = useGridApiContext();
-        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map(id => id.toString()));
+        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map((id) => id.toString()));
         return (
           <>
-            <Typography variant='body2'>Training</Typography>
+            <Typography variant="body2">Training</Typography>
             <Checkbox onChange={(change) => handleTrainingMassSelect(change.target.checked, entryIDs)} />
           </>
         );
@@ -91,10 +91,10 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       valueGetter: (params) => !!taggingSet.find((id) => params.row._id == id),
       renderHeader: (_params: GridColumnHeaderParams) => {
         const grid = useGridApiContext();
-        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map(id => id.toString()));
+        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map((id) => id.toString()));
         return (
           <>
-            <Typography variant='body2'>Available for Tagging</Typography>
+            <Typography variant="body2">Available for Tagging</Typography>
             <Checkbox onChange={(change) => handleTaggingMassSelect(change.target.checked, entryIDs)} />
           </>
         );
