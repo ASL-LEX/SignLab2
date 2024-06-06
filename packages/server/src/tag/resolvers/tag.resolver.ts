@@ -75,7 +75,6 @@ export class TagResolver {
   ): Promise<boolean> {
     const study = await this.studyPipe.transform(tag.study);
     if (!(await this.enforcer.enforce(user.user_id, TagPermissions.DELETE, study._id.toString()))) {
-      console.log('here');
       throw new UnauthorizedException('User cannot delete tags in this study');
     }
 
