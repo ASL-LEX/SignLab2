@@ -2,7 +2,7 @@ import { DatasetsView } from './DatasetsView.component';
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridColumnHeaderParams, GridRowId, useGridApiContext } from '@mui/x-data-grid';
 import { Checkbox, Switch, Typography } from '@mui/material';
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
@@ -28,10 +28,11 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     }
   }, [project]);
 
-  const handleTrainingMassSelect = (checked: boolean) => {
+  const handleTrainingMassSelect = (checked: boolean, ids: Set<GridRowId>) => {
     if (checked) {
     } else {
-      setTrainingSet([]);
+      // setTrainingSet(trainingSet.concat(Array.from(ids)));
+      setTrainingSet(trainingSet.filter((id => !ids.has(id))));
     }
   };
 
@@ -42,11 +43,15 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       width: 200,
       sortable: false,
       valueGetter: (params) => !!trainingSet.find((id) => params.row._id == id),
-      renderHeader: () => {
+      renderHeader: (_params: GridColumnHeaderParams) => {
+        const grid = useGridApiContext();
+        console.log(grid.current.getRowModels());
+
+        const entryIDs = new Set(grid.current.getRowModels().keys());
         return (
           <>
             <Typography variant='body2'>Training</Typography>
-            <Checkbox onChange={(change) => handleTrainingMassSelect(change.target.checked)} />
+            <Checkbox onChange={(change) => handleTrainingMassSelect(change.target.checked, entryIDs)} />
           </>
         );
       },
