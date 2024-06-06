@@ -2,7 +2,7 @@ import { DatasetsView } from './DatasetsView.component';
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
-import { GridColDef, GridColumnHeaderParams, GridRowId, useGridApiContext } from '@mui/x-data-grid';
+import { GridColDef, GridColumnHeaderParams, useGridApiContext } from '@mui/x-data-grid';
 import { Checkbox, Switch, Typography } from '@mui/material';
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
