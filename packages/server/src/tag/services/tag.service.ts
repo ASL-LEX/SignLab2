@@ -199,10 +199,14 @@ export class TagService {
       throw new BadRequestException(`Tag with ID ${tag} not found.`);
     }
     // Reset the data and mark the tag as incomplete
-    await this.tagModel.findOneAndUpdate(
-      { _id: tag._id },
-      { $set: { complete: false }, $unset: { data: '', user: '' } }
-    );
+    if (!tag.training) {
+      await this.tagModel.findOneAndUpdate(
+        { _id: tag._id },
+        { $set: { complete: false }, $unset: { data: '', user: '' } }
+      );
+    } else {
+      await this.tagModel.findOneAndUpdate({ _id: tag._id }, { $set: { complete: false }, $unset: { data: '' } });
+    }
   }
 
   async isEntryEnabled(study: Study, entry: Entry) {

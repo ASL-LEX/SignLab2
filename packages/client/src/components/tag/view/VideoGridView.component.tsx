@@ -33,7 +33,7 @@ export const videoViewTest: TagViewTest = (uischema, _schema, _context) => {
 export const getVideoCols: GetGridColDefs = (uischema, schema, property) => {
   const minVideos = uischema.options!.minimumRequired!;
 
-  let maxVideos = uischema.options!.maximumRequired;
+  let maxVideos = uischema.options!.maximumOptional;
   if (!maxVideos) {
     maxVideos = minVideos;
   }
