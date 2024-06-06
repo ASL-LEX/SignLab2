@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useGetDatasetsByProjectLazyQuery } from '../graphql/dataset/dataset';
 import { Dataset, Entry } from '../graphql/graphql';
 import { GridColDef } from '@mui/x-data-grid';
-import { Switch, Typography } from '@mui/material';
+import { Checkbox, Switch, Typography } from '@mui/material';
 import { useProject } from '../context/Project.context';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../context/Snackbar.context';
@@ -28,14 +28,31 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     }
   }, [project]);
 
+  const handleTrainingMassSelect = (checked: boolean) => {
+    if (checked) {
+    } else {
+      setTrainingSet([]);
+    }
+  };
+
   const additionalColumns: GridColDef[] = [
     {
       field: 'training',
       headerName: 'Training',
       width: 200,
+      sortable: false,
+      valueGetter: (params) => !!trainingSet.find((id) => params.row._id == id),
+      renderHeader: () => {
+        return (
+          <>
+            <Typography variant='body2'>Training</Typography>
+            <Checkbox onChange={(change) => handleTrainingMassSelect(change.target.checked)} />
+          </>
+        );
+      },
       renderCell: (params) => (
         <EditSetSwitch
-          startingValue={false}
+          value={params.value}
           onLoad={(_entry) => {}}
           add={(entry) => {
             setTrainingSet([...trainingSet, entry._id]);
@@ -51,9 +68,10 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       field: 'full',
       headerName: 'Available for Tagging',
       width: 200,
+      sortable: false,
       renderCell: (params) => (
         <EditSetSwitch
-          startingValue={false}
+          value={params.value}
           onLoad={(_entry) => {}}
           add={(entry) => {
             setTaggingSet([...taggingSet, entry._id]);
@@ -98,7 +116,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
 };
 
 interface EditSwitchProps {
-  startingValue: boolean;
+  value: boolean;
   add: (entry: Entry) => void;
   remove: (entry: Entry) => void;
   onLoad: (entry: Entry) => void;
@@ -106,14 +124,17 @@ interface EditSwitchProps {
 }
 
 const EditSetSwitch: React.FC<EditSwitchProps> = (props) => {
-  const [checked, setChecked] = useState(props.startingValue);
+  const [checked, setChecked] = useState(props.value);
+
+  useEffect(() => {
+    setChecked(props.value);
+  }, [props.value]);
 
   useEffect(() => {
     props.onLoad(props.entry);
   }, [props.entry]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
     if (event.target.checked) {
       props.add(props.entry);
     } else {
