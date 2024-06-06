@@ -28,11 +28,27 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     }
   }, [project]);
 
-  const handleTrainingMassSelect = (checked: boolean, ids: Set<GridRowId>) => {
+  const handleTrainingMassSelect = (checked: boolean, ids: Set<string>) => {
+    // If checked, add all the entries for the given dataset
     if (checked) {
-    } else {
-      // setTrainingSet(trainingSet.concat(Array.from(ids)));
+      const entryIDs = Array.from(ids).map((id) => id.toString());
+      setTrainingSet(trainingSet.concat(entryIDs));
+    }
+    // If un-checked, remove all entries for the given dataset
+    else {
       setTrainingSet(trainingSet.filter((id => !ids.has(id))));
+    }
+  };
+
+  const handleTaggingMassSelect = (checked: boolean, ids: Set<string>) => {
+    // If checked, add all the entries for the given dataset
+    if (checked) {
+      const entryIDs = Array.from(ids).map((id) => id.toString());
+      setTaggingSet(taggingSet.concat(entryIDs));
+    }
+    // If un-checked, remove all entries for the given dataset
+    else {
+      setTaggingSet(taggingSet.filter((id => !ids.has(id))));
     }
   };
 
@@ -45,9 +61,7 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
       valueGetter: (params) => !!trainingSet.find((id) => params.row._id == id),
       renderHeader: (_params: GridColumnHeaderParams) => {
         const grid = useGridApiContext();
-        console.log(grid.current.getRowModels());
-
-        const entryIDs = new Set(grid.current.getRowModels().keys());
+        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map(id => id.toString()));
         return (
           <>
             <Typography variant='body2'>Training</Typography>
@@ -72,8 +86,19 @@ export const TagTrainingComponent: React.FC<TagTrainingComponentProps> = (props)
     {
       field: 'full',
       headerName: 'Available for Tagging',
-      width: 200,
+      width: 250,
       sortable: false,
+      valueGetter: (params) => !!taggingSet.find((id) => params.row._id == id),
+      renderHeader: (_params: GridColumnHeaderParams) => {
+        const grid = useGridApiContext();
+        const entryIDs = new Set<string>(Array.from(grid.current.getRowModels().keys()).map(id => id.toString()));
+        return (
+          <>
+            <Typography variant='body2'>Available for Tagging</Typography>
+            <Checkbox onChange={(change) => handleTaggingMassSelect(change.target.checked, entryIDs)} />
+          </>
+        );
+      },
       renderCell: (params) => (
         <EditSetSwitch
           value={params.value}
