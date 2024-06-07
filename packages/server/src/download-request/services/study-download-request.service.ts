@@ -82,7 +82,7 @@ export class StudyDownloadService {
           tagCSVLocation: tagCSVLocation,
           taggedEntriesZipLocation: taggedEntriesZipLocation,
           taggedEntriesJSONLocation: taggedEntriesJSONLocation,
-          taggedEntryWebhookPayloadLocation: taggedEntryWebhookPayloadLocation,
+          taggedEntryWebhookPayloadLocation: taggedEntryWebhookPayloadLocation
         }
       }
     );
