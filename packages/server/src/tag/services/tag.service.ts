@@ -43,6 +43,15 @@ export class TagService {
    * be created.
    */
   async createTags(study: Study, entries: Entry[]): Promise<Tag[]> {
+    // TODO: In the future we want to support more sophisticated methods
+    // for handling order of tags, for now run a basic shuffling
+    for (let index = entries.length - 1; index > 0; index--) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+      const temp = entries[index];
+      entries[index] = entries[randomIndex];
+      entries[randomIndex] = temp;
+    }
+
     const tags: Tag[] = [];
     for (const entry of entries) {
       for (let order = 0; order < study.tagsPerEntry; order++) {
