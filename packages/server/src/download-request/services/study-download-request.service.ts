@@ -10,9 +10,8 @@ import { EntryService } from '../../entry/services/entry.service';
 import { BucketFactory } from '../../bucket/bucket-factory.service';
 import { ConfigService } from '@nestjs/config';
 import { TagService } from '../../tag/services/tag.service';
-import { TagFieldType } from '../../tag/models/tag-field.model';
 import { VideoFieldService } from '../../tag/services/video-field.service';
-import { BucketObjectAction } from 'src/bucket/bucket';
+import { BucketObjectAction } from '../../bucket/bucket';
 import { Entry } from '../../entry/models/entry.model';
 import { Study } from '../../study/study.model';
 import { randomUUID } from 'crypto';
@@ -83,11 +82,14 @@ export class StudyDownloadService {
           tagCSVLocation: tagCSVLocation,
           taggedEntriesZipLocation: taggedEntriesZipLocation,
           taggedEntriesJSONLocation: taggedEntriesJSONLocation,
-          taggedEntryWebhookPayloadLocation: taggedEntryWebhookPayloadLocation
+          taggedEntryWebhookPayloadLocation: taggedEntryWebhookPayloadLocation,
         }
       }
     );
     request = (await this.downloadRequestModel.findById(request._id))!;
+
+    const labeldEntries = await this.getLabeledEntries(request);
+    const bucket = (await this.bucketFactory.getBucket(request.organization))!;
 
     // Download the entries that were generated as part of this study
     await this.downloadService.startZipJob({
@@ -104,7 +106,7 @@ export class StudyDownloadService {
       }),
       webhook: this.gatewayEndpoint,
       entries: await this.entryService.getEntriesForStudy(request.study),
-      bucket: (await this.bucketFactory.getBucket(request.organization))!,
+      bucket: bucket,
       organization: request.organization
     });
     // Download the tag data as a CSV
@@ -123,8 +125,8 @@ export class StudyDownloadService {
         }
       }),
       webhook: this.gatewayEndpoint,
-      entries: await this.getLabeledEntries(request),
-      bucket: (await this.bucketFactory.getBucket(request.organization))!,
+      entries: labeldEntries,
+      bucket: bucket,
       organization: request.organization
     });
 
@@ -270,6 +272,16 @@ export class StudyDownloadService {
             throw new Error(`Entry with id ${tag.entry} not found`);
           }
           return entry.bucketLocation.split('/').pop() || '';
+        }
+      },
+      {
+        header: 'entryID',
+        convertField: async (tag) => {
+          const entry = await this.entryService.find(tag.entry);
+          if (!entry) {
+            throw new Error(`Entry with id ${tag.entry} not found`);
+          }
+          return entry.entryID;
         }
       },
       {
