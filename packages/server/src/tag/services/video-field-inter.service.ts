@@ -95,7 +95,7 @@ export class VideoFieldIntermediateService {
     // Make the entry
     const entry = await this.entryService.create(
       {
-        entryID: 'TODO: Generate entry ID',
+        entryID: tag._id,
         contentType: 'video/webm',
         meta: {}
       },
