@@ -20,7 +20,6 @@ import { StudyDownloadRequestPipe } from './pipes/study-download-request.pipe';
 import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pipe';
 import { BasicCsvTransformer } from './pipes/csv/basic-field.pipe';
 import { VideoCsvTransformer } from './pipes/csv/video-field.pipe';
-import { EntryMetadataDownloadService } from './services/entry-metadata-download.service';
 
 @Module({
   imports: [
@@ -47,8 +46,7 @@ import { EntryMetadataDownloadService } from './services/entry-metadata-download
     StudyDownloadRequestPipe,
     DatasetDownloadRequestPipe,
     BasicCsvTransformer,
-    VideoCsvTransformer,
-    EntryMetadataDownloadService
+    VideoCsvTransformer
   ]
 })
 export class DownloadRequestModule {}
