@@ -16,6 +16,7 @@ import { PermissionModule } from './permission/permission.module';
 import { UserModule } from './user/user.module';
 import { BucketModule } from './bucket/bucket.module';
 import { DownloadRequestModule } from './download-request/download-request.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { DownloadRequestModule } from './download-request/download-request.modul
     PermissionModule,
     UserModule,
     BucketModule,
-    DownloadRequestModule
+    DownloadRequestModule,
+    HealthModule
   ]
 })
 export class AppModule {}

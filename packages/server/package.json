@@ -37,6 +37,7 @@
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/terminus": "^10.2.3",
     "@types/passport-jwt": "^3.0.13",
     "casbin": "^5.28.0",
     "casbin-mongoose-adapter": "^5.3.1",
