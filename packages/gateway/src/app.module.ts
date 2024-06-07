@@ -3,6 +3,7 @@ import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HealthModule } from './health/health.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -37,7 +38,8 @@ import configuration from './config/configuration';
           })
         }
       })
-    })
+    }),
+    HealthModule
   ]
 })
 export class AppModule {}
