@@ -67,6 +67,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({
 
   // Handle when the auth context is notified that an unauthenticated error
   // has taken place
+  //
+  // NOTE: This will explicitly not handle if the token is valid but the
+  // user is making an unauthorized request, that is to make it easier to
+  // debug cases where the UI allows the user to navigate to pages where
+  // they should/shouldn't have access to
   useEffect(() => {
     if (!hasUnauthenticatedError) {
       return;
