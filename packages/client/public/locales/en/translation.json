@@ -29,7 +29,8 @@
     "dataset": "Dataset",
     "status": "Status",
     "dateFormat": "{{date,  datetime}}",
-    "download": "Download"
+    "download": "Download",
+    "loading": "Loading"
   },
   "languages": {
     "en": "English",
@@ -38,7 +39,8 @@
   "home": {
     "welcome": "Welcome to SignLab",
     "signedIn": "You are signed in",
-    "logIn": "Please login to continue"
+    "logIn": "Please login to continue",
+    "backendFailed": "The website appears to be down at the moment, please try again later"
   },
   "menu": {
     "projects": "Projects",

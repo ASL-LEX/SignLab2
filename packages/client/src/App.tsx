@@ -17,8 +17,8 @@ import { TagView } from './pages/studies/TagView';
 import { DatasetControls } from './pages/datasets/DatasetControls';
 import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
-import { CssBaseline, Box, styled } from '@mui/material';
-import { FC, ReactNode, useState } from 'react';
+import { CssBaseline, Box, styled, CircularProgress, Typography } from '@mui/material';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { SideBar } from './components/SideBar.component';
 import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
@@ -32,6 +32,7 @@ import { TagTrainingView } from './pages/studies/TagTrainingView';
 import { SnackbarProvider } from './context/Snackbar.context';
 import { DatasetDownloads } from './pages/datasets/DatasetDownloads';
 import { StudyDownloads } from './pages/studies/StudyDownloads';
+import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -53,7 +54,77 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   })
 }));
 
+type AppState = 'loading' | 'ready' | 'failed';
+
 const App: FC = () => {
+  // State of the app loading
+  const [appState, setAppState] = useState<AppState>('loading');
+
+  const checkBackend = async () => {
+    const result = await fetch(import.meta.env.VITE_HEALTH_ENDPOINT);
+    try {
+      if (result.ok) {
+        setAppState('ready');
+      } else {
+        console.error('Health endpoint returned non-ok value');
+        console.error(`Health endpoint status: ${result.status}`);
+        console.error(`Health result ${await result.text()}`);
+      }
+    } catch (e) {
+      console.error('Failed to call health endpoint');
+      console.error(e);
+      setAppState('failed');
+    }
+  };
+
+  useEffect(() => {
+    checkBackend();
+  }, []);
+
+  const render = (state: AppState) => {
+    switch (appState) {
+      case 'loading':
+        return <AppLoading />;
+      case 'ready':
+        return <AppReady />;
+      case 'failed':
+        return <AppFailed />;
+      default:
+        throw Error(`Unknown state ${state}`);
+    }
+  };
+
+  return (
+    <ThemeProvider>
+      <BrowserRouter>{render(appState)}</BrowserRouter>
+    </ThemeProvider>
+  );
+};
+
+/** Loading screen */
+const AppLoading: FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Typography variant="h2">{t('common.loading')}</Typography>
+      <CircularProgress />
+    </>
+  );
+};
+
+/** Error screen */
+const AppFailed: FC = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Typography variant="h2">{t('home.backendFailed')}</Typography>
+    </>
+  );
+};
+
+/** Portion of the app that can be loaded after the backend is ready */
+const AppReady: FC = () => {
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
   const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem(AUTH_TOKEN_STR);
@@ -72,23 +143,20 @@ const App: FC = () => {
   });
 
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <ApolloProvider client={apolloClient}>
-          <AuthProvider>
-            <ConfirmationProvider>
-              <SnackbarProvider>
-                <CssBaseline />
-                <AppInternal />
-              </SnackbarProvider>
-            </ConfirmationProvider>
-          </AuthProvider>
-        </ApolloProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+    <ApolloProvider client={apolloClient}>
+      <AuthProvider>
+        <ConfirmationProvider>
+          <SnackbarProvider>
+            <CssBaseline />
+            <AppInternal />
+          </SnackbarProvider>
+        </ConfirmationProvider>
+      </AuthProvider>
+    </ApolloProvider>
   );
 };
 
+/** Contents of the app that can be loaded after authentication takes place */
 const AppInternal: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const { authenticated } = useAuth();
