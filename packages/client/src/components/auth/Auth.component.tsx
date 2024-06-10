@@ -2,7 +2,6 @@ import { Box, Tabs, Tab, Select, MenuItem, FormControl, Button, Typography, Stac
 import { useState, useEffect } from 'react';
 import { Organization } from '../../graphql/graphql';
 import { SelectChangeEvent } from '@mui/material';
-import * as firebaseui from 'firebaseui';
 import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
 import { LoginComponent } from './Login.component';
@@ -97,23 +96,22 @@ const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ setToken, o
   // Handle multi-tenant login
   const auth = firebaseauth.getAuth();
   auth.tenantId = organization.tenantID;
-  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
 
-  const signInSuccess = async (authResult: any) => {
-    setToken(await authResult.user.getIdToken());
+  // Function to leverage refresh token
+  const refresh = async (user: firebaseauth.User) => {
+    const newToken = await user.getIdToken(true);
+    setToken(newToken);
+    console.log('called');
   };
 
-  useEffect(() => {
-    ui.start('#firebaseui-auth-container', {
-      callbacks: {
-        signInSuccessWithAuthResult: (authResult, _redirectUrl) => {
-          signInSuccess(authResult);
-          return true;
-        }
-      },
-      signInOptions: [firebaseauth.GoogleAuthProvider.PROVIDER_ID]
-    });
-  }, []);
+  // Handle auth changes
+  auth.onIdTokenChanged((user) => {
+    if (!user) {
+      return;
+    }
+
+    setInterval(() => refresh(user), 1000); // Run every 30 minutes
+  });
 
   return (
     <Box>
