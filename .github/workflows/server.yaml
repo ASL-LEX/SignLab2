@@ -100,7 +100,7 @@ jobs:
 
   eu-prod-deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Staging
+    name: Deploy to EU Prod
     needs: [lint, build]
     permissions:
       contents: 'read'

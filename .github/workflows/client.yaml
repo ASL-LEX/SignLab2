@@ -91,6 +91,7 @@ jobs:
           echo VITE_NAME=${{ secrets.STAGING_ASL_LEX_NAME }} >> .env
           echo VITE_AUTH_API_KEY=${{ secrets.STAGING_AUTH_API_KEY }} >> .env
           echo VITE_AUTH_DOMAIN=${{ secrets.STAGING_AUTH_DOMAIN }} >> .env
+          echo VITE_HEALTH_ENDPOINT=${{ secrets.STAGING_HEALTH_ENDPOINT }} >> .env
 
       - name: NPM Install
         run: npm install
@@ -145,6 +146,7 @@ jobs:
           echo VITE_NAME=${{ secrets.PROD_EU_ASL_LEX_NAME }} >> .env
           echo VITE_AUTH_API_KEY=${{ secrets.PROD_EU_AUTH_API_KEY }} >> .env
           echo VITE_AUTH_DOMAIN=${{ secrets.PROD_EU_AUTH_DOMAIN }} >> .env
+          echo VITE_HEALTH_ENDPOINT=${{ secrets.PROD_EU_HEALTH_ENDPOINT }} >> .env
 
       - name: NPM Install
         run: npm install
