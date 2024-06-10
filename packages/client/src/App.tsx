@@ -23,6 +23,7 @@ import { SideBar } from './components/SideBar.component';
 import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
@@ -125,7 +126,12 @@ const AppFailed: FC = () => {
 
 /** Portion of the app that can be loaded after the backend is ready */
 const AppReady: FC = () => {
+  const [hasUnauthenticatedError, setHasUnauthenticatedError] = useState<boolean>(false);
+
+  // Link for making the HTTP requests
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
+
+  // Link for adding auth header to GraphQL requests
   const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem(AUTH_TOKEN_STR);
     return {
@@ -137,14 +143,32 @@ const AppReady: FC = () => {
     };
   });
 
+  // Handles when errors are generated, currently only checking
+  // if an unauthenticated error is generated, if so, notify the
+  // auth context.
+  const errorLink = onError(({ graphQLErrors }) => {
+    if (!graphQLErrors) {
+      return;
+    }
+
+    // Check if one of the error messages is about being unauthenticated
+    const hasUnauthenticatedError = !!graphQLErrors.find((error) => error.extensions.code === 'UNAUTHENTICATED');
+    if (hasUnauthenticatedError) {
+      setHasUnauthenticatedError(true);
+    }
+  });
+
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: concat(authLink, httpLink)
+    link: concat(concat(authLink, errorLink), httpLink)
   });
 
   return (
     <ApolloProvider client={apolloClient}>
-      <AuthProvider>
+      <AuthProvider
+        hasUnauthenticatedError={hasUnauthenticatedError}
+        setHasUnauthenticatedError={setHasUnauthenticatedError}
+      >
         <ConfirmationProvider>
           <SnackbarProvider>
             <CssBaseline />
