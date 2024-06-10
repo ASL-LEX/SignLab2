@@ -2,7 +2,6 @@ import { Box, Tabs, Tab, Select, MenuItem, FormControl, Button, Typography, Stac
 import { useState, useEffect } from 'react';
 import { Organization } from '../../graphql/graphql';
 import { SelectChangeEvent } from '@mui/material';
-import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
 import { LoginComponent } from './Login.component';
 import { SignUpComponent } from './Signup.component';
@@ -10,11 +9,6 @@ import { ResetPasswordComponent } from './ResetPassword.component';
 import { useGetOrganizationsQuery } from '../../graphql/organization/organization';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '../LanguageSelector';
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_AUTH_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN
-};
 
 export interface AuthComponentProps {
   handleAuthenticated: (token: string) => void;
@@ -91,27 +85,9 @@ interface FirebaseLoginWrapperProps {
 }
 
 const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab }) => {
-  firebase.initializeApp(firebaseConfig);
-
   // Handle multi-tenant login
   const auth = firebaseauth.getAuth();
   auth.tenantId = organization.tenantID;
-
-  // Function to leverage refresh token
-  const refresh = async (user: firebaseauth.User) => {
-    const newToken = await user.getIdToken(true);
-    setToken(newToken);
-    console.log('called');
-  };
-
-  // Handle auth changes
-  auth.onIdTokenChanged((user) => {
-    if (!user) {
-      return;
-    }
-
-    setInterval(() => refresh(user), 1000); // Run every 30 minutes
-  });
 
   return (
     <Box>

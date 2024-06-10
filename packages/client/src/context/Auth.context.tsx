@@ -1,8 +1,15 @@
 import { createContext, FC, useContext, useEffect, useState, ReactNode, SetStateAction, Dispatch } from 'react';
 import jwt_decode from 'jwt-decode';
 import { AuthComponent } from '../components/auth/Auth.component';
+import * as firebaseauth from '@firebase/auth';
+import * as firebase from '@firebase/app';
 
 export const AUTH_TOKEN_STR = 'token';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_AUTH_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN
+};
 
 export interface DecodedToken {
   aud: string;
@@ -48,6 +55,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({
   const [token, setToken] = useState<string | null>(localStorage.getItem(AUTH_TOKEN_STR));
   const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
+  const [user, setUser] = useState<firebaseauth.User | null>(null);
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebaseauth.getAuth();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      setUser(user);
+    }
+  });
 
   const handleUnauthenticated = () => {
     // Clear the token and authenticated state
@@ -63,6 +80,17 @@ export const AuthProvider: FC<AuthProviderProps> = ({
 
     const decodedToken = jwt_decode<DecodedToken>(token);
     setDecodedToken(decodedToken);
+  };
+
+  /** Handles when changes to the user is detected by Firebase Auth */
+  const handleUserChange = async (user: firebaseauth.User | null) => {
+    if (!user) {
+      handleUnauthenticated();
+      return;
+    }
+
+    const token = await user.getIdToken(true);
+    handleAuthenticated(token);
   };
 
   // Handle when the auth context is notified that an unauthenticated error
@@ -87,32 +115,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({
     setHasUnauthenticatedError(false);
   }, [hasUnauthenticatedError]);
 
-  // Handle loading the login UI
+  // Handle initial loading, check for current auth
   useEffect(() => {
-    // Check local storage for token
-    const token = localStorage.getItem(AUTH_TOKEN_STR);
-
-    // If no token, need to login
-    if (!token) {
-      handleUnauthenticated();
-      return;
-    }
-
-    // Decode the token
-    const decodedToken = jwt_decode<DecodedToken>(token);
-
-    // If token is expired, need to login
-    if (decodedToken.exp * 1000 < Date.now()) {
-      handleUnauthenticated();
-      return;
-    }
-
-    // Otherwise, can set the token and authenticated state
-    handleAuthenticated(token);
-  }, []);
+    handleUserChange(user);
+  }, [user]);
 
   const logout = () => {
     handleUnauthenticated();
+    auth.signOut();
   };
 
   return (
