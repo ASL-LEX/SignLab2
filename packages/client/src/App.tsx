@@ -34,6 +34,14 @@ import { SnackbarProvider } from './context/Snackbar.context';
 import { DatasetDownloads } from './pages/datasets/DatasetDownloads';
 import { StudyDownloads } from './pages/studies/StudyDownloads';
 import { useTranslation } from 'react-i18next';
+import * as firebase from '@firebase/app';
+import * as firebaseauth from '@firebase/auth';
+
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_AUTH_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN
+};
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -60,6 +68,9 @@ type AppState = 'loading' | 'ready' | 'failed';
 const App: FC = () => {
   // State of the app loading
   const [appState, setAppState] = useState<AppState>('loading');
+  // Initialize firebase app right away
+  firebase.initializeApp(firebaseConfig);
+
 
   const checkBackend = async () => {
     const result = await fetch(import.meta.env.VITE_HEALTH_ENDPOINT);
@@ -132,12 +143,14 @@ const AppReady: FC = () => {
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
 
   // Link for adding auth header to GraphQL requests
-  const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem(AUTH_TOKEN_STR);
+  const auth = firebaseauth.getAuth();
+  const authLink = setContext(async (_, { headers }) => {
+    // Get the current user from auth
+    const currentUser = auth.currentUser;
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: currentUser ? `Bearer ${await currentUser.getIdToken(false)}` : '',
         organization: import.meta.env.VITE_ORGANIZATION_ID || ''
       }
     };

@@ -2,14 +2,8 @@ import { createContext, FC, useContext, useEffect, useState, ReactNode, SetState
 import jwt_decode from 'jwt-decode';
 import { AuthComponent } from '../components/auth/Auth.component';
 import * as firebaseauth from '@firebase/auth';
-import * as firebase from '@firebase/app';
 
 export const AUTH_TOKEN_STR = 'token';
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_AUTH_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN
-};
 
 export interface DecodedToken {
   aud: string;
@@ -57,7 +51,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({
   const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
   const [user, setUser] = useState<firebaseauth.User | null>(null);
 
-  firebase.initializeApp(firebaseConfig);
   const auth = firebaseauth.getAuth();
 
   auth.onAuthStateChanged((user) => {
