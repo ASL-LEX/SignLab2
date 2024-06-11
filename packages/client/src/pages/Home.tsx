@@ -4,13 +4,13 @@ import { useAuth } from '../context/Auth.context';
 import { useTranslation } from 'react-i18next';
 
 export const HomePage: React.FC = () => {
-  const { token, authenticated } = useAuth();
+  const { authenticated } = useAuth();
   const { t } = useTranslation();
 
   return (
     <div>
       <AnimatedGradientText>{t('home.welcome')}</AnimatedGradientText>
-      {authenticated && token ? <p>{t('home.signedIn')}</p> : <p>{t('home.logIn')}</p>}
+      {authenticated ? <p>{t('home.signedIn')}</p> : <p>{t('home.logIn')}</p>}
     </div>
   );
 };

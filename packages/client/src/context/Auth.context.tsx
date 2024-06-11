@@ -1,59 +1,43 @@
-import { createContext, FC, useContext, useState, ReactNode } from 'react';
+import { createContext, FC, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthComponent } from '../components/auth/Auth.component';
-import * as firebaseauth from '@firebase/auth';
-
-export const AUTH_TOKEN_STR = 'token';
-
-export interface DecodedToken {
-  aud: string;
-  auth_time: number;
-  email: string;
-  email_verified: boolean;
-  exp: number;
-  firebase: {
-    identities: {
-      email: string[];
-      email_verified: boolean;
-    };
-    sign_in_provider: string;
-    user_id: string;
-    tenant: string;
-  };
-  iat: number;
-  iss: string;
-  sub: string;
-  user_id: string;
-}
+import { User, getAuth } from '@firebase/auth';
 
 export interface AuthContextProps {
   authenticated: boolean;
   logout: () => void;
+  user: User | null;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export interface AuthProviderProps {
   children: ReactNode;
+  user: User | null;
 }
 
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children, user }) => {
   const [authenticated, setAuthenticated] = useState<boolean>(true);
 
-  const auth = firebaseauth.getAuth();
+  const auth = getAuth();
+
+  useEffect(() => {
+    setAuthenticated(!!user);
+  }, [user]);
+
 
   const handleAuthenticated = () => {
     setAuthenticated(true);
   };
 
-  const logout = () => {
-    auth.signOut();
+  const logout = async () => {
+    await auth.signOut();
     setAuthenticated(false);
   };
 
   return (
     <>
       {authenticated ? (
-        <AuthContext.Provider value={{ authenticated, logout }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ authenticated, logout, user }}>{children}</AuthContext.Provider>
       ) : (
         <AuthComponent handleAuthenticated={handleAuthenticated} />
       )}

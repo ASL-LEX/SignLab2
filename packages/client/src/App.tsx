@@ -15,7 +15,7 @@ import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions'
 import { StudyUserPermissions } from './pages/studies/UserPermissions';
 import { TagView } from './pages/studies/TagView';
 import { DatasetControls } from './pages/datasets/DatasetControls';
-import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
+import { AuthProvider, useAuth } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
 import { CssBaseline, Box, styled, CircularProgress, Typography } from '@mui/material';
 import { FC, ReactNode, useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ import { SideBar } from './components/SideBar.component';
 import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { onError } from '@apollo/client/link/error';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
@@ -33,9 +32,9 @@ import { TagTrainingView } from './pages/studies/TagTrainingView';
 import { SnackbarProvider } from './context/Snackbar.context';
 import { DatasetDownloads } from './pages/datasets/DatasetDownloads';
 import { StudyDownloads } from './pages/studies/StudyDownloads';
-import { useTranslation } from 'react-i18next';
+import { useSSR, useTranslation } from 'react-i18next';
 import * as firebase from '@firebase/app';
-import * as firebaseauth from '@firebase/auth';
+import { User, getAuth } from '@firebase/auth';
 
 
 const firebaseConfig = {
@@ -140,15 +139,20 @@ const AppReady: FC = () => {
   // Link for making the HTTP requests
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
 
+  // Handle keeping track of the user
+  const [user, setUser] = useState<User | null>(null);
+  const auth = getAuth();
+
+  auth.onAuthStateChanged((user) => {
+    setUser(user);
+  });
+
   // Link for adding auth header to GraphQL requests
   const authLink = setContext(async (_, { headers }) => {
-    // Get the current user from auth
-    const auth = firebaseauth.getAuth();
-    const currentUser = auth.currentUser;
     return {
       headers: {
         ...headers,
-        authorization: currentUser ? `Bearer ${await currentUser.getIdToken(false)}` : '',
+        authorization: user ? `Bearer ${await user.getIdToken(false)}` : '',
         organization: import.meta.env.VITE_ORGANIZATION_ID || ''
       }
     };
@@ -161,7 +165,7 @@ const AppReady: FC = () => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <AuthProvider>
+      <AuthProvider user={user}>
         <ConfirmationProvider>
           <SnackbarProvider>
             <CssBaseline />
