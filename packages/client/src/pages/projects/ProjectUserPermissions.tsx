@@ -4,10 +4,11 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useProject } from '../../context/Project.context';
 import { ProjectPermissionModel, Project } from '../../graphql/graphql';
 import { useGetProjectPermissionsQuery } from '../../graphql/permission/permission';
-import { DecodedToken, useAuth } from '../../context/Auth.context';
+import { useAuth } from '../../context/Auth.context';
 import { useGrantProjectPermissionsMutation } from '../../graphql/permission/permission';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../../context/Snackbar.context';
+import { User } from '@firebase/auth';
 
 export const ProjectUserPermissions: React.FC = () => {
   const { project } = useProject();
@@ -23,7 +24,7 @@ export const ProjectUserPermissions: React.FC = () => {
 
 interface EditAdminSwitchProps {
   permission: ProjectPermissionModel;
-  currentUser: DecodedToken;
+  currentUser: User;
   project: Project;
   refetch: () => void;
 }
@@ -56,7 +57,7 @@ const EditAdminSwitch: React.FC<EditAdminSwitchProps> = (props) => {
     <Switch
       checked={props.permission.isProjectAdmin}
       onChange={handleChange}
-      disabled={!props.permission.editable || props.permission.user.uid === props.currentUser.user_id}
+      disabled={!props.permission.editable || props.permission.user.uid === props.currentUser.uid}
     />
   );
 };
@@ -69,7 +70,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
   });
 
   const [rows, setRows] = useState<ProjectPermissionModel[]>([]);
-  const { decodedToken } = useAuth();
+  const { user } = useAuth();
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
 
@@ -112,9 +113,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       headerName: t('components.projectUserPermissions.projectAdmin'),
       valueGetter: (params) => params.row.hasRole,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditAdminSwitch permission={params.row} currentUser={decodedToken!} project={project} refetch={refetch} />
-        );
+        return <EditAdminSwitch permission={params.row} currentUser={user!} project={project} refetch={refetch} />;
       },
       editable: false,
       flex: 1

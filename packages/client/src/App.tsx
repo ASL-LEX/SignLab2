@@ -15,7 +15,7 @@ import { ProjectUserPermissions } from './pages/projects/ProjectUserPermissions'
 import { StudyUserPermissions } from './pages/studies/UserPermissions';
 import { TagView } from './pages/studies/TagView';
 import { DatasetControls } from './pages/datasets/DatasetControls';
-import { AuthProvider, useAuth, AUTH_TOKEN_STR } from './context/Auth.context';
+import { AuthProvider, useAuth } from './context/Auth.context';
 import { AdminGuard } from './guards/AdminGuard';
 import { CssBaseline, Box, styled, CircularProgress, Typography } from '@mui/material';
 import { FC, ReactNode, useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ import { SideBar } from './components/SideBar.component';
 import { ProjectProvider } from './context/Project.context';
 import { ApolloClient, ApolloProvider, InMemoryCache, concat, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { onError } from '@apollo/client/link/error';
 import { StudyProvider } from './context/Study.context';
 import { ConfirmationProvider } from './context/Confirmation.context';
 import { DatasetProvider } from './context/Dataset.context';
@@ -34,6 +33,13 @@ import { SnackbarProvider } from './context/Snackbar.context';
 import { DatasetDownloads } from './pages/datasets/DatasetDownloads';
 import { StudyDownloads } from './pages/studies/StudyDownloads';
 import { useTranslation } from 'react-i18next';
+import * as firebase from '@firebase/app';
+import { User, getAuth } from '@firebase/auth';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_AUTH_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN
+};
 
 const drawerWidth = 256;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -60,6 +66,8 @@ type AppState = 'loading' | 'ready' | 'failed';
 const App: FC = () => {
   // State of the app loading
   const [appState, setAppState] = useState<AppState>('loading');
+  // Initialize firebase app right away
+  firebase.initializeApp(firebaseConfig);
 
   const checkBackend = async () => {
     const result = await fetch(import.meta.env.VITE_HEALTH_ENDPOINT);
@@ -126,49 +134,38 @@ const AppFailed: FC = () => {
 
 /** Portion of the app that can be loaded after the backend is ready */
 const AppReady: FC = () => {
-  const [hasUnauthenticatedError, setHasUnauthenticatedError] = useState<boolean>(false);
-
   // Link for making the HTTP requests
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
 
+  // IMPORTANT
+  // This block handles more then meets the eye, by listening to
+  // the change in the auth state, the whole app updates between the
+  // login screen and the normal app view.
+  const [user, setUser] = useState<User | null>(null);
+  const auth = getAuth();
+  auth.onAuthStateChanged((user) => {
+    setUser(user);
+  });
+
   // Link for adding auth header to GraphQL requests
-  const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem(AUTH_TOKEN_STR);
+  const authLink = setContext(async (_, { headers }) => {
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: user ? `Bearer ${await user.getIdToken(false)}` : '',
         organization: import.meta.env.VITE_ORGANIZATION_ID || ''
       }
     };
   });
 
-  // Handles when errors are generated, currently only checking
-  // if an unauthenticated error is generated, if so, notify the
-  // auth context.
-  const errorLink = onError(({ graphQLErrors }) => {
-    if (!graphQLErrors) {
-      return;
-    }
-
-    // Check if one of the error messages is about being unauthenticated
-    const hasUnauthenticatedError = !!graphQLErrors.find((error) => error.extensions.code === 'UNAUTHENTICATED');
-    if (hasUnauthenticatedError) {
-      setHasUnauthenticatedError(true);
-    }
-  });
-
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: concat(concat(authLink, errorLink), httpLink)
+    link: concat(authLink, httpLink)
   });
 
   return (
     <ApolloProvider client={apolloClient}>
-      <AuthProvider
-        hasUnauthenticatedError={hasUnauthenticatedError}
-        setHasUnauthenticatedError={setHasUnauthenticatedError}
-      >
+      <AuthProvider user={user}>
         <ConfirmationProvider>
           <SnackbarProvider>
             <CssBaseline />

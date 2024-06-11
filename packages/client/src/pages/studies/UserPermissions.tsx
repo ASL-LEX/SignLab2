@@ -2,7 +2,7 @@ import { Switch, Typography, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useStudy } from '../../context/Study.context';
 import { Study, StudyPermissionModel } from '../../graphql/graphql';
-import { DecodedToken, useAuth } from '../../context/Auth.context';
+import { useAuth } from '../../context/Auth.context';
 import {
   useGetStudyPermissionsQuery,
   useGrantStudyAdminMutation,
@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import * as firebaseauth from '@firebase/auth';
 
 export const StudyUserPermissions: React.FC = () => {
   const { study } = useStudy();
@@ -28,7 +29,7 @@ export const StudyUserPermissions: React.FC = () => {
 interface EditSwitchProps {
   study: Study;
   permission: StudyPermissionModel;
-  currentUser: DecodedToken;
+  currentUser: firebaseauth.User;
   refetch: () => void;
 }
 
@@ -54,7 +55,7 @@ const EditStudyAdminSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isStudyAdmin}
-      disabled={!props.permission.isStudyAdminEditable || props.permission.user.uid === props.currentUser.user_id}
+      disabled={!props.permission.isStudyAdminEditable || props.permission.user.uid === props.currentUser.uid}
       onChange={handleChange}
     />
   );
@@ -82,7 +83,7 @@ const EditContributorSwitch: React.FC<EditSwitchProps> = (props) => {
   return (
     <Switch
       checked={props.permission.isContributor}
-      disabled={!props.permission.isContributorEditable || props.permission.user.uid === props.currentUser.user_id}
+      disabled={!props.permission.isContributorEditable || props.permission.user.uid === props.currentUser.uid}
       onChange={handleChange}
     />
   );
@@ -142,7 +143,8 @@ const TagViewButton: React.FC<TagViewButtonProps> = (props) => {
 };
 
 const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
-  const { decodedToken } = useAuth();
+  const { user } = useAuth();
+
   const { data, refetch } = useGetStudyPermissionsQuery({
     variables: {
       study: study._id
@@ -172,9 +174,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.studyAdmin'),
       valueGetter: (params) => params.row.isStudyAdmin,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditStudyAdminSwitch permission={params.row} currentUser={decodedToken!} study={study} refetch={refetch} />
-        );
+        return <EditStudyAdminSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1
@@ -184,9 +184,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.contributor'),
       valueGetter: (params) => params.row.isContributor,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditContributorSwitch permission={params.row} currentUser={decodedToken!} study={study} refetch={refetch} />
-        );
+        return <EditContributorSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1
@@ -196,9 +194,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.trained'),
       valueGetter: (params) => params.row.isTrained,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditTrainedSwitch permission={params.row} currentUser={decodedToken!} study={study} refetch={refetch} />
-        );
+        return <EditTrainedSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1

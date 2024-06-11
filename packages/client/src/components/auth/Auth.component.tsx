@@ -2,8 +2,6 @@ import { Box, Tabs, Tab, Select, MenuItem, FormControl, Button, Typography, Stac
 import { useState, useEffect } from 'react';
 import { Organization } from '../../graphql/graphql';
 import { SelectChangeEvent } from '@mui/material';
-import * as firebaseui from 'firebaseui';
-import * as firebase from '@firebase/app';
 import * as firebaseauth from '@firebase/auth';
 import { LoginComponent } from './Login.component';
 import { SignUpComponent } from './Signup.component';
@@ -12,16 +10,7 @@ import { useGetOrganizationsQuery } from '../../graphql/organization/organizatio
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '../LanguageSelector';
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_AUTH_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN
-};
-
-export interface AuthComponentProps {
-  handleAuthenticated: (token: string) => void;
-}
-
-export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticated }) => {
+export const AuthComponent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup' | 'reset'>('login');
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [organizationList, setOrganizationList] = useState<Organization[]>([]);
@@ -30,7 +19,6 @@ export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticate
   const getOrganizationResult = useGetOrganizationsQuery();
 
   useEffect(() => {
-    // TODO: Handle multi-organization login
     if (getOrganizationResult.data && getOrganizationResult.data.getOrganizations.length > 0) {
       setOrganizationList(getOrganizationResult.data.getOrganizations);
       setOrganization(getOrganizationResult.data.getOrganizations[0]);
@@ -68,9 +56,7 @@ export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticate
             ))}
           </Select>
         </FormControl>
-        {organization && (
-          <FirebaseLoginWrapper setToken={handleAuthenticated} organization={organization} activeTab={activeTab} />
-        )}
+        {organization && <FirebaseLoginWrapper organization={organization} activeTab={activeTab} />}
         {activeTab !== 'reset' && (
           <Button
             onClick={(event) => handleTabChange(event, 'reset')}
@@ -86,38 +72,18 @@ export const AuthComponent: React.FC<AuthComponentProps> = ({ handleAuthenticate
 };
 
 interface FirebaseLoginWrapperProps {
-  setToken: (token: string) => void;
   organization: Organization;
   activeTab: 'login' | 'signup' | 'reset';
 }
 
-const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ setToken, organization, activeTab }) => {
-  firebase.initializeApp(firebaseConfig);
-
+const FirebaseLoginWrapper: React.FC<FirebaseLoginWrapperProps> = ({ organization, activeTab }) => {
   // Handle multi-tenant login
   const auth = firebaseauth.getAuth();
   auth.tenantId = organization.tenantID;
-  const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
-
-  const signInSuccess = async (authResult: any) => {
-    setToken(await authResult.user.getIdToken());
-  };
-
-  useEffect(() => {
-    ui.start('#firebaseui-auth-container', {
-      callbacks: {
-        signInSuccessWithAuthResult: (authResult, _redirectUrl) => {
-          signInSuccess(authResult);
-          return true;
-        }
-      },
-      signInOptions: [firebaseauth.GoogleAuthProvider.PROVIDER_ID]
-    });
-  }, []);
 
   return (
     <Box>
-      {activeTab === 'login' && <LoginComponent onLoginSuccess={setToken} auth={auth} />}
+      {activeTab === 'login' && <LoginComponent auth={auth} />}
       {activeTab === 'signup' && <SignUpComponent auth={auth} />}
       {activeTab === 'reset' && <ResetPasswordComponent auth={auth} />}
       <Box id="firebaseui-auth-container" style={{ display: activeTab === 'reset' ? 'none' : 'block' }} />
