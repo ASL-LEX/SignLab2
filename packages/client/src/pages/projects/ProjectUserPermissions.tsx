@@ -113,9 +113,7 @@ const UserPermissionTable: React.FC<{ project: Project }> = ({ project }) => {
       headerName: t('components.projectUserPermissions.projectAdmin'),
       valueGetter: (params) => params.row.hasRole,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditAdminSwitch permission={params.row} currentUser={user!} project={project} refetch={refetch} />
-        );
+        return <EditAdminSwitch permission={params.row} currentUser={user!} project={project} refetch={refetch} />;
       },
       editable: false,
       flex: 1

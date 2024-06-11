@@ -56,9 +56,7 @@ export const AuthComponent: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-        {organization && (
-          <FirebaseLoginWrapper organization={organization} activeTab={activeTab} />
-        )}
+        {organization && <FirebaseLoginWrapper organization={organization} activeTab={activeTab} />}
         {activeTab !== 'reset' && (
           <Button
             onClick={(event) => handleTabChange(event, 'reset')}

@@ -174,9 +174,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.studyAdmin'),
       valueGetter: (params) => params.row.isStudyAdmin,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditStudyAdminSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />
-        );
+        return <EditStudyAdminSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1
@@ -186,9 +184,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.contributor'),
       valueGetter: (params) => params.row.isContributor,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditContributorSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />
-        );
+        return <EditContributorSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1
@@ -198,9 +194,7 @@ const UserPermissionTable: React.FC<{ study: Study }> = ({ study }) => {
       headerName: t('components.userPermissions.trained'),
       valueGetter: (params) => params.row.isTrained,
       renderCell: (params: GridRenderCellParams) => {
-        return (
-          <EditTrainedSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />
-        );
+        return <EditTrainedSwitch permission={params.row} currentUser={user!} study={study} refetch={refetch} />;
       },
       editable: false,
       flex: 1

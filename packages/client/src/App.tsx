@@ -36,7 +36,6 @@ import { useTranslation } from 'react-i18next';
 import * as firebase from '@firebase/app';
 import { User, getAuth } from '@firebase/auth';
 
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN
@@ -69,7 +68,6 @@ const App: FC = () => {
   const [appState, setAppState] = useState<AppState>('loading');
   // Initialize firebase app right away
   firebase.initializeApp(firebaseConfig);
-
 
   const checkBackend = async () => {
     const result = await fetch(import.meta.env.VITE_HEALTH_ENDPOINT);
