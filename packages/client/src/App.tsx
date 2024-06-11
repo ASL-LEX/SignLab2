@@ -137,15 +137,13 @@ const AppFailed: FC = () => {
 
 /** Portion of the app that can be loaded after the backend is ready */
 const AppReady: FC = () => {
-  const [hasUnauthenticatedError, setHasUnauthenticatedError] = useState<boolean>(false);
-
   // Link for making the HTTP requests
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
 
   // Link for adding auth header to GraphQL requests
-  const auth = firebaseauth.getAuth();
   const authLink = setContext(async (_, { headers }) => {
     // Get the current user from auth
+    const auth = firebaseauth.getAuth();
     const currentUser = auth.currentUser;
     return {
       headers: {
@@ -156,32 +154,14 @@ const AppReady: FC = () => {
     };
   });
 
-  // Handles when errors are generated, currently only checking
-  // if an unauthenticated error is generated, if so, notify the
-  // auth context.
-  const errorLink = onError(({ graphQLErrors }) => {
-    if (!graphQLErrors) {
-      return;
-    }
-
-    // Check if one of the error messages is about being unauthenticated
-    const hasUnauthenticatedError = !!graphQLErrors.find((error) => error.extensions.code === 'UNAUTHENTICATED');
-    if (hasUnauthenticatedError) {
-      setHasUnauthenticatedError(true);
-    }
-  });
-
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: concat(concat(authLink, errorLink), httpLink)
+    link: concat(authLink, httpLink)
   });
 
   return (
     <ApolloProvider client={apolloClient}>
-      <AuthProvider
-        hasUnauthenticatedError={hasUnauthenticatedError}
-        setHasUnauthenticatedError={setHasUnauthenticatedError}
-      >
+      <AuthProvider>
         <ConfirmationProvider>
           <SnackbarProvider>
             <CssBaseline />
