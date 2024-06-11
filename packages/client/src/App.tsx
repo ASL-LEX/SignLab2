@@ -32,7 +32,7 @@ import { TagTrainingView } from './pages/studies/TagTrainingView';
 import { SnackbarProvider } from './context/Snackbar.context';
 import { DatasetDownloads } from './pages/datasets/DatasetDownloads';
 import { StudyDownloads } from './pages/studies/StudyDownloads';
-import { useSSR, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import * as firebase from '@firebase/app';
 import { User, getAuth } from '@firebase/auth';
 
@@ -139,10 +139,12 @@ const AppReady: FC = () => {
   // Link for making the HTTP requests
   const httpLink = createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_ENDPOINT });
 
-  // Handle keeping track of the user
+  // IMPORTANT
+  // This block handles more then meets the eye, by listening to
+  // the change in the auth state, the whole app updates between the
+  // login screen and the normal app view.
   const [user, setUser] = useState<User | null>(null);
   const auth = getAuth();
-
   auth.onAuthStateChanged((user) => {
     setUser(user);
   });

@@ -24,11 +24,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children, user }) => {
     setAuthenticated(!!user);
   }, [user]);
 
-
-  const handleAuthenticated = () => {
-    setAuthenticated(true);
-  };
-
   const logout = async () => {
     await auth.signOut();
     setAuthenticated(false);
@@ -39,7 +34,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children, user }) => {
       {authenticated ? (
         <AuthContext.Provider value={{ authenticated, logout, user }}>{children}</AuthContext.Provider>
       ) : (
-        <AuthComponent handleAuthenticated={handleAuthenticated} />
+        <AuthComponent />
       )}
     </>
   );

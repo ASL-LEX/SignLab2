@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { FirebaseError } from '@firebase/util';
 
 interface LoginComponentProps {
-  onLoginSuccess: (token: string) => void;
   auth: firebaseauth.Auth;
 }
 
 // Login Page Component
-export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }) => {
+export const LoginComponent: FC<LoginComponentProps> = ({ auth }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -21,9 +20,9 @@ export const LoginComponent: FC<LoginComponentProps> = ({ auth, onLoginSuccess }
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const userCredential = await firebaseauth.signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user.getIdToken();
-      onLoginSuccess(token);
+      // NOTE: Signing in with Firebase will automatically update the
+      // internal client object causing the rest of the UI to update
+      await firebaseauth.signInWithEmailAndPassword(auth, email, password);
     } catch (error: unknown) {
       let errorMessage = '';
       if (error instanceof FirebaseError) {
