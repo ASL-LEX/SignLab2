@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Tag } from '../models/tag.model';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import { Study } from '../../study/study.model';
 import { Entry } from '../../entry/models/entry.model';
 import { StudyService } from '../../study/study.service';
@@ -150,6 +150,30 @@ export class TagService {
       return incomplete;
     }
 
+    // Handles additional pipeline logic which may need to take place when finding
+    // the next tag
+    let additionalOperations: PipelineStage[] = [];
+
+    // For the case where the user is not allowed to tag entries which they
+    // recorded, the entry needs to be expanded and filtered on
+    if (study.studyConfig?.disableSameUserEntryTagging) {
+      additionalOperations = [
+        // Look up the entry from the entry ID stored on the tag object
+        {
+          $lookup: {
+            from: Entry.name,
+            let: { 'entryID': { '$toObjectId': '$entry' } },
+            pipeline: [
+              { $match: { $expr: ['$id', '$$entryID'] } }
+            ],
+            as: 'entryFull'
+          }
+        },
+        // Now match where the user is not identified as the user who recorded the entry
+        { $match: { 'entryFull.signlabRecording.user': { $ne: user } } }
+      ];
+    }
+
     // Atomically search for an incomplete tag and assign it the current
     // user
     await this.tagModel.db.transaction(async (): Promise<void> => {
@@ -158,6 +182,8 @@ export class TagService {
         { $match: { enabled: true, study: study._id.toString(), training: false } },
         // Grab tags that are unassigned (user field doesn't exist) or have been completed by the user
         { $match: { $or: [{ user: { $exists: false } }, { user: { $eq: user } }] } },
+        // Add in any additional operations that may need to take place
+        ...additionalOperations,
         // Group by the entrys and expand tags
         { $group: { _id: { entry: '$entry' }, tag: { $push: '$$ROOT' } } },
         // Now filter where user does not show up in the list of tags
