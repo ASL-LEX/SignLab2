@@ -161,10 +161,10 @@ export class TagService {
         // Look up the entry from the entry ID stored on the tag object
         {
           $lookup: {
-            from: Entry.name,
-            let: { 'entryID': { '$toObjectId': '$entry' } },
+            from: 'entries',
+            let: { 'entryID': { $toObjectId: '$entry' } },
             pipeline: [
-              { $match: { $expr: ['$id', '$$entryID'] } }
+              { $match: { $expr: { $eq: ['$_id', '$$entryID'] } } }
             ],
             as: 'entryFull'
           }
