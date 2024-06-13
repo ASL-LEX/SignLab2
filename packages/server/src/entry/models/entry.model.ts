@@ -21,6 +21,10 @@ export class SignLabRecorded {
 
   @Prop({ required: true })
   videoNumber: number;
+
+  /** The user who made the recording */
+  @Prop({ required: false })
+  user?: string;
 }
 
 export const SignLabRecordedSchema = SchemaFactory.createForClass(SignLabRecorded);

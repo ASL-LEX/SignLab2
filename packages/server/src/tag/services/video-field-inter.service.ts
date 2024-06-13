@@ -106,7 +106,8 @@ export class VideoFieldIntermediateService {
         study: tag.study,
         tag: tag._id,
         fieldName: videoField.field,
-        videoNumber: videoField.index
+        videoNumber: videoField.index,
+        user: user.user_id
       }
     );
 
