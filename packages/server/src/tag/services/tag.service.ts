@@ -162,10 +162,8 @@ export class TagService {
         {
           $lookup: {
             from: 'entries',
-            let: { 'entryID': { $toObjectId: '$entry' } },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$_id', '$$entryID'] } } }
-            ],
+            let: { entryID: { $toObjectId: '$entry' } },
+            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$entryID'] } } }],
             as: 'entryFull'
           }
         },

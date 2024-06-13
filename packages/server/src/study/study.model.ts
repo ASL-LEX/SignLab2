@@ -17,7 +17,6 @@ export class TagSchema {
   uiSchema: Layout;
 }
 
-
 const TagSchemaSchema = SchemaFactory.createForClass(TagSchema);
 
 @Schema()
@@ -27,7 +26,7 @@ export class StudyConfig {
    * When set, users who recorded a given entry, cannot then
    * tag on that entry
    */
-  @Prop({ required: false})
+  @Prop({ required: false })
   @Field({ nullable: true })
   disableSameUserEntryTagging?: boolean;
 }
