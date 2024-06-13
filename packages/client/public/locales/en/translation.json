@@ -124,7 +124,8 @@
       "startOver": "Start Over",
       "formTitle": "Study Information",
       "tagsDescription": "Number of times each entry needs to be tagged (default 1)",
-      "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access"
+      "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access",
+      "disableSameUserTagging": "Disable users tagging entries they recorded"
     },
     "studyControl": {
       "deleteStudy": "Delete Study",

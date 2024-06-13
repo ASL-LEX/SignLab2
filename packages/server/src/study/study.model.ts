@@ -21,6 +21,20 @@ const TagSchemaSchema = SchemaFactory.createForClass(TagSchema);
 
 @Schema()
 @ObjectType()
+export class StudyConfig {
+  /**
+   * When set, users who recorded a given entry, cannot then
+   * tag on that entry
+   */
+  @Prop({ required: false })
+  @Field({ nullable: true })
+  disableSameUserEntryTagging?: boolean;
+}
+
+const StudyConfigSchema = SchemaFactory.createForClass(StudyConfig);
+
+@Schema()
+@ObjectType()
 export class Study {
   @Field(() => ID)
   _id: string;
@@ -52,6 +66,10 @@ export class Study {
   @Prop()
   @Field()
   tagsPerEntry: number;
+
+  @Prop({ type: StudyConfigSchema, requried: false })
+  @Field(() => StudyConfig, { nullable: true })
+  studyConfig?: StudyConfig;
 }
 
 export type StudyDocument = Study & Document;

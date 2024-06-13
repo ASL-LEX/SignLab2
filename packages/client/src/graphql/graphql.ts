@@ -48,6 +48,10 @@ export type DatasetCreate = {
   name: Scalars['String']['input'];
 };
 
+export enum DatasetDownloadField {
+  EntryZip = 'ENTRY_ZIP'
+}
+
 export type DatasetDownloadRequest = {
   __typename?: 'DatasetDownloadRequest';
   _id: Scalars['String']['output'];
@@ -168,6 +172,8 @@ export type Mutation = {
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
   lexiconCreate: Lexicon;
+  markDatasetFieldComplete: Scalars['Boolean']['output'];
+  markStudyFieldComplete: Scalars['Boolean']['output'];
   removeTag: Scalars['Boolean']['output'];
   saveVideoField: VideoFieldIntermediate;
   setEntryEnabled: Scalars['Boolean']['output'];
@@ -324,6 +330,20 @@ export type MutationLexiconClearEntriesArgs = {
 
 export type MutationLexiconCreateArgs = {
   lexicon: LexiconCreate;
+};
+
+
+export type MutationMarkDatasetFieldCompleteArgs = {
+  code: Scalars['String']['input'];
+  datasetField: DatasetDownloadField;
+  downloadRequest: Scalars['ID']['input'];
+};
+
+
+export type MutationMarkStudyFieldCompleteArgs = {
+  code: Scalars['String']['input'];
+  downloadRequest: Scalars['ID']['input'];
+  studyField: StudyDownloadField;
 };
 
 
@@ -569,8 +589,18 @@ export type Study = {
   instructions: Scalars['String']['output'];
   name: Scalars['String']['output'];
   project: Scalars['ID']['output'];
+  studyConfig?: Maybe<StudyConfig>;
   tagSchema: TagSchema;
   tagsPerEntry: Scalars['Float']['output'];
+};
+
+export type StudyConfig = {
+  __typename?: 'StudyConfig';
+  disableSameUserEntryTagging?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type StudyConfigInput = {
+  disableSameUserEntryTagging?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type StudyCreate = {
@@ -578,9 +608,15 @@ export type StudyCreate = {
   instructions: Scalars['String']['input'];
   name: Scalars['String']['input'];
   project: Scalars['ID']['input'];
+  studyConfig?: InputMaybe<StudyConfigInput>;
   tagSchema: TagSchemaInput;
   tagsPerEntry: Scalars['Float']['input'];
 };
+
+export enum StudyDownloadField {
+  EntryZip = 'ENTRY_ZIP',
+  TaggedEntriesZip = 'TAGGED_ENTRIES_ZIP'
+}
 
 export type StudyDownloadRequest = {
   __typename?: 'StudyDownloadRequest';

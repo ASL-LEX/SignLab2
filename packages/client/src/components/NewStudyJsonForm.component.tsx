@@ -34,6 +34,15 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
       tagsPerEntry: {
         type: 'number',
         default: 1
+      },
+      studyConfig: {
+        type: 'object',
+        properties: {
+          disableSameUserEntryTagging: {
+            type: 'boolean',
+            default: false
+          }
+        }
       }
     },
     required: ['name', 'description', 'instructions', 'tagsPerEntry']
@@ -62,6 +71,11 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
         type: 'Control',
         label: t('components.newStudy.tagsDescription'),
         scope: '#/properties/tagsPerEntry'
+      },
+      {
+        type: 'Control',
+        label: t('components.newStudy.disableSameUserTagging'),
+        scope: '#/properties/studyConfig/properties/disableSameUserEntryTagging'
       }
     ]
   };
