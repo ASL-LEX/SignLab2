@@ -1,63 +1,195 @@
 {
+  "Auth": {
+    "dialogClose": "Cerrar",
+    "email": "Correo electrónico",
+    "enterPassword": "Ingresa tu contraseña",
+    "enterUsername": "Ingresa tu nombre de usuario",
+    "errorUnexpected": "Error desconocido. Por favor, contacta con el administrador",
+    "login": {
+      "login": "Iniciar sesión",
+      "userNotFound": "El usuario no existe. Por favor, regístrate primero",
+      "wrongPassword": "Contraseña incorrecta"
+    },
+    "organization": "Organización",
+    "password": "Contraseña",
+    "resetPassword": {
+      "confirmDialog": "Se ha enviado un correo electrónico para restablecer tu contraseña. Por favor, revisa tu correo y sigue las instrucciones",
+      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
+      "resetPassword": "Restablecer la contraseña",
+      "userNotFound": "No se encontró ningún usuario con esta dirección de correo electrónico"
+    },
+    "signup": {
+      "emailAlreadyInUse": "Este correo electrónico ya está en uso. Por favor, inicia sesión directamente",
+      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
+      "passwordNotMatch": "Las contraseñas ingresadas no coinciden",
+      "reEnterPassword": "Reingresa la contraseña",
+      "signup": "Registrarse",
+      "success": "Registro exitoso. Por favor, inicia sesión",
+      "weakPassword": "La contraseña es demasiado débil. Utilice una contraseña más segura"
+    },
+    "submit": "Enviar"
+  },
+  "common": {
+    "back": "",
+    "cancel": "",
+    "clear": "",
+    "complete": "",
+    "continue": "",
+    "dataset": "",
+    "dateFormat": "",
+    "delete": "",
+    "description": "",
+    "download": "",
+    "email": "",
+    "enable": "",
+    "entryId": "",
+    "finish": "",
+    "instruction": "",
+    "key": "",
+    "loading": "",
+    "name": "",
+    "next": "",
+    "ok": "",
+    "primary": "",
+    "project": "",
+    "redo": "",
+    "status": "",
+    "study": "",
+    "submit": "",
+    "video": "",
+    "view": ""
+  },
+  "components": {
+    "contribute": {
+      "enterTagging": "",
+      "noTaggingLeft": "",
+      "studyTagging": "",
+      "studyTraining": ""
+    },
+    "datasetcontrol": {
+      "deleteEntries": ""
+    },
+    "datasetControl": {
+      "addDataset": "",
+      "deleteDescription": "",
+      "deleteEntry": "",
+      "deleteMultipleEntries": "",
+      "downloadDescription": "",
+      "downloadFailed": "",
+      "downloadStartedSuccess": "",
+      "downloadTitle": "",
+      "uploadEntries": ""
+    },
+    "datasetDownload": {
+      "entryDownload": "",
+      "requestDate": ""
+    },
+    "environment": {
+      "title": ""
+    },
+    "languageSelector": {
+      "selectLanguage": "Seleccione el idioma"
+    },
+    "newProject": {
+      "descriptionDescription": "",
+      "formLabel": "",
+      "nameDescription": "",
+      "projectExists": ""
+    },
+    "newStudy": {
+      "completed": "",
+      "createStudy": "",
+      "disableSameUserTagging": "",
+      "formTitle": "",
+      "noDatasets": "",
+      "startOver": "",
+      "tagsDescription": ""
+    },
+    "projectAccess": {
+      "accessFor": "",
+      "datasetName": "",
+      "projectHasAccess": "",
+      "selectProject": ""
+    },
+    "projectControl": {
+      "deleteDescription": "",
+      "deleteStudy": ""
+    },
+    "projectUserPermissions": {
+      "projectAdmin": ""
+    },
+    "studyControl": {
+      "deleteDescription": "",
+      "deleteStudy": ""
+    },
+    "studyDownload": {
+      "csv": "",
+      "downloadDescription": "",
+      "downloadFailed": "",
+      "downloadStartedSuccess": "",
+      "downloadTitle": "",
+      "taggedEntries": ""
+    },
+    "successPage": {
+      "succefullyCreated": ""
+    },
+    "tagView": {
+      "originalEntry": ""
+    },
+    "userPermissions": {
+      "contributor": "",
+      "noTrainingTags": "",
+      "studyAdmin": "",
+      "trained": "",
+      "trainingView": ""
+    }
+  },
+  "errors": {
+    "csvUpload": "",
+    "datasetCreate": "",
+    "datasetPermissionUpdate": "",
+    "datasetsForProject": "",
+    "entryQuery": "",
+    "entryUpload": "",
+    "entryUploadComplete": "",
+    "projectAdminUpdate": "",
+    "projectCreate": "",
+    "projectDelete": "",
+    "projectQuery": "",
+    "studyCreate": "",
+    "studyDelete": "",
+    "studyExists": "",
+    "tagComplete": "",
+    "tagsQuery": "",
+    "uploadSessionCreate": ""
+  },
   "home": {
-    "welcome": "Bienvenido a SignLab",
+    "backendFailed": "",
+    "logIn": "Por favor inicie sesión para continuar",
     "signedIn": "Has iniciado sesión",
-    "logIn": "Por favor inicie sesión para continuar"
+    "welcome": "Bienvenido a SignLab"
   },
   "languages": {
     "en": "Inglés",
     "es": "Español"
   },
   "menu": {
-    "projects": "Proyectos",
-    "newProject": "Nuevo proyecto",
-    "projectControl": "Control de Proyecto",
-    "userPermissions": "Permisos de usuario",
-    "studies": "Estudios",
-    "newStudy": "Nuevo estudio",
-    "studyControl": "Control del estudio",
-    "entryControls": "Controles de entrada",
-    "downloadTags": "Descargar Etiquetas",
-    "datasets": "Conjuntos de datos",
-    "datasetControl": "Control de conjunto de datos",
-    "projectAccess": "Acceso al proyecto",
     "contribute": "Contribuir",
+    "datasetControl": "Control de conjunto de datos",
+    "datasetDownloads": "",
+    "datasets": "Conjuntos de datos",
+    "entryControl": "",
+    "logout": "Cerrar sesión",
+    "newProject": "Nuevo proyecto",
+    "newStudy": "Nuevo estudio",
+    "projectAccess": "Acceso al proyecto",
+    "projectControl": "Control de Proyecto",
+    "projects": "Proyectos",
+    "studies": "Estudios",
+    "studyControl": "Control del estudio",
+    "studyDownloads": "",
     "tagInStudy": "Etiqueta en estudio",
-    "logout": "Cerrar sesión"
-  },
-  "components": {
-    "languageSelector": {
-      "selectLanguage": "Seleccione el idioma"
-    }
-  },
-  "Auth": {
-    "errorUnexpected": "Error desconocido. Por favor, contacta con el administrador",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "enterUsername": "Ingresa tu nombre de usuario",
-    "enterPassword": "Ingresa tu contraseña",
-    "dialogClose": "Cerrar",
-    "submit": "Enviar",
-    "organization": "Organización",
-    "login": {
-      "wrongPassword": "Contraseña incorrecta",
-      "userNotFound": "El usuario no existe. Por favor, regístrate primero",
-      "login": "Iniciar sesión"
-    },
-    "signup": {
-      "emailAlreadyInUse": "Este correo electrónico ya está en uso. Por favor, inicia sesión directamente",
-      "weakPassword": "La contraseña es demasiado débil. Utilice una contraseña más segura",
-      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
-      "passwordNotMatch": "Las contraseñas ingresadas no coinciden",
-      "success": "Registro exitoso. Por favor, inicia sesión",
-      "reEnterPassword": "Reingresa la contraseña",
-      "signup": "Registrarse"
-    },
-    "resetPassword": {
-      "userNotFound": "No se encontró ningún usuario con esta dirección de correo electrónico",
-      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
-      "confirmDialog": "Se ha enviado un correo electrónico para restablecer tu contraseña. Por favor, revisa tu correo y sigue las instrucciones",
-      "resetPassword": "Restablecer la contraseña"
-    }
+    "userPermissions": "Permisos de usuario",
+    "viewTags": ""
   }
 }
