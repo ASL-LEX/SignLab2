@@ -19,6 +19,17 @@ export const LanguageSelector: React.FC = () => {
     setLanguage(newLang);
   };
 
+  const getLanguageName = (lang: string) => {
+    switch (lang) {
+      case 'en':
+        return t('languages.en');
+      case 'es':
+        return t('languages.es');
+      default:
+        throw new Error(`Unsupported language: ${lang}`);
+    }
+  };
+
   return (
     <Paper sx={{ padding: 1, marginTop: 5, minWidth: '200px' }}>
       <FormControl sx={{ minWidth: '200px' }}>
@@ -26,7 +37,7 @@ export const LanguageSelector: React.FC = () => {
         <Select value={language} label="Language" onChange={handleChange}>
           {languages.map((lang) => (
             <MenuItem key={lang} value={lang}>
-              {t('languages.' + lang)}
+              {getLanguageName(lang)}
             </MenuItem>
           ))}
         </Select>
