@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "introspection": "graphql-codegen --config graphql-codegen.yml"
+    "introspection": "graphql-codegen --config graphql-codegen.yml",
+    "i18next": "i18next"
   },
   "dependencies": {
     "@apollo/client": "^3.8.3",
