@@ -24,11 +24,11 @@ export const LanguageSelector: React.FC = () => {
       case 'en':
         return t('languages.en');
       case 'es':
-        return t('languages.es')
+        return t('languages.es');
       default:
         throw new Error(`Unsupported language: ${lang}`);
     }
-  }
+  };
 
   return (
     <Paper sx={{ padding: 1, marginTop: 5, minWidth: '200px' }}>
