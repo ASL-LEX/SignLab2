@@ -19,6 +19,7 @@ import { CsvField } from '../types/csv-field';
 import { videoCsvTest, VideoCsvTransformer } from '../pipes/csv/video-field.pipe';
 import { basicCsvTest, BasicCsvTransformer } from '../pipes/csv/basic-field.pipe';
 import { StudyService } from '../../study/study.service';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class StudyDownloadService {
@@ -43,7 +44,8 @@ export class StudyDownloadService {
     private readonly videoFieldService: VideoFieldService,
     private readonly basicCsvTransformer: BasicCsvTransformer,
     private readonly videoCsvTransformer: VideoCsvTransformer,
-    private readonly studyService: StudyService
+    private readonly studyService: StudyService,
+    private readonly userService: UserService
   ) {}
 
   async createDownloadRequest(
@@ -65,6 +67,7 @@ export class StudyDownloadService {
     // Create the locations for all the artifacts
     const zipLocation = `${bucketLocation}/entries.zip`;
     const entryJSONLocation = `${bucketLocation}/entries.json`;
+    const userCSVLocation = `${bucketLocation}/user.csv`;
     const webhookPayloadLocation = `${bucketLocation}/webhook.json`;
     const tagCSVLocation = `${bucketLocation}/tag.csv`;
     const taggedEntriesZipLocation = `${bucketLocation}/tagged_entries.zip`;
@@ -78,6 +81,7 @@ export class StudyDownloadService {
           bucketLocation: bucketLocation,
           entryZIPLocation: zipLocation,
           entryJSONLocation: entryJSONLocation,
+          userCSVLocation: userCSVLocation,
           webhookPayloadLocation: webhookPayloadLocation,
           tagCSVLocation: tagCSVLocation,
           taggedEntriesZipLocation: taggedEntriesZipLocation,
@@ -111,6 +115,8 @@ export class StudyDownloadService {
     });
     // Download the tag data as a CSV
     await this.generateCSV(request);
+    // Download the user data
+    await this.generateUserCSV(request, organization);
     // Download the entries that were tagged in this study
     await this.downloadService.startZipJob({
       entryJSONLocation: request.taggedEntriesJSONLocation!,
@@ -216,6 +222,26 @@ export class StudyDownloadService {
       throw new Error(`No bucket found for organization ${downloadRequest.organization}`);
     }
     await bucket.writeText(downloadRequest.tagCSVLocation!, dataString);
+  }
+
+  /**
+   * Generate the CSV of the user ID to email mappings
+   */
+  private async generateUserCSV(downloadRequest: StudyDownloadRequest, organization: Organization): Promise<void> {
+    const users = await this.userService.getUsersForTenant(organization.tenantID);
+
+    let body = '';
+    for (const user of users) {
+      body += `${user.uid},${user.email || ''}\n`;
+    }
+    const dataString = 'id,email\n' + body;
+
+    // Store the CSV in the expected location in the bucket
+    const bucket = await this.bucketFactory.getBucket(downloadRequest.organization);
+    if (!bucket) {
+      throw new Error(`No bucket found for organization ${downloadRequest.organization}`);
+    }
+    await bucket.writeText(downloadRequest.userCSVLocation!, dataString);
   }
 
   async getEntryZipUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
