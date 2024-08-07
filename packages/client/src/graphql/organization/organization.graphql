@@ -6,3 +6,12 @@ query getOrganizations {
     tenantID
   }
 }
+
+query getOrganizationFromTenant($tenant: String!) {
+  getOrganizationFromTenant(tenant: $tenant) {
+    _id,
+    name,
+    authURL,
+    tenantID
+  }
+}

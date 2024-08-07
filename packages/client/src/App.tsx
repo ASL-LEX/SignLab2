@@ -35,6 +35,7 @@ import { StudyDownloads } from './pages/studies/StudyDownloads';
 import { useTranslation } from 'react-i18next';
 import * as firebase from '@firebase/app';
 import { User, getAuth } from '@firebase/auth';
+import { OrganizationProvier } from './context/Organization.context';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_AUTH_API_KEY,
@@ -166,12 +167,14 @@ const AppReady: FC = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider user={user}>
-        <ConfirmationProvider>
-          <SnackbarProvider>
-            <CssBaseline />
-            <AppInternal />
-          </SnackbarProvider>
-        </ConfirmationProvider>
+        <OrganizationProvier>
+          <ConfirmationProvider>
+            <SnackbarProvider>
+              <CssBaseline />
+              <AppInternal />
+            </SnackbarProvider>
+          </ConfirmationProvider>
+        </OrganizationProvier>
       </AuthProvider>
     </ApolloProvider>
   );

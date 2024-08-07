@@ -9,12 +9,13 @@ import { ResetPasswordComponent } from './ResetPassword.component';
 import { useGetOrganizationsQuery } from '../../graphql/organization/organization';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '../LanguageSelector';
+import { useOrganization } from '../../context/Organization.context';
 
 export const AuthComponent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup' | 'reset'>('login');
-  const [organization, setOrganization] = useState<Organization | null>(null);
   const [organizationList, setOrganizationList] = useState<Organization[]>([]);
   const { t } = useTranslation();
+  const { organization, setOrganization } = useOrganization();
 
   const getOrganizationResult = useGetOrganizationsQuery();
 

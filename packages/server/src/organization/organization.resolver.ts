@@ -3,7 +3,7 @@ import { OrganizationCreate } from './dtos/create.dto';
 import { Organization } from './organization.model';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationPipe } from './pipes/create.pipe';
-import { UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../jwt/jwt.guard';
 
 @Resolver(() => Organization)
@@ -29,5 +29,14 @@ export class OrganizationResolver {
     @Args('organization', CreateOrganizationPipe) organization: OrganizationCreate
   ): Promise<Organization> {
     return this.orgService.create(organization);
+  }
+
+  @Query(() => Organization)
+  async getOrganizationFromTenant(@Args('tenant') tenant: string): Promise<Organization> {
+    const org = await this.orgService.findByTenantID(tenant);
+    if (!org) {
+      throw new NotFoundException(`Organization with tenant id ${tenant} not found`);
+    }
+    return org;
   }
 }

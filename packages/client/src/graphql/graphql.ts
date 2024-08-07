@@ -437,6 +437,7 @@ export type Query = {
   getDatasets: Array<Dataset>;
   getDatasetsByProject: Array<Dataset>;
   getEntryUploadURL: Scalars['String']['output'];
+  getOrganizationFromTenant: Organization;
   getOrganizations: Array<Organization>;
   getProjectPermissions: Array<ProjectPermissionModel>;
   getProjects: Array<Project>;
@@ -504,6 +505,11 @@ export type QueryGetEntryUploadUrlArgs = {
   contentType: Scalars['String']['input'];
   filename: Scalars['String']['input'];
   session: Scalars['ID']['input'];
+};
+
+
+export type QueryGetOrganizationFromTenantArgs = {
+  tenant: Scalars['String']['input'];
 };
 
 
