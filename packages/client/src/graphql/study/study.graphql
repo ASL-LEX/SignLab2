@@ -44,6 +44,7 @@ query getStudyDownloads($study: ID!) {
     entryZip,
     tagCSV,
     taggedEntries,
+    userCSV,
     study {
       _id
       name

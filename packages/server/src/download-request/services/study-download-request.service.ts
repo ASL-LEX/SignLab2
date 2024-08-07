@@ -248,6 +248,13 @@ export class StudyDownloadService {
     return this.getSignedURL(downloadRequest, downloadRequest.entryZIPLocation!);
   }
 
+  async getUserCsvUrl(downloadRequest: StudyDownloadRequest): Promise<string | null> {
+    if (!downloadRequest.userCSVLocation) {
+      return null;
+    }
+    return this.getSignedURL(downloadRequest, downloadRequest.userCSVLocation!);
+  }
+
   async getTagCSVUrl(downloadRequest: StudyDownloadRequest): Promise<string> {
     return this.getSignedURL(downloadRequest, downloadRequest.tagCSVLocation!);
   }

@@ -50,6 +50,11 @@ export class StudyDownloadRequestResolver {
     return this.studyDownloadService.getEntryZipUrl(downloadRequest);
   }
 
+  @ResolveField(() => String, { nullable: true })
+  async userCSV(@Parent() downloadRequest: StudyDownloadRequest): Promise<string | null> {
+    return this.studyDownloadService.getUserCsvUrl(downloadRequest);
+  }
+
   @ResolveField(() => Study)
   async study(@Parent() downloadRequest: StudyDownloadRequest): Promise<Study> {
     return this.studyPipe.transform(downloadRequest.study);
