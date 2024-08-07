@@ -128,6 +128,7 @@
       "downloadFailed": "Could not download study data, please reach out to your administrator",
       "downloadStartedSuccess": "Download has started, the download will be available under the study download page",
       "downloadTitle": "Study Download Request",
+      "downloadUsers": "User Data",
       "taggedEntries": "Entries Tagged"
     },
     "successPage": {

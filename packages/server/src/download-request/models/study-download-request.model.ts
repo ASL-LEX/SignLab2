@@ -40,6 +40,10 @@ export class StudyDownloadRequest implements DownloadRequest {
   @Prop({ required: false })
   entryZIPLocation?: string;
 
+  /** Location in a bucket where to place the user mappings */
+  @Prop({ required: false })
+  userCSVLocation?: string;
+
   /** The prefix for all bucket locations */
   @Prop({ required: false })
   bucketLocation?: string;

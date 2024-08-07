@@ -20,6 +20,7 @@ import { StudyDownloadRequestPipe } from './pipes/study-download-request.pipe';
 import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pipe';
 import { BasicCsvTransformer } from './pipes/csv/basic-field.pipe';
 import { VideoCsvTransformer } from './pipes/csv/video-field.pipe';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { VideoCsvTransformer } from './pipes/csv/video-field.pipe';
     BucketModule,
     GcpModule,
     StudyModule,
-    TagModule
+    TagModule,
+    UserModule
   ],
   providers: [
     DatasetDownloadRequestResolver,

@@ -627,6 +627,7 @@ export type StudyDownloadRequest = {
   study: Study;
   tagCSV: Scalars['String']['output'];
   taggedEntries: Scalars['String']['output'];
+  userCSV?: Maybe<Scalars['String']['output']>;
 };
 
 export type StudyPermissionModel = {

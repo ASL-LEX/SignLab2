@@ -65,6 +65,18 @@ export const StudyDownloads: React.FC = () => {
         )
     },
     {
+      field: 'userCSV',
+      width: 200,
+      headerName: t('components.studyDownload.downloadUsers'),
+      renderCell: (params) =>
+        params.value &&
+        params.row.status == DownloadStatus.Ready && (
+          <IconButton href={params.value}>
+            <Download />
+          </IconButton>
+        )
+    },
+    {
       field: 'tagCSV',
       width: 200,
       headerName: t('components.studyDownload.csv'),
