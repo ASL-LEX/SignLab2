@@ -3,8 +3,11 @@ import { TagFieldProviderProps, produceJSONForm, ProviderButton } from './TagPro
 import { Accessibility } from '@mui/icons-material';
 import { Lexicon } from '../../graphql/graphql.ts';
 import { useLexFindAllQuery } from '../../graphql/lex.ts';
+import { useTranslation } from 'react-i18next';
 
 export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
+  const { t } = useTranslation();
+
   const [lexicons, setLexicons] = useState<Lexicon[]>([]);
   const lexiconQueryResults = useLexFindAllQuery();
 
@@ -69,5 +72,5 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<Accessibility />} name="ASL-LEX" onClick={handleClick} />;
+  return <ProviderButton icon={<Accessibility />} name={t('common.lexicon')} onClick={handleClick} />;
 };
