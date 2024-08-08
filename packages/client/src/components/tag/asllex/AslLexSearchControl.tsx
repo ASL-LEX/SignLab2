@@ -15,6 +15,8 @@ const AslLexSearchControl: React.FC<ControlProps> = (props) => {
   const [searchResults, setSearchResults] = useState<LexiconEntry[]>([]);
   const [value, setValue] = useState<LexiconEntry | null>(null);
 
+  const lexicon = props.uischema.options?.lexicon || aslLexicon;
+
   useEffect(() => {
     if (!props.data) {
       setValue(null);
@@ -25,7 +27,7 @@ const AslLexSearchControl: React.FC<ControlProps> = (props) => {
 
   return (
     <>
-      <TextSearch width={300} lexicon={aslLexicon} setSearchResults={setSearchResults} />
+      <TextSearch width={300} lexicon={lexicon} setSearchResults={setSearchResults} />
       {searchResults.length > 0 && (
         <SearchResults
           options={searchResults}

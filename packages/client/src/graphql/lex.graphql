@@ -8,3 +8,11 @@ query lexiconByKey($lexicon: String!, $key: String!) {
     fields
   }
 }
+
+query lexFindAll {
+  lexFindAll {
+    _id,
+    name,
+    schema
+  }
+}

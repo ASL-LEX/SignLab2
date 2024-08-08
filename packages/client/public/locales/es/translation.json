@@ -46,6 +46,7 @@
     "finish": "",
     "instruction": "",
     "key": "",
+    "lexicon": "",
     "loading": "",
     "name": "",
     "next": "",
@@ -103,6 +104,11 @@
       "formTitle": "",
       "noDatasets": "",
       "startOver": "",
+      "steps": {
+        "constructTagging": "",
+        "selectItems": "",
+        "studyIdentification": ""
+      },
       "tagsDescription": ""
     },
     "projectAccess": {

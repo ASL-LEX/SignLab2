@@ -149,9 +149,22 @@ export const NewStudy: React.FC = () => {
       <Typography variant="h5">{t('components.newStudy.createStudy')}</Typography>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
+          const getName = () => {
+            switch (label) {
+              case steps[0]:
+                return t('components.newStudy.steps.studyIdentification');
+              case steps[1]:
+                return t('components.newStudy.steps.constructTagging');
+              case steps[2]:
+                return t('components.newStudy.steps.selectItems');
+              default:
+                throw new Error(`Unknown study creation step: ${label}`);
+            }
+          };
+
           return (
             <Step key={label}>
-              <StepLabel>{t('components.newStudy.steps.' + label)}</StepLabel>
+              <StepLabel>{getName()}</StepLabel>
             </Step>
           );
         })}

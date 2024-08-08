@@ -46,6 +46,7 @@
     "finish": "Finish",
     "instruction": "Instruction",
     "key": "key",
+    "lexicon": "Lexicon",
     "loading": "Loading",
     "name": "Name",
     "next": "Next",
@@ -103,6 +104,11 @@
       "formTitle": "Study Information",
       "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access",
       "startOver": "Start Over",
+      "steps": {
+        "constructTagging": "Construct Tagging Interface",
+        "selectItems": "Select Tag/Training Items",
+        "studyIdentification": "Study Identification"
+      },
       "tagsDescription": "Number of times each entry needs to be tagged (default 1)"
     },
     "projectAccess": {

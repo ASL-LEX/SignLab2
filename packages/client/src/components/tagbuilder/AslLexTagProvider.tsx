@@ -1,12 +1,33 @@
+import { useEffect, useState } from 'react';
 import { TagFieldProviderProps, produceJSONForm, ProviderButton } from './TagProvider.tsx';
 import { Accessibility } from '@mui/icons-material';
+import { Lexicon } from '../../graphql/graphql.ts';
+import { useLexFindAllQuery } from '../../graphql/lex.ts';
+import { useTranslation } from 'react-i18next';
 
 export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
+  const { t } = useTranslation();
+
+  const [lexicons, setLexicons] = useState<Lexicon[]>([]);
+  const lexiconQueryResults = useLexFindAllQuery();
+
+  useEffect(() => {
+    if (!lexiconQueryResults.data) {
+      return;
+    }
+    setLexicons(lexiconQueryResults.data?.lexFindAll);
+  }, [lexiconQueryResults.data]);
+
   const customFields = {
+    lexicon: { type: 'string', enum: lexicons.map((lexicon) => lexicon.name) },
     allowCustomLabels: { type: 'boolean' }
   };
 
   const customUISchema = [
+    {
+      type: 'Control',
+      scope: '#/properties/lexicon'
+    },
     {
       type: 'Control',
       scope: '#/properties/allowCustomLabels'
@@ -23,6 +44,11 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
   };
 
   const produceUISchema = (data: any) => {
+    const lexicon = lexicons.find((lexicon) => lexicon.name == data.lexicon);
+    if (!lexicon) {
+      throw new Error(`Could not find lexicon with name ${data.lexicon}`);
+    }
+
     return [
       {
         type: 'Control',
@@ -30,7 +56,8 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
         options: {
           customType: 'asl-lex',
           allowCustomLabels: data.allowCustomLabels,
-          showUnfocusedDescription: true
+          showUnfocusedDescription: true,
+          lexicon: { _id: lexicon._id, name: lexicon.name }
         }
       }
     ];
@@ -45,5 +72,5 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
     });
   };
 
-  return <ProviderButton icon={<Accessibility />} name="ASL-LEX" onClick={handleClick} />;
+  return <ProviderButton icon={<Accessibility />} name={t('common.lexicon')} onClick={handleClick} />;
 };
