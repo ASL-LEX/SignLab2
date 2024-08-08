@@ -19,7 +19,7 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
   }, [lexiconQueryResults.data]);
 
   const customFields = {
-    lexicon: { type: 'string', enum: lexicons.map(lexicon => lexicon.name) },
+    lexicon: { type: 'string', enum: lexicons.map((lexicon) => lexicon.name) },
     allowCustomLabels: { type: 'boolean' }
   };
 

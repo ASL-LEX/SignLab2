@@ -150,13 +150,17 @@ export const NewStudy: React.FC = () => {
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
           const getName = () => {
-            switch(label) {
-              case steps[0]: return t('components.newStudy.steps.studyIdentification');
-              case steps[1]: return t('components.newStudy.steps.constructTagging');
-              case steps[2]: return t('components.newStudy.steps.selectItems');
-              default: throw new Error(`Unknown study creation step: ${label}`);
+            switch (label) {
+              case steps[0]:
+                return t('components.newStudy.steps.studyIdentification');
+              case steps[1]:
+                return t('components.newStudy.steps.constructTagging');
+              case steps[2]:
+                return t('components.newStudy.steps.selectItems');
+              default:
+                throw new Error(`Unknown study creation step: ${label}`);
             }
-          }
+          };
 
           return (
             <Step key={label}>
