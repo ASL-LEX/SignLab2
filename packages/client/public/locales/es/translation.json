@@ -104,6 +104,11 @@
       "formTitle": "",
       "noDatasets": "",
       "startOver": "",
+      "steps": {
+        "constructTagging": "",
+        "selectItems": "",
+        "studyIdentification": ""
+      },
       "tagsDescription": ""
     },
     "projectAccess": {
