@@ -41,6 +41,11 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
   };
 
   const produceUISchema = (data: any) => {
+    const lexicon = lexicons.find((lexicon) => lexicon.name == data.lexicon);
+    if (!lexicon) {
+      throw new Error(`Could not find lexicon with name ${data.lexicon}`);
+    }
+
     return [
       {
         type: 'Control',
@@ -48,7 +53,8 @@ export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
         options: {
           customType: 'asl-lex',
           allowCustomLabels: data.allowCustomLabels,
-          showUnfocusedDescription: true
+          showUnfocusedDescription: true,
+          lexicon: { _id: lexicon._id, name: lexicon.name }
         }
       }
     ];
