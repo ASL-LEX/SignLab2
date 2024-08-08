@@ -14,8 +14,6 @@ import { VideoFieldService } from './video-field.service';
  */
 @Injectable()
 export class TagFieldService {
-  private readonly aslLexID = this.configService.getOrThrow<string>('lexicon.aslLexID');
-
   constructor(private readonly configService: ConfigService, private readonly videoFieldService: VideoFieldService) {}
 
   async produceField(tagField: TagField): Promise<typeof TagFieldUnion | null> {
@@ -53,8 +51,7 @@ export class TagFieldService {
   }
 
   private async getAslLexField(tagField: TagField): Promise<AslLexField> {
-    const key = tagField.data as string;
-    const lexicon = this.aslLexID;
-    return new AslLexField(new LexiconEntry(key, lexicon));
+    const lexEntry = tagField.data;
+    return new AslLexField(new LexiconEntry(lexEntry.key, lexEntry.lexicon));
   }
 }

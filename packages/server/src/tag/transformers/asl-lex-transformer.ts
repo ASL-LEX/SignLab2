@@ -10,14 +10,14 @@ export class AslLexFieldTransformer implements FieldTransformer {
   async transformField(
     _tag: Tag,
     data: string,
-    _uischema: UISchemaElement,
+    uischema: UISchemaElement,
     _schema: JsonSchema,
     _user: TokenPayload,
     property: string
   ): Promise<TagField> {
     return {
       name: property,
-      data,
+      data: { key: data, lexicon: uischema.options?.lexicon._id },
       type: TagFieldType.ASL_LEX
     };
   }
