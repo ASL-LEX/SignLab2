@@ -1,12 +1,30 @@
+import { useEffect, useState } from 'react';
 import { TagFieldProviderProps, produceJSONForm, ProviderButton } from './TagProvider.tsx';
 import { Accessibility } from '@mui/icons-material';
+import { Lexicon } from '../../graphql/graphql.ts';
+import { useLexFindAllQuery } from '../../graphql/lex.ts';
 
 export const AslLexFieldProvider: React.FC<TagFieldProviderProps> = (props) => {
+  const [lexicons, setLexicons] = useState<Lexicon[]>([]);
+  const lexiconQueryResults = useLexFindAllQuery();
+
+  useEffect(() => {
+    if (!lexiconQueryResults.data) {
+      return;
+    }
+    setLexicons(lexiconQueryResults.data?.lexFindAll);
+  }, [lexiconQueryResults.data]);
+
   const customFields = {
+    lexicon: { type: 'string', enum: lexicons.map(lexicon => lexicon.name) },
     allowCustomLabels: { type: 'boolean' }
   };
 
   const customUISchema = [
+    {
+      type: 'Control',
+      scope: '#/properties/lexicon'
+    },
     {
       type: 'Control',
       scope: '#/properties/allowCustomLabels'
