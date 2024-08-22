@@ -23,7 +23,8 @@ import { HealthModule } from './health/health.module';
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
-      ignoreEnvVars: false
+      ignoreEnvVars: false,
+      envFilePath: process.env.RUN_MODE == 'test' ? '.env.test' : '.env'
     }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       autoSchemaFile: {
