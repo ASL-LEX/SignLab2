@@ -1,10 +1,10 @@
 {
-  "name": "signlab-react",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start:dev": "vite",
     "build": "tsc && vite build",
     "prettier": "prettier -l \"src/**/*.ts(x)\"",
     "prettier:fix": "prettier -wl \"src/**/*.ts(x)\"",

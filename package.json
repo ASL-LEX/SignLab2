@@ -7,7 +7,8 @@
     "build": "npm run build --workspaces --if-present",
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier:fix": "npm run prettier:fix --workspaces --if-present",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e:dev": "RUN_MODE=test concurrently 'npm run start:dev --workspace=server' 'sleep 4 && npm run start:dev --workspace=gateway' 'npm run start:dev --workspace=client' 'cypress open'"
   },
   "workspaces": [
     "packages/*"
@@ -15,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "cypress": "^13.13.3",
     "husky": "^9.0.11"
   }
