@@ -8,7 +8,7 @@
     "prettier": "npm run prettier --workspaces --if-present",
     "prettier:fix": "npm run prettier:fix --workspaces --if-present",
     "prepare": "husky",
-    "e2e:dev": "RUN_MODE=test concurrently 'npm run start:dev --workspace=server' 'sleep 4; npm run start:dev --workspace=gateway' 'npm run start:dev --workspace=client' 'cypress open'"
+    "e2e:dev": "cypress open"
   },
   "workspaces": [
     "packages/*"

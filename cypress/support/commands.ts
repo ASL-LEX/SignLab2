@@ -17,5 +17,11 @@ Cypress.Commands.add('resetDB', () => {
 });
 
 Cypress.Commands.add('firstTimeSetup', () => {
-
+  // Make the default organization
+  cy.insertOne({
+    name: 'test-org',
+    projectId: 'does-not-matter',
+    authURL: 'does-not-matter',
+    tenantID: Cypress.env('auth').tenantID
+  }, { collection: 'organizations' });
 });

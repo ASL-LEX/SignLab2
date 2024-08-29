@@ -3,12 +3,16 @@ import * as dotenv from 'dotenv';
 import { configurePlugin } from 'cypress-mongodb';
 
 dotenv.config();
+console.log(process.env.CYPRESS_TENANT_ID);
 
 export default defineConfig({
   env: {
     mongodb: {
       uri: process.env.CYPRESS_MONGO_URI,
       database: process.env.CYPRESS_MONGO_DB
+    },
+    auth: {
+      tenantID: process.env.CYPRESS_TENANT_ID
     }
   },
   e2e: {

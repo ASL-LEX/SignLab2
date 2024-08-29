@@ -12,7 +12,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "introspection": "graphql-codegen --config graphql-codegen.yml",
-    "i18next": "i18next -s"
+    "i18next": "i18next -s",
+    "start:test": "RUN_MODE=test npm run start:dev"
   },
   "dependencies": {
     "@apollo/client": "^3.8.3",
