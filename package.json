@@ -16,10 +16,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@firebase/app": "^0.10.10",
     "concurrently": "^8.2.2",
     "cypress": "^13.13.3",
+    "cypress-firebase": "^4.2.0",
     "cypress-mongodb": "^6.2.1",
     "dotenv": "^16.4.5",
+    "firebase-admin": "^12.4.0",
     "husky": "^9.0.11"
   }
 }

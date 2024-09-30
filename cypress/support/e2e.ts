@@ -1,19 +1,18 @@
-// ***********************************************************
-// This example support/e2e.ts is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
-// ***********************************************************
 import { addCommands } from 'cypress-mongodb/dist/index-browser';
+import { attachCustomCommands } from 'cypress-firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+// import firebase from '@firebase/app';
+// import * as firebase from '@firebase/app';
 
+// cypress-firebase setup
+firebase.initializeApp({
+  apiKey: Cypress.env('auth').apiKey,
+  authDomain: Cypress.env('auth').authDomain
+});
+attachCustomCommands({ Cypress, cy, firebase });
+
+// cypress-mongodb setup
 addCommands();
 
 // Import commands.js using ES2015 syntax:

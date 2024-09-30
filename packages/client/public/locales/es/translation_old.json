@@ -1,0 +1,36 @@
+{
+  "common": {
+    "login": "Login",
+    "preview": "Preview",
+    "required": "Mínimo"
+  },
+  "components": {
+    "contribute": {
+      "failMessage": "  Failed to create project! Try again."
+    },
+    "datasetControl": {
+      "deleteEntries": "Delete Entries"
+    },
+    "login": {
+      "redirectToOrg": "Iniciar sesión a través de la entidad",
+      "selectOrg": "Seleccione una entidad para iniciar sesión"
+    },
+    "newProject": {
+      "failMessage": " Failed to create project! Try again."
+    },
+    "newStudy": {
+      "steps": {
+        "Construct Tagging Interface": "Construct Tagging Interface",
+        "Select Tag Training Items": "Select Tag Training Items",
+        "Study Identification": "Study Identification"
+      }
+    },
+    "projectUserPermissions": {
+      "contributor": "Contributor",
+      "trained": "Trained"
+    },
+    "tagView": {
+      "export": "Export"
+    }
+  }
+}
