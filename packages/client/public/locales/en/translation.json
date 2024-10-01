@@ -32,7 +32,7 @@
   "common": {
     "back": "Back",
     "cancel": "Cancel",
-    "clear": "clear",
+    "clear": "Clear",
     "complete": "complete",
     "continue": "Continue",
     "dataset": "Dataset",
@@ -198,5 +198,10 @@
     "tagInStudy": "Tag in Study",
     "userPermissions": "User Permissions",
     "viewTags": "View Tags"
+  },
+  "tag": {
+    "noneLeftExplaination": "No tags left for {{ studyName }}, please check back later",
+    "noTagsRemaining": "No tags Remaining",
+    "videoRequiredOptional": "Required: {{ minimum }}, Optional Max: {{ max }}"
   }
 }

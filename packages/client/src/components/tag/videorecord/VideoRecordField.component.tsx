@@ -13,6 +13,7 @@ import {
 } from '../../../graphql/tag/tag';
 import { useTag } from '../../../context/Tag.context';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [maxVideos, setMaxVideos] = useState<number>(0);
@@ -31,6 +32,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   stateRef.current = { validVideos, blobs, activeIndex, videoFragmentID };
   const client = useApolloClient();
   const { tag } = useTag();
+  const { t } = useTranslation();
 
   const resetState = () => {
     if (!props.uischema.options?.minimumRequired) {
@@ -136,7 +138,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       <AccordionDetails>
         <Stack direction="column" spacing={2} sx={{ width: '50%', margin: 'auto' }}>
           <Typography variant="h5">
-            Required: {minimumVideos}, Optional Max: {maxVideos}
+            {t('tag.videoRequiredOptional', { minimum: minimumVideos, max: maxVideos })}
           </Typography>
           <StatusProcessCircles isComplete={validVideos} setState={() => {}} activeIndex={activeIndex} />
 
@@ -162,7 +164,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
             </IconButton>
           </Stack>
           <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)}>
-            {recording ? 'Stop' : 'Start'} Recording
+            {t(recording ? 'tag.stopRecording' : 'tag.startRecording')}
           </Button>
         </Stack>
       </AccordionDetails>

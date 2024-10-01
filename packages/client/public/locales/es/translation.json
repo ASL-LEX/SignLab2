@@ -1,202 +1,207 @@
 {
   "Auth": {
     "dialogClose": "Cerrar",
-    "email": "Correo electrónico",
-    "enterPassword": "Ingresa tu contraseña",
-    "enterUsername": "Ingresa tu nombre de usuario",
-    "errorUnexpected": "Error desconocido. Por favor, contacta con el administrador",
+    "email": "Email",
+    "enterPassword": "Contraseña",
+    "enterUsername": "Usuario",
+    "errorUnexpected": "Error desconocido. Por favor contacte con el administrador",
     "login": {
       "login": "Iniciar sesión",
-      "userNotFound": "El usuario no existe. Por favor, regístrate primero",
+      "userNotFound": "El usuario no existe. Por favor, regístrese primero",
       "wrongPassword": "Contraseña incorrecta"
     },
-    "organization": "Organización",
+    "organization": "Entidad",
     "password": "Contraseña",
     "resetPassword": {
-      "confirmDialog": "Se ha enviado un correo electrónico para restablecer tu contraseña. Por favor, revisa tu correo y sigue las instrucciones",
-      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
-      "resetPassword": "Restablecer la contraseña",
-      "userNotFound": "No se encontró ningún usuario con esta dirección de correo electrónico"
+      "confirmDialog": "Se ha enviado un correo electrónico para restablecer su contraseña. Por favor, revise su correo y siga las instrucciones",
+      "invalidEmail": "The email address is invalid. Please re-enter",
+      "resetPassword": "Reestablecer la contraseña",
+      "userNotFound": "Ningún usuario con esta dirección de correo electrónico"
     },
     "signup": {
-      "emailAlreadyInUse": "Este correo electrónico ya está en uso. Por favor, inicia sesión directamente",
-      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, ingrésala nuevamente",
-      "passwordNotMatch": "Las contraseñas ingresadas no coinciden",
-      "reEnterPassword": "Reingresa la contraseña",
+      "emailAlreadyInUse": "Este correo electrónico ya está en uso. Por favor, inicie sesión.",
+      "invalidEmail": "La dirección de correo electrónico es inválida. Por favor, intente de nuevo",
+      "passwordNotMatch": "Las contraseñas no coinciden",
+      "reEnterPassword": "Repetir la contraseña",
       "signup": "Registrarse",
-      "success": "Registro exitoso. Por favor, inicia sesión",
+      "success": "Registro realizado con éxito. Por favor, inicie sesión",
       "weakPassword": "La contraseña es demasiado débil. Utilice una contraseña más segura"
     },
-    "submit": "Enviar"
+    "submit": "Enviar respuesta(s)"
   },
   "common": {
-    "back": "",
-    "cancel": "",
-    "clear": "",
-    "complete": "",
-    "continue": "",
-    "dataset": "",
-    "dateFormat": "",
-    "delete": "",
-    "description": "",
-    "download": "",
-    "email": "",
-    "enable": "",
-    "entryId": "",
-    "finish": "",
-    "instruction": "",
-    "key": "",
+    "back": "Back",
+    "cancel": "Cancel",
+    "clear": "Borrar sin enviar",
+    "complete": "complete",
+    "continue": "Continue",
+    "dataset": "Dataset",
+    "dateFormat": "{{date,  datetime}}",
+    "delete": "Delete",
+    "description": "Descripción del estudio",
+    "download": "Download",
+    "email": "Correo electrónico",
+    "enable": "Enable",
+    "entryId": "Entry ID",
+    "finish": "Finish",
+    "instruction": "Instrucciones para participantes",
+    "key": "key",
     "lexicon": "",
-    "loading": "",
-    "name": "",
-    "next": "",
-    "ok": "",
-    "primary": "",
-    "project": "",
-    "redo": "",
-    "status": "",
-    "study": "",
-    "submit": "",
-    "video": "",
-    "view": ""
+    "loading": "Cargando",
+    "name": "Nombre",
+    "next": "Next",
+    "ok": "OK",
+    "primary": "primay",
+    "project": "Proyecto",
+    "redo": "Redo",
+    "status": "Status",
+    "study": "Nombre del estudio",
+    "submit": "Submit",
+    "video": "video",
+    "view": "View"
   },
   "components": {
     "contribute": {
-      "enterTagging": "",
-      "noTaggingLeft": "",
-      "studyTagging": "",
-      "studyTraining": ""
+      "enterTagging": "Empezar",
+      "noTaggingLeft": "No hay más preguntas",
+      "studyTagging": "Study Tagging",
+      "studyTraining": "Tarea de práctica"
     },
     "datasetcontrol": {
       "deleteEntries": ""
     },
     "datasetControl": {
-      "addDataset": "",
-      "deleteDescription": "",
-      "deleteEntry": "",
-      "deleteMultipleEntries": "",
-      "downloadDescription": "",
-      "downloadFailed": "",
-      "downloadStartedSuccess": "",
-      "downloadTitle": "",
-      "uploadEntries": ""
+      "addDataset": " Add New Dataset",
+      "deleteDescription": "Are you sure you want to delete this entry? Doing so will delete all cooresponding tags",
+      "deleteEntry": "Delete Entry",
+      "deleteMultipleEntries": "Are you sure you want to delete selected entries? All cooresponding tags will be deleted",
+      "downloadDescription": "Would you like to download this dataset? All entries will be downloaded. Once complete, the downloaded results will be available in the download center",
+      "downloadFailed": "Could not download dataset, please reach out to administrator",
+      "downloadStartedSuccess": "Download has started, go to download center to get artifacts when complete",
+      "downloadTitle": "Dataset Download Request",
+      "uploadEntries": " Upload Entries"
     },
     "datasetDownload": {
-      "entryDownload": "",
-      "requestDate": ""
+      "entryDownload": "Entry Download",
+      "requestDate": "Request Date"
     },
     "environment": {
-      "title": ""
+      "title": "Proyecto/estudio"
     },
     "languageSelector": {
       "selectLanguage": "Seleccione el idioma"
     },
     "newProject": {
-      "descriptionDescription": "",
-      "formLabel": "",
-      "nameDescription": "",
-      "projectExists": ""
+      "descriptionDescription": "Please enter project description",
+      "formLabel": "Create New Project",
+      "nameDescription": "Please enter project name",
+      "projectExists": "A project with this name already exists"
     },
     "newStudy": {
-      "completed": "",
-      "createStudy": "",
-      "disableSameUserTagging": "",
-      "formTitle": "",
-      "noDatasets": "",
-      "startOver": "",
+      "completed": "All steps completed - your new study is created",
+      "createStudy": "Create New Study",
+      "disableSameUserTagging": "Disable users tagging entries they recorded",
+      "formTitle": "Study Information",
+      "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access",
+      "startOver": "Start Over",
       "steps": {
         "constructTagging": "",
         "selectItems": "",
         "studyIdentification": ""
       },
-      "tagsDescription": ""
+      "tagsDescription": "Number of times each entry needs to be tagged (default 1)"
     },
     "projectAccess": {
-      "accessFor": "",
-      "datasetName": "",
-      "projectHasAccess": "",
-      "selectProject": ""
+      "accessFor": "Dataset Access for ",
+      "datasetName": "Dataset Name",
+      "projectHasAccess": "Project Has Access",
+      "selectProject": "Select a Project to Continue"
     },
     "projectControl": {
-      "deleteDescription": "",
-      "deleteStudy": ""
+      "deleteDescription": "Are you sure you want to delete this project? Doing so will delete all contained studies and tags",
+      "deleteStudy": "Delete Study"
     },
     "projectUserPermissions": {
-      "projectAdmin": ""
+      "projectAdmin": "Project Admin"
     },
     "studyControl": {
-      "deleteDescription": "",
-      "deleteStudy": ""
+      "deleteDescription": "Are you sure you want to delete this study? Doing so will delete all contained tags",
+      "deleteStudy": "Delete Study"
     },
     "studyDownload": {
-      "csv": "",
-      "downloadDescription": "",
-      "downloadFailed": "",
-      "downloadStartedSuccess": "",
-      "downloadTitle": "",
+      "csv": "Tag CSV",
+      "downloadDescription": "Would you like to download this study? The tag data, any recorded videos, and the original entries will be download, this may take a while, downloads will appear in the study download page when complete",
+      "downloadFailed": "Could not download study data, please reach out to your administrator",
+      "downloadStartedSuccess": "Download has started, the download will be available under the study download page",
+      "downloadTitle": "Study Download Request",
       "downloadUsers": "",
-      "taggedEntries": ""
+      "taggedEntries": "Entries Tagged"
     },
     "successPage": {
-      "succefullyCreated": ""
+      "succefullyCreated": "Successfully created!"
     },
     "tagView": {
-      "originalEntry": ""
+      "originalEntry": "Original Entry"
     },
     "userPermissions": {
-      "contributor": "",
-      "noTrainingTags": "",
-      "studyAdmin": "",
-      "trained": "",
-      "trainingView": ""
+      "contributor": "Contributor",
+      "noTrainingTags": "No Tags to Show",
+      "studyAdmin": "Study Admin",
+      "trained": "Trained",
+      "trainingView": "View Training Results"
     }
   },
   "errors": {
-    "csvUpload": "",
-    "datasetCreate": "",
-    "datasetPermissionUpdate": "",
-    "datasetsForProject": "",
-    "entryQuery": "",
-    "entryUpload": "",
-    "entryUploadComplete": "",
-    "projectAdminUpdate": "",
-    "projectCreate": "",
-    "projectDelete": "",
-    "projectQuery": "",
-    "studyCreate": "",
-    "studyDelete": "",
-    "studyExists": "",
-    "tagComplete": "",
-    "tagsQuery": "",
-    "uploadSessionCreate": ""
+    "csvUpload": "Could not upload the CSV, please try again",
+    "datasetCreate": "Failed to create dataset, please try again or report this issue",
+    "datasetPermissionUpdate": "Could not give project permission",
+    "datasetsForProject": "Failed to get possible datasets",
+    "entryQuery": "Failed to get entries for the dataset",
+    "entryUpload": "Could not upload entry, please try again",
+    "entryUploadComplete": "Could not complete the upload process, please try again",
+    "projectAdminUpdate": "Could not update the user's permssions",
+    "projectCreate": "Could not create the project, please try again",
+    "projectDelete": "An issue took place deleting the project",
+    "projectQuery": "Failed to find projects",
+    "studyCreate": "Failed to create the new study",
+    "studyDelete": "Failed to delete the target study",
+    "studyExists": "Could not check if a study with that name exists",
+    "tagComplete": "Se ha producido un error. Por favor, envíe su respuesta de nuevo",
+    "tagsQuery": "Failed to get tags",
+    "uploadSessionCreate": "Could not start the upload process, please try again"
   },
   "home": {
-    "backendFailed": "",
+    "backendFailed": "Algo ha fallado. Por favor, vuelva a intentarlo más tarde",
     "logIn": "Por favor inicie sesión para continuar",
-    "signedIn": "Has iniciado sesión",
-    "welcome": "Bienvenido a SignLab"
+    "signedIn": "Ha iniciado sesión",
+    "welcome": "Bienvenido/a a SignLab"
   },
   "languages": {
     "en": "Inglés",
     "es": "Español"
   },
   "menu": {
-    "contribute": "Contribuir",
-    "datasetControl": "Control de conjunto de datos",
-    "datasetDownloads": "",
-    "datasets": "Conjuntos de datos",
-    "entryControl": "",
+    "contribute": "Participar",
+    "datasetControl": "Dataset Control",
+    "datasetDownloads": "Dataset Downloads",
+    "datasets": "Datasets",
+    "entryControl": "Entry Control",
     "logout": "Cerrar sesión",
-    "newProject": "Nuevo proyecto",
-    "newStudy": "Nuevo estudio",
-    "projectAccess": "Acceso al proyecto",
-    "projectControl": "Control de Proyecto",
-    "projects": "Proyectos",
-    "studies": "Estudios",
-    "studyControl": "Control del estudio",
-    "studyDownloads": "",
-    "tagInStudy": "Etiqueta en estudio",
-    "userPermissions": "Permisos de usuario",
-    "viewTags": ""
+    "newProject": "New Project",
+    "newStudy": "New Study",
+    "projectAccess": "Project Access",
+    "projectControl": "Project Control",
+    "projects": "Projects",
+    "studies": "Studies",
+    "studyControl": "Study Control",
+    "studyDownloads": "Study Downloads",
+    "tagInStudy": "Dar respuestas",
+    "userPermissions": "User Permissions",
+    "viewTags": "View Tags"
+  },
+  "tag": {
+    "noneLeftExplaination": "No hay más preguntas en el estudio {{ studyName }}, por favor, vuelva más tarde",
+    "noTagsRemaining": "No hay más preguntas en este estudio",
+    "videoRequiredOptional": "Required: {{ minimum }}, Máximo: {{ max }}"
   }
 }
