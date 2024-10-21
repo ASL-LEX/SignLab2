@@ -56,7 +56,7 @@
     "redo": "Redo",
     "status": "Status",
     "study": "Nombre del estudio",
-    "submit": "Submit",
+    "submit": "Enviar respuesta(s)",
     "video": "video",
     "view": "View"
   },
@@ -64,7 +64,7 @@
     "contribute": {
       "enterTagging": "Empezar",
       "noTaggingLeft": "No hay más preguntas",
-      "studyTagging": "Study Tagging",
+      "studyTagging": "Estudio",
       "studyTraining": "Tarea de práctica"
     },
     "datasetcontrol": {
@@ -204,6 +204,6 @@
     "noTagsRemaining": "No hay más preguntas en este estudio",
     "startRecording": "Grabar video",
     "stopRecording": "Dejar de grabar video",
-    "videoRequiredOptional": "Required: {{ minimum }}, Máximo: {{ max }}"
+    "videoRequiredOptional": "Mínimo: {{ minimum }}, Máximo: {{ max }}"
   }
 }
