@@ -151,6 +151,7 @@ export type Mutation = {
   changeStudyName: Study;
   completeTag: Scalars['Boolean']['output'];
   completeUploadSession: UploadResult;
+  createCatchTrials: Array<Tag>;
   createDataset: Dataset;
   createDatasetDownload: DatasetDownloadRequest;
   createOrganization: Organization;
@@ -218,6 +219,12 @@ export type MutationCompleteTagArgs = {
 
 export type MutationCompleteUploadSessionArgs = {
   session: Scalars['ID']['input'];
+};
+
+
+export type MutationCreateCatchTrialsArgs = {
+  entries: Array<Scalars['ID']['input']>;
+  study: Scalars['ID']['input'];
 };
 
 
@@ -432,6 +439,7 @@ export type Query = {
   findStudies: Array<Study>;
   /** Get the presigned URL for where to upload the CSV against */
   getCSVUploadURL: Scalars['String']['output'];
+  getCatchTrials: Array<Tag>;
   getDatasetDownloads: Array<DatasetDownloadRequest>;
   getDatasetProjectPermissions: Array<DatasetProjectPermission>;
   getDatasets: Array<Dataset>;
@@ -484,6 +492,10 @@ export type QueryGetCsvUploadUrlArgs = {
   session: Scalars['ID']['input'];
 };
 
+
+export type QueryGetCatchTrialsArgs = {
+  study: Scalars['ID']['input'];
+}
 
 export type QueryGetDatasetDownloadsArgs = {
   dataset: Scalars['ID']['input'];
@@ -650,6 +662,8 @@ export type Tag = {
   /** If the tag is enabled as part of the study, way to disable certain tags */
   enabled: Scalars['Boolean']['output'];
   entry: Entry;
+  /** Indicates if the tag is a catch trial */
+  isCatchTrial: Scalars['Boolean']['output'];
   /** Way to rank tags based on order to be tagged */
   order: Scalars['Float']['output'];
   study: Study;
