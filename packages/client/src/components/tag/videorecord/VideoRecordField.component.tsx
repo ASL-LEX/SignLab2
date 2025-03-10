@@ -163,7 +163,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
               <ArrowRight fontSize="large" />
             </IconButton>
           </Stack>
-          <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)} size='large'>
+          <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)} size="large">
             {recording ? t('tag.stopRecording') : t('tag.startRecording')}
           </Button>
         </Stack>
