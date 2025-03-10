@@ -177,7 +177,7 @@ export class TagService {
     if (study.studyConfig?.sortByEntryID) {
       entryIDOperations = [
         // Get ObjectID for enty
-        { $addFields: { 'entryID': { $toObjectId: '$tag.entry' } } },
+        { $addFields: { entryID: { $toObjectId: '$tag.entry' } } },
         // Expand entry
         {
           $lookup: {
@@ -188,10 +188,10 @@ export class TagService {
           }
         },
         // Should only have a single match in the lookup array
-        { $unwind: '$entry'  },
+        { $unwind: '$entry' },
         // Now sort by the user provied entry ID
-        { $sort: { 'entry.entryID':  1 }}
-      ]
+        { $sort: { 'entry.entryID': 1 } }
+      ];
     }
 
     // Atomically search for an incomplete tag and assign it the current
