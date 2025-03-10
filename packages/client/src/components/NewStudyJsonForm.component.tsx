@@ -41,6 +41,10 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
           disableSameUserEntryTagging: {
             type: 'boolean',
             default: false
+          },
+          sortByEntryID: {
+            type: 'boolean',
+            default: false
           }
         }
       }
@@ -76,6 +80,11 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
         type: 'Control',
         label: t('components.newStudy.disableSameUserTagging'),
         scope: '#/properties/studyConfig/properties/disableSameUserEntryTagging'
+      },
+      {
+        type: 'Control',
+        label: t('components.newStudy.sortByEntryID'),
+        scope: '#/properties/studyConfig/properties/sortByEntryID'
       }
     ]
   };
