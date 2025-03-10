@@ -62,10 +62,10 @@
   },
   "components": {
     "contribute": {
-      "enterTagging": "Enter tagging",
+      "enterTagging": "Start",
       "noTaggingLeft": "No tagging left",
-      "studyTagging": "Study Tagging",
-      "studyTraining": "Study Training"
+      "studyTagging": "Start Experiment",
+      "studyTraining": "Start Experiment Training"
     },
     "datasetcontrol": {
       "deleteEntries": ""
@@ -182,7 +182,7 @@
     "es": "Spanish"
   },
   "menu": {
-    "contribute": "Contribute",
+    "contribute": "Experiment",
     "datasetControl": "Dataset Control",
     "datasetDownloads": "Dataset Downloads",
     "datasets": "Datasets",
@@ -196,7 +196,7 @@
     "studies": "Studies",
     "studyControl": "Study Control",
     "studyDownloads": "Study Downloads",
-    "tagInStudy": "Tag in Study",
+    "tagInStudy": "Start Experiment",
     "userPermissions": "User Permissions",
     "viewTags": "View Tags"
   },

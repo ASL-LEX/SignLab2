@@ -130,7 +130,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   };
 
   return (
-    <Accordion>
+    <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Typography sx={{ width: '33%' }}>{props.label}</Typography>
         <Typography>{props.description}</Typography>
@@ -163,7 +163,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
               <ArrowRight fontSize="large" />
             </IconButton>
           </Stack>
-          <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)}>
+          <Button variant={recording ? 'contained' : 'outlined'} onClick={() => setRecording(!recording)} size="large">
             {recording ? t('tag.stopRecording') : t('tag.startRecording')}
           </Button>
         </Stack>
