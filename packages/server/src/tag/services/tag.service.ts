@@ -172,6 +172,28 @@ export class TagService {
       ];
     }
 
+    // Handles sorting by entry ID
+    let entryIDOperations: PipelineStage[] = [];
+    if (study.studyConfig?.sortByEntryID) {
+      entryIDOperations = [
+        // Get ObjectID for enty
+        { $addFields: { 'entryID': { $toObjectId: '$tag.entry' } } },
+        // Expand entry
+        {
+          $lookup: {
+            from: 'entries',
+            localField: 'entryID',
+            foreignField: '_id',
+            as: 'entry'
+          }
+        },
+        // Should only have a single match in the lookup array
+        { $unwind: '$entry'  },
+        // Now sort by the user provied entry ID
+        { $sort: { 'entry.entryID':  1 }}
+      ]
+    }
+
     // Atomically search for an incomplete tag and assign it the current
     // user
     await this.tagModel.db.transaction(async (): Promise<void> => {
@@ -190,6 +212,7 @@ export class TagService {
         { $unwind: '$tag' },
         // Sort by order
         { $sort: { 'tag.order': 1 } },
+        ...entryIDOperations,
         // Limit to a single tag
         { $limit: 1 }
       ]);
