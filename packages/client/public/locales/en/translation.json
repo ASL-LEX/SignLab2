@@ -64,8 +64,8 @@
     "contribute": {
       "enterTagging": "Enter tagging",
       "noTaggingLeft": "No tagging left",
-      "studyTagging": "Study Tagging",
-      "studyTraining": "Study Training"
+      "studyTagging": "Start Experiment",
+      "studyTraining": "Start Experiment Training"
     },
     "datasetcontrol": {
       "deleteEntries": ""
@@ -182,7 +182,7 @@
     "es": "Spanish"
   },
   "menu": {
-    "contribute": "Contribute",
+    "contribute": "Experiment",
     "datasetControl": "Dataset Control",
     "datasetDownloads": "Dataset Downloads",
     "datasets": "Datasets",
