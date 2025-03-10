@@ -103,6 +103,7 @@
       "disableSameUserTagging": "Disable users tagging entries they recorded",
       "formTitle": "Study Information",
       "noDatasets": "No datasets available, create a dataset and grant the project access under Datasets > Project Access",
+      "sortByEntryID": "Show tags in Entry ID order",
       "startOver": "Start Over",
       "steps": {
         "constructTagging": "Construct Tagging Interface",

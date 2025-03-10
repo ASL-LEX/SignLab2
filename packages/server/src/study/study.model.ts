@@ -29,6 +29,13 @@ export class StudyConfig {
   @Prop({ required: false })
   @Field({ nullable: true })
   disableSameUserEntryTagging?: boolean;
+
+  /**
+   * When set, the tags that are served are sorted based on the entryID
+   */
+  @Prop({ required: false })
+  @Field({ nullable: true })
+  sortByEntryID?: boolean;
 }
 
 const StudyConfigSchema = SchemaFactory.createForClass(StudyConfig);

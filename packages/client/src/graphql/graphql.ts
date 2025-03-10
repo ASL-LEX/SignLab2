@@ -142,6 +142,29 @@ export type LexiconEntry = {
   video: Scalars['String']['output'];
 };
 
+export type LexiconUpdate = {
+  _id: Scalars['String']['input'];
+  /** The name of the Lexicon */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Format each entry in the Lexicon is expected to follow */
+  schema?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type LexiconUpdateEntry = {
+  /** Keywords that are similar to search accross */
+  associates?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Fields stored on the entry */
+  fields?: InputMaybe<Scalars['JSON']['input']>;
+  findByKey: Scalars['String']['input'];
+  /** Unique user assigned identifier for the entry within the lexicon */
+  key?: InputMaybe<Scalars['String']['input']>;
+  lexicon: Scalars['String']['input'];
+  /** Primary way to search for entries in the lexicon */
+  primary?: InputMaybe<Scalars['String']['input']>;
+  /** Link to the video that represents the entry */
+  video?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   assignTag?: Maybe<Tag>;
@@ -172,6 +195,10 @@ export type Mutation = {
   /** Remove all entries from a given lexicon */
   lexiconClearEntries: Scalars['Boolean']['output'];
   lexiconCreate: Lexicon;
+  /** Delete a lexicon entry by key */
+  lexiconDeleteEntry: Scalars['Boolean']['output'];
+  lexiconUpdate: Lexicon;
+  lexiconUpdateEntry: LexiconEntry;
   markDatasetFieldComplete: Scalars['Boolean']['output'];
   markStudyFieldComplete: Scalars['Boolean']['output'];
   removeTag: Scalars['Boolean']['output'];
@@ -333,6 +360,22 @@ export type MutationLexiconCreateArgs = {
 };
 
 
+export type MutationLexiconDeleteEntryArgs = {
+  key: Scalars['String']['input'];
+  lexicon: Scalars['String']['input'];
+};
+
+
+export type MutationLexiconUpdateArgs = {
+  updateData: LexiconUpdate;
+};
+
+
+export type MutationLexiconUpdateEntryArgs = {
+  lexiconEntry: LexiconUpdateEntry;
+};
+
+
 export type MutationMarkDatasetFieldCompleteArgs = {
   code: Scalars['String']['input'];
   datasetField: DatasetDownloadField;
@@ -447,6 +490,8 @@ export type Query = {
   getTrainingTags: Array<Tag>;
   isEntryEnabled: Scalars['Boolean']['output'];
   lexFindAll: Array<Lexicon>;
+  /** Fetch all entries for a given lexicon */
+  lexiconAllEntries: Array<LexiconEntry>;
   lexiconByKey: LexiconEntry;
   lexiconSearch: Array<LexiconEntry>;
   projectExists: Scalars['Boolean']['output'];
@@ -545,6 +590,11 @@ export type QueryIsEntryEnabledArgs = {
 };
 
 
+export type QueryLexiconAllEntriesArgs = {
+  lexicon: Scalars['String']['input'];
+};
+
+
 export type QueryLexiconByKeyArgs = {
   key: Scalars['String']['input'];
   lexicon: Scalars['String']['input'];
@@ -597,10 +647,12 @@ export type Study = {
 export type StudyConfig = {
   __typename?: 'StudyConfig';
   disableSameUserEntryTagging?: Maybe<Scalars['Boolean']['output']>;
+  sortByEntryID?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type StudyConfigInput = {
   disableSameUserEntryTagging?: InputMaybe<Scalars['Boolean']['input']>;
+  sortByEntryID?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type StudyCreate = {
