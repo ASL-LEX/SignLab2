@@ -1,7 +1,7 @@
 import { JsonForms } from '@jsonforms/react';
 import { Study } from '../../graphql/graphql';
 import { materialRenderers } from '@jsonforms/material-renderers';
-import { SetStateAction, useState, Dispatch } from 'react';
+import { SetStateAction, useState, Dispatch, useEffect } from 'react';
 import { Box, Stack, Button } from '@mui/material';
 import { ErrorObject } from 'ajv';
 import AslLexSearchControl from '../tag/asllex/AslLexSearchControl';
@@ -51,6 +51,21 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
     { tester: videoFieldTester, renderer: VideoRecordField },
     { tester: AslLexSearchControlTester, renderer: AslLexSearchControl }
   ];
+
+  // Support for using the enter key for submission
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key == 'Enter') {
+      handleSubmit();
+    }
+  };
+
+  useEffect(() => {
+    // Listen for spaces
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [props, data, dataValid]);
 
   return (
     <Box sx={{ maxWidth: 500 }}>
