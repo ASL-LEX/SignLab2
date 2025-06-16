@@ -33,6 +33,9 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const client = useApolloClient();
   const { tag } = useTag();
   const { t } = useTranslation();
+  const recordingRef = useRef<boolean>(recording);
+  recordingRef.current = recording;
+
 
   const resetState = () => {
     if (!props.uischema.options?.minimumRequired) {
@@ -132,7 +135,8 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   // Support for using the space key to progress
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key == ' ') {
-      console.log('here');
+      // Toggle the recording state
+      setRecording(!recordingRef.current);
     }
   };
 
