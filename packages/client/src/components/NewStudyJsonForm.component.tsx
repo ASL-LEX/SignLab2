@@ -45,6 +45,10 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
           sortByEntryID: {
             type: 'boolean',
             default: false
+          },
+          disableClear: {
+            type: 'boolean',
+            default: 'false'
           }
         }
       }
@@ -85,6 +89,11 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
         type: 'Control',
         label: t('components.newStudy.sortByEntryID'),
         scope: '#/properties/studyConfig/properties/sortByEntryID'
+      },
+      {
+        type: 'Control',
+        label: t('components.newStudy.disableClear'),
+        scope: '#/properties/studyConfig/properties/disableClear'
       }
     ]
   };

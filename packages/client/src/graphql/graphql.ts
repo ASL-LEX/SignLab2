@@ -646,11 +646,13 @@ export type Study = {
 
 export type StudyConfig = {
   __typename?: 'StudyConfig';
+  disableClear?: Maybe<Scalars['Boolean']['output']>;
   disableSameUserEntryTagging?: Maybe<Scalars['Boolean']['output']>;
   sortByEntryID?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type StudyConfigInput = {
+  disableClear?: InputMaybe<Scalars['Boolean']['input']>;
   disableSameUserEntryTagging?: InputMaybe<Scalars['Boolean']['input']>;
   sortByEntryID?: InputMaybe<Scalars['Boolean']['input']>;
 };

@@ -36,6 +36,13 @@ export class StudyConfig {
   @Prop({ required: false })
   @Field({ nullable: true })
   sortByEntryID?: boolean;
+
+  /**
+   * If set, clear button will not be present in the UI of the study
+   */
+  @Prop({ required: false })
+  @Field({ nullable: true })
+  disableClear?: boolean;
 }
 
 const StudyConfigSchema = SchemaFactory.createForClass(StudyConfig);
