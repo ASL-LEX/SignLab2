@@ -111,7 +111,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     // Automatic progression
     const activeIndex = stateRef.current?.activeIndex;
     if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
-      setActiveIndex(activeIndex + 1)
+      setActiveIndex(activeIndex + 1);
     }
   };
 
