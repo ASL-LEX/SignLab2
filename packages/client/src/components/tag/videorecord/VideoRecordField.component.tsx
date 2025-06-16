@@ -33,6 +33,8 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const client = useApolloClient();
   const { tag } = useTag();
   const { t } = useTranslation();
+  const recordingRef = useRef<boolean>(recording);
+  recordingRef.current = recording;
 
   const resetState = () => {
     if (!props.uischema.options?.minimumRequired) {
@@ -105,6 +107,12 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       setVideoFragmentID(updatedVideoFragmentID);
       props.handleChange(props.path, updatedVideoFragmentID);
     }
+
+    // Automatic progression
+    const activeIndex = stateRef.current?.activeIndex;
+    if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
+      setActiveIndex(activeIndex + 1);
+    }
   };
 
   /** Store the blob and check if the video needs to be saved */
@@ -128,6 +136,22 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setBlobs(updatedBlobs);
     setValidVideos(updateValidVideos);
   };
+
+  // Support for using the space key to progress
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key == ' ') {
+      // Toggle the recording state
+      setRecording(!recordingRef.current);
+    }
+  };
+
+  useEffect(() => {
+    // Listen for spaces
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Accordion defaultExpanded>
