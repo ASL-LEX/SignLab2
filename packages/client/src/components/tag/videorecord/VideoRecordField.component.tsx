@@ -129,6 +129,21 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     setValidVideos(updateValidVideos);
   };
 
+  // Support for using the space key to progress
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key == ' ') {
+      console.log('here');
+    }
+  };
+
+  useEffect(() => {
+    // Listen for spaces
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMore />}>
