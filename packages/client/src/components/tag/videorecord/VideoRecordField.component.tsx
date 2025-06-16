@@ -36,7 +36,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const recordingRef = useRef<boolean>(recording);
   recordingRef.current = recording;
 
-
   const resetState = () => {
     if (!props.uischema.options?.minimumRequired) {
       console.error('Minimum number of videos required not specified');
@@ -107,6 +106,12 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       });
       setVideoFragmentID(updatedVideoFragmentID);
       props.handleChange(props.path, updatedVideoFragmentID);
+    }
+
+    // Automatic progression
+    const activeIndex = stateRef.current?.activeIndex;
+    if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
+      setActiveIndex(activeIndex + 1)
     }
   };
 
