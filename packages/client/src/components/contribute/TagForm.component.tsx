@@ -20,6 +20,26 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
   const [dataValid, setDataValid] = useState<boolean>(false);
   const { t } = useTranslation();
 
+  // Controls if a clear button should be present
+  const [hasClearButton, setHasClearButton] = useState<boolean>(false);
+
+  useEffect(() => {
+    // If the study config is not present, by default have a clear button
+    if (!props.study.studyConfig) {
+      setHasClearButton(true);
+      return;
+    }
+
+    // If the "disableClear" field isn't present, default have a clear button
+    if (props.study.studyConfig.disableClear === undefined || props.study.studyConfig.disableClear === null) {
+      setHasClearButton(true);
+      return;
+    }
+
+    // Otherwise use the field
+    setHasClearButton(!props.study.studyConfig.disableClear);
+  }, [props.study]);
+
   const handleFormChange = (data: any, errors: ErrorObject[] | undefined) => {
     setData(data);
 
@@ -81,9 +101,12 @@ export const TagForm: React.FC<TagFormProps> = (props) => {
           <Button variant="outlined" onClick={handleSubmit} disabled={!dataValid}>
             {t('common.submit')}
           </Button>
-          <Button variant="outlined" onClick={handleClear}>
-            {t('common.clear')}
-          </Button>
+
+          {hasClearButton && (
+            <Button variant="outlined" onClick={handleClear}>
+              {t('common.clear')}
+            </Button>
+          )}
         </Stack>
       </Stack>
     </Box>

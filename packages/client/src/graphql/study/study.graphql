@@ -10,6 +10,11 @@ query findStudies($project: ID!) {
       dataSchema
       uiSchema
     }
+    studyConfig {
+      disableSameUserEntryTagging
+      sortByEntryID
+      disableClear
+    }
   }
 }
 
