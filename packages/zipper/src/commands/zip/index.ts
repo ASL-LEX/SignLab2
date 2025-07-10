@@ -36,7 +36,11 @@ export default class ZipHander extends Command {
 
     // Add the enties to the zip
     for (const entry of entries) {
-      zip.addLocalFile(entry, 'entries/');
+      try {
+        zip.addLocalFile(entry, 'entries/');
+      } catch (e) {
+        console.warn(`Error reading file: ${e}`);
+      }
     }
 
     // Save the zip
