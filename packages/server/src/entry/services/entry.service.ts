@@ -58,7 +58,7 @@ export class EntryService {
     }
 
     const query = this.entryModel.find({ dataset: id, isTraining: false });
-    console.log(pageSize)
+    console.log(pageSize);
 
     if (page !== undefined && pageSize !== undefined) {
       const offset = page * pageSize;

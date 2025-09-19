@@ -22,7 +22,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [deleteEntryMutation] = useDeleteEntryMutation();
   const confirmation = useConfirmation();
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
-  const [paginationModel, setPaginationModel] = useState<{page: number, pageSize: number}>({ page: 0, pageSize: 10 });
+  const [paginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({ page: 0, pageSize: 10 });
 
   const defaultColumns: GridColDef[] = [
     {
@@ -112,8 +112,11 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   }, [props.dataset, paginationModel]);
 
   const reload = () => {
-    entryForDataset({ variables: { dataset: props.dataset._id, page: paginationModel.page, pageSize: paginationModel.pageSize }, fetchPolicy: 'network-only' });
-    entryCount({ variables: { dataset: props.dataset._id }});
+    entryForDataset({
+      variables: { dataset: props.dataset._id, page: paginationModel.page, pageSize: paginationModel.pageSize },
+      fetchPolicy: 'network-only'
+    });
+    entryCount({ variables: { dataset: props.dataset._id } });
   };
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires

@@ -42,7 +42,7 @@ export class EntryResolver {
   @Query(() => Int)
   async countEntryForDataset(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
-    @TokenContext() user: TokenPayload,
+    @TokenContext() user: TokenPayload
   ): Promise<Number> {
     if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
