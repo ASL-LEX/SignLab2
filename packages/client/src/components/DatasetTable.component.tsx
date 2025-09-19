@@ -22,6 +22,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [deleteEntryMutation] = useDeleteEntryMutation();
   const confirmation = useConfirmation();
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
+  const [paginationModel, setPaginationModel] = useState<{page: number, pageSize: number}>({ page: 0, pageSize: 10 });
 
   const defaultColumns: GridColDef[] = [
     {
@@ -127,6 +128,9 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
       getRowHeight={() => 'auto'}
       rows={entries}
       columns={columns}
+      paginationMode={'server'}
+      paginationModel={paginationModel}
+      onPaginationModelChange={setPaginationModel}
       initialState={{
         pagination: {
           paginationModel: {

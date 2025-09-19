@@ -28,13 +28,15 @@ export class EntryResolver {
   @Query(() => [Entry])
   async entryForDataset(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
-    @TokenContext() user: TokenPayload
+    @TokenContext() user: TokenPayload,
+    @Args('page', { type: () => Number, nullable: true }) page?: number,
+    @Args('pageSize', { type: () => Number, nullable: true }) pageSize?: number
   ): Promise<Entry[]> {
     if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
-    return this.entryService.findForDataset(dataset);
+    return this.entryService.findForDataset(dataset, page, pageSize);
   }
 
   @Query(() => Entry)
