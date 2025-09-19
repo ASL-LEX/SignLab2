@@ -7,6 +7,8 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type EntryForDatasetQueryVariables = Types.Exact<{
   dataset: Types.Scalars['ID']['input'];
+  page?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  pageSize?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
@@ -28,8 +30,8 @@ export type DeleteEntryMutation = { __typename?: 'Mutation', deleteEntry: boolea
 
 
 export const EntryForDatasetDocument = gql`
-    query entryForDataset($dataset: ID!) {
-  entryForDataset(dataset: $dataset) {
+    query entryForDataset($dataset: ID!, $page: Int, $pageSize: Int) {
+  entryForDataset(dataset: $dataset, page: $page, pageSize: $pageSize) {
     _id
     organization
     entryID
@@ -58,6 +60,8 @@ export const EntryForDatasetDocument = gql`
  * const { data, loading, error } = useEntryForDatasetQuery({
  *   variables: {
  *      dataset: // value for 'dataset'
+ *      page: // value for 'page'
+ *      pageSize: // value for 'pageSize'
  *   },
  * });
  */

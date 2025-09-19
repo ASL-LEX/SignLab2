@@ -507,6 +507,8 @@ export type QueryDatasetExistsArgs = {
 
 export type QueryEntryForDatasetArgs = {
   dataset: Scalars['ID']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

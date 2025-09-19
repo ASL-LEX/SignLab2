@@ -57,14 +57,15 @@ export class EntryService {
       id = dataset._id.toString();
     }
 
-    let result = this.entryModel.find({ dataset: id, isTraining: false });
+    const query = this.entryModel.find({ dataset: id, isTraining: false });
+    console.log(pageSize)
 
-    if (page && pageSize) {
+    if (page !== undefined && pageSize !== undefined) {
       const offset = page * pageSize;
-      result = result.skip(offset).limit(pageSize);
+      return await query.skip(offset).limit(pageSize);
     }
 
-    return result;
+    return query;
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {

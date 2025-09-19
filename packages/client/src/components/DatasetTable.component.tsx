@@ -107,10 +107,10 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
 
   useEffect(() => {
     reload();
-  }, [props.dataset]);
+  }, [props.dataset, paginationModel]);
 
   const reload = () => {
-    entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
+    entryForDataset({ variables: { dataset: props.dataset._id, page: paginationModel.page, pageSize: paginationModel.pageSize }, fetchPolicy: 'network-only' });
   };
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
