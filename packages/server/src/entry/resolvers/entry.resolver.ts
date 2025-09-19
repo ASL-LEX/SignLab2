@@ -39,6 +39,18 @@ export class EntryResolver {
     return this.entryService.findForDataset(dataset, page, pageSize);
   }
 
+  @Query(() => Int)
+  async countEntryForDataset(
+    @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
+    @TokenContext() user: TokenPayload,
+  ): Promise<Number> {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
+      throw new UnauthorizedException('User cannot read entries on this dataset');
+    }
+
+    return this.entryService.countForDataset(dataset);
+  }
+
   @Query(() => Entry)
   async entryFromID(
     @Args('entry', { type: () => ID }, EntryPipe) entry: Entry,

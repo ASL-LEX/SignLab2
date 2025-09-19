@@ -14,6 +14,13 @@ export type EntryForDatasetQueryVariables = Types.Exact<{
 
 export type EntryForDatasetQuery = { __typename?: 'Query', entryForDataset: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, dataset: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> };
 
+export type CountEntryForDatasetQueryVariables = Types.Exact<{
+  dataset: Types.Scalars['ID']['input'];
+}>;
+
+
+export type CountEntryForDatasetQuery = { __typename?: 'Query', countEntryForDataset: number };
+
 export type EntryFromIdQueryVariables = Types.Exact<{
   entry: Types.Scalars['ID']['input'];
 }>;
@@ -76,6 +83,39 @@ export function useEntryForDatasetLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type EntryForDatasetQueryHookResult = ReturnType<typeof useEntryForDatasetQuery>;
 export type EntryForDatasetLazyQueryHookResult = ReturnType<typeof useEntryForDatasetLazyQuery>;
 export type EntryForDatasetQueryResult = Apollo.QueryResult<EntryForDatasetQuery, EntryForDatasetQueryVariables>;
+export const CountEntryForDatasetDocument = gql`
+    query countEntryForDataset($dataset: ID!) {
+  countEntryForDataset(dataset: $dataset)
+}
+    `;
+
+/**
+ * __useCountEntryForDatasetQuery__
+ *
+ * To run a query within a React component, call `useCountEntryForDatasetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountEntryForDatasetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountEntryForDatasetQuery({
+ *   variables: {
+ *      dataset: // value for 'dataset'
+ *   },
+ * });
+ */
+export function useCountEntryForDatasetQuery(baseOptions: Apollo.QueryHookOptions<CountEntryForDatasetQuery, CountEntryForDatasetQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountEntryForDatasetQuery, CountEntryForDatasetQueryVariables>(CountEntryForDatasetDocument, options);
+      }
+export function useCountEntryForDatasetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountEntryForDatasetQuery, CountEntryForDatasetQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountEntryForDatasetQuery, CountEntryForDatasetQueryVariables>(CountEntryForDatasetDocument, options);
+        }
+export type CountEntryForDatasetQueryHookResult = ReturnType<typeof useCountEntryForDatasetQuery>;
+export type CountEntryForDatasetLazyQueryHookResult = ReturnType<typeof useCountEntryForDatasetLazyQuery>;
+export type CountEntryForDatasetQueryResult = Apollo.QueryResult<CountEntryForDatasetQuery, CountEntryForDatasetQueryVariables>;
 export const EntryFromIdDocument = gql`
     query entryFromID($entry: ID!) {
   entryFromID(entry: $entry) {

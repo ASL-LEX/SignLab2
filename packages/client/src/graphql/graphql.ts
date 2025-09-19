@@ -468,6 +468,7 @@ export type ProjectPermissionModel = {
 
 export type Query = {
   __typename?: 'Query';
+  countEntryForDataset: Scalars['Int']['output'];
   datasetExists: Scalars['Boolean']['output'];
   entryForDataset: Array<Entry>;
   entryFromID: Entry;
@@ -497,6 +498,11 @@ export type Query = {
   projectExists: Scalars['Boolean']['output'];
   studyExists: Scalars['Boolean']['output'];
   validateCSV: UploadResult;
+};
+
+
+export type QueryCountEntryForDatasetArgs = {
+  dataset: Scalars['ID']['input'];
 };
 
 

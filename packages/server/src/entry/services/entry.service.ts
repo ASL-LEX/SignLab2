@@ -68,6 +68,18 @@ export class EntryService {
     return query;
   }
 
+  async countForDataset(dataset: Dataset | string) {
+    let id: string = '';
+
+    if (typeof dataset === 'string') {
+      id = dataset;
+    } else {
+      id = dataset._id.toString();
+    }
+
+    return this.entryModel.count({ dataset: id, isTraining: false });
+  }
+
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {
     const entry = await this.entryModel.findOne({ entryID, dataset: dataset._id });
     return !!entry;
