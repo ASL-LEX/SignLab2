@@ -48,7 +48,7 @@ export class EntryService {
     await this.entryModel.deleteOne({ _id: entry._id });
   }
 
-  async findForDataset(dataset: Dataset | string): Promise<Entry[]> {
+  async findForDataset(dataset: Dataset | string, page?: number, pageSize?: number): Promise<Entry[]> {
     let id: string = '';
 
     if (typeof dataset === 'string') {
@@ -57,7 +57,26 @@ export class EntryService {
       id = dataset._id.toString();
     }
 
-    return this.entryModel.find({ dataset: id, isTraining: false });
+    const query = this.entryModel.find({ dataset: id, isTraining: false });
+
+    if (page !== undefined && pageSize !== undefined) {
+      const offset = page * pageSize;
+      return await query.skip(offset).limit(pageSize);
+    }
+
+    return query;
+  }
+
+  async countForDataset(dataset: Dataset | string) {
+    let id: string = '';
+
+    if (typeof dataset === 'string') {
+      id = dataset;
+    } else {
+      id = dataset._id.toString();
+    }
+
+    return this.entryModel.count({ dataset: id, isTraining: false });
   }
 
   async exists(entryID: string, dataset: Dataset): Promise<boolean> {

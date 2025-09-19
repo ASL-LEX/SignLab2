@@ -1,4 +1,4 @@
-import { Args, ID, Resolver, Query, ResolveField, Parent, Mutation } from '@nestjs/graphql';
+import { Args, ID, Resolver, Query, ResolveField, Parent, Mutation, Int } from '@nestjs/graphql';
 import { Dataset } from '../../dataset/dataset.model';
 import { Entry } from '../models/entry.model';
 import { EntryService } from '../services/entry.service';
@@ -28,13 +28,27 @@ export class EntryResolver {
   @Query(() => [Entry])
   async entryForDataset(
     @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
-    @TokenContext() user: TokenPayload
+    @TokenContext() user: TokenPayload,
+    @Args('page', { type: () => Int, nullable: true }) page?: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize?: number
   ): Promise<Entry[]> {
     if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
       throw new UnauthorizedException('User cannot read entries on this dataset');
     }
 
-    return this.entryService.findForDataset(dataset);
+    return this.entryService.findForDataset(dataset, page, pageSize);
+  }
+
+  @Query(() => Int)
+  async countEntryForDataset(
+    @Args('dataset', { type: () => ID }, DatasetPipe) dataset: Dataset,
+    @TokenContext() user: TokenPayload
+  ): Promise<Number> {
+    if (!(await this.enforcer.enforce(user.user_id, DatasetPermissions.READ, dataset._id.toString()))) {
+      throw new UnauthorizedException('User cannot read entries on this dataset');
+    }
+
+    return this.entryService.countForDataset(dataset);
   }
 
   @Query(() => Entry)

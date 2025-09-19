@@ -468,6 +468,7 @@ export type ProjectPermissionModel = {
 
 export type Query = {
   __typename?: 'Query';
+  countEntryForDataset: Scalars['Int']['output'];
   datasetExists: Scalars['Boolean']['output'];
   entryForDataset: Array<Entry>;
   entryFromID: Entry;
@@ -500,6 +501,11 @@ export type Query = {
 };
 
 
+export type QueryCountEntryForDatasetArgs = {
+  dataset: Scalars['ID']['input'];
+};
+
+
 export type QueryDatasetExistsArgs = {
   name: Scalars['String']['input'];
 };
@@ -507,6 +513,8 @@ export type QueryDatasetExistsArgs = {
 
 export type QueryEntryForDatasetArgs = {
   dataset: Scalars['ID']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

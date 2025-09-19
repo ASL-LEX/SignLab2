@@ -1,5 +1,5 @@
-query entryForDataset($dataset: ID!) {
-  entryForDataset(dataset: $dataset) {
+query entryForDataset($dataset: ID!, $page: Int, $pageSize: Int) {
+  entryForDataset(dataset: $dataset, page: $page, pageSize: $pageSize) {
     _id
     organization
     entryID
@@ -13,6 +13,10 @@ query entryForDataset($dataset: ID!) {
     isTraining
   }
 }
+
+ query countEntryForDataset($dataset: ID!) {
+   countEntryForDataset(dataset: $dataset)
+ }
 
 query entryFromID($entry: ID!) {
   entryFromID(entry: $entry) {

@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef, GridRowId, GridActionsCellItem } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Dataset, Entry } from '../graphql/graphql';
-import { useEntryForDatasetLazyQuery } from '../graphql/entry/entry';
+import { useEntryForDatasetLazyQuery, useCountEntryForDatasetLazyQuery } from '../graphql/entry/entry';
 import { EntryView } from './EntryView.component';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../context/Snackbar.context';
@@ -22,6 +22,7 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   const [deleteEntryMutation] = useDeleteEntryMutation();
   const confirmation = useConfirmation();
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
+  const [paginationModel, setPaginationModel] = useState<{ page: number; pageSize: number }>({ page: 0, pageSize: 10 });
 
   const defaultColumns: GridColDef[] = [
     {
@@ -97,19 +98,25 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
   };
 
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [rowCount, setRowCount] = useState<number>(0);
   const columns = [...defaultColumns, ...(props.additionalColumns ?? [])];
   if (props.supportEntryDelete) {
     columns.push(deleteColumn);
   }
 
   const [entryForDataset, entryForDatasetResult] = useEntryForDatasetLazyQuery();
+  const [entryCount, entryCountResult] = useCountEntryForDatasetLazyQuery();
 
   useEffect(() => {
     reload();
-  }, [props.dataset]);
+  }, [props.dataset, paginationModel]);
 
   const reload = () => {
-    entryForDataset({ variables: { dataset: props.dataset._id }, fetchPolicy: 'network-only' });
+    entryForDataset({
+      variables: { dataset: props.dataset._id, page: paginationModel.page, pageSize: paginationModel.pageSize },
+      fetchPolicy: 'network-only'
+    });
+    entryCount({ variables: { dataset: props.dataset._id } });
   };
 
   // TODO: Add in logic to re-fetch data when the presigned URL expires
@@ -122,11 +129,24 @@ export const DatasetTable: React.FC<DatasetTableProps> = (props) => {
     }
   }, [entryForDatasetResult]);
 
+  useEffect(() => {
+    if (entryCountResult.data) {
+      setRowCount(entryCountResult.data.countEntryForDataset);
+    } else if (entryCountResult.error) {
+      pushSnackbarMessage(t('errors.entryQuery'), 'error');
+      console.error(entryForDatasetResult.error);
+    }
+  }, [entryCountResult]);
+
   return (
     <DataGrid
       getRowHeight={() => 'auto'}
       rows={entries}
+      rowCount={rowCount}
       columns={columns}
+      paginationMode={'server'}
+      paginationModel={paginationModel}
+      onPaginationModelChange={setPaginationModel}
       initialState={{
         pagination: {
           paginationModel: {
