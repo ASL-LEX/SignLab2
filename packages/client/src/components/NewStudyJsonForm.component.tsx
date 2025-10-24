@@ -22,8 +22,7 @@ export const NewStudyJsonForm: React.FC<NewStudyFormProps> = (props) => {
     type: 'object',
     properties: {
       name: {
-        type: 'string',
-        pattern: '^[a-zA-Z 0-9]*$'
+        type: 'string'
       },
       description: {
         type: 'string'
