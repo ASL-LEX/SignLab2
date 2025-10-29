@@ -18,7 +18,7 @@ export const TagTrainingView: React.FC = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
   const [trainingTagsQuery, trainingTagsResult] = useGetTrainingTagsLazyQuery();
   const [totalTags, setTotalTags] = useState<number>(0);
-  const [tagCount, tagCountResult]  = useCountTrainingTagForStudyLazyQuery();
+  const [tagCount, tagCountResult] = useCountTrainingTagForStudyLazyQuery();
 
   useEffect(() => {
     trainingTagsQuery({
@@ -29,7 +29,7 @@ export const TagTrainingView: React.FC = () => {
         pageSize: paginationModel.pageSize
       }
     });
-    tagCount({ variables: { study: study._id, user: user.uid }});
+    tagCount({ variables: { study: study._id, user: user.uid } });
   }, [paginationModel]);
 
   useEffect(() => {
@@ -58,7 +58,14 @@ export const TagTrainingView: React.FC = () => {
       {!tags || tags.length === 0 ? (
         <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography>
       ) : (
-        <TagGridView tags={tags} study={study} refetchTags={refetchTags} paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalTags={totalTags} />
+        <TagGridView
+          tags={tags}
+          study={study}
+          refetchTags={refetchTags}
+          paginationModel={paginationModel}
+          setPaginationModel={setPaginationModel}
+          totalTags={totalTags}
+        />
       )}
     </>
   );

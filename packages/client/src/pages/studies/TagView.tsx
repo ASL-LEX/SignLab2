@@ -21,7 +21,7 @@ export const TagView: React.FC = () => {
     }
 
     getTagQuery({ variables: { study: study._id, page: paginationModel.page, pageSize: paginationModel.pageSize } });
-    tagCount({ variables: { study: study._id }});
+    tagCount({ variables: { study: study._id } });
   }, [study, paginationModel]);
 
   useEffect(() => {
@@ -46,7 +46,16 @@ export const TagView: React.FC = () => {
   return (
     <>
       <Typography variant="h3"> {t('menu.viewTags')}</Typography>
-      {study && <TagGridView study={study} tags={tags} refetchTags={refetchTags} paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalTags={totalTags} />}
+      {study && (
+        <TagGridView
+          study={study}
+          tags={tags}
+          refetchTags={refetchTags}
+          paginationModel={paginationModel}
+          setPaginationModel={setPaginationModel}
+          totalTags={totalTags}
+        />
+      )}
     </>
   );
 };

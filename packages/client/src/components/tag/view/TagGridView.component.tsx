@@ -59,7 +59,14 @@ interface GridData extends Omit<GetTagsQuery['getTags'][0], 'data'> {
   data: { [property: string]: any } | null;
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags, paginationModel, setPaginationModel, totalTags }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({
+  tags,
+  study,
+  refetchTags,
+  paginationModel,
+  setPaginationModel,
+  totalTags
+}) => {
   const { t } = useTranslation();
 
   const [gridData, setGridData] = useState<(GridData | null)[]>([]);
@@ -167,7 +174,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
       slots={{ toolbar: TagToolbar }}
-      paginationMode='server'
+      paginationMode="server"
       paginationModel={paginationModel}
       initialState={{
         pagination: {

@@ -138,7 +138,7 @@ export class TagResolver {
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('user') user: string,
     @TokenContext() requestingUser: TokenPayload,
-    @Args('page', { type: () => Int, nullable: true}) page?: number,
+    @Args('page', { type: () => Int, nullable: true }) page?: number,
     @Args('pageSize', { type: () => Int, nullable: true }) pageSize?: number
   ): Promise<Tag[]> {
     if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
@@ -152,7 +152,7 @@ export class TagResolver {
   async countTrainingTagForStudy(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('user') user: string,
-    @TokenContext() requestingUser: TokenPayload,
+    @TokenContext() requestingUser: TokenPayload
   ): Promise<Number> {
     if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
       throw new UnauthorizedException('User cannot read tags in this study');
