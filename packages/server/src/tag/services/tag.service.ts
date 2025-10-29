@@ -73,12 +73,24 @@ export class TagService {
     return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
   }
 
-  async getTrainingTags(study: Study, user: string): Promise<Tag[]> {
-    return this.tagModel.find({
+  async getTrainingTags(study: Study, user: string, page?: number, pageSize?: number): Promise<Tag[]> {
+    const query = this.tagModel.find({
       user,
       study: study._id,
       training: true
     });
+
+    // Pagination support
+    if (page !== undefined && pageSize != undefined) {
+      const offset = page * pageSize;
+      return await query.skip(offset).limit(pageSize);
+    }
+
+    return await query;
+  }
+
+  async countTrainingTagForStudy(study: Study, user: string): Promise<number> {
+    return this.tagModel.count({ study: study._id, user: user, training: true });
   }
 
   /**

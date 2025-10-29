@@ -122,8 +122,12 @@ query countTagForStudy($study: ID!) {
   countTagForStudy(study: $study)
 }
 
-query getTrainingTags($study: ID!, $user: String!) {
-  getTrainingTags(study: $study, user: $user) {
+query countTrainingTagForStudy($study: ID!, $user: String!) {
+  countTrainingTagForStudy(study: $study, user: $user)
+}
+
+query getTrainingTags($study: ID!, $user: String!, $page: Int, $pageSize: Int) {
+  getTrainingTags(study: $study, user: $user, page: $page, pageSize: $pageSize) {
     _id
     entry {
       _id

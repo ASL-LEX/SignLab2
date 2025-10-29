@@ -13,7 +13,7 @@ export const TagView: React.FC = () => {
   const [getTagQuery, getTagResult] = useGetTagsLazyQuery();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
   const [totalTags, setTotalTags] = useState<number>(0);
-  const [entryCount, entryCountResult] = useCountTagForStudyLazyQuery();
+  const [tagCount, tagCountResult] = useCountTagForStudyLazyQuery();
 
   useEffect(() => {
     if (!study) {
@@ -21,16 +21,16 @@ export const TagView: React.FC = () => {
     }
 
     getTagQuery({ variables: { study: study._id, page: paginationModel.page, pageSize: paginationModel.pageSize } });
-    entryCount({ variables: { study: study._id }});
+    tagCount({ variables: { study: study._id }});
   }, [study, paginationModel]);
 
   useEffect(() => {
-    if (entryCountResult.data) {
-      setTotalTags(entryCountResult.data.countTagForStudy);
-    } else if (entryCountResult.error) {
-      console.error(entryCountResult.error);
+    if (tagCountResult.data) {
+      setTotalTags(tagCountResult.data.countTagForStudy);
+    } else if (tagCountResult.error) {
+      console.error(tagCountResult.error);
     }
-  }, [entryCountResult]);
+  }, [tagCountResult]);
 
   useEffect(() => {
     if (!getTagResult.data) {

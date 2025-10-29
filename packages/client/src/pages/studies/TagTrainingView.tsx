@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { User, Study } from '../../graphql/graphql';
-import { GetTagsQuery, useGetTrainingTagsQuery } from '../../graphql/tag/tag';
+import { GetTagsQuery, useCountTrainingTagForStudyLazyQuery, useGetTrainingTagsLazyQuery } from '../../graphql/tag/tag';
 import { useEffect, useState } from 'react';
 import { TagGridView } from '../../components/tag/view/TagGridView.component';
 import { Typography } from '@mui/material';
@@ -16,20 +16,41 @@ export const TagTrainingView: React.FC = () => {
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
-
-  const trainingTags = useGetTrainingTagsQuery({ variables: { study: study._id, user: user.uid } });
+  const [trainingTagsQuery, trainingTagsResult] = useGetTrainingTagsLazyQuery();
+  const [totalTags, setTotalTags] = useState<number>(0);
+  const [tagCount, tagCountResult]  = useCountTrainingTagForStudyLazyQuery();
 
   useEffect(() => {
-    if (trainingTags.data) {
-      setTags(trainingTags.data.getTrainingTags);
-    } else if (trainingTags.error) {
+    trainingTagsQuery({
+      variables: {
+        study: study._id,
+        user: user.uid,
+        page: paginationModel.page,
+        pageSize: paginationModel.pageSize
+      }
+    });
+    tagCount({ variables: { study: study._id, user: user.uid }});
+  }, [paginationModel]);
+
+  useEffect(() => {
+    if (trainingTagsResult.data) {
+      setTags(trainingTagsResult.data.getTrainingTags);
+    } else if (trainingTagsResult.error) {
       pushSnackbarMessage(t('errors.tagsQuery'), 'error');
-      console.error(trainingTags.error);
+      console.error(trainingTagsResult.error);
     }
-  }, [trainingTags]);
+  }, [trainingTagsResult]);
+
+  useEffect(() => {
+    if (tagCountResult.data) {
+      setTotalTags(tagCountResult.data.countTrainingTagForStudy);
+    } else if (tagCountResult.error) {
+      console.error(tagCountResult.error);
+    }
+  }, [tagCountResult]);
 
   const refetchTags = () => {
-    trainingTags.refetch();
+    trainingTagsResult.refetch();
   };
 
   return (
@@ -37,7 +58,7 @@ export const TagTrainingView: React.FC = () => {
       {!tags || tags.length === 0 ? (
         <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography>
       ) : (
-        <TagGridView tags={tags} study={study} refetchTags={refetchTags} paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
+        <TagGridView tags={tags} study={study} refetchTags={refetchTags} paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalTags={totalTags} />
       )}
     </>
   );
