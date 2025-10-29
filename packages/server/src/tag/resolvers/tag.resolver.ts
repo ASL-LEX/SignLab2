@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent, Int } from '@nestjs/graphql';
 import { TagService } from '../services/tag.service';
 import { Tag } from '../models/tag.model';
 import { StudyPipe } from '../../study/pipes/study.pipe';
@@ -111,27 +111,55 @@ export class TagResolver {
   @Query(() => [Tag])
   async getTags(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @TokenContext() user: TokenPayload
+    @TokenContext() user: TokenPayload,
+    @Args('page', { type: () => Int, nullable: true }) page?: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize?: number
   ): Promise<Tag[]> {
     if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
       throw new UnauthorizedException('User cannot read tags in this study');
     }
-    return this.tagService.getTags(study);
+    return this.tagService.getTags(study, page, pageSize);
+  }
+
+  @Query(() => Int)
+  async countTagForStudy(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<Number> {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+
+    return this.tagService.countForStudy(study);
   }
 
   @Query(() => [Tag])
   async getTrainingTags(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
     @Args('user') user: string,
-    @TokenContext() requestingUser: TokenPayload
+    @TokenContext() requestingUser: TokenPayload,
+    @Args('page', { type: () => Int, nullable: true }) page?: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize?: number
   ): Promise<Tag[]> {
     if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
       throw new UnauthorizedException('User cannot read tags in this study');
     }
 
-    return this.tagService.getTrainingTags(study, user);
+    return this.tagService.getTrainingTags(study, user, page, pageSize);
   }
 
+  @Query(() => Int)
+  async countTrainingTagForStudy(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @Args('user') user: string,
+    @TokenContext() requestingUser: TokenPayload
+  ): Promise<Number> {
+    if (!(await this.enforcer.enforce(requestingUser.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+
+    return this.tagService.countTrainingTagForStudy(study, user);
+  }
   @ResolveField(() => Entry)
   async entry(@Parent() tag: Tag): Promise<Entry> {
     return this.entryPipe.transform(tag.entry);

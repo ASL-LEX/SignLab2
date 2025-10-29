@@ -73,12 +73,24 @@ export class TagService {
     return isTrained ? this.assignTagFull(study, user) : this.assignTrainingTag(study, user);
   }
 
-  async getTrainingTags(study: Study, user: string): Promise<Tag[]> {
-    return this.tagModel.find({
+  async getTrainingTags(study: Study, user: string, page?: number, pageSize?: number): Promise<Tag[]> {
+    const query = this.tagModel.find({
       user,
       study: study._id,
       training: true
     });
+
+    // Pagination support
+    if (page !== undefined && pageSize != undefined) {
+      const offset = page * pageSize;
+      return await query.skip(offset).limit(pageSize);
+    }
+
+    return await query;
+  }
+
+  async countTrainingTagForStudy(study: Study, user: string): Promise<number> {
+    return this.tagModel.count({ study: study._id, user: user, training: true });
   }
 
   /**
@@ -289,14 +301,33 @@ export class TagService {
     return true;
   }
 
-  async getTags(study: Study | string): Promise<Tag[]> {
+  async getTags(study: Study | string, page?: number, pageSize?: number): Promise<Tag[]> {
     let studyID = '';
     if (typeof study === 'string') {
       studyID = study;
     } else {
       studyID = study._id;
     }
-    return this.tagModel.find({ study: studyID, training: false });
+    const query = this.tagModel.find({ study: studyID, training: false });
+
+    // Pagination support
+    if (page !== undefined && pageSize != undefined) {
+      const offset = page * pageSize;
+      return await query.skip(offset).limit(pageSize);
+    }
+
+    return await query;
+  }
+
+  async countForStudy(study: Study | string): Promise<number> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+
+    return this.tagModel.count({ study: studyID, training: false });
   }
 
   async getCompleteTags(study: Study | string): Promise<Tag[]> {

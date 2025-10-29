@@ -469,6 +469,8 @@ export type ProjectPermissionModel = {
 export type Query = {
   __typename?: 'Query';
   countEntryForDataset: Scalars['Int']['output'];
+  countTagForStudy: Scalars['Int']['output'];
+  countTrainingTagForStudy: Scalars['Int']['output'];
   datasetExists: Scalars['Boolean']['output'];
   entryForDataset: Array<Entry>;
   entryFromID: Entry;
@@ -503,6 +505,17 @@ export type Query = {
 
 export type QueryCountEntryForDatasetArgs = {
   dataset: Scalars['ID']['input'];
+};
+
+
+export type QueryCountTagForStudyArgs = {
+  study: Scalars['ID']['input'];
+};
+
+
+export type QueryCountTrainingTagForStudyArgs = {
+  study: Scalars['ID']['input'];
+  user: Scalars['String']['input'];
 };
 
 
@@ -582,11 +595,15 @@ export type QueryGetStudyPermissionsArgs = {
 
 
 export type QueryGetTagsArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
   study: Scalars['ID']['input'];
 };
 
 
 export type QueryGetTrainingTagsArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
   study: Scalars['ID']['input'];
   user: Scalars['String']['input'];
 };

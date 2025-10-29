@@ -71,14 +71,33 @@ export type SaveVideoFieldMutation = { __typename?: 'Mutation', saveVideoField: 
 
 export type GetTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
+  page?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  pageSize?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', _id: string, complete: boolean, entry: { __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }, data?: Array<{ __typename?: 'TagField', type: Types.TagFieldType, name: string, field?: { __typename: 'AslLexField', lexiconEntry: { __typename?: 'LexiconEntry', key: string, primary: string, video: string, lexicon: string, associates: Array<string>, fields: any } } | { __typename: 'BooleanField', boolValue: boolean } | { __typename: 'FreeTextField', textValue: string } | { __typename: 'NumericField', numericValue: number } | { __typename: 'SliderField', sliderValue: number } | { __typename: 'VideoField', entries: Array<{ __typename?: 'Entry', _id: string, organization: string, entryID: string, contentType: string, creator: string, dateCreated: any, meta?: any | null, signedUrl: string, signedUrlExpiration: number, isTraining: boolean }> } | null }> | null }> };
 
+export type CountTagForStudyQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+}>;
+
+
+export type CountTagForStudyQuery = { __typename?: 'Query', countTagForStudy: number };
+
+export type CountTrainingTagForStudyQueryVariables = Types.Exact<{
+  study: Types.Scalars['ID']['input'];
+  user: Types.Scalars['String']['input'];
+}>;
+
+
+export type CountTrainingTagForStudyQuery = { __typename?: 'Query', countTrainingTagForStudy: number };
+
 export type GetTrainingTagsQueryVariables = Types.Exact<{
   study: Types.Scalars['ID']['input'];
   user: Types.Scalars['String']['input'];
+  page?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  pageSize?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
@@ -364,8 +383,8 @@ export type SaveVideoFieldMutationHookResult = ReturnType<typeof useSaveVideoFie
 export type SaveVideoFieldMutationResult = Apollo.MutationResult<SaveVideoFieldMutation>;
 export type SaveVideoFieldMutationOptions = Apollo.BaseMutationOptions<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>;
 export const GetTagsDocument = gql`
-    query getTags($study: ID!) {
-  getTags(study: $study) {
+    query getTags($study: ID!, $page: Int, $pageSize: Int) {
+  getTags(study: $study, page: $page, pageSize: $pageSize) {
     _id
     entry {
       _id
@@ -440,6 +459,8 @@ export const GetTagsDocument = gql`
  * const { data, loading, error } = useGetTagsQuery({
  *   variables: {
  *      study: // value for 'study'
+ *      page: // value for 'page'
+ *      pageSize: // value for 'pageSize'
  *   },
  * });
  */
@@ -454,9 +475,76 @@ export function useGetTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
 export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
 export type GetTagsQueryResult = Apollo.QueryResult<GetTagsQuery, GetTagsQueryVariables>;
+export const CountTagForStudyDocument = gql`
+    query countTagForStudy($study: ID!) {
+  countTagForStudy(study: $study)
+}
+    `;
+
+/**
+ * __useCountTagForStudyQuery__
+ *
+ * To run a query within a React component, call `useCountTagForStudyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountTagForStudyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountTagForStudyQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *   },
+ * });
+ */
+export function useCountTagForStudyQuery(baseOptions: Apollo.QueryHookOptions<CountTagForStudyQuery, CountTagForStudyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountTagForStudyQuery, CountTagForStudyQueryVariables>(CountTagForStudyDocument, options);
+      }
+export function useCountTagForStudyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountTagForStudyQuery, CountTagForStudyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountTagForStudyQuery, CountTagForStudyQueryVariables>(CountTagForStudyDocument, options);
+        }
+export type CountTagForStudyQueryHookResult = ReturnType<typeof useCountTagForStudyQuery>;
+export type CountTagForStudyLazyQueryHookResult = ReturnType<typeof useCountTagForStudyLazyQuery>;
+export type CountTagForStudyQueryResult = Apollo.QueryResult<CountTagForStudyQuery, CountTagForStudyQueryVariables>;
+export const CountTrainingTagForStudyDocument = gql`
+    query countTrainingTagForStudy($study: ID!, $user: String!) {
+  countTrainingTagForStudy(study: $study, user: $user)
+}
+    `;
+
+/**
+ * __useCountTrainingTagForStudyQuery__
+ *
+ * To run a query within a React component, call `useCountTrainingTagForStudyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountTrainingTagForStudyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountTrainingTagForStudyQuery({
+ *   variables: {
+ *      study: // value for 'study'
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCountTrainingTagForStudyQuery(baseOptions: Apollo.QueryHookOptions<CountTrainingTagForStudyQuery, CountTrainingTagForStudyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountTrainingTagForStudyQuery, CountTrainingTagForStudyQueryVariables>(CountTrainingTagForStudyDocument, options);
+      }
+export function useCountTrainingTagForStudyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountTrainingTagForStudyQuery, CountTrainingTagForStudyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountTrainingTagForStudyQuery, CountTrainingTagForStudyQueryVariables>(CountTrainingTagForStudyDocument, options);
+        }
+export type CountTrainingTagForStudyQueryHookResult = ReturnType<typeof useCountTrainingTagForStudyQuery>;
+export type CountTrainingTagForStudyLazyQueryHookResult = ReturnType<typeof useCountTrainingTagForStudyLazyQuery>;
+export type CountTrainingTagForStudyQueryResult = Apollo.QueryResult<CountTrainingTagForStudyQuery, CountTrainingTagForStudyQueryVariables>;
 export const GetTrainingTagsDocument = gql`
-    query getTrainingTags($study: ID!, $user: String!) {
-  getTrainingTags(study: $study, user: $user) {
+    query getTrainingTags($study: ID!, $user: String!, $page: Int, $pageSize: Int) {
+  getTrainingTags(study: $study, user: $user, page: $page, pageSize: $pageSize) {
     _id
     entry {
       _id
@@ -532,6 +620,8 @@ export const GetTrainingTagsDocument = gql`
  *   variables: {
  *      study: // value for 'study'
  *      user: // value for 'user'
+ *      page: // value for 'page'
+ *      pageSize: // value for 'pageSize'
  *   },
  * });
  */
