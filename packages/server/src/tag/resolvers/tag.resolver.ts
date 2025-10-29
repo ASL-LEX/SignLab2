@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, ID, ResolveField, Parent, Int } from '@nestjs/graphql';
 import { TagService } from '../services/tag.service';
 import { Tag } from '../models/tag.model';
 import { StudyPipe } from '../../study/pipes/study.pipe';
@@ -111,12 +111,14 @@ export class TagResolver {
   @Query(() => [Tag])
   async getTags(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,
-    @TokenContext() user: TokenPayload
+    @TokenContext() user: TokenPayload,
+    @Args('page', { type: () => Int, nullable: true }) page?: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize?: number
   ): Promise<Tag[]> {
     if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
       throw new UnauthorizedException('User cannot read tags in this study');
     }
-    return this.tagService.getTags(study);
+    return this.tagService.getTags(study, page, pageSize);
   }
 
   @Query(() => [Tag])

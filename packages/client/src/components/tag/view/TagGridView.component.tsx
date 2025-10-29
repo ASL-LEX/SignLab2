@@ -3,6 +3,7 @@ import { GetGridColDefs, TagViewTest } from '../../../types/TagColumnView';
 import { Entry, Study } from '../../../graphql/graphql';
 import {
   GridColDef,
+  GridPaginationModel,
   GridRenderCellParams,
   GridToolbarColumnsButton,
   GridToolbarContainer,
@@ -19,12 +20,14 @@ import { getSliderCols, sliderTest } from './SliderGridView.component';
 import { getBoolCols, booleanTest } from './BooleanGridView.component';
 import { aslLexTest, getAslLexCols } from './AslLexGridView.component';
 import { getVideoCols, videoViewTest } from './VideoGridView.component';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export interface TagGridViewProps {
   study: Study;
   tags: GetTagsQuery['getTags'];
   refetchTags: () => void;
+  paginationModel: GridPaginationModel;
+  setPaginationModel: Dispatch<SetStateAction<GridPaginationModel>>;
 }
 
 /**
@@ -55,7 +58,7 @@ interface GridData extends Omit<GetTagsQuery['getTags'][0], 'data'> {
   data: { [property: string]: any } | null;
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags, paginationModel, setPaginationModel }) => {
   const { t } = useTranslation();
 
   const [gridData, setGridData] = useState<(GridData | null)[]>([]);
@@ -163,6 +166,17 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       columns={entryColumns.concat(tagMetaColumns).concat(dataColunms).concat(tagRedoColumns)}
       getRowId={(row) => row._id}
       slots={{ toolbar: TagToolbar }}
+      paginationMode='server'
+      paginationModel={paginationModel}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 5
+          }
+        }
+      }}
+      pageSizeOptions={[5, 10, 15]}
+      onPaginationModelChange={setPaginationModel}
     />
   );
 };

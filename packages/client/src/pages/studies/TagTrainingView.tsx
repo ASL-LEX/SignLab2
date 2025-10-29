@@ -6,6 +6,7 @@ import { TagGridView } from '../../components/tag/view/TagGridView.component';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '../../context/Snackbar.context';
+import { GridPaginationModel } from '@mui/x-data-grid';
 
 export const TagTrainingView: React.FC = () => {
   const state = useLocation().state;
@@ -14,6 +15,7 @@ export const TagTrainingView: React.FC = () => {
   const [tags, setTags] = useState<GetTagsQuery['getTags']>([]);
   const { t } = useTranslation();
   const { pushSnackbarMessage } = useSnackbar();
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
 
   const trainingTags = useGetTrainingTagsQuery({ variables: { study: study._id, user: user.uid } });
 
@@ -35,7 +37,7 @@ export const TagTrainingView: React.FC = () => {
       {!tags || tags.length === 0 ? (
         <Typography variant="h3">{t('components.userPermissions.noTrainingTags')}</Typography>
       ) : (
-        <TagGridView tags={tags} study={study} refetchTags={refetchTags} />
+        <TagGridView tags={tags} study={study} refetchTags={refetchTags} paginationModel={paginationModel} setPaginationModel={setPaginationModel} />
       )}
     </>
   );
