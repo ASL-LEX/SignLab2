@@ -121,6 +121,18 @@ export class TagResolver {
     return this.tagService.getTags(study, page, pageSize);
   }
 
+  @Query(() => Int)
+  async countTagForStudy(
+    @Args('study', { type: () => ID }, StudyPipe) study: Study,
+    @TokenContext() user: TokenPayload
+  ): Promise<Number> {
+    if (!(await this.enforcer.enforce(user.user_id, TagPermissions.READ, study._id.toString()))) {
+      throw new UnauthorizedException('User cannot read tags in this study');
+    }
+
+    return this.tagService.countForStudy(study);
+  }
+
   @Query(() => [Tag])
   async getTrainingTags(
     @Args('study', { type: () => ID }, StudyPipe) study: Study,

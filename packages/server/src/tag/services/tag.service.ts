@@ -307,6 +307,17 @@ export class TagService {
     return await query;
   }
 
+  async countForStudy(study: Study | string): Promise<number> {
+    let studyID = '';
+    if (typeof study === 'string') {
+      studyID = study;
+    } else {
+      studyID = study._id;
+    }
+
+    return this.tagModel.count({ study: studyID, training: false });
+  }
+
   async getCompleteTags(study: Study | string): Promise<Tag[]> {
     let studyID = '';
     if (typeof study === 'string') {

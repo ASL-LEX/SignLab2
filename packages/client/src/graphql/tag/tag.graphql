@@ -50,8 +50,8 @@ mutation saveVideoField($tag: ID!, $field: String!, $index: Int!) {
   }
 }
 
-query getTags($study: ID!) {
-  getTags(study: $study) {
+query getTags($study: ID!, $page: Int, $pageSize: Int) {
+  getTags(study: $study, page: $page, pageSize: $pageSize) {
     _id
     entry {
       _id
@@ -116,6 +116,10 @@ query getTags($study: ID!) {
     }
     complete
   }
+}
+
+query countTagForStudy($study: ID!) {
+  countTagForStudy(study: $study)
 }
 
 query getTrainingTags($study: ID!, $user: String!) {

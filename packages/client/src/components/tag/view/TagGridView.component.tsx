@@ -28,6 +28,7 @@ export interface TagGridViewProps {
   refetchTags: () => void;
   paginationModel: GridPaginationModel;
   setPaginationModel: Dispatch<SetStateAction<GridPaginationModel>>;
+  totalTags: number;
 }
 
 /**
@@ -58,7 +59,7 @@ interface GridData extends Omit<GetTagsQuery['getTags'][0], 'data'> {
   data: { [property: string]: any } | null;
 }
 
-export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags, paginationModel, setPaginationModel }) => {
+export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTags, paginationModel, setPaginationModel, totalTags }) => {
   const { t } = useTranslation();
 
   const [gridData, setGridData] = useState<(GridData | null)[]>([]);
@@ -177,6 +178,7 @@ export const TagGridView: React.FC<TagGridViewProps> = ({ tags, study, refetchTa
       }}
       pageSizeOptions={[5, 10, 15]}
       onPaginationModelChange={setPaginationModel}
+      rowCount={totalTags}
     />
   );
 };
