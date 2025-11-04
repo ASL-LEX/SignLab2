@@ -21,6 +21,7 @@ import { DatasetDownloadRequestPipe } from './pipes/dataset-download-request.pip
 import { BasicCsvTransformer } from './pipes/csv/basic-field.pipe';
 import { VideoCsvTransformer } from './pipes/csv/video-field.pipe';
 import { UserModule } from '../user/user.module';
+import { LexiconCsvTransformer } from './pipes/csv/lexicon-field.pipe';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { UserModule } from '../user/user.module';
     StudyDownloadRequestPipe,
     DatasetDownloadRequestPipe,
     BasicCsvTransformer,
-    VideoCsvTransformer
+    VideoCsvTransformer,
+    LexiconCsvTransformer
   ]
 })
 export class DownloadRequestModule {}
