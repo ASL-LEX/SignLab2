@@ -88,7 +88,9 @@ export const TagGridView: React.FC<TagGridViewProps> = ({
       const properties = {} as any;
 
       for (const property of Object.getOwnPropertyNames(study.tagSchema.dataSchema.properties)) {
-        properties[property] = tag.data!.find((row) => row.name === property);
+        if (tag.data) {
+          properties[property] = tag.data!.find((row) => row.name === property);
+        }
       }
 
       newGridData.push({

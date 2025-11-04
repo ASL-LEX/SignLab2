@@ -15,9 +15,14 @@ export class AslLexFieldTransformer implements FieldTransformer {
     _user: TokenPayload,
     property: string
   ): Promise<TagField> {
+    let tagData = null;
+    if (data) {
+      tagData = { key: data, lexicon: uischema.options?.lexicon._id };
+    }
+
     return {
       name: property,
-      data: { key: data, lexicon: uischema.options?.lexicon._id },
+      data: tagData,
       type: TagFieldType.ASL_LEX
     };
   }
