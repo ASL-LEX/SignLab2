@@ -20,6 +20,7 @@ import { videoCsvTest, VideoCsvTransformer } from '../pipes/csv/video-field.pipe
 import { basicCsvTest, BasicCsvTransformer } from '../pipes/csv/basic-field.pipe';
 import { StudyService } from '../../study/study.service';
 import { UserService } from '../../user/user.service';
+import { lexiconCsvTest, LexiconCsvTransformer } from '../pipes/csv/lexicon-field.pipe';
 
 @Injectable()
 export class StudyDownloadService {
@@ -45,7 +46,8 @@ export class StudyDownloadService {
     private readonly basicCsvTransformer: BasicCsvTransformer,
     private readonly videoCsvTransformer: VideoCsvTransformer,
     private readonly studyService: StudyService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly lexiconCsvTransformer: LexiconCsvTransformer
   ) {}
 
   async createDownloadRequest(
@@ -369,6 +371,18 @@ export class StudyDownloadService {
             }
           });
         }
+      } else if (lexiconCsvTest(uiSchema, dataSchema)) {
+        csvFields.push({
+          header: propertyName,
+          convertField: async (tag) => {
+            const tagField = tag.data?.find((field) => field.name == propertyName);
+            if (!tagField) {
+              throw new Error(`Tag field ${propertyName} not found`);
+            }
+
+            return await this.lexiconCsvTransformer.transform(tagField.data);
+          }
+        });
       } else if (basicCsvTest(uiSchema, dataSchema)) {
         csvFields.push({
           header: propertyName,
