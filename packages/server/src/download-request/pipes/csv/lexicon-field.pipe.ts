@@ -1,5 +1,5 @@
-import { Injectable, PipeTransform } from "@nestjs/common";
-import { CsvFieldTest } from "../../../download-request/types/csv-field";
+import { Injectable, PipeTransform } from '@nestjs/common';
+import { CsvFieldTest } from '../../../download-request/types/csv-field';
 
 @Injectable()
 export class LexiconCsvTransformer implements PipeTransform<any, Promise<string>> {
@@ -17,4 +17,4 @@ export const lexiconCsvTest: CsvFieldTest = (uischema, _schema) => {
     return true;
   }
   return false;
-}
+};
