@@ -36,6 +36,10 @@ export default class ZipHander extends Command {
     archive.on('error', (err) => {
       console.error(err);
     });
+    archive.on('close', function() {
+      console.log(archive.pointer() + ' total bytes');
+      console.log('archiver has been finalized and the output file descriptor has closed.');
+    });
 
     // Load in the target entries
     const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'))['entries'];
@@ -49,11 +53,8 @@ export default class ZipHander extends Command {
         // Keep only the file name
         const entryName = basename(entry);
 
-        // Read in the file
-        const file = createReadStream(entry);
-
         // Add the file to the archive
-        archive.append(file, { name: entryName });
+        archive.file(entry, { name: 'entries/' + entryName });
       } catch (e) {
         console.warn(`Error reading file: ${e}`);
       }
@@ -61,9 +62,6 @@ export default class ZipHander extends Command {
 
     // Wait for all zip operatings to complete
     await archive.finalize();
-
-    // Close the zip file
-    fileStream.close();
 
     // Post to the webhook to notify of completion
     const result = await fetch(flags.notification_webhook, {
