@@ -1,6 +1,8 @@
 import { Command, Flags } from '@oclif/core';
-import AdmZip from 'adm-zip';
 import { readFile } from 'fs/promises';
+import * as archiver from 'archiver';
+import { createReadStream, createWriteStream } from 'fs';
+import { basename } from 'path';
 
 export default class ZipHander extends Command {
   static args = {};
@@ -25,8 +27,19 @@ export default class ZipHander extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(ZipHander);
 
-    // Open a ZIP
-    const zip = new AdmZip();
+    // Make the zip file
+    const fileStream = createWriteStream(flags.output_zip);
+
+    // Make a new zipper
+    const archive = archiver.create('zip');
+    archive.pipe(fileStream);
+    archive.on('error', (err) => {
+      console.error(err);
+    });
+    archive.on('close', function () {
+      console.log(archive.pointer() + ' total bytes');
+      console.log('archiver has been finalized and the output file descriptor has closed.');
+    });
 
     // Load in the target entries
     const entries: string[] = JSON.parse(await readFile(flags.target_entries, 'utf8'))['entries'];
@@ -37,14 +50,18 @@ export default class ZipHander extends Command {
     // Add the enties to the zip
     for (const entry of entries) {
       try {
-        zip.addLocalFile(entry, 'entries/');
+        // Keep only the file name
+        const entryName = basename(entry);
+
+        // Add the file to the archive
+        archive.file(entry, { name: 'entries/' + entryName });
       } catch (e) {
         console.warn(`Error reading file: ${e}`);
       }
     }
 
-    // Save the zip
-    await zip.writeZipPromise(flags.output_zip);
+    // Wait for all zip operatings to complete
+    await archive.finalize();
 
     // Post to the webhook to notify of completion
     const result = await fetch(flags.notification_webhook, {
