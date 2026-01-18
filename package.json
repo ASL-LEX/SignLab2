@@ -4,14 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "prettier": "npm run prettier --workspaces --if-present",
-    "prettier:fix": "npm run prettier:fix --workspaces --if-present",
     "prepare": "husky"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
