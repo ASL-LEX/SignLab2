@@ -1,0 +1,11 @@
+services:
+  signtag-mongodb:
+    image: mongo:8.2.3
+    container_name: signtag-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - signtag-mongodb-data:/data/db
+
+volumes:
+  signtag-mongodb-data:
