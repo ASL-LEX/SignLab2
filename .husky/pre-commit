@@ -1,3 +1,0 @@
-# Handle generating the translation files
-npm --workspace=packages/client run i18next -s
-git add packages/client/public/locales
