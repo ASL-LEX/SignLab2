@@ -107,14 +107,15 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     });
 
     const updateValidVideos = validVideos.map((valid, index) => {
+      // If the blob is null, then we don't have a proper recorded video yet
       if (index === activeIndex) {
-        return video !== null;
+        return blob !== null;
       }
       return valid;
     });
 
-    if (video !== null) {
-      saveVideoFragmentNew(video);
+    if (blob !== null) {
+      saveVideoFragmentNew(blob);
     }
     setBlobs(updatedBlobs);
     setValidVideos(updateValidVideos);

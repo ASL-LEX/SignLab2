@@ -4,8 +4,8 @@ import { useReactMediaRecorder } from 'react-media-recorder';
 const mimeType = 'video/webm; codecs=vp9';
 
 export interface VideoRecordInterfaceProps {
-  activeBlob: Blob | null;
-  handleVideoRecordCompletion: (blobURL: string, blob: Blob | null) => void;
+  activeBlob: { blobURL: string | null, blob: Blob | null };
+  handleVideoRecordCompletion: (blobURL: string, blob: Blob) => void;
   recording: boolean;
 }
 
@@ -31,8 +31,8 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
     }
     // Otherwise, show the user the recording video
     else if (videoPreviewRef.current && recorder.mediaBlobUrl) {
-      videoPreviewRef.current.src = '';
-      videoPreviewRef.current.srcObject = activeBlob;
+      videoPreviewRef.current.src = activeBlob.blobURL || '';
+      videoPreviewRef.current.srcObject = null;
     }
   }, [recorder.status, recorder.previewStream, recorder.mediaBlobUrl]);
 
