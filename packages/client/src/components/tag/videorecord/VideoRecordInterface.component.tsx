@@ -5,11 +5,11 @@ const mimeType = 'video/webm; codecs=vp9';
 
 export interface VideoRecordInterfaceProps {
   activeBlob: Blob | null;
-  handleVideoRecordCompletion: (blob: Blob | null) => void;
+  handleVideoRecordCompletion: (blobURL: string, blob: Blob | null) => void;
   recording: boolean;
 }
 
-export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ recording, handleVideoRecordCompletion }) => {
+export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ recording, handleVideoRecordCompletion, activeBlob }) => {
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const recorder = useReactMediaRecorder({
     video: true,
@@ -17,7 +17,7 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
     mediaRecorderOptions: {
       mimeType
     },
-    onStop: (_mediaBlobUrl, blob) => handleVideoRecordCompletion(blob),
+    onStop: (blobURL, blob) => handleVideoRecordCompletion(blobURL, blob),
     blobPropertyBag: {
       type: mimeType
     }
@@ -31,8 +31,8 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
     }
     // Otherwise, show the user the recording video
     else if (videoPreviewRef.current && recorder.mediaBlobUrl) {
-      videoPreviewRef.current.src = recorder.mediaBlobUrl;
-      videoPreviewRef.current.srcObject = null;
+      videoPreviewRef.current.src = '';
+      videoPreviewRef.current.srcObject = activeBlob;
     }
   }, [recorder.status, recorder.previewStream, recorder.mediaBlobUrl]);
 
@@ -44,6 +44,11 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
       recorder.stopRecording();
     }
   }, [recording]);
+
+  // Handle switching between previews from other videos
+  useEffect(() => {
+
+  }, [activeBlob])
 
   return (
     <>

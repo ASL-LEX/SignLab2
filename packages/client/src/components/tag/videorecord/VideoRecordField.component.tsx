@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [validVideos, setValidVideos] = useState<boolean[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
+  const [blobs, setBlobs] = useState<{ blobURL: string | null, blob: (Blob | null)}[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
   const [videoFragmentID, setVideoFragmentID] = useState<string[]>([]);
   const client = useApolloClient();
@@ -30,7 +30,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
 
   const resetState = () => {
     setValidVideos(Array.from({ length: maxVideos }, (_, _i) => false));
-    setBlobs(Array.from({ length: maxVideos }, (_, _i) => null));
+    setBlobs(Array.from({ length: maxVideos }, (_, _i) => ({ blobURL: null, blob: null })));
     setActiveIndex(0);
   };
 
@@ -94,13 +94,18 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   }, [activeIndex, videoFragmentID]);
 
   /** Store the blob and check if the video needs to be saved */
-  const handleVideoRecord = useCallback((video: Blob | null) => {
-    const updatedBlobs = blobs.map((blob, index) => {
+  const handleVideoRecord = useCallback((blobURL: string, blob: Blob) => {
+    // Make a new list of blobs with the recorded one added in
+    const updatedBlobs = blobs.map((existing, index) => {
+      // If the index is the active index, then this is where the new recording should be "saved"
       if (index === activeIndex) {
-        return video;
+        return { blobURL, blob };
       }
-      return blob;
+
+      // Otherwise keep the current video
+      return existing;
     });
+
     const updateValidVideos = validVideos.map((valid, index) => {
       if (index === activeIndex) {
         return video !== null;
