@@ -1,10 +1,10 @@
-import { ControlProps, RankedTester, rankWith, ControlElement } from '@jsonforms/core';
+import { ControlProps, RankedTester, rankWith } from '@jsonforms/core';
 import { ArrowLeft, ArrowRight, ExpandMore } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack, Button, IconButton } from '@mui/material';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { StatusProcessCircles } from './StatusCircles.component';
 import { VideoRecordInterface } from './VideoRecordInterface.component';
-import { useEffect, useState, useRef, useCallback, FC } from 'react';
+import { useEffect, useState, useCallback, FC } from 'react';
 import { useApolloClient } from '@apollo/client';
 import {
   SaveVideoFieldDocument,
@@ -21,13 +21,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [blobs, setBlobs] = useState<(Blob | null)[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
   const [videoFragmentID, setVideoFragmentID] = useState<string[]>([]);
-  const stateRef = useRef<{
-    validVideos: boolean[];
-    blobs: (Blob | null)[];
-    activeIndex: number;
-    videoFragmentID: string[];
-  }>();
-  stateRef.current = { validVideos, blobs, activeIndex, videoFragmentID };
   const client = useApolloClient();
   const { tag } = useTag();
 
@@ -53,14 +46,14 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   }, [props.data]);
 
   /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
-  const saveVideoFragment = async (blob: Blob) => {
+  const saveVideoFragmentNew = useCallback(async (blob: Blob) => {
     // Save the video fragment
     const result = await client.mutate<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>({
       mutation: SaveVideoFieldDocument,
       variables: {
         tag: tag!._id,
         field: props.path,
-        index: stateRef.current!.activeIndex
+        index: activeIndex
       }
     });
 
@@ -79,13 +72,13 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     // Update the JSON Forms representation of the data to be the ID of the video fragment
 
     // If the index is longer than the current videoFragmentID array, then add the new ID to the end
-    if (stateRef.current!.activeIndex >= stateRef.current!.videoFragmentID.length) {
-      const updatedVideoFragmentID = [...stateRef.current!.videoFragmentID, result.data!.saveVideoField._id];
+    if (activeIndex >= videoFragmentID.length) {
+      const updatedVideoFragmentID = [...videoFragmentID, result.data!.saveVideoField._id];
       setVideoFragmentID(updatedVideoFragmentID);
       props.handleChange(props.path, updatedVideoFragmentID);
     } else {
-      const updatedVideoFragmentID = stateRef.current!.videoFragmentID.map((id, index) => {
-        if (index === stateRef.current!.activeIndex) {
+      const updatedVideoFragmentID = videoFragmentID.map((id, index) => {
+        if (index === activeIndex) {
           return result.data!.saveVideoField._id;
         }
         return id;
@@ -95,33 +88,32 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     }
 
     // Automatic progression
-    const activeIndex = stateRef.current?.activeIndex;
     if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
       setActiveIndex(activeIndex + 1);
     }
-  };
+  }, [activeIndex, videoFragmentID]);
 
   /** Store the blob and check if the video needs to be saved */
-  const handleVideoRecord = (video: Blob | null) => {
-    const updatedBlobs = stateRef.current!.blobs.map((blob, index) => {
-      if (index === stateRef.current!.activeIndex) {
+  const handleVideoRecord = useCallback((video: Blob | null) => {
+    const updatedBlobs = blobs.map((blob, index) => {
+      if (index === activeIndex) {
         return video;
       }
       return blob;
     });
-    const updateValidVideos = stateRef.current!.validVideos.map((valid, index) => {
-      if (index === stateRef.current!.activeIndex) {
+    const updateValidVideos = validVideos.map((valid, index) => {
+      if (index === activeIndex) {
         return video !== null;
       }
       return valid;
     });
 
     if (video !== null) {
-      saveVideoFragment(video);
+      saveVideoFragmentNew(video);
     }
     setBlobs(updatedBlobs);
     setValidVideos(updateValidVideos);
-  };
+  }, [blobs, validVideos, activeIndex]);
 
   const toggleRecording = useCallback((e: KeyboardEvent) => {
     if (e.key == ' ') {
@@ -137,7 +129,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
     return () => {
       document.removeEventListener('keydown', toggleRecording);
     };
-  }, [recording]);
+  }, [recording, setRecording]);
 
   return (
     <Accordion defaultExpanded>
@@ -159,7 +151,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
 
             <VideoRecordInterface
               activeBlob={blobs[activeIndex]}
-              recordVideo={(blob) => handleVideoRecord(blob)}
+              handleVideoRecordCompletion={handleVideoRecord}
               recording={recording}
             />
 
