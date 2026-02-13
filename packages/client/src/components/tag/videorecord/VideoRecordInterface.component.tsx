@@ -4,12 +4,16 @@ import { useReactMediaRecorder } from 'react-media-recorder';
 const mimeType = 'video/webm; codecs=vp9';
 
 export interface VideoRecordInterfaceProps {
-  activeBlob: { blobURL: string | null, blob: Blob | null };
+  activeBlob: { blobURL: string | null; blob: Blob | null };
   handleVideoRecordCompletion: (blobURL: string, blob: Blob) => void;
   recording: boolean;
 }
 
-export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ recording, handleVideoRecordCompletion, activeBlob }) => {
+export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({
+  recording,
+  handleVideoRecordCompletion,
+  activeBlob
+}) => {
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const recorder = useReactMediaRecorder({
     video: true,
@@ -46,9 +50,7 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
   }, [recording]);
 
   // Handle switching between previews from other videos
-  useEffect(() => {
-
-  }, [activeBlob])
+  useEffect(() => {}, [activeBlob]);
 
   return (
     <>

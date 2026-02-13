@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 const VideoRecordField: React.FC<ControlProps> = (props) => {
   const [validVideos, setValidVideos] = useState<boolean[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [blobs, setBlobs] = useState<{ blobURL: string | null, blob: (Blob | null)}[]>([]);
+  const [blobs, setBlobs] = useState<{ blobURL: string | null; blob: Blob | null }[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
   const [videoFragmentID, setVideoFragmentID] = useState<string[]>([]);
   const client = useApolloClient();
@@ -46,87 +46,96 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   }, [props.data]);
 
   /** Handles saving the video fragment to the database and updating the JSON Forms representation of the data */
-  const saveVideoFragmentNew = useCallback(async (blob: Blob) => {
-    // Save the video fragment
-    const result = await client.mutate<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>({
-      mutation: SaveVideoFieldDocument,
-      variables: {
-        tag: tag!._id,
-        field: props.path,
-        index: activeIndex
-      }
-    });
-
-    if (!result.data?.saveVideoField) {
-      console.error('Failed to save video fragment');
-      return;
-    }
-
-    // Upload the video to the provided URL
-    await axios.put(result.data.saveVideoField.uploadURL, blob, {
-      headers: {
-        'Content-Type': 'video/webm'
-      }
-    });
-
-    // Update the JSON Forms representation of the data to be the ID of the video fragment
-
-    // If the index is longer than the current videoFragmentID array, then add the new ID to the end
-    if (activeIndex >= videoFragmentID.length) {
-      const updatedVideoFragmentID = [...videoFragmentID, result.data!.saveVideoField._id];
-      setVideoFragmentID(updatedVideoFragmentID);
-      props.handleChange(props.path, updatedVideoFragmentID);
-    } else {
-      const updatedVideoFragmentID = videoFragmentID.map((id, index) => {
-        if (index === activeIndex) {
-          return result.data!.saveVideoField._id;
+  const saveVideoFragmentNew = useCallback(
+    async (blob: Blob) => {
+      // Save the video fragment
+      const result = await client.mutate<SaveVideoFieldMutation, SaveVideoFieldMutationVariables>({
+        mutation: SaveVideoFieldDocument,
+        variables: {
+          tag: tag!._id,
+          field: props.path,
+          index: activeIndex
         }
-        return id;
       });
-      setVideoFragmentID(updatedVideoFragmentID);
-      props.handleChange(props.path, updatedVideoFragmentID);
-    }
 
-    // Automatic progression
-    if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
-      setActiveIndex(activeIndex + 1);
-    }
-  }, [activeIndex, videoFragmentID]);
+      if (!result.data?.saveVideoField) {
+        console.error('Failed to save video fragment');
+        return;
+      }
+
+      // Upload the video to the provided URL
+      await axios.put(result.data.saveVideoField.uploadURL, blob, {
+        headers: {
+          'Content-Type': 'video/webm'
+        }
+      });
+
+      // Update the JSON Forms representation of the data to be the ID of the video fragment
+
+      // If the index is longer than the current videoFragmentID array, then add the new ID to the end
+      if (activeIndex >= videoFragmentID.length) {
+        const updatedVideoFragmentID = [...videoFragmentID, result.data!.saveVideoField._id];
+        setVideoFragmentID(updatedVideoFragmentID);
+        props.handleChange(props.path, updatedVideoFragmentID);
+      } else {
+        const updatedVideoFragmentID = videoFragmentID.map((id, index) => {
+          if (index === activeIndex) {
+            return result.data!.saveVideoField._id;
+          }
+          return id;
+        });
+        setVideoFragmentID(updatedVideoFragmentID);
+        props.handleChange(props.path, updatedVideoFragmentID);
+      }
+
+      // Automatic progression
+      if (activeIndex !== undefined && activeIndex != validVideos.length - 1) {
+        setActiveIndex(activeIndex + 1);
+      }
+    },
+    [activeIndex, videoFragmentID]
+  );
 
   /** Store the blob and check if the video needs to be saved */
-  const handleVideoRecord = useCallback((blobURL: string, blob: Blob) => {
-    // Make a new list of blobs with the recorded one added in
-    const updatedBlobs = blobs.map((existing, index) => {
-      // If the index is the active index, then this is where the new recording should be "saved"
-      if (index === activeIndex) {
-        return { blobURL, blob };
+  const handleVideoRecord = useCallback(
+    (blobURL: string, blob: Blob) => {
+      // Make a new list of blobs with the recorded one added in
+      const updatedBlobs = blobs.map((existing, index) => {
+        // If the index is the active index, then this is where the new recording should be "saved"
+        if (index === activeIndex) {
+          return { blobURL, blob };
+        }
+
+        // Otherwise keep the current video
+        return existing;
+      });
+
+      const updateValidVideos = validVideos.map((valid, index) => {
+        // If the blob is null, then we don't have a proper recorded video yet
+        if (index === activeIndex) {
+          return blob !== null;
+        }
+        return valid;
+      });
+
+      if (blob !== null) {
+        saveVideoFragmentNew(blob);
       }
+      setBlobs(updatedBlobs);
+      setValidVideos(updateValidVideos);
+    },
+    [blobs, validVideos, activeIndex]
+  );
 
-      // Otherwise keep the current video
-      return existing;
-    });
-
-    const updateValidVideos = validVideos.map((valid, index) => {
-      // If the blob is null, then we don't have a proper recorded video yet
-      if (index === activeIndex) {
-        return blob !== null;
+  const toggleRecording = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key == 'r') {
+        // Toggle the recording state
+        setRecording(!recording);
       }
-      return valid;
-    });
-
-    if (blob !== null) {
-      saveVideoFragmentNew(blob);
-    }
-    setBlobs(updatedBlobs);
-    setValidVideos(updateValidVideos);
-  }, [blobs, validVideos, activeIndex]);
-
-  const toggleRecording = useCallback((e: KeyboardEvent) => {
-    if (e.key == 'r') {
-      // Toggle the recording state
-      setRecording(!recording);
-    }
-  }, [recording]);
+    },
+    [recording]
+  );
 
   useEffect(() => {
     // Listen for spaces
@@ -144,7 +153,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2} sx={{ width: '50%', margin: 'auto' }}>
-
           <VideoCountRequirements min={minimumVideos} max={maxVideos} />
           <StatusProcessCircles isComplete={validVideos} setState={() => {}} activeIndex={activeIndex} />
 
@@ -169,7 +177,7 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
               <ArrowRight fontSize="large" />
             </IconButton>
           </Stack>
-          <RecordButton recording={recording} toggleRecording={() => setRecording(!recording)}/>
+          <RecordButton recording={recording} toggleRecording={() => setRecording(!recording)} />
         </Stack>
       </AccordionDetails>
     </Accordion>
@@ -199,16 +207,12 @@ interface VideoCountRequirementsProps {
 const VideoCountRequirements: FC<VideoCountRequirementsProps> = ({ max, min }) => {
   const { t } = useTranslation();
 
-  if (!min)  {
+  if (!min) {
     console.error('Minimum number of videos not found');
   }
 
-  return (
-    <Typography variant="h5">
-      {t('tag.videoRequiredOptional', { minimum: min, max: max  })}
-    </Typography>
-  );
-}
+  return <Typography variant="h5">{t('tag.videoRequiredOptional', { minimum: min, max: max })}</Typography>;
+};
 
 export const videoFieldTester: RankedTester = rankWith(10, (uischema, _schema, _rootSchema) => {
   return uischema.options != undefined && uischema.options && uischema.options.customType === 'video';
