@@ -27,7 +27,6 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
   useEffect(() => {
     // If in recording mode, show the user the preview
     if (videoPreviewRef.current && recorder.previewStream && recorder.status == 'recording') {
-      console.log('setting preview')
       videoPreviewRef.current.srcObject = recorder.previewStream;
     }
     // Otherwise, show the user the recording video
@@ -39,21 +38,16 @@ export const VideoRecordInterface: React.FC<VideoRecordInterfaceProps> = ({ reco
 
   // Handle toggling between recording and not recording
   useEffect(() => {
-    if  (recorder.status === 'recording') {
-      recorder.stopRecording();
-    } else {
-      console.log('starting')
+    if (recording) {
       recorder.startRecording();
+    } else {
+      recorder.stopRecording();
     }
   }, [recording]);
 
-  useEffect(() => {
-    console.log(recorder.error)
-  }, [recorder.error])
-
   return (
     <>
-      <video style={{ minWidth: 500 }} ref={videoPreviewRef} src={recorder.mediaBlobUrl} controls autoPlay />
+      <video style={{ minWidth: 500 }} ref={videoPreviewRef} src={recorder.mediaBlobUrl} controls autoPlay loop />
     </>
   );
 };

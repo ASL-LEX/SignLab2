@@ -118,7 +118,6 @@ const VideoRecordField: React.FC<ControlProps> = (props) => {
   const toggleRecording = useCallback((e: KeyboardEvent) => {
     if (e.key == ' ') {
       // Toggle the recording state
-      console.log('toggle');
       setRecording(!recording);
     }
   }, [recording]);
